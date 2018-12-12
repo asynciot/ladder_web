@@ -1,0 +1,29 @@
+.content {
+  position: absolute;
+  top: 90px;
+  width: 100%;
+  bottom: 0;
+  z-index: 2;
+  padding: 0 0 10px;
+  overflow-y: scroll;
+}
+.panel {
+  margin-bottom: 8px;
+  border: 0 !important;
+}
+:global {
+  .accordion .am-accordion-item .am-accordion-header {
+    color: #999;
+  }
+  .accordion .am-list-line .am-list-content,.am-list-extra {
+    color: #AAA;
+    font-size: 14px;
+  }
+}
+@media screen and (min-width: 575px) {
+  .content {
+    background: #f7f7f7;
+    position: static;
+    padding: 16px 14px 16px;
+  }
+}

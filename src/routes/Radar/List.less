@@ -1,0 +1,122 @@
+.content {
+  position: absolute;
+  top: 44px;
+  width: 100%;
+  bottom: 0;
+  z-index: 2;
+  background: #fff;
+  overflow-y: scroll;
+}
+.table {
+  display: block;
+  width: 300px;
+  margin: 0 auto;
+	td {
+    display: inline-block;
+		color: #999;
+    font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: top;
+    padding: 4px 0;
+  }
+  tr td:nth-child(1){
+    width: 45px;
+  }
+  tr td:nth-child(2){
+    width: 105px;
+  }
+  tr td:nth-child(3){
+    width: 45px;
+  }
+  tr td:nth-child(4){
+    width: 105px;
+  }
+  tr > td:nth-child(odd) {
+    color: #333;
+    white-space: nowrap;
+  }
+  .status {
+    color: red;
+    width: 100px !important;
+    white-space: nowrap;
+    word-break: break-all;
+    overflow: hidden;   
+    text-overflow: ellipsis;
+  }
+  .pass {
+    color: #55BC52;
+  }
+}
+.status {
+  color: red;
+  white-space: nowrap;
+  word-break: break-all;
+}
+.pass {
+  color: #55BC52;
+}
+.modal {
+  // height: auto;
+  // overflow: scroll;
+	background-color: #ECECEC;
+	border-radius: 5px;
+	padding: 3px 0 3px 30px;
+	tr {
+		display: flex;
+		flex-flow: row nowrap;
+		margin: 2px 0;
+	}
+	td {
+    color: #999;
+		text-align: left;
+    font-size: 13px;
+  }
+  tr > td:first-child {
+    white-space: nowrap;
+  }
+  tr > td:nth-child(odd) {
+    color: #333;
+    white-space: nowrap;
+  }
+}
+@media screen and (max-width: 340px) {
+  .table {
+    tr td:nth-child(1){
+      width: 45px;
+    }
+    tr td:nth-child(2){
+      width: 105px;
+    }
+    tr td:nth-child(3){
+      width: 45px;
+    }
+    tr td:nth-child(4){
+      width: 105px;
+    }
+  }
+}
+@media screen and (min-width: 341px) and (max-width: 574px) {
+  .table {
+    width: 340px;
+    tr td:nth-child(1){
+      width: 45px;
+    }
+    tr td:nth-child(2){
+      width: 125px;
+    }
+    tr td:nth-child(3){
+      width: 45px;
+    }
+    tr td:nth-child(4){
+      width: 125px;
+    }
+  }
+}
+@media screen and (min-width: 575px) {
+  .content {
+    position: static;
+    padding: 16px 14px 16px;
+  }
+}

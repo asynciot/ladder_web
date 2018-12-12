@@ -1,0 +1,79 @@
+.menu {
+  position: relative;
+  top: 0;
+  width: 100%;
+  background: #fbfbfb;
+  z-index: 8;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eaeaea;
+}
+.nav {
+  display: block;
+  width: 25%;
+  flex-grow: 1;
+  line-height: 20px;
+  height: 40px;
+  padding: 10px 0;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  letter-spacing: 1px;
+  transition: all .3s ease;
+}
+.dropdown {
+  width: 25%;
+  text-align: center;
+}
+.active {
+  color: #D52B2E;
+}
+.table {
+  display: block;
+  width: 300px;
+  margin: 0 auto;
+	td {
+    display: inline-block;
+		color: #999;
+    font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: top;
+    padding: 4px 0;
+  }
+  tr td:nth-child(1){
+    width: 45px;
+  }
+  tr td:nth-child(2){
+    width: 105px;
+  }
+  tr td:nth-child(3){
+    width: 45px;
+  }
+  tr td:nth-child(4){
+    width: 105px;
+  }
+  tr > td:nth-child(odd) {
+    color: #333;
+    white-space: nowrap;
+  }
+  .status {
+    color: red;
+    width: 100px !important;
+    white-space: nowrap;
+    word-break: break-all;
+    overflow: hidden;   
+    text-overflow: ellipsis;
+  }
+  .pass {
+    color: #55BC52;
+  }
+}
+.active {
+  color: #D52B2E;
+}
+@media screen and (min-width: 575px) {
+}

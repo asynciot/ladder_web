@@ -1,0 +1,170 @@
+html,
+body,
+:global(#root) {
+  height: 100%;
+}
+
+canvas {
+  display: block;
+}
+
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.globalSpin {
+  width: 100%;
+  margin: 40px 0 !important;
+  z-index: 99;
+}
+
+// temp fix for https://github.com/ant-design/ant-design/commit/a1fafb5b727b62cb0be29ce6e9eca8f579d4f8b7
+:global {
+  .tab-active {
+    height: 100%;
+    position: relative;
+    left: 0%;
+    width: 100%;
+    visibility: visible;
+    display: block;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tab-notactive {
+    visibility: hidden;
+    display: none;
+  }
+  .am-modal-alert-content, .am-modal-propmt-content {
+    text-align: left;
+  }
+  .ant-spin-container {
+    overflow: visible !important;
+    & > .ant-list-item:last-child {
+      border-bottom: 1px solid #e8e8e8 !important;
+    }
+  }
+  .am-list-item .am-list-line .am-list-extra {
+    flex-basis: initial !important;
+    max-width: 220px !important;
+    overflow-x: scroll !important;
+    overflow-y: hidden;
+    text-overflow: initial !important;
+  }
+  .am-list-item .am-list-line .am-list-content, .am-list-item .am-input-label {
+    color: #444 !important;
+    font-size: 14px !important;
+  }
+  .am-list-brief {
+    font-size: 13px !important;
+  }
+  .content {
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    height: 100%;
+    background: #F7F7F7;
+    -webkit-overflow-scrolling: touch;
+  }
+  p {
+    margin: 0;
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+  }
+  .ant-layout {
+    background: #F7F7F7 !important;
+  }
+  .shadow-nav {
+    div {
+      background-color: #fff;
+      padding: 0 20px;
+      height: 40px;
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      box-shadow: 0 -2px 6px -2px rgba(0, 0, 0, .2) inset;
+    }
+    .icon {
+      font-size: 16px;
+      margin-right: 8px;
+    }
+    img {
+      width: auto;
+      height: 70%;
+      margin-right: 10px;
+    }
+    p {
+      font-size: 14px;
+      height: 40px;
+      line-height: 40px;
+      margin: 0;
+    }
+  
+    & > section:last-child {
+      box-shadow: 0 2px 8px -2px rgba(0, 0, 0, .2);
+    }
+  }
+  .tr {
+    text-align: right;
+  }
+  .tc {
+    text-align: center;
+  }
+  .tl {
+    text-align: left;
+  }
+  .mb-10 {
+    margin-bottom: 10px;
+  }
+  .mb-20 {
+    margin-bottom: 20px;
+  }
+  .ant-tabs-bar {
+    margin-bottom: 0 !important;
+  }
+  .BMap_cpyCtrl,.anchorBL {  
+    display: none;  
+  }  
+  .tab-hide {
+    .am-tabs {
+      // margin-top: -44px;
+    }
+    .am-tabs-tab-bar-wrap {
+      opacity: 0;
+      display: none;
+    }
+  }
+  @media screen and (min-width: 575px) {
+    .content {
+      position: static;
+      width: auto;
+      height: auto;
+    }
+  }
+  .LazyLoad {
+    background: url('./assets/default.png') no-repeat center center;
+    background-size: auto auto;
+  }
+  .qrcode {
+    width: 100%;
+    height: 160px;
+    position: relative;
+    .qrcode-loading {
+      position: absolute;
+      z-index: 5;
+      top: 50%;
+      left: 50%;
+      margin-left: -10px;
+      margin-top: -13px;
+    }
+    img {
+      position: absolute;
+      left: 50%;
+      margin-left: -80px;
+      top: 0;
+      z-index: 10;
+    }
+  }
+}

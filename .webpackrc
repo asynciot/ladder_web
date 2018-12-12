@@ -1,0 +1,27 @@
+{
+  "entry": "src/index.js",
+  "extraBabelPlugins": [
+    ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": true },"antd"],
+    ["import", { "libraryName": "antd-mobile", "style": "css" },"antd-mobile"]
+  ],
+  "env": {
+    "development": {
+      "extraBabelPlugins": [
+        "dva-hmr"
+      ]
+    }
+  },
+  "ignoreMomentLocale": true,
+  "theme": "./src/theme.js",
+  "html": {
+    "template": "./src/index.ejs"
+  },
+  "externals": {
+    "BMap": "BMap",
+    "BMapLib": "BMapLib"
+  },
+  "publicPath": "/",
+  "outputPath": "./dist/",
+  "disableDynamicImport": false,
+  "hash": false
+}
