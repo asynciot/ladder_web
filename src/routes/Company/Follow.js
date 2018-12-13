@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import { connect } from 'dva';
 import { Tabs, Flex, ImagePicker, List, InputItem } from 'antd-mobile';
 import { Button, message } from 'antd';
+import base64url from 'base64url';
 import qrcode from 'qrcode.js';
 import pathToRegexp from 'path-to-regexp';
 import styles from './Follow.less';
@@ -9,44 +11,10 @@ import camera from '../../assets/camera.png';
 import { postFollowInfo } from '../../services/api';
 
 const tabs = [
-  { title: '上传二维码' },
-  { title: '输入串号' },
+	{ title: '输入串号' },
+  // { title: '上传二维码' },
+  
 ];
-const utf8ToUtf16 = (s) => {
-  // 将utf-8字符串转码为unicode字符串，要不读取的二维码信息包含中文会乱码
-  if (!s) {
-    return;
-  }
-  let i, 
-  codes, 
-  bytes, 
-  ret = [], 
-  len = s.length;
-  for (i = 0; i < len; i++) {
-    codes = [];
-    codes.push(s.charCodeAt(i));
-    if (((codes[0] >> 7) & 0xff) == 0x0) {
-      // 单字节  0xxxxxxx
-      ret.push(s.charAt(i));
-    } else if (((codes[0] >> 5) & 0xff) == 0x6) {
-      // 双字节  110xxxxx 10xxxxxx
-      codes.push(s.charCodeAt(++i));
-      bytes = [];
-      bytes.push(codes[0] & 0x1f);
-      bytes.push(codes[1] & 0x3f);
-      ret.push(String.fromCharCode((bytes[0] << 6) | bytes[1]));
-    } else if (((codes[0] >> 4) & 0xff) == 0xe) {
-      // 三字节  1110xxxx 10xxxxxx 10xxxxxx
-      codes.push(s.charCodeAt(++i));
-      codes.push(s.charCodeAt(++i));
-      bytes = [];
-      bytes.push((codes[0] << 4) | ((codes[1] >> 2) & 0xf));
-      bytes.push(((codes[1] & 0x3) << 6) | (codes[2] & 0x3f));
-      ret.push(String.fromCharCode((bytes[0] << 8) | bytes[1]));
-    }
-  }
-  return ret.join('');
-};
 
 @connect(({ submit, user, loading }) => ({
   submit,
@@ -64,13 +32,12 @@ export default class extends Component {
     if (IMEI !== 'new') {
       this.setState({
         deviceNo: IMEI,
-        view: 1,
+        view: 0,
       });
     }
   }
   componentDidMount() {
     qrcode.callback = (val) => {
-      console.log(val);
       const match = pathToRegexp('${window.location.origin}/:sub?/:sec?/:sec?').exec(val);
       if (match && match[2] == 'follow' && match[3]) {
         this.setState({
@@ -81,11 +48,10 @@ export default class extends Component {
           qrcodeNo: val,
         });
       }
-      
     };
     this.reader = new FileReader();
-    this.reader.onload= (e) => {  
-      qrcode.decode(e.currentTarget.result);
+    this.reader.onload= (e) => {
+			qrcode.decode(e.currentTarget.result)
     };
   }
 
@@ -94,10 +60,9 @@ export default class extends Component {
       deviceNo: value,
     });
   }
-
   reader = null;
   upload = (e) => {
-    this.reader.readAsDataURL(e.target.files[0]);  
+    this.reader.readAsDataURL(e.target.files[0]);	
   }
   submit = () => {
     postFollowInfo({
@@ -122,26 +87,26 @@ export default class extends Component {
     const { submitting } = this.props;
     return (
       <div className="content">
-        <Tabs
+       <Tabs
           tabs={tabs}
           initialPage={this.state.view}
           onChange={this.tabChange}
           tabBarActiveTextColor="#D72826"
           tabBarUnderlineStyle={{ borderColor: '#D72826' }}
         >
-          <div style={{ backgroundColor: '#fff' }}>
+          {/* <div style={{ backgroundColor: '#fff' }}>
             <List>
               <List.Item>
                 <div className={styles.upload}>
                   <img src={camera} alt="" />
                   <input accept="image/*" className={styles.input} onChange={this.upload} type="file" />
-                  {/* <ImagePicker
+                  <ImagePicker
                     className={styles.btn}
                     files={this.state.files}
                     onChange={this.onUpload}
                     onImageClick={(index, fs) => console.log(index, fs)}
                     accept="image/gif,image/jpeg,image/jpg,image/png"
-                  /> */}
+                  />
                 </div>
               </List.Item>
               <InputItem
@@ -157,7 +122,7 @@ export default class extends Component {
                 </Button>
               </List.Item>
             </List>
-          </div>
+          </div>*/}
           <div style={{ backgroundColor: '#fff' }}>
             <List>
               <InputItem

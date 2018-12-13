@@ -48,7 +48,7 @@ export default class Profile extends Component {
       <div className={styles.main}>
           <Form onSubmit={this.handleSubmit}>
             <div className={styles.content}>
-              <section className={styles.info}>
+              {/*<section className={styles.info}>
                 <FormItem>
                   <Row gutter={8}>
                     <Col span={6}>
@@ -66,7 +66,7 @@ export default class Profile extends Component {
                   </Row>
                 </FormItem>
               </section>
-              {/* <section className={styles.info}>
+               <section className={styles.info}>
               <FormItem>
                 <Row gutter={8}>
                   <Col span={6}>

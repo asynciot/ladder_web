@@ -415,7 +415,7 @@ export default class DoorHistory extends Component {
 		getDeviceList({device_id}).then((res)=>{
 			const id = res.data.list[0].IMEI
 			this.setState({
-				src: `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${window.location.origin}/company/follow/${id}`,
+				src: `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=http://server.asynciot.com/company/follow/${id}`,
 				modal: true,
 			});
 		})

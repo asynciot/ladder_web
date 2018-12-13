@@ -396,7 +396,7 @@ export default class DoorHistory extends Component {
   goQrcode = () => {
     const id = this.props.match.params.id;
     this.setState({
-      src: `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${window.location.origin}/company/follow/${id}`,
+      src: `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=http://server.asynciot.com/company/follow/${id}`,
       modal: true,
     });    
   }
