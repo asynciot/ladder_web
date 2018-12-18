@@ -67,7 +67,8 @@ export default class Company extends Component {
           <List.Item arrow="horizontal" onClick={() => this.goDetail('work-order')} >工单处理</List.Item>
           <List.Item arrow="horizontal" onClick={() => this.goDetail('follow/new')} >关注设备</List.Item>
           {/*<List.Item arrow="horizontal" onClick={() => this.goDetail('statistics/all')} >设备统计</List.Item>*/}
-          <List.Item arrow="horizontal" onClick={() => this.goDetail('/tech/manual')} >技术文档</List.Item>
+          <List.Item arrow="horizontal" onClick={() => this.goDetail('/test')} >测试</List.Item>
+					<List.Item arrow="horizontal" onClick={() => this.goDetail('/tech/manual')} >技术文档</List.Item>
 				</List>
 				<Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }}>
 					<Button onClick={this.logout} type="primary" style={{ width: '100%' }} >登出</Button>

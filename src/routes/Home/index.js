@@ -158,25 +158,25 @@ export default class Home extends Component {
           >
             {
               notClosedEvents.length ?
-                notClosedEvents.map(item => (
-                  <span className={styles.msg} key={item.id}>
-                    工单状态
-                    <Brief>待处理<span>{notClosedEvents.length}</span></Brief>
-                    <Brief>最新工单</Brief>
-                    <Brief>
-                      <Flex>
-                        <Flex.Item>名称:<span className={styles.tips}>{names[item.event]}</span></Flex.Item>
-                        <Flex.Item>型号:<span className={styles.tips}>{item.deviceNo ? item.deviceNo : '无'}</span></Flex.Item>
-                      </Flex>
-                    </Brief>
-                    <Brief>错误码<span className={styles.tips}>{item.errCode ? item.errCode : '无'}</span></Brief>
-                  </span>
-                )) : (
-                  <span>
-                    工单状态
-                    <Brief>暂无工单</Brief>
-                  </span>
-              )
+							notClosedEvents.map(item => (
+								<span className={styles.msg} key={item.id}>
+									工单状态
+									<Brief>待处理<span>{notClosedEvents.length}</span></Brief>
+									<Brief>最新工单</Brief>
+									<Brief>
+										<Flex>
+											<Flex.Item>名称:<span className={styles.tips}>{names[item.event]}</span></Flex.Item>
+											<Flex.Item>型号:<span className={styles.tips}>{item.deviceNo ? item.deviceNo : '无'}</span></Flex.Item>
+										</Flex>
+									</Brief>
+									<Brief>错误码<span className={styles.tips}>{item.errCode ? item.errCode : '无'}</span></Brief>
+								</span>
+							)) : (
+								<span>
+									工单状态
+									<Brief>暂无工单</Brief>
+								</span>
+							)
             }
           </Item>
         </List>

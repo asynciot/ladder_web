@@ -51,7 +51,7 @@ export default class MobileFooter extends PureComponent {
       //   link: 'https://h5.youzan.com/v2/feature/fEh4xJSkS7',
       // },
       {
-        label: '我的',
+        label: '个人',
         icon: 'user',
         link: '/me',
       },

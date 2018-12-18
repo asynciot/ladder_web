@@ -75,15 +75,17 @@ export default class extends Component {
       },
     ]);
   }
-
+	tabChange = (tab, index) => {
+		this.setState({
+			view: index,
+		});
+	}
   render() {
     const { historyEvents } = this.state;
     return (
       <div className="content">
         <Tabs
           tabs={tabs}
-          swipeable={false}
-          page={this.state.tab}
           initialPage={0}
           tabBarActiveTextColor="#D72826"
           tabBarUnderlineStyle={{ borderColor: '#D72826' }}
@@ -170,7 +172,7 @@ export default class extends Component {
               }
             </PullToRefresh>
           </div>
-          <div>
+          {/*<div>
             <PullToRefresh
               damping={60}
               ref={el => this.ptr = el}
@@ -210,7 +212,7 @@ export default class extends Component {
                 )
               }
             </PullToRefresh>
-          </div>
+          </div>*/}
         </Tabs>
       </div>
     );
