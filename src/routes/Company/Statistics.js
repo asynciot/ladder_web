@@ -24,7 +24,7 @@ const textStyle = {
 let date = [];
 const style = {
   textStyle: {
-    color: '#D72826',
+    color: '#1E90FF',
     fontWeight: 'normal',
     fontSize: 13,
     align: 'center',

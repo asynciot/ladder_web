@@ -386,8 +386,8 @@ export default class extends Component {
         <Tabs
           tabs={tabs}
           initialPage={0}
-          tabBarActiveTextColor="#D72826"
-          tabBarUnderlineStyle={{ borderColor: '#D72826' }}
+          tabBarActiveTextColor="#1E90FF"
+          tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
           onChange={(tab, index) => { this.getDevice(tab.device_type,1); }}
         >
           <div style={{ backgroundColor: '#fff' }}>

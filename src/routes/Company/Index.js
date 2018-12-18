@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col, Avatar, Icon, Button, } from 'antd';
 import { connect } from 'dva';
-import { Modal, Accordion, List, Badge } from 'antd-mobile';
+import { Modal, Accordion, List, Badge, Grid } from 'antd-mobile';
 import styles from './Index.less';
 
 const { alert } = Modal;
@@ -50,7 +50,7 @@ export default class Company extends Component {
     }
   };
   render() {
-    const { company: { group, unread }, currentUser } = this.props;
+    const { company: { group, unread }, currentUser } = this.props;		
     return (
       <div className="content">
         <div className={styles.header}>
@@ -61,16 +61,40 @@ export default class Company extends Component {
           />
           <p onClick={() => this.goDetail('revise')} className={styles.nickname}>{currentUser.username}<Icon className={styles.edit} type="form" /></p>
         </div>
-        <List>
+				<div className={styles.back}>
+					<Row>
+						<Col span={6} onClick={() => this.goDetail('/company/followdevice')}>
+							<img className={styles.icon}  src={require('../../assets/icon/电梯.png')} />
+							<a className={styles.icon}>设备管理</a>
+						</Col>
+						<Col span={6} onClick={() => this.goDetail('message/all')}>
+							<img className={styles.icon}  src={require('../../assets/icon/信息.png')} />
+							<a className={styles.icon}>消息处理</a>
+						</Col>
+						<Col span={6} onClick={() => this.goDetail('work-order')}>
+							<img className={styles.icon}  src={require('../../assets/icon/工单.png')} />
+							<a className={styles.icon}>工单处理</a>
+						</Col>
+						<Col span={6} onClick={() => this.goDetail('follow/new')}>
+							<img className={styles.icon}  src={require('../../assets/icon/关注.png')} />
+							<a className={styles.icon}>关注设备</a>
+						</Col>
+						<Col span={6} onClick={() => this.goDetail('/tech/manual')}>
+							<img className={styles.icon}  src={require('../../assets/icon/文档.png')} />
+							<a className={styles.icon}>技术文档</a>
+						</Col>
+					</Row>
+				</div>
+        {/*<List>
           <List.Item arrow="horizontal" onClick={() => this.goDetail('/company/followdevice')}>设备管理</List.Item>
           <List.Item arrow="horizontal" onClick={() => this.goDetail('message/all')} >消息处理</List.Item>
           <List.Item arrow="horizontal" onClick={() => this.goDetail('work-order')} >工单处理</List.Item>
           <List.Item arrow="horizontal" onClick={() => this.goDetail('follow/new')} >关注设备</List.Item>
-          {/*<List.Item arrow="horizontal" onClick={() => this.goDetail('statistics/all')} >设备统计</List.Item>*/}
-          {/*<List.Item arrow="horizontal" onClick={() => this.goDetail('/test')} >测试</List.Item>*/}
+          <List.Item arrow="horizontal" onClick={() => this.goDetail('statistics/all')} >设备统计</List.Item>*/}
+          {/*<List.Item arrow="horizontal" onClick={() => this.goDetail('/test')} >测试</List.Item>
 					<List.Item arrow="horizontal" onClick={() => this.goDetail('/tech/manual')} >技术文档</List.Item>
-				</List>
-				<Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }}>
+				</List>*/}
+				<Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} className={styles.btn}>
 					<Button onClick={this.logout} type="primary" style={{ width: '100%' }} >登出</Button>
 				</Col>
         {/* <Row type="flex" justify="space-around" align="middle">

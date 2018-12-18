@@ -48,25 +48,25 @@ export default class Profile extends Component {
       <div className={styles.main}>
           <Form onSubmit={this.handleSubmit}>
             <div className={styles.content}>
-              {/*<section className={styles.info}>
+              <section className={styles.info}>
                 <FormItem>
                   <Row gutter={8}>
                     <Col span={6}>
-                      <div>姓名:</div>
+                      <div>昵称:</div>
                     </Col>
                     <Col span={18}>
                       {getFieldDecorator('nicname', {
                         initialValue: currentUser.nicname || '',
                           rules: [{
-                            required: true,class:'explain', message: '请输入姓名',
+                            required: true,class:'explain', message: '请输入昵称',
                           }],
-                      })(<Input placeholder="姓名" ></Input>)
+                      })(<Input placeholder="昵称" ></Input>)
                       }
                     </Col>
                   </Row>
                 </FormItem>
               </section>
-               <section className={styles.info}>
+              {/*<section className={styles.info}>
               <FormItem>
                 <Row gutter={8}>
                   <Col span={6}>

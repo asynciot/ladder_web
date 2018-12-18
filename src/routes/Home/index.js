@@ -93,6 +93,10 @@ export default class Home extends Component {
     history.push('/company/work-order');
   }
   render() {
+		
+		const imgList = [
+				'../../assets/menu-bg.png',
+		]
     const { devicesStatus, historyEvents } = this.state;
     let notClosedEvents = historyEvents.filter(item => item.status === 0);
     notClosedEvents.length > 1 ? notClosedEvents = [notClosedEvents[0]]:null
@@ -104,82 +108,82 @@ export default class Home extends Component {
           beforeChange={(from, to) => console.log(`slide from ${from} to ${to}`)}
           afterChange={index => console.log('slide to', index)}
         >
-					<a
-						href="#"
-						style={{ display: 'inline-block', width: '100%', height: this.state.imgHeight }}
-					>
-						<img
-							src='../../../assets/menu-bg.jpg'
-							alt=""
-							style={{ width: '100%', verticalAlign: 'top' }}
-						/>
-					</a>
+					{imgList.map((item, index) => {
+						return (
+							<a key={index} className={styles.link} href="javascript:;">
+								<img className={styles.img} src={require('../../assets/menu-bg.png')} />
+							</a>
+						);
+					})
+					}
         </Carousel>
-        <List className="list">
-          <Item
-            arrow="horizontal"
-            multipleLine
-            onClick={this.toMessagesPage}
-          >
-            {
-              this.state.messages[0] && this.state.messages[0].content ?
-                <span>最新消息 <Brief>{this.state.messages[0].content}</Brief></span> :
-                <span>没有消息</span>
-            }
-          </Item>
-					<Item
-						arrow="horizontal"
-						multipleLine
-						onClick={this.toFollowDevicesPage}
-						platform="android"
-					>
-						关注列表
-						<Brief>控制器</Brief>
-						<Brief>
-							<Flex>
-								<Flex.Item>在线<span className={styles.tips}>{devicesStatus.dooronline}</span></Flex.Item>
-								<Flex.Item>离线<span className={styles.tips}>{devicesStatus.dooroffline}</span></Flex.Item>
-								<Flex.Item>长期离线<span className={styles.tips}>{devicesStatus.doorlongoffline}</span></Flex.Item>
-							</Flex>
-						</Brief>
-						<Brief>控制柜</Brief>
-						<Brief>
-							<Flex>
-								<Flex.Item>在线<span className={styles.tips}>{devicesStatus.ctrlonline}</span></Flex.Item>
-								<Flex.Item>离线<span className={styles.tips}>{devicesStatus.ctrloffline}</span></Flex.Item>
-								<Flex.Item>长期离线<span className={styles.tips}>{devicesStatus.ctrllongoffline}</span></Flex.Item>
-							</Flex>
-						</Brief>
-					</Item>
-          <Item
-            arrow="horizontal"
-            multipleLine
-            onClick={this.toHistoryEventPage}
-          >
-            {
-              notClosedEvents.length ?
-							notClosedEvents.map(item => (
-								<span className={styles.msg} key={item.id}>
-									工单状态
-									<Brief>待处理<span>{notClosedEvents.length}</span></Brief>
-									<Brief>最新工单</Brief>
-									<Brief>
-										<Flex>
-											<Flex.Item>名称:<span className={styles.tips}>{names[item.event]}</span></Flex.Item>
-											<Flex.Item>型号:<span className={styles.tips}>{item.deviceNo ? item.deviceNo : '无'}</span></Flex.Item>
-										</Flex>
-									</Brief>
-									<Brief>错误码<span className={styles.tips}>{item.errCode ? item.errCode : '无'}</span></Brief>
-								</span>
-							)) : (
-								<span>
-									工单状态
-									<Brief>暂无工单</Brief>
-								</span>
-							)
-            }
-          </Item>
-        </List>
+				<div className={styles.pre}>
+					<List className="list">
+						<Item
+							arrow="horizontal"
+							multipleLine
+							onClick={this.toMessagesPage}
+						>
+							{
+								this.state.messages[0] && this.state.messages[0].content ?
+									<span>最新消息 <Brief>{this.state.messages[0].content}</Brief></span> :
+									<span>没有消息</span>
+							}
+						</Item>
+						<Item
+							arrow="horizontal"
+							multipleLine
+							onClick={this.toFollowDevicesPage}
+							platform="android"
+						>
+							关注列表
+							<Brief>控制器</Brief>
+							<Brief>
+								<Flex>
+									<Flex.Item>在线<span className={styles.tips}>{devicesStatus.dooronline}</span></Flex.Item>
+									<Flex.Item>离线<span className={styles.tips}>{devicesStatus.dooroffline}</span></Flex.Item>
+									<Flex.Item>长期离线<span className={styles.tips}>{devicesStatus.doorlongoffline}</span></Flex.Item>
+								</Flex>
+							</Brief>
+							<Brief>控制柜</Brief>
+							<Brief>
+								<Flex>
+									<Flex.Item>在线<span className={styles.tips}>{devicesStatus.ctrlonline}</span></Flex.Item>
+									<Flex.Item>离线<span className={styles.tips}>{devicesStatus.ctrloffline}</span></Flex.Item>
+									<Flex.Item>长期离线<span className={styles.tips}>{devicesStatus.ctrllongoffline}</span></Flex.Item>
+								</Flex>
+							</Brief>
+						</Item>
+						<Item
+							arrow="horizontal"
+							multipleLine
+							onClick={this.toHistoryEventPage}
+						>
+							{
+								notClosedEvents.length ?
+								notClosedEvents.map(item => (
+									<span className={styles.msg} key={item.id}>
+										工单状态
+										<Brief>待处理<span>{notClosedEvents.length}</span></Brief>
+										<Brief>最新工单</Brief>
+										<Brief>
+											<Flex>
+												<Flex.Item>名称:<span className={styles.tips}>{names[item.event]}</span></Flex.Item>
+												<Flex.Item>型号:<span className={styles.tips}>{item.deviceNo ? item.deviceNo : '无'}</span></Flex.Item>
+											</Flex>
+										</Brief>
+										<Brief>错误码<span className={styles.tips}>{item.errCode ? item.errCode : '无'}</span></Brief>
+									</span>
+								)) : (
+									<span>
+										工单状态
+										<Brief>暂无工单</Brief>
+									</span>
+								)
+							}
+						</Item>
+					</List>
+				</div>
       </div>
     );
   }

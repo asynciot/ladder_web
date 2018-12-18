@@ -91,8 +91,8 @@ export default class extends Component {
           tabs={tabs}
           initialPage={this.state.view}
           onChange={this.tabChange}
-          tabBarActiveTextColor="#D72826"
-          tabBarUnderlineStyle={{ borderColor: '#D72826' }}
+          tabBarActiveTextColor="#1E90FF"
+          tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
         >
           {/* <div style={{ backgroundColor: '#fff' }}>
             <List>
