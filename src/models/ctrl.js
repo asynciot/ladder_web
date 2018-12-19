@@ -90,7 +90,7 @@ function parseMenu(buffer) {
     '13': '救援蜂鸣输出 1',
    };
    const isY1 = { 
-    '00': '无信号输出',
+    '00': '未使用',
     '01': '输出上行到站钟',
     '02': '输出下行到站钟',
     '03': '上下行到站钟合并输出',
@@ -188,7 +188,7 @@ function parseMenu(buffer) {
       item.value = parseInt(hex[i + 11], 16);
     } else if (i < 23) {
       item.value = parseInt((hex[i + 11] + hex[i + 12]), 16);
-      item.value = (item.value / item.num).toFixed(`${item.num}`.length - 1);
+      // item.value = (item.value / item.num).toFixed(`${item.num}`.length - 1);
     } else if (i < 48) {
       let val = hex2b(hex[i + 12]);
       const a = val[0]
@@ -199,9 +199,11 @@ function parseMenu(buffer) {
       }
       item.value = `${b}${a}`
     } else if (i < 58) {
-      item.value = isOpen[parseInt(hex[i + 12])];
+      item.value = isOpen[parseInt(hex[i + 12],16)];
     } else if (i < 66) {
-      item.value = isRoof[hex[i + 12]];
+      item.value = isRoof[hex[i + 12]];			
+    } else if (i < 73) {
+      item.value = isY[hex[i + 12]];
     } else if (i < 77) {
       item.value = isY1[hex[i + 12]];
     } else if (i < 78) {
@@ -629,33 +631,39 @@ export default {
       payload,
     }, { call, put }) {
       const response = yield call(getFileData, payload.id);
-      var arr = '';
-      var buf = ['','','','','','','','','','',''];
+      var arr = [];
+			var a=[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},];
       var buffer = [];
       if (response.code === 0) {
       	for(let i=0;i<response.data.totalNumber;i++){
-      		if(response.data.list[i].type ==4099){
-      			buf[0] = response.data.list[i].data;
-      		}else if(response.data.list[i].type == 4100){
-      			buf[1] = response.data.list[i].data;
-      		}else if(response.data.list[i].type == 4101){
-      			buf[2] = response.data.list[i].data;
-      		}else if(response.data.list[i].type == 4102){
-      			buf[3] = response.data.list[i].data;
-      		}else if(response.data.list[i].type == 4103){
-      			buf[4] = response.data.list[i].data;
-      		}else if(response.data.list[i].type == 4104){
-      			buf[5] = response.data.list[i].data;
-      		}else if(response.data.list[i].type == 4104){
-      			buf[5] = response.data.list[i].data;
-      		}else if(response.data.list[i].type == 4104){
-      			buf[5] = response.data.list[i].data;
-      		}else if(response.data.list[i].type == 4104){
-      			buf[5] = response.data.list[i].data;
+      		if(response.data.list[i].type ==8196){
+						a[0] = base64url.toBuffer(response.data.list[i].data);
+      		}else if(response.data.list[i].type == 8197){
+						a[1] = base64url.toBuffer(response.data.list[i].data);
+      		}else if(response.data.list[i].type == 8198){
+						a[2] = base64url.toBuffer(response.data.list[i].data);
+      		}else if(response.data.list[i].type == 8199){
+						a[3] = base64url.toBuffer(response.data.list[i].data);
+      		}else if(response.data.list[i].type == 8200){
+						a[4] = base64url.toBuffer(response.data.list[i].data);
+      		}else if(response.data.list[i].type == 8201){
+						a[5] = base64url.toBuffer(response.data.list[i].data);
+      		}else if(response.data.list[i].type == 8202){
+						a[6] = base64url.toBuffer(response.data.list[i].data);
+      		}else if(response.data.list[i].type == 8203){
+						a[7] = base64url.toBuffer(response.data.list[i].data);
+      		}else if(response.data.list[i].type == 8204){
+						a[8] = base64url.toBuffer(response.data.list[i].data);
+      		}else if(response.data.list[i].type == 8205){
+						a[9] = base64url.toBuffer(response.data.list[i].data);
+      		}else if(response.data.list[i].type == 8206){
+						a[10] = base64url.toBuffer(response.data.list[i].data);
       		}
       	}
-      	arr = buf[0]+buf[1]+buf[2]+buf[3]+buf[4]+buf[5]				
-      	buffer = base64url.toBuffer(arr)
+				for(let i=0;i<11;i++){
+					a[i] =Array.from(a[i])
+					buffer = buffer.concat(a[i])
+				}
       	yield put({ type: 'getMenu', payload: parseMenu(buffer, payload.type) });				
       }
     },

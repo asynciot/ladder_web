@@ -46,67 +46,50 @@ export default class Profile extends Component {
     const { getFieldDecorator } = form;
     return (
       <div className={styles.main}>
-          <Form onSubmit={this.handleSubmit}>
-            <div className={styles.content}>
-              <section className={styles.info}>
-                <FormItem>
-                  <Row gutter={8}>
-                    <Col span={6}>
-                      <div>昵称:</div>
-                    </Col>
-                    <Col span={18}>
-                      {getFieldDecorator('nicname', {
-                        initialValue: currentUser.nicname || '',
-                          rules: [{
-                            required: true,class:'explain', message: '请输入昵称',
-                          }],
-                      })(<Input placeholder="昵称" ></Input>)
-                      }
-                    </Col>
-                  </Row>
-                </FormItem>
-              </section>
-              {/*<section className={styles.info}>
-              <FormItem>
-                <Row gutter={8}>
-                  <Col span={6}>
-                  	<div>公司名:</div>
-	                </Col>
-	                <Col span={18}>
-	                  {getFieldDecorator('companyName', {
-	                    initialValue:currentUser.companyName || '',
-	                    rules: [{
-	                      required: true,class:'explain', message: '请输入公司名',
-	                    }],
-	                  })(<Input placeholder="公司名"></Input>)}
-	                </Col>
-                </Row>
-              </FormItem>
-            </section> */}
-            <section className={styles.info}>
-              <FormItem>
-                <Row gutter={8}>
-                  <Col span={6}>
-	                  <div>手机号码:</div>
-	                </Col>
-	                <Col span={18}>
-	                  {getFieldDecorator('mobile', {
-	                    initialValue:currentUser.mobile || '',
-	                    rules: [{
-	                      required: true,class:'explain', message: '请输入手机号码',
-	                    }],
-	                  })(<Input placeholder="手机号码"></Input>)}
-	                </Col>
-                </Row>
-              </FormItem>
-            </section>
-            <section className={styles.info}>
-            	{getFieldDecorator('id', {
-                initialValue:currentUser.id || '',
-                rules: [{
-                }],
-              })}
-            </section>
+				<Form onSubmit={this.handleSubmit}>
+					<div className={styles.content}>
+						<section className={styles.info}>
+							<FormItem>
+								<Row gutter={8}>
+									<Col span={6}>
+										<div>昵称:</div>
+									</Col>
+									<Col span={18}>
+										{getFieldDecorator('nickname', {
+											initialValue: currentUser.nickname || '',
+												rules: [{
+													required: true,class:'explain', message: '请输入昵称',
+												}],
+										})(<Input placeholder="昵称" ></Input>)
+										}
+									</Col>
+								</Row>
+							</FormItem>
+						</section>
+						<section className={styles.info}>
+							<FormItem>
+								<Row gutter={8}>
+									<Col span={6}>
+										<div>手机号码:</div>
+									</Col>
+									<Col span={18}>
+										{getFieldDecorator('mobile', {
+											initialValue:currentUser.mobile || '',
+											rules: [{
+												required: true,class:'explain', message: '请输入手机号码',
+											}],
+										})(<Input placeholder="手机号码"></Input>)}
+									</Col>
+								</Row>
+							</FormItem>
+						</section>
+						<section className={styles.info}>
+							{getFieldDecorator('id', {
+								initialValue:currentUser.id || '',
+								rules: [{
+								}],
+							})}
+						</section>
             <FormItem className={styles.additional}>
 	            <Button size="large" loading={submitting} className={styles.submit} type="primary" htmlType="submit">
 	                提交修改

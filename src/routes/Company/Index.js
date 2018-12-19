@@ -59,7 +59,7 @@ export default class Company extends Component {
             size="large"
             src={currentUser.portrait}
           />
-          <p onClick={() => this.goDetail('revise')} className={styles.nickname}>{currentUser.username}<Icon className={styles.edit} type="form" /></p>
+          <p onClick={() => this.goDetail('revise')} className={styles.nickname}>{currentUser.nickname}<Icon className={styles.edit} type="form" /></p>
         </div>
 				<div className={styles.back}>
 					<Row>
