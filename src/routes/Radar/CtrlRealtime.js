@@ -210,7 +210,7 @@ export default class CtrlHistory extends Component {
 		buffer = base64url.toBuffer(val.data);	//8位转流
 		let count= 0
 		var inte = setInterval(function () {
-			if((count+8) <= buffer.length){
+			if((count+33) <= buffer.length){
 				show.upCall   = buffer[count+0]&0x01
 				show.downCall = (buffer[count+0]&0x02)>>1
 				show.run      = (buffer[count+0]&0x04)>>2					//获取运行信号
@@ -220,11 +220,11 @@ export default class CtrlHistory extends Component {
 				show.close    = (buffer[count+0]&0x10)>>5					//获取关门信号
 				show.model    = buffer[count+1]&0xff						//获取电梯模式
 				show.status   = buffer[count+2]&0xff						//获取电梯状态				
-				show.floor    = buffer[count+3]&0xff
-				if(show.floor>=floor.length){
-					show.floor = floor.length-1
-				}
-				count+=8
+				show.floor    = buffer[count+28]&0xff
+// 				if(show.floor>=floor.length){
+// 					show.floor = floor.length-1
+// 				}
+				count+=33
 			}
 		}, this.state.interval);
 		this.showChart()
