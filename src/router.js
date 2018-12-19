@@ -33,6 +33,12 @@ function RouterConfig({ history, app }) {
             redirectPath="/"
           />
           <AuthorizedRoute
+            path="/resetting"
+            render={props => <UserLayout {...props} />}
+            authority="guest"
+            redirectPath="/"
+          />
+          <AuthorizedRoute
             path="/user"
             render={props => <UserLayout {...props} />}
             authority={['admin', 'user']}

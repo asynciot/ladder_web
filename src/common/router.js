@@ -288,6 +288,10 @@ export const getRouterData = (app) => {
       name: '注册',
       component: dynamicWrapper(app, ['login'], () => import('../routes/User/Register')),
     },
+		'/resetting/': {
+			name: '忘记密码',
+			component: dynamicWrapper(app, ['login'], () => import('../routes/User/Resetting')),
+		},
     '/user': {
       component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
     },

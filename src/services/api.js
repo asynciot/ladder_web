@@ -8,6 +8,12 @@ export async function register(params) {
     body: params,
   });
 }
+export async function retrieve(params) {
+  return request('/account/retrieve', {
+    method: 'POST',
+    body: params,
+  });
+}
 
 export async function accountLogin(params) {
   return request('/account/login', {

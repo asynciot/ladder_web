@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { accountLogin, accountLogout, register, getCaptcha } from '../services/api';
+import { accountLogin, accountLogout, register, getCaptcha, retrieve } from '../services/api';
 import { setAuthority } from '../utils/authority';
 
 export default {
@@ -59,6 +59,26 @@ export default {
         message.error('注册失败');
       } 
     },
+		*retrieve({ payload }, { call, put }) {
+			const params = Object.assign({ username: payload.mobile }, payload);
+			const response = yield call(retrieve, params);
+			if (response.code === 0) {
+				const msg = message.success(
+					'密码修改成功，正在登录...',
+					0,
+				);
+				yield setTimeout(msg, 500);
+				yield put({
+					type: 'login',
+					payload: {
+						username: payload.mobile,
+						password: payload.password,
+					},
+				});
+			}else {
+				message.error('密码修改失败');
+			}
+		},
     *captcha({ payload }, { call, put }) {
       const response = yield call(getCaptcha, payload.mobile);
       if (response.code === 0) {
