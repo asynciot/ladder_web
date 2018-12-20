@@ -25,12 +25,17 @@ const activeNav = (data, idx) => {
   return data === idx ? styles.active : '';
 };
 const menus = [{
-  name: '实时',
-  link: 'realtime',
-},{
-  name: '历史',
-  link: 'history',
-}];
+		name: '实时',
+		link: 'realtime',
+	},{
+		name: '实时',
+		link: 'realtime',
+	},
+// {
+//   name: '历史',
+//   link: 'history',
+// },
+];
 @connect(({ ctrl }) => ({
   ctrl,
 }))

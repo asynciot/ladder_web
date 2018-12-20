@@ -12,7 +12,7 @@ import F2 from '@antv/f2';
 import styles from './History.less';
 import echarts from 'echarts';
 import ReactEcharts from 'echarts-for-react';
-import {getEvent,getMonitor,getFollowDevices,getDeviceList} from '../../services/api';
+import {getEvent,postMonitor,getFollowDevices,getDeviceList} from '../../services/api';
 const timeList = [{
   label: '90s',
   value: '90',
@@ -168,7 +168,9 @@ export default class DoorHistory extends Component {
 				const threshold = 1;
 				const reset = this.state.pick;
 				const duration = reset[0];
-				getMonitor({ op, IMEI, interval, threshold, duration, }).then((res) => {});				
+				const device_type = '15';
+				const type = '0';
+				postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {});				
 			}
 		})
 		const wsurl = 'ws://47.96.162.192:9006/device/Monitor/socket?deviceId='+device_id;	
@@ -197,7 +199,7 @@ export default class DoorHistory extends Component {
 	}
 	closed(){//数据发送
 		const op = "closed"
-		getMonitor({ op, device_id,}).then((res) => {});
+		postMonitor({ op, device_id,}).then((res) => {});
 	}
 	websocketclosed(){
 	}

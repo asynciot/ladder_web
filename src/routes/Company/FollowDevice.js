@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import base64url from 'base64url';
 import { Row, Col, Button, Spin, DatePicker, Pagination, } from 'antd';
 import MobileNav from '../../components/MobileNav';
-import styles from './Device.less';
+import styles from './FollowDevice.less';
 import singalImg from '../../assets/signal.png';
 import { getFollowDevices, deleteFollowInfo } from '../../services/api';
 const alert = Modal.alert;
@@ -337,7 +337,7 @@ export default class extends Component {
   edit = (e, detail) => {
     e.stopPropagation();
     e.preventDefault();
-    if (detail.cell_address == undefined || !detail.cell_address) {
+    if (detail.install_addr == undefined || !detail.install_addr) {
       this.props.history.push(`/company/edit-device/${detail.device_id}/undefined`);
     }else {
       this.props.history.push(`/company/edit-device/${detail.device_id}`);
@@ -412,7 +412,7 @@ export default class extends Component {
                       <tbody>
                         <tr>
                           <td className="tr">地点 ：</td>
-                          <td className="tl" style={{ width: '260px' }}>{item.cell_address}</td>
+                          <td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
                         </tr>
                         <tr>
                           <td className="tr">别名 ：</td>
@@ -424,7 +424,7 @@ export default class extends Component {
                           <td className="tr">编号 ：</td>
                           <td className="tl">{item.IMEI}</td>
                           <td className="tl">信号 ：</td>
-                          <td className="tl"><Signal width={item.RSSI}/></td>
+                          <td className="tl"><Signal width={item.rssi}/></td>
                         </tr>
                         <tr>
                           <td className="tr">型号 ：</td>
@@ -461,7 +461,7 @@ export default class extends Component {
                       <tbody>
                         <tr>
                           	<td className="tr">地点 ：</td>
-                          	<td className="tl" style={{ width: '260px' }}>{item.cell_address}</td>
+                          	<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
 												</tr>
 												<tr>
 													<td className="tr">别名 ：</td>
@@ -473,7 +473,7 @@ export default class extends Component {
 													<td className="tr">编号 ：</td>
 													<td className="tl">{item.IMEI}</td>
 													<td className="tl">信号 ：</td>
-													<td className="tl"><Signal width={item.RSSI}/></td>
+													<td className="tl"><Signal width={item.rssi}/></td>
 												</tr>
 												<tr>
 													<td className="tr">型号 ：</td>
@@ -510,7 +510,7 @@ export default class extends Component {
                       <tbody>
                         <tr>
 													<td className="tr">地点 ：</td>
-													<td className="tl" style={{ width: '260px' }}>{item.cell_address}</td>
+													<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
 												</tr>
 												<tr>
 													<td className="tr">别名 ：</td>
@@ -522,7 +522,7 @@ export default class extends Component {
 													<td className="tr">编号 ：</td>
 													<td className="tl">{item.IMEI}</td>
 													<td className="tl">信号 ：</td>
-													<td className="tl"><Signal width={item.RSSI}/></td>
+													<td className="tl"><Signal width={item.rssi}/></td>
 												</tr>
 												<tr>
 													<td className="tr">型号 ：</td>

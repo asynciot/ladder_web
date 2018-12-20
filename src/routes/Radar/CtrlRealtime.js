@@ -11,7 +11,7 @@ import TweenOne from 'rc-tween-one';
 import F2 from '@antv/f2';
 import styles from './CtrlRealtime.less';
 import echarts from 'echarts';
-import {getEvent,getMonitor,getFollowDevices,getDeviceList} from '../../services/api';
+import {getEvent,postMonitor,getFollowDevices,getDeviceList} from '../../services/api';
 const tabs = [
 	{ title: '门' 	},
 	{ title: '分屏' },
@@ -164,7 +164,9 @@ export default class CtrlHistory extends Component {
 				const threshold = 1;
 				const reset = this.state.pick;
 				const duration = reset[0];
-				getMonitor({ op, IMEI, interval, threshold, duration, }).then((res) => {});
+				const device_type = '240';
+				const type = '0';
+				postMonitor({ op, IMEI, interval, threshold, duration, device_type}).then((res) => {});
 			}
 		})
 		const wsurl = 'ws://47.96.162.192:9006/device/Monitor/socket?deviceId='+device_id;

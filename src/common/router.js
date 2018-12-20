@@ -143,10 +143,10 @@ export const getRouterData = (app) => {
       name: '控制柜',
       component: dynamicWrapper(app, ['ctrl'], () => import('../routes/Radar/CtrlRealtime')),
     },
-    '/ctrl/:id/history/:type': {
-      name: '控制柜',
-      component: dynamicWrapper(app, ['ctrl'], () => import('../routes/Radar/CtrlHistory')),
-    },
+//     '/ctrl/:id/history/:type': {
+//       name: '控制柜',
+//       component: dynamicWrapper(app, ['ctrl'], () => import('../routes/Radar/CtrlHistory')),
+//     },
     '/company/debug/:id': {
       name: '内存调试',
       component: dynamicWrapper(app, ['ctrl'], () => import('../routes/Company/Debug')),
@@ -241,7 +241,7 @@ export const getRouterData = (app) => {
     },
 		'/company/followdevice': {
 			name: '关注列表',
-			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/FollowDevices')),
+			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/FollowDevice')),
 		},
     '/company/map': {
       name: '地图列表',

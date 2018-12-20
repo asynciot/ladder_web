@@ -173,7 +173,7 @@ export function postFault(params) {
 export function getStatistic(params) {
   return request(`/mointors/statistic?${stringify(params)}`);
 }
-export async function getMonitor(params) {
+export async function postMonitor(params) {
   return request('/device/Monitor', {
     method: 'POST',
     body: params,

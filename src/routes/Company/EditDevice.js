@@ -18,9 +18,9 @@ export default class extends Component {
 		const match = pathToRegexp('/company/edit-device/:id').exec(location.pathname);
 		const device_id =match[1]
     getDevices({device_id}).then(res=> {
-      if (res.data.list[0].cell_address) {
+      if (res.data.list[0].install_addr) {
         this.setState({
-          cell_address: res.data.list[0].cell_address,					
+          install_addr: res.data.list[0].install_addr,					
         })
       }
       this.setState({
@@ -38,7 +38,7 @@ export default class extends Component {
     putFollowInfo({
       device_id: this.state.device_id,
       device_name: this.state.device_name,
-      cell_address: this.state.cell_address,
+      install_addr: this.state.install_addr,
     }).then((res) => {
       if (res.code === 0) {
         message.success('修改成功', 1, () => {
@@ -56,7 +56,7 @@ export default class extends Component {
         <List>
           <InputItem
             onChange={value => this.onChange(value, 'address')}
-            value={this.state.cell_address}
+            value={this.state.install_addr}
           >
             地点
           </InputItem>
@@ -67,7 +67,7 @@ export default class extends Component {
             别名
           </InputItem>
           <List.Item>
-            <Button disabled={!this.state.device_name && !this.state.cell_address } size="large" loading={submitting} style={{ width: '100%' }} type="primary" onClick={() => this.submit()}>
+            <Button disabled={!this.state.device_name && !this.state.install_addr } size="large" loading={submitting} style={{ width: '100%' }} type="primary" onClick={() => this.submit()}>
               修改
             </Button>
           </List.Item>

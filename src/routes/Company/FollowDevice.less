@@ -1,0 +1,103 @@
+.placeholder {
+  text-align: center;
+  height: 40px;
+  color: #999;
+  line-height: 40px;
+}
+.item {
+  font-size: 14px;
+  em {
+    color: #999;
+    font-style: normal;
+  }
+}
+.signal {
+  position: relative;
+  background: #ccc;
+  height: 19px;
+  width: 19px;
+  overflow: hidden;
+  .cover {
+    position: absolute;
+    height: 19px;
+    width: 19px;
+    z-index: 4;
+    background: #55BC52;
+  }
+  img {
+    position: absolute;
+    width: auto;
+    display: block;
+    height: 19px;
+    z-index: 6;
+  }
+}
+.list-btn {
+  overflow-x: hidden;
+  .icon {
+    line-height: 24px;
+    vertical-align: middle;
+  }
+  .qrcode {
+    color: black;
+    font-size: 22px;
+  }
+  .edit {
+    color: green;
+  }
+  .delete {
+    color: red;
+  }
+  em {
+    font-size: 13px;
+    color: #444;
+    margin-left: 6px;
+    line-height: 24px;
+    vertical-align: middle;
+  }
+}
+.table {
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+	td {
+    display: inline-block;
+		color: #999;
+    font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: top;
+    padding: 4px 0;
+  }
+  tr td:nth-child(1){
+    width: 45px;
+  }
+  tr td:nth-child(2){
+    width: 120px;
+  }
+  tr td:nth-child(3){
+    width: 45px;
+  }
+  tr td:nth-child(4){
+    width: 90px;
+  }
+  tr > td:nth-child(odd) {
+    color: #333;
+    white-space: nowrap;
+  }
+  .status {
+    color: red;
+    width: 90px !important;
+    white-space: nowrap;
+    word-break: break-all;
+    overflow: hidden;   
+    text-overflow: ellipsis;
+  }
+  .pass {
+    color: #55BC52;
+  }
+}
+.active {
+  color: #D52B2E;
+}
