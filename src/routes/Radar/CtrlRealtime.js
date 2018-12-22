@@ -11,7 +11,7 @@ import TweenOne from 'rc-tween-one';
 import F2 from '@antv/f2';
 import styles from './CtrlRealtime.less';
 import echarts from 'echarts';
-import {getEvent,postMonitor,getFollowDevices,getDeviceList} from '../../services/api';
+import {getEvent, postMonitor, getFollowDevices, getDeviceList, getFloorData,} from '../../services/api';
 const tabs = [
 	{ title: '门' 	},
 	{ title: '分屏' },
@@ -99,7 +99,7 @@ const data = [{
 }))
 export default class CtrlHistory extends Component {
 	state = {
-		floor: [14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, -1, -2],
+		floor:[],
 		leftAnimation: {
 			left: '0%',
 			duration: 100,
@@ -149,8 +149,12 @@ export default class CtrlHistory extends Component {
 		lock:[],
 		close:[],
 	}
-	componentWillMount() {		
+	componentWillMount() {
+		this.getfloor()
 	}
+	componentDidMount() {
+		this.getfloor()
+	} 
 	initWebsocket = () =>{ //初始化weosocket
 		const { dispatch, location } = this.props;
 		const {pick} = this.state;
@@ -222,14 +226,41 @@ export default class CtrlHistory extends Component {
 				show.close    = (buffer[count+0]&0x10)>>5					//获取关门信号
 				show.model    = buffer[count+1]&0xff						//获取电梯模式
 				show.status   = buffer[count+2]&0xff						//获取电梯状态				
-				show.floor    = buffer[count+28]&0xff
-// 				if(show.floor>=floor.length){
-// 					show.floor = floor.length-1
-// 				}
+				show.floor    = buffer[count+28]&0xff           //获取电梯当前楼层
+
 				count+=33
 			}
 		}, this.state.interval);
 		this.showChart()
+	}
+	getfloor = (val) => {
+		const { dispatch, location } = this.props;
+		const {pick} = this.state;
+		const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
+		const device_id = match[1];
+		getFloorData({device_id}).then((res) => {
+			if(res.code == 0){
+				let buffer = [];
+				let arr = [];
+				let floor = [];
+				buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
+				buffer.forEach((item) => {
+					arr.push(String.fromCharCode(item))
+				})
+				for(let i=0; i<(arr.length/3);i++){
+					floor[arr.length/3-1-i]=arr[i*3]+arr[i*3+1]+arr[i*3+2]
+					if(floor[i] == 'GQQ'){
+						floor[i] = '1'
+					}
+				}
+				this.setState({
+					floor,
+				});
+			}else{
+				alert("获取楼层高度失败！")
+			}
+			
+		});
 	}
 	showChart = () =>{
 		const {event} = this.props;
@@ -464,12 +495,12 @@ export default class CtrlHistory extends Component {
 									<div className={styles.info}>
 										<p>
 											<Icon className={styles.icon} type={direction[`${this.state.show.toDown}${this.state.show.toUp}`]} />
-											<i>{floor[this.state.show.floor]}</i>
+											<i>{this.state.show.floor}</i>
 										</p>
 										<ul>
 											{
 												floor.map((item,index) => (
-													<li style={{ width: 50}} key={`${item}${index}`}>{item}</li>
+													<li style={{ width: 40}} key={`${item}${index}`}>{item}</li>
 												))
 											}
 										</ul>

@@ -57,6 +57,9 @@ export async function getDeviceInfo(params) {
 export async function getFileData(params) {
   return request(`/device/Runtime?&num=20&page=1&device_id=${params}`);
 }
+export async function getFloorData(params) {
+  return request(`/device/Runtime?&num=1&page=1&type=8211&${stringify(params)}`);
+}
 export async function followDevice(IMEI, params) {
   return request(`/device/Device/ReadMore?${IMEI}?${stringify(params)}`,{
     method: 'POST',

@@ -55,7 +55,7 @@ export default class extends Component {
       <div className="content">
         <List>
           <InputItem
-            onChange={value => this.onChange(value, 'address')}
+            onChange={value => this.onChange(value, 'install_addr')}
             value={this.state.install_addr}
           >
             地点

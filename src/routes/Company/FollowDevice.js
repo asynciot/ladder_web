@@ -337,11 +337,11 @@ export default class extends Component {
   edit = (e, detail) => {
     e.stopPropagation();
     e.preventDefault();
-    if (detail.install_addr == undefined || !detail.install_addr) {
-      this.props.history.push(`/company/edit-device/${detail.device_id}/undefined`);
-    }else {
+//     if (detail.install_addr == undefined || !detail.install_addr) {
+//       this.props.history.push(`/company/edit-device/${detail.device_id}/undefined`);
+//     }else {
       this.props.history.push(`/company/edit-device/${detail.device_id}`);
-    }
+    // }
   }
   qrcode = (e, detail) => {
     e.stopPropagation();
