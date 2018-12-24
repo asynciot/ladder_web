@@ -97,7 +97,7 @@ const data = [{
 @connect(({ ctrl }) => ({
   ctrl,
 }))
-export default class CtrlHistory extends Component {
+export default class CtrlRealtime extends Component {
 	state = {
 		floor:[],
 		leftAnimation: {
@@ -137,6 +137,7 @@ export default class CtrlHistory extends Component {
 			closeBtn:'',
 			floor:'',
 			nowtime:'',
+			updateTime:'',
 		},
 		doorWidth: 4096,
 		historyEvents:[],
@@ -234,6 +235,7 @@ export default class CtrlHistory extends Component {
 		this.showChart()
 	}
 	getfloor = (val) => {
+		const {show, } = this.state
 		const { dispatch, location } = this.props;
 		const {pick} = this.state;
 		const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
@@ -247,12 +249,24 @@ export default class CtrlHistory extends Component {
 				buffer.forEach((item) => {
 					arr.push(String.fromCharCode(item))
 				})
-				for(let i=0; i<(arr.length/3);i++){
-					floor[arr.length/3-1-i]=arr[i*3]+arr[i*3+1]+arr[i*3+2]
+				let high = arr.length/3;
+				for(let i=0; i<high;i++){
+					floor[high-1-i]=arr[i*3]+arr[i*3+1]+arr[i*3+2]
 					if(floor[i] == 'GQQ'){
 						floor[i] = '1'
 					}
 				}
+				for(let i=0; i<high-2;i+=3){
+					let a = floor[i]
+					floor[i]=floor[i+2]
+					floor[i+2] = a
+					if(high%3==2){
+						const last = floor[high-1]
+						floor[high-1] = floor[high-2]
+						floor[high-2] = last
+					}
+				}
+				show.updateTime = res.data.list[0].t_update
 				this.setState({
 					floor,
 				});
@@ -461,7 +475,7 @@ export default class CtrlHistory extends Component {
 										}}
 									>
 										最后更新时间 ：
-										<i className={styles.status}>{moment(property.updateTimee).format('YYYY-MM-DD HH:mm:ss')}</i>
+										<i className={styles.status}>{moment(this.state.show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
 									</p>
 									{/* <p style={{
 										width: '100%',

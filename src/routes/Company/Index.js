@@ -23,7 +23,6 @@ export default class Company extends Component {
   showProfile = () => {
     const { history } = this.props;
     history.push('/company/profile');
-
 	};
 	showMessage = () => {
 		const { history } = this.props;
