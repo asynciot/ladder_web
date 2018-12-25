@@ -9,6 +9,8 @@ import {
   getDeviceInfo,
   getFileData,
   getLastWave,
+	getFollowDevices,
+	postMonitor,
 } from '../services/api';
 import { ctrlMenu } from '../ctrl.js';
 
@@ -536,16 +538,29 @@ export default {
       payload,
     }, { put, select }) {
       const event = yield select(state => state.ctrl.event);
+			const device_id = payload.id
+			getFollowDevices({device_id}).then((res)=>{
+				if(res.code == 0){
+					const op = 'open';
+					const IMEI = res.data.list[0].IMEI;
+					const interval = 100;
+					const threshold = 50;
+					const duration = 30;
+					const device_type = '15';
+					const type = '1';
+					postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {});
+				}
+			})
       const data = {
         deviceId: payload.id,
-        delay: 0,
-        interval: 100,
-        duration: 30,
-        threshold: 50,
-				type: 1,
-        base: payload.base,
-        offsets: payload.offsets,
-        monitorId: payload.monitorId,
+//         delay: 0,
+//         interval: 100,
+//         duration: 30,
+//         threshold: 50,
+// 				 type: 1,
+//         base: payload.base,
+//         offsets: payload.offsets,
+//         monitorId: payload.monitorId,
       };
       yield ws = new WebSocket(`${wsDebug}?${stringify(data)}`);
       yield put({ type: 'setDebugWs',
@@ -554,14 +569,16 @@ export default {
         } });
     },
     *debugMs({ payload }, { put, select }) {
+			console.log("yes")
       const debugList = yield select(state => state.ctrl.debugList);
       const property = payload.data;
-      const start = parseInt(property.StartId);
-      const count = parseInt(property.Count);
+      const start = parseInt(property.id);
+      const count = parseInt(property.length);
       const end = debugList.length ? debugList[debugList.length - 1].startId : -1;
       if (start + count <= end) return;
-      if (property.Events) {
-        const buffer = base64url.toBuffer(property.Events);
+      if (property.data) {
+        const buffer = base64url.toBuffer(property.data);
+				console.log(buffer)
         for (let index = 0; index < count; index++) {
           if ((start + index) > end) {
             const debugBuffer = buffer.slice(index * 8, (index + 1) * 8);

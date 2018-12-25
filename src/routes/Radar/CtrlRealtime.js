@@ -167,8 +167,8 @@ export default class CtrlRealtime extends Component {
 				const IMEI = res.data.list[0].IMEI;
 				const interval = 1000;
 				const threshold = 1;
-				const reset = this.state.pick;
-				const duration = reset[0];
+				// const reset = this.state.pick;
+				const duration = 30;
 				const device_type = '240';
 				const type = '0';
 				postMonitor({ op, IMEI, interval, threshold, duration, device_type}).then((res) => {});
@@ -183,6 +183,7 @@ export default class CtrlRealtime extends Component {
 			if(e.data=="closed"){
 				alert("此次实时数据已结束")
 				_this.state.stop = 1
+				this.closed
 			}else{
 				var redata = JSON.parse(e.data)
 				_this.getData(redata)
@@ -196,11 +197,9 @@ export default class CtrlRealtime extends Component {
 	websocketonerror(e) { //错误
 		console.log("WebSocket连接发生错误");
 	}
-	async closed(){//数据发送
-		let res = await this.$api.monitor({
-			IMEI:this.query.IMEI,
-			op:'closed',
-		});
+	closed(){//数据发送
+		const op = "close"
+		postMonitor({ op, device_id,}).then((res) => {});
 	}
 	websocketclosed(){
 		console.log("1")

@@ -183,6 +183,7 @@ export default class DoorHistory extends Component {
 			if(e.data=="closed"){
 				alert("此次实时数据已结束")
 				_this.state.stop = 1
+				this.closed
 			}else{
 				var redata = JSON.parse(e.data)
 				_this.getData(redata)
@@ -199,7 +200,7 @@ export default class DoorHistory extends Component {
 	websocketonmessage(e){ //数据接收
 	}
 	closed(){//数据发送
-		const op = "closed"
+		const op = "close"
 		postMonitor({ op, device_id,}).then((res) => {});
 	}
 	websocketclosed(){

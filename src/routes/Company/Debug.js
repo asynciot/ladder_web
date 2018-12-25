@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
+import pathToRegexp from 'path-to-regexp';
 import { connect } from 'dva';
 import { message } from 'antd';
 import { Row, Col, Button, Checkbox, Switch } from 'antd';
 import { List, InputItem, Picker } from 'antd-mobile';
+import base64url from 'base64url';
 import classNames from 'classnames';
 import StringMask from 'string-mask';
 import styles from './Debug.less';
-
+import {postMonitor,getFollowDevices} from '../../services/api';
 const Item = List.Item;
 const pattern =  /^[0-9a-fA-f]+$/
 const formatter = new StringMask('AA,AA,AA,AA,AA,AA,AA,AA,AA,AA,AA,AA,AA,AA,AA,AA');
@@ -36,6 +38,7 @@ const defaultDebug = ['','','','','','','','',];
 export default class Debug extends Component {
   
   state = {
+		debugList:[],
     disabled: false,
     checked: false,
     base: ['','','',''],
@@ -244,7 +247,6 @@ export default class Debug extends Component {
         },
       }).then(() => {
         debugWs = this.props.ctrl.debugWs;
-				console.log(debugWs)
         setTimeout(()=> {
           this.setState({
             switch: false,
@@ -260,12 +262,12 @@ export default class Debug extends Component {
             }else {
               message.error('内存诊断失败');
             }
-            dispatch({
-              type: 'ctrl/debugMs',
-              payload: {
-                data: [],
-              },
-            });
+//             dispatch({
+//               type: 'ctrl/debugMs',
+//               payload: {
+//                 data: [],
+//               },
+//             });
             clearInterval(play)
             this.setState({
               switch: false,
@@ -276,30 +278,32 @@ export default class Debug extends Component {
               if (JSON.parse(msg.data).code == 677) {
                 message.error('内存诊断正在使用中');
                 ws.close()
-              }else if (JSON.parse(msg.data).Events) {
-                dispatch({
-                  type: 'ctrl/debugMs',
-                  payload: {
-                    data: JSON.parse(msg.data),
-                  },
-                });
+              }else if (JSON.parse(msg.data).data) {
+//                 dispatch({
+//                   type: 'ctrl/debugMs',
+//                   payload: {
+//                     data: JSON.parse(msg.data),
+//                   },
+//                 });
+								console.log(JSON.parse(msg.data))
+								this.debugMs(JSON.parse(msg.data))						
               }
             } catch (e) {
               console.error(e);
             }
-          }
+          }				
           debugWs.onopen = () => {
             play = setInterval(() => {
               this.playData();
             }, 100);
           }
           debugWs.onclose = () => {
-            dispatch({
-              type: 'ctrl/debugMs',
-              payload: {
-                data: [],
-              },
-            });
+//             dispatch({
+//               type: 'ctrl/debugMs',
+//               payload: {
+//                 data: [],
+//               },
+//             });
             clearInterval(play)
           }
         }
@@ -312,12 +316,37 @@ export default class Debug extends Component {
       debugWs.close();
     }
   }
+	debugMs = (val) => {
+		const property = val;
+		const start = parseInt(property.id);
+		const count = parseInt(property.length);
+		const end = this.state.debugList.length ? this.state.debugList[this.state.debugList.length - 1].startId : -1;
+		if (property.data) {
+			const buffer = base64url.toBuffer(property.data);			
+			for (let index = 0; index < count; index++) {
+				if ((start + index) > end) {
+					const debugBuffer = buffer.slice(index * 8, (index + 1) * 8);
+					let arr = [];
+					debugBuffer.forEach((item) => {
+						item = item.toString(16)
+						item.length == 1 ? item = `0${item}`: null;
+						arr = arr.concat(item);
+					});
+					const obj = {
+						startId: start + index,
+						data: arr,
+					};
+					this.state.debugList.push(obj);
+				}
+			}
+		}
+	}
   playData() {
-    const { ctrl: {
-      debugList,
-    }, dispatch } = this.props;
+    const {  dispatch } = this.props;
+		const {debugList} = this.state
     let debug= null;
     const lastId = debugList.length ? debugList[debugList.length - 1].startId : 0;
+		console.log(this.state.debugList)
     debug = debugList.shift();
     if (debug) {
       let data = ['','','','','','','','',];
