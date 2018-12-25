@@ -78,7 +78,7 @@ export default class Home extends Component {
 
   toMessagesPage = () => {
     const { history } = this.props;
-    history.push('/company/message/all');
+    history.push('/company/message/unfinished');
   }
   toDevicesStatusPage = () => {
     const { history } = this.props;
