@@ -15,7 +15,7 @@ import { ctrlMenu } from '../ctrl.js';
 const formatter = new StringMask('00');
 let ws = null;
 const wsApi = `${api.replace('http', 'ws')}/devices/socket`;
-const wsDebug = `${api.replace('http', 'ws')}/devices/socketDebug`;
+const wsDebug = 'ws://47.96.162.192:9006/device/Monitor/socket';
 
 function array2obj(arr, key = null) {
   const obj = {};
@@ -542,6 +542,7 @@ export default {
         interval: 100,
         duration: 30,
         threshold: 50,
+				type: 1,
         base: payload.base,
         offsets: payload.offsets,
         monitorId: payload.monitorId,

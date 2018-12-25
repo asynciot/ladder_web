@@ -166,12 +166,17 @@ export function getHistoryEvent(params) {
   return request(`/device/Event?id=${params}`);
 }
 export function postFault(params) {
-  return request(`/device/Fault/order?IMEI${params}`, {
+  return request('/device/Fault/order', {
     method: 'POST',
     body: params,
   });
 }
-
+export function postFinish(params) {
+  return request('/device/Repair/finish', {
+    method: 'POST',
+    body: params,
+  });
+}
 // statistic
 export function getStatistic(params) {
   return request(`/mointors/statistic?${stringify(params)}`);

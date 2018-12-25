@@ -133,29 +133,29 @@ export default {
     door: [],
     doorWidth: 4096,
     event: {},
-	events:{
-		openIn:[],
-		closeIn:[],
-		current:[],
-		openToOut:[],
-		openTo:[],
-		closeToOut:[],
-		closeTo:[],
-		door:[],
-		open:[],
-		close:[],
-		openKeep:[],
-		closeKeep:[],
-		stop:[],
-		inHigh:[],
-		inLow:[],
-		outHigh:[],
-		motorHigh:[],
-		flySafe:[],
-		closeStop:[],
-		position:[],
-		speed:[],
-	},
+		events:{
+			openIn:[],
+			closeIn:[],
+			current:[],
+			openToOut:[],
+			openTo:[],
+			closeToOut:[],
+			closeTo:[],
+			door:[],
+			open:[],
+			close:[],
+			openKeep:[],
+			closeKeep:[],
+			stop:[],
+			inHigh:[],
+			inLow:[],
+			outHigh:[],
+			motorHigh:[],
+			flySafe:[],
+			closeStop:[],
+			position:[],
+			speed:[],
+		},
     eventList: [],
     property: {},
     wave: [],
@@ -166,9 +166,6 @@ export default {
     option: localStorage.getItem('option') ? JSON.parse(localStorage.getItem('option')) : {},
     switchLoading: false,
     loadingMore: false,
-    deviceInfo:{
-    	deviceid:'',
-    }
   },
   effects: {
     *option({payload,}, { put }) {
@@ -231,7 +228,10 @@ export default {
 				}
 				arr = buf[0]+buf[1]+buf[2]+buf[3]+buf[4]+buf[5]				
 				buffer = base64url.toBuffer(arr)
-				yield put({ type: 'getMenu', payload: parseMenu(buffer, payload.type) });				
+				yield put({
+					type: 'getMenu', 
+					payload: parseMenu(buffer, payload.type),
+				});				
       }
     },
     *changeView({

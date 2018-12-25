@@ -244,6 +244,7 @@ export default class Debug extends Component {
         },
       }).then(() => {
         debugWs = this.props.ctrl.debugWs;
+				console.log(debugWs)
         setTimeout(()=> {
           this.setState({
             switch: false,

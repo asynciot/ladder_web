@@ -154,6 +154,7 @@ export default class DoorHistory extends Component {
   }
   componentWillMount() {
 		this.setAnimation();
+		this.getTime();
   }
 	initWebsocket = () =>{ //初始化weosocket
 		const { dispatch, location } = this.props;
@@ -170,7 +171,7 @@ export default class DoorHistory extends Component {
 				const duration = reset[0];
 				const device_type = '15';
 				const type = '0';
-				postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {});				
+				postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {});
 			}
 		})
 		const wsurl = 'ws://47.96.162.192:9006/device/Monitor/socket?deviceId='+device_id;	
@@ -208,6 +209,15 @@ export default class DoorHistory extends Component {
 			pick: val,
 		});
 		this.initWebsocket()
+	}
+	getTime = (val) => {
+		const { dispatch, location } = this.props;
+		const {pick} = this.state;
+		const match = pathToRegexp('/door/:id/realtime').exec(location.pathname);
+		const device_id = match[1];
+		getEvent({device_id,nums:1,page:1}).then((res)=>{
+			
+		})
 	}
 	getData = (val) => {
 		const {show} = this.state
@@ -423,7 +433,7 @@ export default class DoorHistory extends Component {
 		})
   }
   render() {
-    const { device: { events, view, property }} = this.props;
+    const { device: { events, view, property, updateTime, }} = this.props;
     const id = this.props.match.params.id;
     const width = parseInt((window.innerWidth - 100) / 2);
     let type = null
