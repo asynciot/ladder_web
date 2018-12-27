@@ -162,7 +162,7 @@ export default class extends Component {
 													<tr>
 														<td className="tr">故障类型 ：</td>
 														<td className="tl" style={{ width: '130px' }}>{item.type}</td>
-														<td className="tl">设备类型 ：</td>
+														<td className="tl">类型 ：</td>
 														<td className="tl">{typeName[item.device_type] ||''}</td>
 													</tr>
 													<tr>

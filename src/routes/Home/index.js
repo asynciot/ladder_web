@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Carousel, WingBlank, List, Flex } from 'antd-mobile';
+import { Carousel, WingBlank, List, Flex, Card,} from 'antd-mobile';
+import { Row, Col, Button, Spin, DatePicker, Pagination, } from 'antd';
 import styles from './index.less';
 import { getBanners, getMessages, getDevicesStatus, getFault } from '../../services/api';
 
@@ -15,13 +16,18 @@ export default class Home extends Component {
     data: [],
     imgHeight: 176,
     messages: [],
+		doornum:0,
+		ctrlnum:0,
     devicesStatus: {
-      dooronline:'0',
-      dooroffline:'0',
-			doorlongoffline:'0',
-			ctrlonline:'0',
-			ctrloffline:'0',
-			ctrllongoffline:'0',
+			
+      dooronline:0,
+      dooroffline:0,
+			doorlongoffline:0,
+			
+			ctrlonline:0,
+			ctrloffline:0,
+			ctrllongoffline:0,
+			
     },
     historyEvents: [],
   }
@@ -61,9 +67,11 @@ export default class Home extends Component {
       if (res.code === 0) {
         this.setState({
           devicesStatus: res.data,
+					doornum: parseInt(res.data.dooronline)+parseInt(res.data.dooroffline)+parseInt(res.data.doorlongoffline),
+					ctrlnum:parseInt(res.data.ctrlonline)+parseInt(res.data.ctrloffline)+parseInt(res.data.ctrllongoffline),
         });
       }
-    }).catch((e => console.info(e)));	
+    }).catch((e => console.info(e)));
   }
 
   getFault = () => {
@@ -97,7 +105,7 @@ export default class Home extends Component {
 		const imgList = [
 				'../../assets/menu-bg.png',
 		]
-    const { devicesStatus, historyEvents } = this.state;
+    const { devicesStatus, historyEvents, doornum, ctrlnum, } = this.state;
     let notClosedEvents = historyEvents.filter(item => item.status === 0);
     notClosedEvents.length > 1 ? notClosedEvents = [notClosedEvents[0]]:null
     return (
@@ -122,6 +130,97 @@ export default class Home extends Component {
 						<Item
 							arrow="horizontal"
 							multipleLine
+							onClick={this.toFollowDevicesPage}
+							platform="android"
+						>
+							<Row gutter={20}>
+								<Col span={6}>
+									<Card className={styles.gridcontent}>
+										<div className={styles.gridright}>													
+											<div className={styles.gridnum4}>
+												{doornum}
+											</div>
+											控制器
+										</div>
+									</Card>
+								</Col>
+								<Col span={6}>
+									<Card>
+										<div className={styles.gridright}>													
+											<div className={styles.gridnum1}>
+												{devicesStatus.dooronline}
+											</div>
+											在线
+										</div>
+									</Card>
+								</Col>
+								<Col span={6}>
+									<Card>
+										<div className={styles.gridright}>													
+											<div className={styles.gridnum2}>
+												{devicesStatus.dooroffline}
+											</div>
+											离线
+										</div>
+									</Card>
+								</Col>
+								<Col span={6}>
+									<Card>
+										<div className={styles.gridright}>													
+											<div className={styles.gridnum3}>
+												{devicesStatus.doorlongoffline}
+											</div>
+											长期离线
+										</div>
+									</Card>
+								</Col>
+							</Row>
+							<Row gutter={20}>
+								<Col span={6}>
+									<Card>
+										<div className={styles.gridright}>													
+											<div className={styles.gridnum4}>
+												{ctrlnum}
+											</div>
+											控制柜
+										</div>
+									</Card>
+								</Col>
+								<Col span={6}>
+									<Card>
+										<div className={styles.gridright}>													
+											<div className={styles.gridnum1}>
+												{devicesStatus.ctrlonline}
+											</div>
+											在线
+										</div>
+									</Card>
+								</Col>
+								<Col span={6}>
+									<Card>
+										<div className={styles.gridright}>
+											<div className={styles.gridnum2}>
+												{devicesStatus.ctrloffline}
+											</div>
+											离线
+										</div>
+									</Card>
+								</Col>
+								<Col span={6}>
+									<Card>
+										<div className={styles.gridright}>
+											<div className={styles.gridnum3}>
+												{devicesStatus.ctrllongoffline}
+											</div>
+											长期离线
+										</div>
+									</Card>
+								</Col>
+							</Row>
+						</Item>
+						<Item
+							arrow="horizontal"
+							multipleLine
 							onClick={this.toMessagesPage}
 						>
 							{
@@ -129,30 +228,6 @@ export default class Home extends Component {
 									<span>最新消息 <Brief>{this.state.messages[0].content}</Brief></span> :
 									<span>没有消息</span>
 							}
-						</Item>
-						<Item
-							arrow="horizontal"
-							multipleLine
-							onClick={this.toFollowDevicesPage}
-							platform="android"
-						>
-							关注列表
-							<Brief>控制器</Brief>
-							<Brief>
-								<Flex>
-									<Flex.Item>在线<span className={styles.tips}>{devicesStatus.dooronline}</span></Flex.Item>
-									<Flex.Item>离线<span className={styles.tips}>{devicesStatus.dooroffline}</span></Flex.Item>
-									<Flex.Item>长期离线<span className={styles.tips}>{devicesStatus.doorlongoffline}</span></Flex.Item>
-								</Flex>
-							</Brief>
-							<Brief>控制柜</Brief>
-							<Brief>
-								<Flex>
-									<Flex.Item>在线<span className={styles.tips}>{devicesStatus.ctrlonline}</span></Flex.Item>
-									<Flex.Item>离线<span className={styles.tips}>{devicesStatus.ctrloffline}</span></Flex.Item>
-									<Flex.Item>长期离线<span className={styles.tips}>{devicesStatus.ctrllongoffline}</span></Flex.Item>
-								</Flex>
-							</Brief>
 						</Item>
 						<Item
 							arrow="horizontal"

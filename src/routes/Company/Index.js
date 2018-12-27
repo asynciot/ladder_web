@@ -1,19 +1,35 @@
 import React, { Component } from 'react';
-import { Row, Col, Avatar, Icon, Button, } from 'antd';
+import { Row, Col, Avatar, Icon, Button, Upload, message,  } from 'antd';
+import {ImagePicker} from 'antd-mobile';
 import { connect } from 'dva';
 import { Modal, Accordion, List, Badge, Grid } from 'antd-mobile';
 import styles from './Index.less';
 
 const { alert } = Modal;
-
+function getBase64(img, callback) {
+  const reader = new FileReader();
+  reader.addEventListener('load', () => callback(reader.result));
+  reader.readAsDataURL(img);
+}
+function beforeUpload(file) {
+  const isJPG = file.type === 'image/jpeg';
+  if (!isJPG) {
+    message.error('You can only upload JPG file!');
+  }
+  const isLt2M = file.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    message.error('Image must smaller than 2MB!');
+  }
+  return isJPG && isLt2M;
+}
 @connect(({ user, company }) => ({
   currentUser: user.currentUser,
   company,
 }))
-
 export default class Company extends Component {
   state = {
     list: [],
+		loading: false,
   }
   componentDidMount() {
   }
@@ -36,7 +52,6 @@ export default class Company extends Component {
 		const { history } = this.props;
     history.push('/company/device');
   };
-	
   logout = () => {
     this.props.dispatch({ type: 'login/logout' });
   };
@@ -48,16 +63,47 @@ export default class Company extends Component {
       history.push(`/company/${link}`);
     }
   };
+	
+	handleChange = (info) => {
+    if (info.file.status === 'uploading') {
+      this.setState({ loading: true });
+      return;
+    }
+    if (info.file.status === 'done') {
+      // Get this url from response in real world.
+      getBase64(info.file.originFileObj, imageUrl => this.setState({
+        imageUrl,
+        loading: false,
+      }));
+    }
+  };
   render() {
-    const { company: { group, unread }, currentUser } = this.props;		
+		const uploadButton = (
+      <div>
+        <Icon type={this.state.loading ? 'loading' : 'plus'} />
+        <div className={styles.avatar}>Upload</div>
+      </div>
+    );
+    const { company: { group, unread }, currentUser } = this.props;
+		const imageUrl = this.state.imageUrl;
     return (
       <div className="content">
         <div className={styles.header}>
-          <Avatar
-            className={styles.avatar}
-            size="large"
-            src={currentUser.portrait}
-          />
+					<div className={styles.upload}>
+						<Avatar
+							className={styles.avatar}
+							size="large"
+							src={currentUser.portrait}
+						/>
+							<input accept="image/*" className={styles.input} type="file" />
+						<ImagePicker
+							className={styles.btn}
+							files={this.state.files}
+							onChange={this.onUpload}
+							onImageClick={(index, fs) => console.log(index, fs)}
+							accept="image/jpeg,image/jpg,image/png"
+						/>
+					</div>          
           <p onClick={() => this.goDetail('revise')} className={styles.nickname}>{currentUser.nickname}<Icon className={styles.edit} type="form" /></p>
         </div>
 				<div className={styles.back}>

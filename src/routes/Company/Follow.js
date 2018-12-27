@@ -66,7 +66,7 @@ export default class extends Component {
   }
   submit = () => {
     postFollowInfo({
-      deviceNo: this.state.view ? this.state.deviceNo:this.state.qrcodeNo,
+      imei: this.state.deviceNo,
     }).then((res) => {
       if (res.code === 0) {
         message.success('关注成功');
