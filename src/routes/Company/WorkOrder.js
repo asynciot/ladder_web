@@ -69,14 +69,15 @@ export default class extends Component {
     }
     getFault({ num: 10, page, state }).then((res) => {
 			const list = res.data.list.map((item) => {
+				if (item.createTime) {
+					item.createTime = moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')
+				}				
 				return item;
 			})
       if(refreshing) {
         page++
       }
-      const events = res.data.list.filter(item => item.state === state)
       this.setState({
-        historyEvents: page>2 ? historyEvents.concat(events) :events,
         page,
 				list,
         total: res.data.totalPage
@@ -88,7 +89,6 @@ export default class extends Component {
   }
 
   deal = (detail) => {
-		console.log(detail)
 		const fault_id = detail.id
     alert('提示', desc[detail.state], [
       { text: '取消', style: 'default' },
@@ -155,19 +155,19 @@ export default class extends Component {
 												<tbody>
 													<tr>
 														<td className="tr">名称 ：</td>
-														<td className="tl" style={{ width: '130px' }}>{item.id}</td>
+														<td className="tl" style={{ width: '100px' }}>{item.id}</td>
 														<td className="tl">设备编号 ：</td>
 														<td className="tl">{item.device_id}</td>
 													</tr>
 													<tr>
 														<td className="tr">故障类型 ：</td>
-														<td className="tl" style={{ width: '130px' }}>{item.type}</td>
-														<td className="tl">类型 ：</td>
+														<td className="tl" style={{ width: '100px' }}>{names[item.type]}</td>
+														<td className="tl">设备类型 ：</td>
 														<td className="tl">{typeName[item.device_type] ||''}</td>
 													</tr>
 													<tr>
 														<td className="tr">故障时间 ：</td>
-														<td className="tl">{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss') }</td>
+														<td className="tl">{item.createTime}</td>
 													</tr>
 												</tbody>
 											</table>
@@ -202,19 +202,19 @@ export default class extends Component {
               					<tbody>
               						<tr>
               							<td className="tr">名称 ：</td>
-              							<td className="tl" style={{ width: '130px' }}>{item.id}</td>
+              							<td className="tl" style={{ width: '100px' }}>{item.id}</td>
               							<td className="tl">设备编号 ：</td>
               							<td className="tl">{item.device_id}</td>
               						</tr>
               						<tr>
               							<td className="tr">故障类型 ：</td>
-              							<td className="tl" style={{ width: '130px' }}>{item.type}</td>
+              							<td className="tl" style={{ width: '100px' }}>{names[item.type]}</td>
               							<td className="tl">设备类型 ：</td>
               							<td className="tl">{typeName[item.device_type] ||''}</td>
               						</tr>
               						<tr>
               							<td className="tr">故障时间 ：</td>
-              							<td className="tl">{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss') }</td>
+              							<td className="tl">{item.createTime}</td>
               						</tr>
               						<tr>
               							<td className="tr">故障时长 ：</td>

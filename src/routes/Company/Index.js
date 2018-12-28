@@ -8,6 +8,10 @@ import avatar from '../../assets/avatar.jpg';
 import { uploadPicture, } from '../../services/api';
 
 const { alert } = Modal;
+const typeName ={
+  'ctrl':'控制柜',
+  'door':'控制器',
+}
 @connect(({ user, company }) => ({
   currentUser: user.currentUser,
   company,
@@ -18,6 +22,7 @@ export default class Company extends Component {
 		loading: false,
   }
   componentDidMount() {
+		this.reader = new FileReader();
   }
   companyId = localStorage.getItem('companyId');
   joincompanyId = localStorage.getItem('joinCompanyId');
@@ -49,21 +54,27 @@ export default class Company extends Component {
       history.push(`/company/${link}`);
     }
   };
-	uploadPicture = (e) =>{		
-		var formData = new FormData()
-		// var files = e.files
-		console.log(e.files)
+	uploadPicture = (e) =>{
+		// var f = e.target.files[0]
+		// document.getElementsByName('pic').files;
+		var files = e[0].file
+		var formData = new FormData(files)
+// 		var formData = new window.FormData()
+// 		formData.append('file',e[0].file)
+		
+		// console.log(e.files)
 		// const pic = document.getElementsByName('pic').files
 		
-		// formData.append('file',files[0])
+		// formData.append('file',files)
 		console.log(formData)
-// 		uploadPicture({formData}).then((res) => {
-// 			if (res.code == 0){
-// 				alert("上传成功")
-// 			}else{
-// 				alert("上传失败")
-// 			}
-// 		}).catch((e => console.info(e)));
+		
+		uploadPicture({formData}).then((res) => {
+			if (res.code == 0){
+				alert("上传成功")
+			}else{
+				alert("上传失败")
+			}
+		}).catch((e => console.info(e)));
 	};
 	
   render() {
@@ -73,23 +84,20 @@ export default class Company extends Component {
       <div className="content">
         <div className={styles.header}>
 					<div className={styles.upload}>
-						
 						<Avatar
 							className={styles.avatar}
 							size="large"
 							src={avatar}
 						/>
-						<input accept="image/*" className={styles.input} type="file" name='pic' onChange={this.uploadPicture(this)} />
-						{/*<ImagePicker
+						<input accept="image/*" className={styles.input} type="file" name='pic' onChange={() => this.uploadPicture()} />
+						<ImagePicker
 							className={styles.btn}
 							files={this.state.files}
 							onChange={this.uploadPicture}
 							onImageClick={(index, fs) => console.log(index, fs)}
 							accept="image/jpeg,image/jpg,image/png"
-						/>*/}
-						
-						
-					</div>          
+						/>
+					</div>
           <p onClick={() => this.goDetail('revise')} className={styles.nickname}>{currentUser.nickname}<Icon className={styles.edit} type="form" /></p>
         </div>
 				<div className={styles.back}>

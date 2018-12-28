@@ -147,7 +147,7 @@ export function getFault(params) {
   return request(`/device/Order?${stringify(params)}&follow=yes`);
 }
 export function postFault(params) {
-  return request('/device/order/receipt', {
+  return request('/device/Order/receipt', {
     method: 'POST',
     body: params,
   });

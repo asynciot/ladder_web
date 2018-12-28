@@ -14,6 +14,10 @@ const names = {
   1: '人工报修',
   2: '自动报修',
 }
+const typeName ={
+  'ctrl':'控制柜',
+  'door':'控制器',
+}
 export default class Home extends Component {
   state = {
     data: [],
@@ -104,7 +108,8 @@ export default class Home extends Component {
 				background4,
 		]
     const { devicesStatus, historyEvents, doornum, ctrlnum, } = this.state;
-    let notClosedEvents = historyEvents.filter(item => item.status === 0);
+    let notClosedEvents = historyEvents.filter(item => item.state === 'untreated');
+		const len = notClosedEvents.length
     notClosedEvents.length > 1 ? notClosedEvents = [notClosedEvents[0]]:null
     return (
       <div className="content">
@@ -236,15 +241,15 @@ export default class Home extends Component {
 								notClosedEvents.map(item => (
 									<span className={styles.msg} key={item.id}>
 										工单状态
-										<Brief>待处理<span>{notClosedEvents.length}</span></Brief>
+										<Brief>待处理<span>{len}</span></Brief>
 										<Brief>最新工单</Brief>
 										<Brief>
 											<Flex>
-												<Flex.Item>名称:<span className={styles.tips}>{names[item.event]}</span></Flex.Item>
-												<Flex.Item>型号:<span className={styles.tips}>{item.deviceNo ? item.deviceNo : '无'}</span></Flex.Item>
+												<Flex.Item>名称:<span className={styles.tips}>{names[item.type]}</span></Flex.Item>
+												<Flex.Item>型号:<span className={styles.tips}>{typeName[item.device_type] ||''}</span></Flex.Item>
 											</Flex>
 										</Brief>
-										<Brief>错误码<span className={styles.tips}>{item.errCode ? item.errCode : '无'}</span></Brief>
+										<Brief>错误码<span className={styles.tips}>{item.code ? item.code : '无'}</span></Brief>
 									</span>
 								)) : (
 									<span>
