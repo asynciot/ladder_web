@@ -3,7 +3,10 @@ import { Carousel, WingBlank, List, Flex, Card,} from 'antd-mobile';
 import { Row, Col, Button, Spin, DatePicker, Pagination, } from 'antd';
 import styles from './index.less';
 import { getBanners, getMessages, getDevicesStatus, getFault } from '../../services/api';
-
+import background1 from '../../assets/menu-bg.png';
+import background3 from '../../assets/bg-menu.jpg';
+import background2 from '../../assets/menu-bg1.jpg';
+import background4 from '../../assets/service-img4.jpg';
 const Item = List.Item;
 const Brief = Item.Brief;
 const names = {
@@ -18,20 +21,16 @@ export default class Home extends Component {
     messages: [],
 		doornum:0,
 		ctrlnum:0,
-    devicesStatus: {
-			
+    devicesStatus: {			
       dooronline:0,
       dooroffline:0,
-			doorlongoffline:0,
-			
+			doorlongoffline:0,			
 			ctrlonline:0,
 			ctrloffline:0,
-			ctrllongoffline:0,
-			
+			ctrllongoffline:0,			
     },
     historyEvents: [],
   }
-
   componentWillMount() {
     this.getdata();
   }
@@ -61,7 +60,6 @@ export default class Home extends Component {
       }
     }).catch((e => console.info(e)));
   }
-
   getDevicesStatus = () => {
     getDevicesStatus().then((res) => {
       if (res.code === 0) {
@@ -73,7 +71,6 @@ export default class Home extends Component {
       }
     }).catch((e => console.info(e)));
   }
-
   getFault = () => {
     getFault({ num: 10, page: 1 }).then((res) => {
       if (res.code === 0) {
@@ -83,7 +80,6 @@ export default class Home extends Component {
       }
     }).catch((e => console.info(e)));
   }
-
   toMessagesPage = () => {
     const { history } = this.props;
     history.push('/company/message/unfinished');
@@ -100,10 +96,12 @@ export default class Home extends Component {
     const { history } = this.props;
     history.push('/company/work-order');
   }
-  render() {
-		
+  render() {		
 		const imgList = [
-				'../../assets/menu-bg.png',
+				background1,
+				background2,
+				background3,
+				background4,
 		]
     const { devicesStatus, historyEvents, doornum, ctrlnum, } = this.state;
     let notClosedEvents = historyEvents.filter(item => item.status === 0);
@@ -119,11 +117,10 @@ export default class Home extends Component {
 					{imgList.map((item, index) => {
 						return (
 							<a key={index} className={styles.link} href="javascript:;">
-								<img className={styles.img} src={require('../../assets/menu-bg.png')} />
+								<img className={styles.img} src={item} />
 							</a>
 						);
-					})
-					}
+					})}
         </Carousel>
 				<div className={styles.pre}>
 					<List className="list">

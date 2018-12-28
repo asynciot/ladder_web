@@ -1,27 +1,13 @@
 import React, { Component } from 'react';
 import { Row, Col, Avatar, Icon, Button, Upload, message,  } from 'antd';
-import {ImagePicker} from 'antd-mobile';
+import { ImagePicker } from 'antd-mobile';
 import { connect } from 'dva';
 import { Modal, Accordion, List, Badge, Grid } from 'antd-mobile';
 import styles from './Index.less';
+import avatar from '../../assets/avatar.jpg';
+import { uploadPicture, } from '../../services/api';
 
 const { alert } = Modal;
-function getBase64(img, callback) {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result));
-  reader.readAsDataURL(img);
-}
-function beforeUpload(file) {
-  const isJPG = file.type === 'image/jpeg';
-  if (!isJPG) {
-    message.error('You can only upload JPG file!');
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error('Image must smaller than 2MB!');
-  }
-  return isJPG && isLt2M;
-}
 @connect(({ user, company }) => ({
   currentUser: user.currentUser,
   company,
@@ -63,46 +49,46 @@ export default class Company extends Component {
       history.push(`/company/${link}`);
     }
   };
+	uploadPicture = (e) =>{		
+		var formData = new FormData()
+		// var files = e.files
+		console.log(e.files)
+		// const pic = document.getElementsByName('pic').files
+		
+		// formData.append('file',files[0])
+		console.log(formData)
+// 		uploadPicture({formData}).then((res) => {
+// 			if (res.code == 0){
+// 				alert("上传成功")
+// 			}else{
+// 				alert("上传失败")
+// 			}
+// 		}).catch((e => console.info(e)));
+	};
 	
-	handleChange = (info) => {
-    if (info.file.status === 'uploading') {
-      this.setState({ loading: true });
-      return;
-    }
-    if (info.file.status === 'done') {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj, imageUrl => this.setState({
-        imageUrl,
-        loading: false,
-      }));
-    }
-  };
   render() {
-		const uploadButton = (
-      <div>
-        <Icon type={this.state.loading ? 'loading' : 'plus'} />
-        <div className={styles.avatar}>Upload</div>
-      </div>
-    );
     const { company: { group, unread }, currentUser } = this.props;
 		const imageUrl = this.state.imageUrl;
     return (
       <div className="content">
         <div className={styles.header}>
 					<div className={styles.upload}>
+						
 						<Avatar
 							className={styles.avatar}
 							size="large"
-							src={currentUser.portrait}
+							src={avatar}
 						/>
-							<input accept="image/*" className={styles.input} type="file" />
-						<ImagePicker
+						<input accept="image/*" className={styles.input} type="file" name='pic' onChange={this.uploadPicture(this)} />
+						{/*<ImagePicker
 							className={styles.btn}
 							files={this.state.files}
-							onChange={this.onUpload}
+							onChange={this.uploadPicture}
 							onImageClick={(index, fs) => console.log(index, fs)}
 							accept="image/jpeg,image/jpg,image/png"
-						/>
+						/>*/}
+						
+						
 					</div>          
           <p onClick={() => this.goDetail('revise')} className={styles.nickname}>{currentUser.nickname}<Icon className={styles.edit} type="form" /></p>
         </div>
@@ -139,7 +125,7 @@ export default class Company extends Component {
           {/*<List.Item arrow="horizontal" onClick={() => this.goDetail('/test')} >测试</List.Item>
 					<List.Item arrow="horizontal" onClick={() => this.goDetail('/tech/manual')} >技术文档</List.Item>
 				</List>*/}
-				<Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} className={styles.btn}>
+				<Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} className={styles.btn1}>
 					<Button onClick={this.logout} type="primary" style={{ width: '100%' }} >登出</Button>
 				</Col>
         {/* <Row type="flex" justify="space-around" align="middle">

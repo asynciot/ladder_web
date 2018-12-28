@@ -14,14 +14,12 @@ export async function retrieve(params) {
     body: params,
   });
 }
-
 export async function accountLogin(params) {
   return request('/account/login', {
     method: 'POST',
     body: params,
   });
 }
-
 export async function accountLogout(params) {
   return request('/account/logout', {
     method: 'POST',
@@ -37,6 +35,12 @@ export async function queryCurrent(params) {
 export async function updateUser(params) {
   return request('/account', {
     method: 'PUT',
+    body: params,
+  });
+}
+export async function uploadPicture(params) {
+  return request('/account/portrait', {
+    method: 'POST',
     body: params,
   });
 }
@@ -140,10 +144,16 @@ export function putFollowInfo(params) {
   });
 }
 export function getFault(params) {
-  return request(`/device/Fault?${stringify(params)}&follow=yes`);
+  return request(`/device/Order?${stringify(params)}&follow=yes`);
+}
+export function postFault(params) {
+  return request('/device/order/receipt', {
+    method: 'POST',
+    body: params,
+  });
 }
 export function deleteFollowInfo(params) {
-  return request(`/device/follow?${stringify(params)}`, {
+  return request(`/device/Order?${stringify(params)}`, {
     method: 'DELETE',
   });
 }
@@ -164,12 +174,6 @@ export function getEvent(params) {
 }
 export function getHistoryEvent(params) {
   return request(`/device/Event?id=${params}`);
-}
-export function postFault(params) {
-  return request('/device/Fault/order', {
-    method: 'POST',
-    body: params,
-  });
 }
 export function postFinish(params) {
   return request('/device/Repair/finish', {

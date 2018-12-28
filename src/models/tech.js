@@ -12,43 +12,43 @@ export default {
 
   effects: {
     *query({ payload }, { call, put }) {
-      const response = yield call(errorCode, payload);
-      if (response.code === 0 && payload === undefined) {
-        const model = response.data.list.map(item => ({
-          label: item.ctrlType,
-          value: item.ctrlType,
-        }));
-        yield put({
-          type: 'queryResult',
-          payload: {
-            model,
-          },
-        });
-      }
-      if (response.code === 0 && payload && payload.type) {
-        yield put({
-          type: 'queryResult',
-          payload: {
-            list: response.data.list,
-          },
-        });
-      }
-      if (response.code === 0 && payload && payload.name) {
-        yield put({
-          type: 'queryResult',
-          payload: {
-            list: response.data.list,
-          },
-        });
-      }
-      if (response.code !== 0) {
-        yield put({
-          type: 'queryResult',
-          payload: {
-            list: [],
-          },
-        });
-      }
+//       const response = yield call(errorCode, payload);
+//       if (response.code === 0 && payload === undefined) {
+//         const model = response.data.list.map(item => ({
+//           label: item.ctrlType,
+//           value: item.ctrlType,
+//         }));
+//         yield put({
+//           type: 'queryResult',
+//           payload: {
+//             model,
+//           },
+//         });
+//       }
+//       if (response.code === 0 && payload && payload.type) {
+//         yield put({
+//           type: 'queryResult',
+//           payload: {
+//             list: response.data.list,
+//           },
+//         });
+//       }
+//       if (response.code === 0 && payload && payload.name) {
+//         yield put({
+//           type: 'queryResult',
+//           payload: {
+//             list: response.data.list,
+//           },
+//         });
+//       }
+//       if (response.code !== 0) {
+//         yield put({
+//           type: 'queryResult',
+//           payload: {
+//             list: [],
+//           },
+//         });
+//       }
     },
   },
 

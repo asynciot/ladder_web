@@ -24,6 +24,9 @@ const options = [
 export default class Tech extends Component {
   state = {
     navs: [{
+      label: '故障代码查询',
+      link: '/tech/code',
+    },{
       label: '产品说明书',
       link: '/tech/manual',
     }, {
@@ -36,28 +39,28 @@ export default class Tech extends Component {
   }
   componentDidMount() {
   }
-  onSelect(e) {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'tech/query',
-      payload: {
-        type: e[0],
-      },
-    });
-    this.setState({
-      model: e,
-      name: '',
-    });
-  }
+//   onSelect(e) {
+//     const { dispatch } = this.props;
+//     dispatch({
+//       type: 'tech/query',
+//       payload: {
+//         type: e[0],
+//       },
+//     });
+//     this.setState({
+//       model: e,
+//       name: '',
+//     });
+//   }
   handleSubmit = (e) => {
-    e.preventDefault();
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'tech/query',
-      payload: {
-        name: this.state.name,
-      },
-    });
+    // e.preventDefault();
+//     const { dispatch } = this.props;
+//     dispatch({
+//       type: 'tech/query',
+//       payload: {
+//         name: this.state.name,
+//       },
+//     });
   }
   input = (val) => {
     this.setState({
@@ -126,37 +129,37 @@ export default class Tech extends Component {
                   </Col>
                 </Row>
               </div>
-              ) : (
-                <Form onSubmit={this.handleSubmit}>
-                  <Row type="flex" justify="space-around" align="middle">
-                    <Col xs={{ span: 20 }} sm={{ span: 18 }} md={{ span: 18 }}>
-                      <FormItem label="控制器型号：" {...formItemLayout}>
-                        <Select defaultValue="NSFC01-02T" style={{ width: '100%' }} onChange={this.onChange}>
-                          <Option value="NSFC01-02T">NSFC01-02T</Option>
-                          <Option value="NSFC01-03T">NSFC01-03T</Option>
-                        </Select>
-                      </FormItem>
-                    </Col>
-                    <Col xs={{ span: 20 }} sm={{ span: 18 }} md={{ span: 18 }}>
-                      <FormItem label="故障代码值：" {...formItemLayout}>
-                        {getFieldDecorator('username', {
-                          rules: [{
-                            message: '请输入故障代码值！',
-                          }],
-                        })(
-                          <Input
-                            placeholder="代码值"
-                          />
-                        )}
-                      </FormItem>
-                    </Col>
-                    <Col xs={{ span: 20 }} sm={{ span: 18 }} md={{ span: 16 }}>
-                      <FormItem className="tc">
-                        <Button type="primary" htmlType="submit" >查询</Button>
-                      </FormItem>
-                    </Col>
-                  </Row>
-                </Form>
+						) : (
+							<Form onSubmit={this.handleSubmit}>
+								<Row type="flex" justify="space-around" align="middle">
+									<Col xs={{ span: 20 }} sm={{ span: 18 }} md={{ span: 18 }}>
+										<FormItem label="控制器型号：" {...formItemLayout}>
+										 <Select defaultValue="NSFC01-02T" style={{ width: '100%' }} onChange={this.onChange}>
+												<Option value="NSFC01-02T">NSFC01-02T</Option>
+												<Option value="NSFC01-03T">NSFC01-03T</Option>
+											</Select>
+										</FormItem>
+									</Col>
+									<Col xs={{ span: 20 }} sm={{ span: 18 }} md={{ span: 18 }}>
+										<FormItem label="故障代码值：" {...formItemLayout}>
+											{getFieldDecorator('username', {
+												rules: [{
+													message: '请输入故障代码值！',
+												}],
+											})(
+												<Input
+													placeholder="代码值"
+												/>
+											)}
+										</FormItem>
+									</Col>
+									<Col xs={{ span: 20 }} sm={{ span: 18 }} md={{ span: 16 }}>
+										<FormItem className="tc">
+											<Button type="primary" htmlType="submit" >查询</Button>
+										</FormItem>
+									</Col>
+								</Row>
+							</Form>
             )
           }
           <Row type="flex" justify="space-around" align="middle" className={styles.tech}>
