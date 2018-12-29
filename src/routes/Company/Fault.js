@@ -103,6 +103,7 @@ export default class DoorHistory extends Component {
 				},
 				body: formdata
 			}).then(function(response){
+				alert("上传成功！")
 			}).then(function(data){
 			})
 		}		
@@ -142,7 +143,7 @@ export default class DoorHistory extends Component {
 										<td className="tr">故障代码 ：</td>
 										<td className="tl" style={{ width: '100px' }}>E{item.code}</td>
 									</tr>
-									<tr>	
+									<tr>
 										<td className="tr">设备编号 ：</td>
 										<td className="tl">{item.device_id}</td>
 									</tr>
