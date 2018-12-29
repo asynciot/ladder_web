@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Icon, Button, Row, Col, Pagination, } from 'antd';
 import { Tabs, Flex, Modal, List,PullToRefresh } from 'antd-mobile';
 import styles from './WorkOrder.less';
-import { getFault, postFault, postFinish, deleteFault,} from '../../services/api';
+import { getFault, postFault, postFinish, deleteFault, getDispatch,} from '../../services/api';
 
 const Item = List.Item;
 const Brief = Item.Brief;
@@ -39,10 +39,6 @@ const ListButton = ({ className = '', ...restProps }) => (
 );
 const Finish = ({ className = '', ...restProps }) => (
   <div className={`${className} ${styles['list-btn']}`}>
-    <span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.finish ? restProps.finish:''}>
-      <Icon className={`${styles.edit} ${styles.icon}`} type="form" />
-      <em>完成</em>
-    </span>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.remove ? restProps.remove:''}>
 			<Icon className={`${styles.delete} ${styles.icon}`} type="close" />
 			<em>取消</em>
@@ -72,29 +68,55 @@ export default class extends Component {
       }, 800)
       return
     }
-    getFault({ num: 10, page, state }).then((res) => {
-			const list = res.data.list.map((item) => {
-				const time = this.state.nowTime - item.createTime
-				item.hour = parseInt((time)/(1000*3600))
-				item.minute = parseInt(time%(1000*3600)/(1000*60))
-				item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
-				item.code = res.data.list[res.data.list.length-1].code.toString(16)
-				return item;
-			})
-      if(refreshing) {
-        page++
-      }
-      this.setState({
-        page,
-				list,
-        total: res.data.totalPage
-      });
-      setTimeout(()=>{
-        this.setState({ refreshing: false });
-      }, 800)
-    }).catch((e => console.info(e)));
+		if(state == 'untreated'){
+			getFault({ num: 10, page, state }).then((res) => {
+				const list = res.data.list.map((item) => {
+					const time = this.state.nowTime - item.createTime
+					item.hour = parseInt((time)/(1000*3600))
+					item.minute = parseInt(time%(1000*3600)/(1000*60))
+					item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
+					item.code = res.data.list[res.data.list.length-1].code.toString(16)
+					return item;
+				})
+				if(refreshing) {
+					page++
+				}
+				this.setState({
+					page,
+					list,
+					total: res.data.totalPage
+				});
+				setTimeout(()=>{
+					this.setState({ refreshing: false });
+				}, 800)
+			}).catch((e => console.info(e)));
+		}else{
+			getDispatch({ num: 10, page }).then((res) => {
+				const list = res.data.list.map((item) => {
+					const time = this.state.nowTime - item.create_time
+					item.hour = parseInt((time)/(1000*3600))
+					item.minute = parseInt(time%(1000*3600)/(1000*60))
+					item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
+					return item;
+				})
+				
+				if(refreshing) {
+					page++
+				}
+				this.setState({
+					page,
+					list,
+					total: res.data.totalPage
+				});
+				setTimeout(()=>{
+					this.setState({ refreshing: false });
+				}, 800)
+			}).catch((e => console.info(e)));
+		}	
   }
-
+	goFault = item => () =>{
+		this.props.history.push(`/company/order/${item.id}`);
+	}
   deal = (e, detail) => {
 		const order_id = detail.id
     alert('提示', desc[detail.state], [
@@ -169,8 +191,8 @@ export default class extends Component {
 							<List>
 								{
 									list.map((item, index) => (
-										<List.Item className={styles.item} key={index} extra={<ListButton edit={(event) => { this.deal(event,item,); }} />}>
-											<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
+										<List.Item className={styles.item} key={index}  extra={<ListButton edit={(event) => { this.deal(event,item,); }} />}>
+											<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault(item)}>
 												<tbody>
 													<tr>
 														<td className="tr">故障代码 ：</td>
@@ -220,8 +242,8 @@ export default class extends Component {
               <List>
               	{
               		list.map((item, index) => (
-              			<List.Item className={styles.item} key={index} extra={<Finish remove={(event) => { this.remove(event, item); }} />}>
-              				<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
+              			<List.Item className={styles.item} key={index}  extra={<Finish remove={(event) => { this.remove(event, item); }} />}>
+              				<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault(item)}>
               					<tbody>
               						<tr>
               							<td className="tr">故障代码 ：</td>
@@ -236,11 +258,11 @@ export default class extends Component {
               							<td className="tl">{typeName[item.device_type] ||''}</td>
               						</tr>
               						<tr>
-              							<td className="tr">故障时间 ：</td>
-              							<td className="tl">{moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')}</td>
+              							<td className="tr">接单时间 ：</td>
+              							<td className="tl">{moment(parseInt(item.create_time)).format('YYYY-MM-DD HH:mm:ss')}</td>
               						</tr>
               						<tr>
-              							<td className="tr">故障时长 ：</td>
+              							<td className="tr">接单时长 ：</td>
               							<td className="tl">{item.hour}小时{item.minute}分{item.second}秒</td>					
               						</tr>
               					</tbody>
@@ -251,47 +273,6 @@ export default class extends Component {
               </List>
             </PullToRefresh>
           </div>
-          {/*<div>
-            <PullToRefresh
-              damping={60}
-              ref={el => this.ptr = el}
-              style={{
-                height: this.state.height,
-                overflow: 'auto',
-              }}
-              indicator={this.state.down ? {} : { deactivate: '上拉可以刷新' }}
-              direction={this.state.down ? 'down' : 'up'}
-              refreshing={this.state.refreshing}
-              onRefresh={() => {
-                this.setState({ refreshing: true },()=>{
-                  this.getFault(this.state.tab)
-                });
-              }}
-            >
-              {
-                historyEvents.length ? historyEvents.map(
-                  item => (
-                    <List key={item.id} renderHeader={() => `工单编号: ${item.id}`} className="order-list">
-                      <List.Item>
-                        <div>名称 : <span>{names[item.event]}</span></div>
-                        <div>型号 : <span>{item.deviceNo}</span></div>
-                        <div>错误码 : <span>{item.errCode}</span></div>
-                        <div>地址 : <span>{item.address?item.address:'无'}</span></div>
-                        <div>创建时间 : <span>{moment(item.createTime).format(format)}</span></div>
-                        <div>完成时间 : <span>{item.solveTime?moment(item.solveTime).format(format):'无'}</span></div>
-                      </List.Item>
-                    </List>
-                  )
-                ) : (
-                  <List>
-                    <List.Item>
-                      <Brief>暂无工单</Brief>
-                    </List.Item>
-                  </List>
-                )
-              }
-            </PullToRefresh>
-          </div>*/}
         </Tabs>
       </div>
     );

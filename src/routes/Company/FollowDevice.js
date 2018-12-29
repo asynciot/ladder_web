@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Icon } from 'antd';
+import { Row, Col, Button, Spin, DatePicker, Pagination, Icon , } from 'antd';
 import { Tabs, Flex, Badge, List, Modal,} from 'antd-mobile';
 import classNames from 'classnames';
 import base64url from 'base64url';
-import { Row, Col, Button, Spin, DatePicker, Pagination, } from 'antd';
 import MobileNav from '../../components/MobileNav';
 import styles from './FollowDevice.less';
 import singalImg from '../../assets/signal.png';
@@ -351,7 +350,6 @@ export default class extends Component {
       code: true,
     });
   }
-
   remove = (e, detail) => {
     e.stopPropagation();
     e.preventDefault();

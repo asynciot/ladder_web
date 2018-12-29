@@ -111,9 +111,9 @@ export default class Home extends Component {
 				background4,
 		]
     const { devicesStatus, historyEvents, doornum, ctrlnum, } = this.state;
-    let notClosedEvents = historyEvents.filter(item => item.state === 'untreated');
+    let notClosedEvents = historyEvents.filter(item => item.state );
 		const len = notClosedEvents.length
-    notClosedEvents.length > 1 ? notClosedEvents = [notClosedEvents[0]]:null
+    len > 1 ? notClosedEvents = [notClosedEvents[0]]:null
     return (
       <div className="content">
         <Carousel
@@ -240,7 +240,7 @@ export default class Home extends Component {
 							onClick={this.toHistoryEventPage}
 						>
 							{
-								notClosedEvents.length ?
+								len ?
 								notClosedEvents.map(item => (
 									<span className={styles.msg} key={item.id}>
 										工单状态

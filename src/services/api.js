@@ -183,6 +183,9 @@ export function getEvent(params) {
 export function getHistoryEvent(params) {
   return request(`/device/Event?id=${params}`);
 }
+export function getDispatch(params) {
+  return request(`/device/Dispatch?${stringify(params)}`);
+}
 export function postFinish(params) {
   return request('/device/Dispatch/finish', {
     method: 'POST',

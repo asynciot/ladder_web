@@ -267,6 +267,10 @@ export const getRouterData = (app) => {
       name: '工单处理',
       component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/WorkOrder')),
     },
+		'/company/order/:id': {
+			name: '工单详情',
+			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/Fault')),
+		},
     '/company/follow/:IMEI': {
       name: '关注设备',
       component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/Follow')),
