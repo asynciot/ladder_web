@@ -44,6 +44,9 @@ export async function uploadPicture(params) {
     body: params,
   });
 }
+export async function getFile(params) {
+  return request(`/getfile?${stringify(params)}`);
+}
 
 export async function getCaptcha(params) {
   return request('/common/sms', {
@@ -152,8 +155,13 @@ export function postFault(params) {
     body: params,
   });
 }
-export function deleteFollowInfo(params) {
+export function deleteFault(params) {
   return request(`/device/Order?${stringify(params)}`, {
+    method: 'DELETE',
+  });
+}
+export function deleteFollowInfo(params) {
+  return request(`/device/follow?${stringify(params)}`, {
     method: 'DELETE',
   });
 }
@@ -176,7 +184,7 @@ export function getHistoryEvent(params) {
   return request(`/device/Event?id=${params}`);
 }
 export function postFinish(params) {
-  return request('/device/Repair/finish', {
+  return request('/device/Dispatch/finish', {
     method: 'POST',
     body: params,
   });

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Icon, Button, Row, Col, Pagination, } from 'antd';
 import { Tabs, Flex, Modal, List,PullToRefresh } from 'antd-mobile';
 import styles from './WorkOrder.less';
-import { getFault, postFault, postFinish, } from '../../services/api';
+import { getFault, postFault, postFinish, deleteFault,} from '../../services/api';
 
 const Item = List.Item;
 const Brief = Item.Brief;
@@ -39,10 +39,14 @@ const ListButton = ({ className = '', ...restProps }) => (
 );
 const Finish = ({ className = '', ...restProps }) => (
   <div className={`${className} ${styles['list-btn']}`}>
-    <span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.remove ? restProps.remove:''}>
-      <Icon className={`${styles.delete} ${styles.icon}`} type="form" />
+    <span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.finish ? restProps.finish:''}>
+      <Icon className={`${styles.edit} ${styles.icon}`} type="form" />
       <em>完成</em>
     </span>
+		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.remove ? restProps.remove:''}>
+			<Icon className={`${styles.delete} ${styles.icon}`} type="close" />
+			<em>取消</em>
+		</span>
   </div>
 );
 export default class extends Component {
@@ -50,6 +54,7 @@ export default class extends Component {
     historyEvents: [],
 		list:[],
     height: document.documentElement.clientHeight-150,
+		nowTime: new Date().getTime(),
     refreshing: true,
     down: false,
     tab: 0,
@@ -69,9 +74,11 @@ export default class extends Component {
     }
     getFault({ num: 10, page, state }).then((res) => {
 			const list = res.data.list.map((item) => {
-				if (item.createTime) {
-					item.createTime = moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')
-				}				
+				const time = this.state.nowTime - item.createTime
+				item.hour = parseInt((time)/(1000*3600))
+				item.minute = parseInt(time%(1000*3600)/(1000*60))
+				item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
+				item.code = res.data.list[res.data.list.length-1].code.toString(16)
 				return item;
 			})
       if(refreshing) {
@@ -88,25 +95,37 @@ export default class extends Component {
     }).catch((e => console.info(e)));
   }
 
-  deal = (detail) => {
-		const fault_id = detail.id
+  deal = (e, detail) => {
+		const order_id = detail.id
     alert('提示', desc[detail.state], [
       { text: '取消', style: 'default' },
       { text: '确认',
         onPress: () => {
-          postFault(fault_id).then(() => {
+          postFault({order_id}).then(() => {
             this.getFault(detail.state);
           });
         },
       },
     ]);
   }
-	remove = (detail) => {
+	finish = (e,detail) => {
 		alert('提示', '是否完成', [
 			{ text: '取消', style: 'default' },
 			{ text: '确认',
 				onPress: () => {
-					postFinish({ fault_id: detail.id }).then((res) => {            
+					postFinish({ order_id: detail.id }).then((res) => {            
+					});
+					this.getFault(detail.state);
+				},
+			},
+		]);
+	}
+	remove = (e,detail) => {
+		alert('提示', '是否完成', [
+			{ text: '取消', style: 'default' },
+			{ text: '确认',
+				onPress: () => {
+					deleteFault({ order_id: detail.id }).then((res) => {            
 					});
 					this.getFault(detail.state);
 				},
@@ -150,12 +169,12 @@ export default class extends Component {
 							<List>
 								{
 									list.map((item, index) => (
-										<List.Item className={styles.item} key={index} extra={<ListButton edit={(item) => { this.deal(item); }} />}>
+										<List.Item className={styles.item} key={index} extra={<ListButton edit={(event) => { this.deal(event,item,); }} />}>
 											<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 												<tbody>
 													<tr>
-														<td className="tr">名称 ：</td>
-														<td className="tl" style={{ width: '100px' }}>{item.id}</td>
+														<td className="tr">故障代码 ：</td>
+														<td className="tl" style={{ width: '100px' }}>E{item.code}</td>
 														<td className="tl">设备编号 ：</td>
 														<td className="tl">{item.device_id}</td>
 													</tr>
@@ -167,7 +186,11 @@ export default class extends Component {
 													</tr>
 													<tr>
 														<td className="tr">故障时间 ：</td>
-														<td className="tl">{item.createTime}</td>
+														<td className="tl">{moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')}</td>
+													</tr>
+													<tr>
+														<td className="tr">故障时长 ：</td>
+														<td className="tl">{item.hour}小时{item.minute}分{item.second}秒</td>					
 													</tr>
 												</tbody>
 											</table>
@@ -197,12 +220,12 @@ export default class extends Component {
               <List>
               	{
               		list.map((item, index) => (
-              			<List.Item className={styles.item} key={index} extra={<Finish remove={(item) => { this.remove(item); }} />}>
+              			<List.Item className={styles.item} key={index} extra={<Finish remove={(event) => { this.remove(event, item); }} />}>
               				<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
               					<tbody>
               						<tr>
-              							<td className="tr">名称 ：</td>
-              							<td className="tl" style={{ width: '100px' }}>{item.id}</td>
+              							<td className="tr">故障代码 ：</td>
+              							<td className="tl" style={{ width: '100px' }}>E{item.code}</td>
               							<td className="tl">设备编号 ：</td>
               							<td className="tl">{item.device_id}</td>
               						</tr>
@@ -214,11 +237,11 @@ export default class extends Component {
               						</tr>
               						<tr>
               							<td className="tr">故障时间 ：</td>
-              							<td className="tl">{item.createTime}</td>
+              							<td className="tl">{moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')}</td>
               						</tr>
               						<tr>
               							<td className="tr">故障时长 ：</td>
-              							<td className="tl">{moment(item.time+item.interval*item["length"]).format('YYYY-MM-DD HH:mm:ss')}</td>					
+              							<td className="tl">{item.hour}小时{item.minute}分{item.second}秒</td>					
               						</tr>
               					</tbody>
               				</table>

@@ -4,7 +4,6 @@ import avatar from '../assets/avatar.jpg';
 
 export default {
   namespace: 'user',
-
   state: {
     list: [],
     currentUser: {
@@ -13,7 +12,7 @@ export default {
       sex: '',
       companyName: '',
       mobile: '',
-      portrait: avatar,
+      portrait: '',
     },
   },
 
@@ -28,9 +27,9 @@ export default {
     *fetchCurrent({ payload }, { call, put }) {
       const response = yield call(queryCurrent, payload);
       if (response.code === 0) {
-        if (!response.data.list[0].portrait) {
-          response.data.list[0].portrait = avatar;
-        }
+//         if (!response.data.list[0].portrait) {
+//           response.data.list[0].portrait = 'http://server.asynciot.com/getfile?filePath='+response.data.list[0].portrait;
+// 				}
         yield put({
           type: 'saveCurrentUser',
           payload: response.data.list[0],

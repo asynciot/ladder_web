@@ -4,9 +4,9 @@ import { ImagePicker } from 'antd-mobile';
 import { connect } from 'dva';
 import { Modal, Accordion, List, Badge, Grid } from 'antd-mobile';
 import styles from './Index.less';
-import avatar from '../../assets/avatar.jpg';
-import { uploadPicture, } from '../../services/api';
+import { uploadPicture, getFile,} from '../../services/api';
 
+var avatar = '';
 const { alert } = Modal;
 const typeName ={
   'ctrl':'控制柜',
@@ -55,28 +55,21 @@ export default class Company extends Component {
     }
   };
 	uploadPicture = (e) =>{
-		// var f = e.target.files[0]
-		// document.getElementsByName('pic').files;
-		var files = e[0].file
-		var formData = new FormData(files)
-// 		var formData = new window.FormData()
-// 		formData.append('file',e[0].file)
-		
-		// console.log(e.files)
-		// const pic = document.getElementsByName('pic').files
-		
-		// formData.append('file',files)
-		console.log(formData)
-		
-		uploadPicture({formData}).then((res) => {
-			if (res.code == 0){
-				alert("上传成功")
-			}else{
-				alert("上传失败")
-			}
-		}).catch((e => console.info(e)));
+		var files = e.target.files[0]
+		var formdata = new FormData()
+		formdata = new window.FormData()
+		formdata.append("file",files)
+		fetch('http://server.asynciot.com/account/portrait', {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json, text/plain, */*',
+			},
+			body: formdata
+		}).then(function(response){
+		}).then(function(data){
+		})
 	};
-	
+
   render() {
     const { company: { group, unread }, currentUser } = this.props;
 		const imageUrl = this.state.imageUrl;
@@ -87,16 +80,16 @@ export default class Company extends Component {
 						<Avatar
 							className={styles.avatar}
 							size="large"
-							src={avatar}
+							src={'http://server.asynciot.com/getfile?filePath='+currentUser.portrait}
 						/>
-						<input accept="image/*" className={styles.input} type="file" name='pic' onChange={() => this.uploadPicture()} />
-						<ImagePicker
+						<input accept="image/*" className={styles.input} type="file" name='pic' onChange={this.uploadPicture} />
+						{/*<ImagePicker
 							className={styles.btn}
 							files={this.state.files}
 							onChange={this.uploadPicture}
 							onImageClick={(index, fs) => console.log(index, fs)}
 							accept="image/jpeg,image/jpg,image/png"
-						/>
+						/>*/}
 					</div>
           <p onClick={() => this.goDetail('revise')} className={styles.nickname}>{currentUser.nickname}<Icon className={styles.edit} type="form" /></p>
         </div>

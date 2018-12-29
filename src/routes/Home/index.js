@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Carousel, WingBlank, List, Flex, Card,} from 'antd-mobile';
 import { Row, Col, Button, Spin, DatePicker, Pagination, } from 'antd';
 import styles from './index.less';
-import { getBanners, getMessages, getDevicesStatus, getFault } from '../../services/api';
+import { getBanners, getMessages, getDevicesStatus, getFault, } from '../../services/api';
 import background1 from '../../assets/menu-bg.png';
 import background3 from '../../assets/bg-menu.jpg';
 import background2 from '../../assets/menu-bg1.jpg';
@@ -34,6 +34,7 @@ export default class Home extends Component {
 			ctrllongoffline:0,			
     },
     historyEvents: [],
+		code:'',
   }
   componentWillMount() {
     this.getdata();
@@ -78,8 +79,10 @@ export default class Home extends Component {
   getFault = () => {
     getFault({ num: 10, page: 1 }).then((res) => {
       if (res.code === 0) {
+				const code = res.data.list[res.data.list.length-1].code
         this.setState({
           historyEvents: res.data.list,
+					code: code.toString(16)
         });
       }
     }).catch((e => console.info(e)));
@@ -249,7 +252,7 @@ export default class Home extends Component {
 												<Flex.Item>型号:<span className={styles.tips}>{typeName[item.device_type] ||''}</span></Flex.Item>
 											</Flex>
 										</Brief>
-										<Brief>错误码<span className={styles.tips}>{item.code ? item.code : '无'}</span></Brief>
+										<Brief>错误码<span className={styles.tips}>E{this.state.code ? this.state.code : '无'}</span></Brief>
 									</span>
 								)) : (
 									<span>
