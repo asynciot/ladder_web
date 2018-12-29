@@ -85,14 +85,14 @@ export default class DoorHistory extends Component {
 		reader.readAsDataURL(this.state.file2)
 	}
 	uploadPicture = (e) =>{
-		e.stopPropagation();
-		e.preventDefault();
 		var formdata = new FormData()
 		formdata = new window.FormData()
 		formdata.append("file1",this.state.file1)
 		formdata.append("file2",this.state.file2)
 		formdata.append("maintenance_nexttime",this.state.maintenance_nexttime)
 		formdata.append("inspection_nexttime",this.state.inspection_nexttime)
+		formdata.append("result",'untransfer')
+		formdata.append("id",this.state.list.id)
 		if(!this.state.file1 || !this.state.file2){
 			alert("请上传维修前和维修后的图片！")
 		}else {
@@ -118,8 +118,6 @@ export default class DoorHistory extends Component {
 		});
 	}
 	postFault = (e) =>{
-		e.stopPropagation();
-		e.preventDefault();
 		const { dispatch, location } = this.props;
 		const match = pathToRegexp('/company/order/:id').exec(location.pathname);
 		const order_id = match[1];
@@ -189,7 +187,7 @@ export default class DoorHistory extends Component {
 						<input accept="image/*" className={styles.input} type="file" id='upload2' onChange={this.upFinish}/>
 					</Col>
 					<Col xs={{ span: 12 }} sm={{ span: 18 }} md={{ span: 16 }} className={styles.btn1}>
-						<Button disabled={this.state.disable} onClick={(event) => {this.postFault(event)}} type="primary" style={{ width: '100%' }} >接单</Button>
+						<Button disabled={this.state.disable} onClick={() => this.postFault()} type="primary" style={{ width: '100%' }} >接单</Button>
 					</Col>
 					<Col xs={{ span: 12 }} sm={{ span: 18 }} md={{ span: 16 }} className={styles.btn1}>
 						<Button onClick={(event) => {this.uploadPicture(event)}} type="primary" style={{ width: '100%' }} >维修完成</Button>

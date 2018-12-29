@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Icon, Button, Row, Col, Pagination, } from 'antd';
 import { Tabs, Flex, Modal, List,PullToRefresh } from 'antd-mobile';
 import styles from './WorkOrder.less';
-import { getFault, postFault, postFinish, deleteFault, getDispatch,} from '../../services/api';
+import { getFault, postFault, postFinish, deleteFault, getDispatch, } from '../../services/api';
 
 const Item = List.Item;
 const Brief = Item.Brief;
@@ -147,7 +147,7 @@ export default class extends Component {
 			{ text: '取消', style: 'default' },
 			{ text: '确认',
 				onPress: () => {
-					deleteFault({ order_id: detail.id }).then((res) => {            
+					postFinish({ id: detail.id,result:'transfer' }).then((res) => {            
 					});
 					this.getFault(detail.state);
 				},
