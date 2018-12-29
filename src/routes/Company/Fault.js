@@ -33,6 +33,8 @@ export default class DoorHistory extends Component {
 		disable:false,
 		last:'',
 		val:'',
+		maintenance:true,
+		inspection:true,
 	}
 	componentWillMount() {
 		this.getFault()
@@ -43,6 +45,12 @@ export default class DoorHistory extends Component {
 		const order_id = match[1];
 		getFault({ order_id, page:1, num:1, }).then((res) => {
 			const list = res.data.list.map((item) => {
+				if(item.type == "2"){
+					this.state.maintenance = false
+				}
+				if(item.type == "3"){
+					this.state.inspection = false
+				}
 				const time = this.state.nowTime - item.createTime
 				item.hour = parseInt((time)/(1000*3600))
 				item.minute = parseInt(time%(1000*3600)/(1000*60))
@@ -60,7 +68,7 @@ export default class DoorHistory extends Component {
 	}
 	upFault = (e) =>{
 		var file = e.target.files[0]
-		this.state.file1 = new File([file], "before.jpg",{type:"image/*"})
+		this.state.file1 = new File([file], "before"+new Date().getTime()+".jpg",{type:"image/*"});
 		var reader = new FileReader()
 		reader.onload = function (e) {
 			document.querySelector("#upload1").src = e.target.result
@@ -69,7 +77,7 @@ export default class DoorHistory extends Component {
 	}
 	upFinish = (e) =>{
 		var file = e.target.files[0]
-		this.state.file2 = new File([file], "after.jpg",{type:"image/*"});
+		this.state.file2 = new File([file], "after"+new Date().getTime()+".jpg",{type:"image/*"});
 		var reader = new FileReader()
 		reader.onload = function (e) {
 			document.querySelector("#upload2").src = e.target.result
@@ -88,18 +96,13 @@ export default class DoorHistory extends Component {
 		if(!this.state.file1 || !this.state.file2){
 			alert("请上传维修前和维修后的图片！")
 		}else {
-			fetch('http://server.asynciot.com/account/portrait', {
+			fetch('http://server.asynciot.com/device/Dispatch/finish', {
 				method: 'POST',
 				headers: {
 					Accept: 'application/json, text/plain, */*',
 				},
 				body: formdata
 			}).then(function(response){
-				if(response.code == 0){
-					alert("上传成功！")
-				}else{
-					alert("上传失败！")
-				}
 			}).then(function(data){
 			})
 		}		
@@ -163,11 +166,11 @@ export default class DoorHistory extends Component {
 									</tr>
 									<tr>
 										<td className="tr">下次维保 ：</td>
-										<td className="tl"><DatePicker title="下次维保时间" size="large" value={this.state.maintenance_nexttime} onChange={this.onStart} /></td>
+										<td className="tl"><DatePicker title="下次维保时间" disabled={this.state.maintenance} size="large" value={this.state.maintenance_nexttime} onChange={this.onStart} /></td>
 									</tr>
 									<tr>
 										<td className="tr">下次年检 ：</td>
-										<td className="tl"><DatePicker title="下次年检时间" size="large" value={this.state.inspection_nexttime} onChange={this.onEnd} /></td>
+										<td className="tl"><DatePicker title="下次年检时间" disabled={this.state.inspection} size="large" value={this.state.inspection_nexttime} onChange={this.onEnd} /></td>
 									</tr>
 								</tbody>
 							</table>

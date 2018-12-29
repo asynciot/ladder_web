@@ -194,7 +194,7 @@ const ListButton = ({ className = '', ...restProps }) => (
     </span>
     <span onClick={restProps.remove ? restProps.remove:''}>
       <Icon className={`${styles.delete} ${styles.icon}`} type="close" />
-      <em>删除</em>
+      <em>取关</em>
     </span>
   </div>
 );

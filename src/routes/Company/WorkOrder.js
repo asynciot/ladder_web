@@ -41,7 +41,7 @@ const Finish = ({ className = '', ...restProps }) => (
   <div className={`${className} ${styles['list-btn']}`}>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.remove ? restProps.remove:''}>
 			<Icon className={`${styles.delete} ${styles.icon}`} type="close" />
-			<em>取消</em>
+			<em>转办</em>
 		</span>
   </div>
 );

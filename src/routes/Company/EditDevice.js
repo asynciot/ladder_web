@@ -22,7 +22,7 @@ export default class extends Component {
 		const device_id =match[1]
     getDevices({device_id}).then(res=> {
       if (res.code == 0) {
-        const list = res.data.list[0]
+        var list = res.data.list[0]
 				this.setState({
 					list,
 				})
@@ -57,16 +57,16 @@ export default class extends Component {
     this.setState(val);
   }
   submit = () => {
+		const time1 = this.state.maintenance_remind*24*3600*1000
+		const time2 = this.state.inspection_remind*24*3600*1000
     putFollowInfo({
       device_id: this.state.list.device_id,
       device_name: this.state.list.device_name,
       install_addr: this.state.list.install_addr,
 			maintenance_nexttime: this.state.maintenance_nexttime,
 			inspection_nexttime: this.state.inspection_nexttime,
-			maintenance_remind: this.state.maintenance_remind,
-			inspection_remind: this.state.inspection_remind,
-			maintenance_lasttime: this.state.list.maintenance_lasttime,
-			inspection_lasttime: this.state.list.inspection_lasttime,
+			maintenance_remind: time1,
+			inspection_remind: time2,
     }).then((res) => {
       if (res.code === 0) {
         message.success('修改成功', 1, () => {
@@ -119,7 +119,7 @@ export default class extends Component {
 					<InputItem
 						disabled={true}
 						onChange={value => this.onChange(value, 'maintenance_lasttime')}
-						value={list.maintenance_lasttime}
+						value={moment(parseInt(list.maintenance_lasttime)).format('YYYY-MM-DD HH:mm:ss')}
 					>
 						上次维保时间
 					</InputItem>
@@ -137,7 +137,7 @@ export default class extends Component {
 					<InputItem
 						disabled={true}
 						onChange={value => this.onChange(value, 'inspection_lasttime')}
-						value={list.inspection_lasttime}
+						value={moment(parseInt(list.inspection_lasttime)).format('YYYY-MM-DD HH:mm:ss')}
 					>
 						上次年检时间
 					</InputItem>
