@@ -49,8 +49,9 @@ export async function getFile(params) {
 }
 
 export async function getCaptcha(params) {
-  return request(`/common/sms/${params}`, {
+  return request(`/common/sms/`+params, {
     method: 'POST',
+		body: params,
   });
 }
 // ladder
