@@ -105,7 +105,7 @@ export default class Home extends Component {
   }
   render() {		
 		const imgList = [
-				background1,
+				// background1,
 				background2,
 				background3,
 				background4,

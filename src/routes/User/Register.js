@@ -4,7 +4,7 @@ import { Form, Input, Button, Icon, Checkbox, Row, Col, Modal, Alert } from 'ant
 import styles from './Register.less';
 import logo from '../../assets/logo-title.png';
 import Background from '../../assets/back.png';
-
+import {getCaptcha, } from '../../services/api';
 
 var sectionStyle = {
 	width:"100%",
@@ -28,12 +28,9 @@ export default class Login extends Component {
   onGetCaptcha = () => {
     const { form } = this.props;
     if (this.state.count !== 0) return;
-    this.props.dispatch({
-      type: 'login/captcha',
-      payload: {
-        mobile: form.getFieldValue('mobile'),
-      },
-    });
+	const mobile = form.getFieldValue('mobile')
+	getCaptcha({mobile}).then((res)=>{
+	})
     let count = 59;
     this.setState({ count });
     this.interval = setInterval(() => {
