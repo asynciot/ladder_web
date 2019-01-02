@@ -28,18 +28,25 @@ export default class Login extends Component {
   onGetCaptcha = () => {
     const { form } = this.props;
     if (this.state.count !== 0) return;
-	const mobile = form.getFieldValue('mobile')
-	getCaptcha({mobile}).then((res)=>{
-	})
-    let count = 59;
-    this.setState({ count });
-    this.interval = setInterval(() => {
-      count -= 1;
-      this.setState({ count });
-      if (count === 0) {
-        clearInterval(this.interval);
-      }
-    }, 1000);
+		const mobile = form.getFieldValue('mobile')	
+		fetch('http://server.asynciot.com/common/sms/'+mobile, {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json, text/plain, */*',
+			},
+			// body: formdata
+		}).then(function(response){
+		}).then(function(data){
+		})
+		let count = 59;
+		this.setState({ count });
+		this.interval = setInterval(() => {
+			count -= 1;
+			this.setState({ count });
+			if (count === 0) {
+				clearInterval(this.interval);
+			}
+		}, 1000);
   }
 
   showModal = (e) => {

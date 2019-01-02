@@ -38,7 +38,7 @@ export default {
       }
     },
     *register({ payload }, { call, put }) {
-      const params = Object.assign({ username: payload.mobile }, payload);
+      const params = Object.assign({ username: payload.username }, payload);
       const response = yield call(register, params);
       if (response.code === 0) {
         const msg = message.success(
@@ -49,7 +49,7 @@ export default {
         yield put({
           type: 'login',
           payload: {
-            username: payload.mobile,
+            username: payload.username,
             password: payload.password,
           },
         });
@@ -60,7 +60,7 @@ export default {
       } 
     },
 		*retrieve({ payload }, { call, put }) {
-			const params = Object.assign({ username: payload.mobile }, payload);
+			const params = Object.assign({ username: payload.username }, payload);
 			const response = yield call(retrieve, params);
 			if (response.code === 0) {
 				const msg = message.success(
@@ -71,7 +71,7 @@ export default {
 				yield put({
 					type: 'login',
 					payload: {
-						username: payload.mobile,
+						username: payload.username,
 						password: payload.password,
 					},
 				});
