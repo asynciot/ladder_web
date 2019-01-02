@@ -20,11 +20,9 @@ export default class Login extends Component {
   state = {
     count: 0,
   }
-
   componentWillUnmount() {
     clearInterval(this.interval);
   }
-
   showModal = (e) => {
     e.preventDefault();
     Modal.info({
@@ -39,7 +37,6 @@ export default class Login extends Component {
       onOk() {},
     });
   }
-
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields({ force: true },
@@ -55,7 +52,6 @@ export default class Login extends Component {
       }
     );
   }
-
   emitEmpty = () => {
     this.props.form.resetFields('username');
   }
@@ -130,7 +126,7 @@ export default class Login extends Component {
 												<Input
 													size="large"
 													type="password"
-	                     prefix={<Icon type="lock" className={styles.prefixIcon} />}
+													prefix={<Icon type="lock" className={styles.prefixIcon} />}
 													placeholder="密码"
 												/>
 											)}
