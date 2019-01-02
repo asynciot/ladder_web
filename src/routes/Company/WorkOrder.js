@@ -92,7 +92,7 @@ export default class extends Component {
 				}, 800)
 			}).catch((e => console.info(e)));
 		}else{
-			getDispatch({ num: 10, page }).then((res) => {
+			getDispatch({ num: 10, page, follow:'yes' }).then((res) => {
 				const list = res.data.list.map((item) => {
 					const time = this.state.nowTime - item.create_time
 					item.hour = parseInt((time)/(1000*3600))

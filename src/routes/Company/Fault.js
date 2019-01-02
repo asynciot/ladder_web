@@ -56,6 +56,7 @@ export default class DoorHistory extends Component {
 				item.minute = parseInt(time%(1000*3600)/(1000*60))
 				item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
 				item.code = res.data.list[res.data.list.length-1].code.toString(16)
+				console.log(item.device_id)
 				if(item.state == 'treating'){
 					this.state.disable = true
 				}
@@ -85,6 +86,9 @@ export default class DoorHistory extends Component {
 		reader.readAsDataURL(this.state.file2)
 	}
 	uploadPicture = (e) =>{
+		const { dispatch, location } = this.props;
+		const match = pathToRegexp('/company/order/:id').exec(location.pathname);
+		const order_id = match[1];
 		var formdata = new FormData()
 		formdata = new window.FormData()
 		formdata.append("file1",this.state.file1)
@@ -92,7 +96,7 @@ export default class DoorHistory extends Component {
 		formdata.append("maintenance_nexttime",this.state.maintenance_nexttime)
 		formdata.append("inspection_nexttime",this.state.inspection_nexttime)
 		formdata.append("result",'untransfer')
-		formdata.append("id",this.state.list.id)
+		formdata.append("id",this.state.list[0].device_id)
 		if(!this.state.file1 || !this.state.file2){
 			alert("请上传维修前和维修后的图片！")
 		}else {
@@ -106,7 +110,7 @@ export default class DoorHistory extends Component {
 				alert("上传成功！")
 			}).then(function(data){
 			})
-		}		
+		}
 	}
 	onStart = async(val) => {
 		await this.setState({
