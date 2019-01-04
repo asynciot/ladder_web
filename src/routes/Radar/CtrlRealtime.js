@@ -171,7 +171,9 @@ export default class CtrlRealtime extends Component {
 				const duration = 30;
 				const device_type = '240';
 				const type = '0';
-				postMonitor({ op, IMEI, interval, threshold, duration, device_type}).then((res) => {});
+				const segment = '0';
+				const address = '1,1,1,1,1,1,1,1';
+				postMonitor({ op, IMEI, interval, threshold, duration, device_type, type, segment, address}).then((res) => {});
 			}
 		})
 		const wsurl = 'ws://47.96.162.192:9006/device/Monitor/socket?deviceId='+device_id;
@@ -186,6 +188,7 @@ export default class CtrlRealtime extends Component {
 				this.closed
 			}else{
 				var redata = JSON.parse(e.data)
+				console.log(redata)
 				_this.getData(redata)
 			}
 		}
