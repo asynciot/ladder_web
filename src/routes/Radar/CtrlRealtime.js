@@ -188,7 +188,6 @@ export default class CtrlRealtime extends Component {
 				this.closed
 			}else{
 				var redata = JSON.parse(e.data)
-				console.log(redata)
 				_this.getData(redata)
 			}
 		}
@@ -217,6 +216,7 @@ export default class CtrlRealtime extends Component {
 		const {show, floor} = this.state
 		let buffer = []
 		buffer = base64url.toBuffer(val.data);	//8位转流
+		console.log(buffer)
 		let count= 0
 		var inte = setInterval(function () {
 			if((count+33) <= buffer.length){
@@ -396,7 +396,6 @@ export default class CtrlRealtime extends Component {
 				src: `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=http://server.asynciot.com/company/follow/${id}`,
 				modal: true,
 			});
-			console.log(this.state.src)
 		})
 	}
 	goDebug = () => {
