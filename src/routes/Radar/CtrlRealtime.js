@@ -213,24 +213,24 @@ export default class CtrlRealtime extends Component {
 		this.initWebsocket()
 	}
 	getData = (val) => {
-		const {show, floor} = this.state
+		// const {show, floor} = this.state
 		let buffer = []
 		buffer = base64url.toBuffer(val.data);	//8位转流
-		console.log(buffer)
 		let count= 0
+		const _this = this
 		var inte = setInterval(function () {
 			if((count+33) <= buffer.length){
-				show.upCall   = buffer[count+0]&0x01
-				show.downCall = (buffer[count+0]&0x02)>>1
-				show.run      = (buffer[count+0]&0x04)>>2					//获取运行信号
-				show.lock     = (buffer[count+0]&0x08)>>3					//获取门锁信号
-				show.openBtn  = (buffer[count+0]&0x40)>>6					//获取开门按钮信号
-				show.closeBtn = (buffer[count+0]&0x80)>>7					//获取关门按钮信号
-				show.close    = (buffer[count+0]&0x10)>>5					//获取关门信号
-				show.model    = buffer[count+1]&0xff						//获取电梯模式
-				show.status   = buffer[count+2]&0xff						//获取电梯状态				
-				show.floor    = buffer[count+28]&0xff           //获取电梯当前楼层
-
+				_this.state.show.upCall   = buffer[count+0]&0x01
+				_this.state.show.downCall = (buffer[count+0]&0x02)>>1
+				_this.state.show.run      = (buffer[count+0]&0x04)>>2					//获取运行信号
+				_this.state.show.lock     = (buffer[count+0]&0x08)>>3					//获取门锁信号
+				_this.state.show.openBtn  = (buffer[count+0]&0x40)>>6					//获取开门按钮信号
+				_this.state.show.closeBtn = (buffer[count+0]&0x80)>>7					//获取关门按钮信号
+				_this.state.show.close    = (buffer[count+0]&0x10)>>5					//获取关门信号
+				_this.state.show.model    = buffer[count+1]&0xff						//获取电梯模式
+				_this.state.show.status   = buffer[count+2]&0xff						//获取电梯状态				
+				_this.state.show.floor    = buffer[count+27]&0xff           //获取电梯当前楼层
+				
 				count+=33
 			}
 		}, this.state.interval);
@@ -509,7 +509,7 @@ export default class CtrlRealtime extends Component {
 								<Col span={8}>	
 									<div className={styles.info}>
 										<p>
-											<Icon className={styles.icon} type={direction[`${this.state.show.toDown}${this.state.show.toUp}`]} />
+											<Icon className={styles.icon} type={direction[`${this.state.show.downCall}${this.state.show.upCall}`]} />
 											<i>{this.state.show.floor}</i>
 										</p>
 										<ul>
