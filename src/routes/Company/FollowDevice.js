@@ -1,17 +1,23 @@
 import React, { Component } from 'react';
-import { Row, Col, Button, Spin, DatePicker, Pagination, Icon , } from 'antd';
+import { Row, Col, Button, Spin, DatePicker, Pagination, Icon, } from 'antd';
 import { Tabs, Flex, Badge, List, Modal,} from 'antd-mobile';
 import classNames from 'classnames';
 import base64url from 'base64url';
 import MobileNav from '../../components/MobileNav';
 import styles from './FollowDevice.less';
 import singalImg from '../../assets/signal.png';
-import { getFollowDevices, deleteFollowInfo } from '../../services/api';
+import { getFollowDevices, deleteFollowInfo, getDevicesStatus } from '../../services/api';
 const alert = Modal.alert;
 const tabs = [
   { title: '全部', device_type: '' },
   { title: '控制器', device_type: '15' },
   { title: '控制柜', device_type: '240' },
+];
+const tabs2 = [
+  { title: '全部', state: '' },
+  { title: '在线', state: 'online' },
+  { title: '离线', state: 'offline' },
+	{ title: '长期离线', state: 'longoffline' },
 ];
 const typeName ={
   '240':'控制柜',
@@ -215,15 +221,32 @@ export default class extends Component {
     },
   }
   componentWillMount() {
-    this.getDevice('',1);
+		const params = this.props.location.state.vcode
+		this.getDevice('',1,params);
   }
 	pageChange = (val) => {
-		this.getDevice(val)
+		console.log(this.state.switchIdx)
+		const { device_type,} =this.state
+		this.getDevice(device_type,val,this.state.switchIdx)
 	}
-  getDevice = (device_type,val) => {
+  getDevice = (device_type,val,state) => {
     let { navs } = this.state;
 		const page = val
-    getFollowDevices({ num: 10, page,device_type }).then((res) => {
+		this.state.switchIdx = state
+		console.log(this.state.switchIdx)
+		if(state == 0){
+			state = ""
+		}else if(state == 1){
+			state = "online"
+		}else if(state == 2){
+			state = "offline"
+		}else if(state == 3){
+			state = "longoffline"
+		}
+		this.setState({
+			device_type
+		});
+    getFollowDevices({ num: 10, page, device_type, state }).then((res) => {
       if (res.code === 0) {
         const now = new Date().getTime();
 				const totalNumber = res.data.totalNumber
@@ -263,13 +286,22 @@ export default class extends Component {
           }
           return item;
         });
-        navs.all = list.length;
-        navs.ok = (list.filter(item => item.state  === 'online') || []).length;
-        navs.fault = (list.filter(item => item.state === 'offline') || []).length;
-        navs.missing = (list.filter(item => item.state === 'longoffline') || []).length;
+				getDevicesStatus().then((res) => {
+					if (res.code === 0) {
+						navs.ok = parseInt(res.data.dooronline) + parseInt(res.data.ctrlonline)
+						navs.fault = parseInt(res.data.dooroffline)+parseInt(res.data.ctrloffline)
+						navs.missing = parseInt(res.data.doorlongoffline)+parseInt(res.data.ctrllongoffline)
+						this.setState({
+							navs,
+						});
+					}
+				}).catch((e => console.info(e)));
+        navs.all = totalNumber
+//         navs.ok = (list.filter(item => item.state  === 'online') || []).length;
+//         navs.fault = (list.filter(item => item.state === 'offline') || []).length;
+//         navs.missing = (list.filter(item => item.state === 'longoffline') || []).length;
         this.setState({
           switchIdx: 0,
-          navs,
           totalList: list,
           list,
 					page,
@@ -310,28 +342,34 @@ export default class extends Component {
         this.setState({
           list: totalList,
         });
+				console.log(totalList)
         break;
       case 1:
         this.setState({
           list: totalList.filter(item => item.state  === "online"),
         });
+				console.log(totalList)
         break;
       case 2:
         this.setState({
           list: totalList.filter(item => item.state  === "offline"),
         });
+				console.log(this.state.list)
         break;
       case 3:
         this.setState({
           list: totalList.filter(item => item.state  === "longoffline"),
         });
+				console.log(this.state.list)
         break;
       default:
         this.setState({
           list: totalList,
         });
+				console.log(this.state.list)
         break;
     }
+		
   }
   edit = (e, detail) => {
     e.stopPropagation();
@@ -389,151 +427,157 @@ export default class extends Component {
           onChange={(tab, index) => { this.getDevice(tab.device_type,1); }}
         >
           <div style={{ backgroundColor: '#fff' }}>
-            <Flex>
-              <Flex.Item onClick={() => this.switchList(0)}><PlaceHolder className={switchIdx === 0 ? styles.active : ''}>全部 {navs.all}</PlaceHolder></Flex.Item>
-              <Flex.Item onClick={() => this.switchList(1)}><PlaceHolder className={switchIdx === 1 ? styles.active : ''}>在线 {navs.ok}</PlaceHolder></Flex.Item>
-              <Flex.Item onClick={() => this.switchList(2)}><PlaceHolder className={switchIdx === 2 ? styles.active : ''}>离线 {navs.fault}</PlaceHolder></Flex.Item>
-              <Flex.Item onClick={() => this.switchList(3)}><PlaceHolder className={switchIdx === 3 ? styles.active : ''}>长期离线 {navs.missing}</PlaceHolder></Flex.Item>
-            </Flex>
-						<Row className={styles.page}>
-							<Col span={6}>
-							</Col>
-							<Col span={18} >
-								<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
-							</Col>
-						</Row>
-            <List>
-              {
-                list.map((item, index) => (
-                  <List.Item className={styles.item} key={index} onClick={this.goDevice(item)} extra={<ListButton qrcode={(event) => { this.qrcode(event, item); }} remove={(event) => { this.remove(event, item); }} edit={(event) => { this.edit(event, item); }} />}>
-                    <table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
-                      <tbody>
-                        <tr>
-                          <td className="tr">地点 ：</td>
-                          <td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
-                        </tr>
-                        <tr>
-                          <td className="tr">别名 ：</td>
-                          <td className="tl">{item.device_name ? item.device_name : '无'}</td>
-                          <td className="tl">类型 ：</td>
-                          <td className="tl">{typeName[item.device_type] ||''}</td>
-                        </tr>
-                        <tr>
-                          <td className="tr">编号 ：</td>
-                          <td className="tl">{item.IMEI}</td>
-                          <td className="tl">信号 ：</td>
-                          <td className="tl"><Signal width={item.rssi}/></td>
-                        </tr>
-                        <tr>
-                          <td className="tr">型号 ：</td>
-                          <td className="tl">{item.device_model ? item.device_model : '无'}</td>
-                          <td className="tr">状态 ：</td>
-                          <td className="tl">{state[item.state] ||''}</td>
-												</tr>
-                      </tbody>
-                    </table>
-                  </List.Item>
-                ))
-              }
-            </List>
+            <Tabs
+            	tabs={tabs2}
+            	initialPage={0}
+            	tabBarActiveTextColor="#1E90FF"
+            	tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
+            	onChange={(tab, index) => { this.getDevice(this.state.device_type,1,index); }}
+            >
+            	<List>
+            		<Row className={styles.page}>
+            			<Col span={6}>
+            			</Col>
+            			<Col span={18} >
+            				<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
+            			</Col>
+            		</Row>
+            		{
+            			list.map((item, index) => (
+            				<List.Item className={styles.item} key={index} onClick={this.goDevice(item)} extra={<ListButton qrcode={(event) => { this.qrcode(event, item); }} remove={(event) => { this.remove(event, item); }} edit={(event) => { this.edit(event, item); }} />}>
+            					<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
+            						<tbody>
+            							<tr>
+            								<td className="tr">地点 ：</td>
+            								<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
+            							</tr>
+            							<tr>
+            								<td className="tr">别名 ：</td>
+            								<td className="tl">{item.device_name ? item.device_name : '无'}</td>
+            								<td className="tl">类型 ：</td>
+            								<td className="tl">{typeName[item.device_type] ||''}</td>
+            							</tr>
+            							<tr>
+            								<td className="tr">编号 ：</td>
+            								<td className="tl">{item.IMEI}</td>
+            								<td className="tl">信号 ：</td>
+            								<td className="tl"><Signal width={item.rssi}/></td>
+            							</tr>
+            							<tr>
+            								<td className="tr">型号 ：</td>
+            								<td className="tl">{item.device_model ? item.device_model : '无'}</td>
+            								<td className="tr">状态 ：</td>
+            								<td className="tl">{state[item.state] ||''}</td>
+            							</tr>
+            						</tbody>
+            					</table>
+            				</List.Item>
+            			))
+            		}
+            	</List>
+            </Tabs>
           </div>
           <div style={{ backgroundColor: '#fff' }}>
-            <Flex>
-              <Flex.Item onClick={() => this.switchList(0)}><PlaceHolder className={switchIdx === 0 ? styles.active : ''}>全部 {navs.all}</PlaceHolder></Flex.Item>
-              <Flex.Item onClick={() => this.switchList(1)}><PlaceHolder className={switchIdx === 1 ? styles.active : ''}>在线 {navs.ok}</PlaceHolder></Flex.Item>
-              <Flex.Item onClick={() => this.switchList(2)}><PlaceHolder className={switchIdx === 2 ? styles.active : ''}>离线 {navs.fault}</PlaceHolder></Flex.Item>
-              <Flex.Item onClick={() => this.switchList(3)}><PlaceHolder className={switchIdx === 3 ? styles.active : ''}>长期离线 {navs.missing}</PlaceHolder></Flex.Item>
-            </Flex>
-						<Row className={styles.page}>
-							<Col span={6}>
-							</Col>
-							<Col span={18} >
-								<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
-							</Col>
-						</Row>
-            <List>
-              {
-                list.map((item, index) => (
-                  <List.Item className={styles.item} key={index} onClick={this.goDevice(item)} extra={<ListButton remove={(event) => { this.remove(event, item); }} edit={(event) => { this.edit(event, item); }} />}>
-                    <table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
-                      <tbody>
-                        <tr>
-                          	<td className="tr">地点 ：</td>
-                          	<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
-												</tr>
-												<tr>
-													<td className="tr">别名 ：</td>
-													<td className="tl">{item.device_name ? item.device_name : '无'}</td>
-													<td className="tl">类型 ：</td>
-													<td className="tl">{typeName[item.device_type] ||''}</td>
-												</tr>
-												<tr>
-													<td className="tr">编号 ：</td>
-													<td className="tl">{item.IMEI}</td>
-													<td className="tl">信号 ：</td>
-													<td className="tl"><Signal width={item.rssi}/></td>
-												</tr>
-												<tr>
-													<td className="tr">型号 ：</td>
-													<td className="tl">{item.device_model ? item.device_model : '无'}</td>
-													<td className="tr">状态 ：</td>
-													<td className="tl">{state[item.state] ||''}</td>
-												</tr>
-                      </tbody>
-                    </table>
-                  </List.Item>
-                ))
-              }
-            </List>
+            <Tabs
+            	tabs={tabs2}
+            	initialPage={0}
+            	tabBarActiveTextColor="#1E90FF"
+            	tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
+            	onChange={(tab, index) => { this.getDevice(this.state.device_type,1,index); }}
+            >
+            	<List>
+								<Row className={styles.page}>
+									<Col span={6}>
+									</Col>
+									<Col span={18} >
+										<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
+									</Col>
+								</Row>
+            		{
+            			list.map((item, index) => (
+            				<List.Item className={styles.item} key={index} onClick={this.goDevice(item)} extra={<ListButton qrcode={(event) => { this.qrcode(event, item); }} remove={(event) => { this.remove(event, item); }} edit={(event) => { this.edit(event, item); }} />}>
+            					<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
+            						<tbody>
+            							<tr>
+            								<td className="tr">地点 ：</td>
+            								<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
+            							</tr>
+            							<tr>
+            								<td className="tr">别名 ：</td>
+            								<td className="tl">{item.device_name ? item.device_name : '无'}</td>
+            								<td className="tl">类型 ：</td>
+            								<td className="tl">{typeName[item.device_type] ||''}</td>
+            							</tr>
+            							<tr>
+            								<td className="tr">编号 ：</td>
+            								<td className="tl">{item.IMEI}</td>
+            								<td className="tl">信号 ：</td>
+            								<td className="tl"><Signal width={item.rssi}/></td>
+            							</tr>
+            							<tr>
+            								<td className="tr">型号 ：</td>
+            								<td className="tl">{item.device_model ? item.device_model : '无'}</td>
+            								<td className="tr">状态 ：</td>
+            								<td className="tl">{state[item.state] ||''}</td>
+            							</tr>
+            						</tbody>
+            					</table>
+            				</List.Item>
+            			))
+            		}
+            	</List>
+            </Tabs>
           </div>
           <div style={{ backgroundColor: '#fff' }}>
-            <Flex>
-              <Flex.Item onClick={() => this.switchList(0)}><PlaceHolder className={switchIdx === 0 ? styles.active : ''}>全部 {navs.all}</PlaceHolder></Flex.Item>
-              <Flex.Item onClick={() => this.switchList(1)}><PlaceHolder className={switchIdx === 1 ? styles.active : ''}>在线 {navs.ok}</PlaceHolder></Flex.Item>
-              <Flex.Item onClick={() => this.switchList(2)}><PlaceHolder className={switchIdx === 2 ? styles.active : ''}>离线 {navs.fault}</PlaceHolder></Flex.Item>
-              <Flex.Item onClick={() => this.switchList(3)}><PlaceHolder className={switchIdx === 3 ? styles.active : ''}>长期离线 {navs.missing}</PlaceHolder></Flex.Item>
-            </Flex>
-						<Row className={styles.page}>
-							<Col span={6}>
-							</Col>
-							<Col span={18} >
-								<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
-							</Col>
-						</Row>
-            <List>
-              {
-                list.map((item, index) => (
-                  <List.Item className={styles.item} key={index} onClick={this.goDevice(item)} extra={<ListButton remove={(event) => { this.remove(event, item); }} edit={(event) => { this.edit(event, item); }} />}>
-                    <table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
-                      <tbody>
-                        <tr>
-													<td className="tr">地点 ：</td>
-													<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
-												</tr>
-												<tr>
-													<td className="tr">别名 ：</td>
-													<td className="tl">{item.device_name ? item.device_name : '无'}</td>
-													<td className="tl">类型 ：</td>
-													<td className="tl">{typeName[item.device_type] ||''}</td>
-												</tr>
-												<tr>
-													<td className="tr">编号 ：</td>
-													<td className="tl">{item.IMEI}</td>
-													<td className="tl">信号 ：</td>
-													<td className="tl"><Signal width={item.rssi}/></td>
-												</tr>
-												<tr>
-													<td className="tr">型号 ：</td>
-													<td className="tl">{item.device_model ? item.device_model : '无'}</td>
-													<td className="tr">状态 ：</td>
-													<td className="tl">{state[item.state] ||''}</td>
-												</tr>
-                      </tbody>
-                    </table>
-                  </List.Item>
-                ))
-              }
-            </List>
+            <Tabs
+            	tabs={tabs2}
+            	initialPage={0}
+            	tabBarActiveTextColor="#1E90FF"
+            	tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
+            	onChange={(tab, index) => { this.getDevice(this.state.device_type,1,index); }}
+            >
+            	<List>
+            		<Row className={styles.page}>
+            			<Col span={6}>
+            			</Col>
+            			<Col span={18} >
+            				<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
+            			</Col>
+            		</Row>
+            		{
+            			list.map((item, index) => (
+            				<List.Item className={styles.item} key={index} onClick={this.goDevice(item)} extra={<ListButton qrcode={(event) => { this.qrcode(event, item); }} remove={(event) => { this.remove(event, item); }} edit={(event) => { this.edit(event, item); }} />}>
+            					<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
+            						<tbody>
+            							<tr>
+            								<td className="tr">地点 ：</td>
+            								<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
+            							</tr>
+            							<tr>
+            								<td className="tr">别名 ：</td>
+            								<td className="tl">{item.device_name ? item.device_name : '无'}</td>
+            								<td className="tl">类型 ：</td>
+            								<td className="tl">{typeName[item.device_type] ||''}</td>
+            							</tr>
+            							<tr>
+            								<td className="tr">编号 ：</td>
+            								<td className="tl">{item.IMEI}</td>
+            								<td className="tl">信号 ：</td>
+            								<td className="tl"><Signal width={item.rssi}/></td>
+            							</tr>
+            							<tr>
+            								<td className="tr">型号 ：</td>
+            								<td className="tl">{item.device_model ? item.device_model : '无'}</td>
+            								<td className="tr">状态 ：</td>
+            								<td className="tl">{state[item.state] ||''}</td>
+            							</tr>
+            						</tbody>
+            					</table>
+            				</List.Item>
+            			))
+            		}
+            	</List>
+            </Tabs>
           </div>
         </Tabs>
       </div>

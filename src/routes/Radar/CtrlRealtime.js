@@ -35,41 +35,41 @@ const direction = {
 }
 const parseStatus= (event) => {
 	let statusName = '无';
-	if (event.status == 128) {
+	if (event == 1) {
 		statusName = '自动';
 	}
-	if (event.status ==64) {
+	if (event == 2) {
 		statusName = '检修';
 	}
-	if (event.status ==32) {
+	if (event == 4) {
 		statusName = '司机';
 	}
-	if (event.status ==16) {
+	if (event == 8) {
 		statusName = '消防';
 	}
-	if (event.status ==8) {
+	if (event == 16) {
 		statusName = '锁体';
 	}
-	if (event.status ==4) {
+	if (event == 32) {
 		statusName = '故障';
 	}
-	if (event.status ==2) {
+	if (event == 64) {
 		statusName = '超载';
 	}
-	if (event.status ==1) {
+	if (event == 128) {
 		statusName = '满载';
 	}
 	return statusName
 }
 const parseModel = (event) => {
 	let statusName = '无';
-	if (event.model == 128) {
+	if (event == 1) {
 		statusName = '单体';
 	}
-	if (event.model ==64) {
+	if (event == 2) {
 		statusName = '并联';
 	}
-	if (event.model ==32) {
+	if (event == 4) {
 		statusName = '群控';
 	}
 	return statusName
@@ -188,7 +188,9 @@ export default class CtrlRealtime extends Component {
 				this.closed
 			}else{
 				var redata = JSON.parse(e.data)
+				console.log(redata)
 				_this.getData(redata)
+				
 			}
 		}
 	}
@@ -216,6 +218,7 @@ export default class CtrlRealtime extends Component {
 		// const {show, floor} = this.state
 		let buffer = []
 		buffer = base64url.toBuffer(val.data);	//8位转流
+		console.log(buffer)
 		let count= 0
 		const _this = this
 		var inte = setInterval(function () {
@@ -254,9 +257,9 @@ export default class CtrlRealtime extends Component {
 				let high = arr.length/3;
 				for(let i=0; i<high;i++){
 					floor[high-1-i]=arr[i*3]+arr[i*3+1]+arr[i*3+2]
-					if(floor[i] == 'GQQ'){
-						floor[i] = '1'
-					}
+// 					if(floor[i] == 'GQQ'){
+// 						floor[i] = '1'
+// 					}
 				}
 				for(let i=0; i<high-2;i+=3){
 					let a = floor[i]

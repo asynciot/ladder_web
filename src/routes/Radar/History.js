@@ -461,9 +461,9 @@ export default class DoorHistory extends Component {
                 className={classNames(styles.door)}
               >
                 <section>
-                  <p>门坐标 ：<i className={styles.status}>{this.state.show.position || this.state.show.position === 0 ? this.state.show.position : '无'}</i>
+                  <p>门坐标 ：<i className={styles.status}>{this.state.show.position || this.state.show.position === 0 ? this.state.show.position : '0'}</i>
                   </p>
-                  <p>门电流 ：<i className={styles.status}>{isNaN(this.state.show.current) ? '无' : `${this.state.show.current} A`}</i>
+                  <p>门电流 ：<i className={styles.status}>{isNaN(this.state.show.current) ? '0' : `${this.state.show.current} A`}</i>
                   </p>
                   <p>门状态 ：<i className={styles.status}>{statusName || '无'}</i>
                   </p>

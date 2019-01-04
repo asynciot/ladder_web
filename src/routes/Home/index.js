@@ -95,9 +95,37 @@ export default class Home extends Component {
     const { history } = this.props;
     history.push('/company/device');
   }
-	toFollowDevicesPage = () => {
+	toFollowDoorPage = () => {
 		const { history } = this.props;
-		history.push('/company/followdevice');
+		const vcode = 0;
+		history.push({
+			pathname: '/company/followdevice',
+			state: { vcode }
+		});
+	}
+	toFollowDoorOnline = () => {
+		const { history } = this.props;
+		const vcode = 1;
+		history.push({
+			pathname: '/company/followdevice',
+			state: { vcode }
+		});
+	}
+	toFollowDoorOffline = () => {
+		const { history } = this.props;
+		const vcode = 2;
+		history.push({
+			pathname: '/company/followdevice',
+			state: { vcode }
+		});
+	}
+	toFollowDoorLongOffline = () => {
+		const { history } = this.props;
+		const vcode = 3;
+		history.push({
+			pathname: '/company/followdevice',
+			state: { vcode }
+		});
 	}
   toHistoryEventPage = () => {
     const { history } = this.props;
@@ -135,12 +163,11 @@ export default class Home extends Component {
 						<Item
 							arrow="horizontal"
 							multipleLine
-							onClick={this.toFollowDevicesPage}
 							platform="android"
 						>
 							<Row gutter={20}>
 								<Col span={6}>
-									<Card className={styles.gridcontent}>
+									<Card className={styles.gridcontent} onClick={this.toFollowDoorPage}>
 										<div className={styles.gridright}>													
 											<div className={styles.gridnum4}>
 												{doornum}
@@ -150,7 +177,7 @@ export default class Home extends Component {
 									</Card>
 								</Col>
 								<Col span={6}>
-									<Card>
+									<Card onClick={this.toFollowDoorOnline}>
 										<div className={styles.gridright}>													
 											<div className={styles.gridnum1}>
 												{devicesStatus.dooronline}
@@ -160,7 +187,7 @@ export default class Home extends Component {
 									</Card>
 								</Col>
 								<Col span={6}>
-									<Card>
+									<Card onClick={this.toFollowDoorOffline}>
 										<div className={styles.gridright}>													
 											<div className={styles.gridnum2}>
 												{devicesStatus.dooroffline}
@@ -170,7 +197,7 @@ export default class Home extends Component {
 									</Card>
 								</Col>
 								<Col span={6}>
-									<Card>
+									<Card onClick={this.toFollowDoorLongOffline}>
 										<div className={styles.gridright}>													
 											<div className={styles.gridnum3}>
 												{devicesStatus.doorlongoffline}
