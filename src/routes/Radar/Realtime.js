@@ -12,7 +12,7 @@ import F2 from '@antv/f2';
 import styles from './History.less';
 import echarts from 'echarts';
 import ReactEcharts from 'echarts-for-react';
-import {getEvent,postMonitor,getFollowDevices,getDeviceList} from '../../services/api';
+import {getEvent, postMonitor, getFollowDevices, getDeviceList, getFileData} from '../../services/api';
 const timeList = [{
   label: '90s',
   value: '90',
@@ -154,27 +154,14 @@ export default class DoorHistory extends Component {
   }
   componentWillMount() {
 		this.setAnimation();
-		this.getTime();
+		this.getFileData()
   }
 	initWebsocket = () =>{ //初始化weosocket
 		const { dispatch, location } = this.props;
 		const {pick} = this.state;
 		const match = pathToRegexp('/door/:id/realtime').exec(location.pathname);
 		const device_id = match[1];
-		getFollowDevices({device_id}).then((res)=>{
-			if(res.code == 0){
-				const op = 'open';
-				const IMEI = res.data.list[0].IMEI;
-				const interval = 1000;
-				const threshold = 1;
-				const reset = this.state.pick;
-				const duration = reset[0];
-				const device_type = '15';
-				const type = '0';
-				postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {});
-			}
-		})
-		const wsurl = 'ws://47.96.162.192:9006/device/Monitor/socket?deviceId='+device_id;	
+		const wsurl = 'ws://47.96.162.192:9006/device/Monitor/socket?deviceId='+device_id;
 		const websock = new WebSocket(wsurl);
 		websock.onopen = this.websocketonopen;
 		websock.onerror = this.websocketonerror;
@@ -192,7 +179,6 @@ export default class DoorHistory extends Component {
 	}
 	websocketonopen() {
 		console.log("WebSocket连接成功");
-		alert("请等待接收数据")
 	}
 	websocketonerror(e) { //错误
 		console.log("WebSocket连接发生错误");
@@ -209,7 +195,24 @@ export default class DoorHistory extends Component {
 		await this.setState({
 			pick: val,
 		});
-		this.initWebsocket()
+		const { dispatch, location } = this.props;
+		const {pick} = this.state;
+		const match = pathToRegexp('/door/:id/realtime').exec(location.pathname);
+		const device_id = match[1];
+		getFollowDevices({device_id}).then((res)=>{
+			if(res.code == 0){
+				const op = 'open';
+				const IMEI = res.data.list[0].IMEI;
+				const interval = 1000;
+				const threshold = 1;
+				const reset = this.state.pick;
+				const duration = reset[0];
+				const device_type = '15';
+				const type = '0';
+				postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {});
+			}
+		})
+		alert("请等待接收数据")
 	}
 	getTime = (val) => {
 		const { dispatch, location } = this.props;
@@ -219,6 +222,42 @@ export default class DoorHistory extends Component {
 		getEvent({device_id,nums:1,page:1}).then((res)=>{
 			
 		})
+	}
+	getFileData = (val) => {
+		const { location } = this.props;
+		const match = pathToRegexp('/door/:id/realtime').exec(location.pathname);
+		const device_id = match[1];
+		const show = this.state.show
+		getFileData({device_id}).then((res) => {
+			let buffer = []
+			buffer = base64url.toBuffer(res.data.list[14].data);	//8位转流
+			console.log(buffer)
+			show.openIn = buffer[0]&0x01
+			show.closeIn = (buffer[0]&0x02)>>1						//获取关门信号
+			show.openToOut = (buffer[0]&0x40)>>6					//获取开到位输出信号
+			show.closeToOut = (buffer[0]&0x80)>>7					//获取关到位输出信号
+			show.openTo =	(buffer[0]&0x04)>>2								//获取开到位输入信号
+			show.closeTo = (buffer[0]&0x08)>>3								//获取关到位输入信号				
+			show.door	= buffer[1]&0x01								//正在开门信号
+			show.open	= (buffer[1]&0x02)>>1								//正在开门信号
+			show.close =	(buffer[1]&0x04)>>2						//正在关门信号
+			show.openKeep	= (buffer[1]&0x08)>>3						//开门到位维持信号
+			show.closeKeep	= (buffer[1]&0x10)>>4						//关门到位维持信号
+			show.stop	= (buffer[1]&0x20)>>5								//停止输出信号
+			show.inHigh = (buffer[1]&0x40)>>6							//输入电压过高
+			show.inLow = (buffer[1]&0x80)>>7									//输入电压过低
+			show.outHigh = buffer[2]&&0x01						//输出过流
+			show.motorHigh = (buffer[2]&0x02)>>1				//电机过载
+			show.flySafe = (buffer[2]&0x04)>>2						//飞车保护
+			show.closeStop = (buffer[2]&0x08)>>3					//开关门受阻
+			show.position	= ((buffer[2]&0xf0)<<4)+(buffer[3]&0xff)		//获取位置信号
+			show.current = (((buffer[4]&0xff)<<8)+(buffer[5]&0xff))/1000		//获取电流信号
+			show.speed = (((buffer[6]&0xff)<<8)+(buffer[7]&0xff))/1000
+			if(show.speed>32.767){
+				show.speed = show.speed-65.535
+			}			
+			show.updateTime = res.data.list[0].t_update
+		});
 	}
 	getData = (val) => {
 		const {show} = this.state
@@ -509,8 +548,8 @@ export default class DoorHistory extends Component {
                   </p>
                   <p>门状态 ：<i className={styles.status}>{statusName || '无'}</i>
                   </p>
-                  <p>开门次数 ：<i className={styles.status}>{this.state.show.times || '无'}</i>
-                  </p>
+                  {/*<p>开门次数 ：<i className={styles.status}>{this.state.show.times || '无'}</i>
+                  </p>*/}
                   <p>开门信号 ：<i className={styles.status}>{this.state.show.openIn ? '开' : '关'}</i>
                   </p>
                   <p>关门信号 ：<i className={styles.status}>{this.state.show.closeIn ? '开' : '关'}</i>
@@ -538,7 +577,7 @@ export default class DoorHistory extends Component {
                     }}
                   >
                     最后更新时间 ：
-                    <i className={styles.status}>{moment(property.updateTimee).format('YYYY-MM-DD HH:mm:ss')}</i>
+                    <i className={styles.status}>{moment(this.state.show.updateTimee).format('YYYY-MM-DD HH:mm:ss')}</i>
                   </p>
                 </section>
               </Col>

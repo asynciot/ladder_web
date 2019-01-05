@@ -21,6 +21,11 @@ const tabs2 = [
   { title: '离线', state: 'offline' },
 	{ title: '长期离线', state: 'longoffline' },
 ];
+const modelName = {
+	'0':'0',
+	'1':'NSFC01-01B',
+	'2':'NSFC01 -02T',
+}
 const typeName ={
   '240':'控制柜',
   '15':'控制器',
@@ -448,7 +453,7 @@ export default class extends Component {
             							</tr>
             							<tr>
             								<td className="tr">型号 ：</td>
-            								<td className="tl">{item.device_model ? item.device_model : '无'}</td>
+            								<td className="tl">{modelName[item.device_model] ||''}</td>
             								<td className="tr">状态 ：</td>
             								<td className="tl">{state[item.state] ||''}</td>
             							</tr>
