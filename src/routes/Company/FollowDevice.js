@@ -211,6 +211,7 @@ export default class extends Component {
   state = {
     totalList: [],
     list: [],
+		switchIdx:0,
     device_type: 0,
 		type:0,
     src: '',
@@ -225,6 +226,7 @@ export default class extends Component {
   componentWillMount() {
 		const type = this.props.location.state.device_type
 		switchIdx = this.props.location.state.vcode
+		this.state.switchIdx = switchIdx
 		if(type == "15"){
 			this.state.type = 1
 		}else if(type == "240"){
@@ -359,7 +361,7 @@ export default class extends Component {
           <div style={{ backgroundColor: '#fff' }}>
             <Tabs
             	tabs={tabs2}
-            	initialPage={switchIdx}
+            	initialPage={this.state.switchIdx}
             	tabBarActiveTextColor="#1E90FF"
             	tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
             	onChange={(tab, index) => { this.getDevice(this.state.device_type,1,index); }}
@@ -410,7 +412,7 @@ export default class extends Component {
           <div style={{ backgroundColor: '#fff' }}>
             <Tabs
             	tabs={tabs2}
-            	initialPage={switchIdx}
+            	initialPage={this.state.switchIdx}
             	tabBarActiveTextColor="#1E90FF"
             	tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
             	onChange={(tab, index) => { this.getDevice(this.state.device_type,1,index); }}
@@ -461,7 +463,7 @@ export default class extends Component {
           <div style={{ backgroundColor: '#fff' }}>
             <Tabs
             	tabs={tabs2}
-            	initialPage={switchIdx}
+            	initialPage={this.state.switchIdx}
             	tabBarActiveTextColor="#1E90FF"
             	tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
             	onChange={(tab, index) => { this.getDevice(this.state.device_type,1,index); }}
