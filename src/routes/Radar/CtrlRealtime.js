@@ -34,42 +34,42 @@ const direction = {
 	'11': '',
 }
 const parseStatus= (event) => {
-	let statusName = '无';
-	if (event == 1) {
-		statusName = '自动';
+	let statusName = '';
+	if ((event&(0x01)) == 1) {
+		statusName+= '自动,';
 	}
-	if (event == 2) {
-		statusName = '检修';
+	if ((event&(0x02))>>1 == 1) {
+		statusName+= '检修,';
 	}
-	if (event == 4) {
-		statusName = '司机';
+	if ((event&(0x04))>>2 == 1) {
+		statusName+= '司机,';
 	}
-	if (event == 8) {
-		statusName = '消防';
+	if ((event&(0x08))>>3 == 1) {
+		statusName+= '消防,';
 	}
-	if (event == 16) {
-		statusName = '锁体';
+	if ((event&(0x10))>>4 == 1) {
+		statusName+= '锁体,';
 	}
-	if (event == 32) {
-		statusName = '故障';
+	if ((event&(0x20))>>5 == 1) {
+		statusName+= '故障,';
 	}
-	if (event == 64) {
-		statusName = '超载';
+	if ((event&(0x40))>>6 == 1) {
+		statusName+= '超载,';
 	}
-	if (event == 128) {
-		statusName = '满载';
+	if ((event&(0x80))>>7 == 1) {
+		statusName+= '满载,';
 	}
 	return statusName
 }
 const parseModel = (event) => {
 	let statusName = '无';
-	if (event == 1) {
+	if ((event&(0x01)) == 1) {
 		statusName = '单体';
 	}
-	if (event == 2) {
+	if ((event&(0x02))>>1 == 1) {
 		statusName = '并联';
 	}
-	if (event == 4) {
+	if ((event&(0x04))>>2 == 1) {
 		statusName = '群控';
 	}
 	return statusName
@@ -153,9 +153,6 @@ export default class CtrlRealtime extends Component {
 	componentWillMount() {
 		this.getfloor()
 	}
-	componentDidMount() {
-		this.getfloor()
-	} 
 	initWebsocket = () =>{ //初始化weosocket
 		const { dispatch, location } = this.props;
 		const {pick} = this.state;
@@ -220,24 +217,26 @@ export default class CtrlRealtime extends Component {
 		buffer = base64url.toBuffer(val.data);	//8位转流
 		console.log(buffer)
 		let count= 0
-		const _this = this
+		const show = this.state.show
 		var inte = setInterval(function () {
 			if((count+33) <= buffer.length){
-				_this.state.show.upCall   = buffer[count+0]&0x01
-				_this.state.show.downCall = (buffer[count+0]&0x02)>>1
-				_this.state.show.run      = (buffer[count+0]&0x04)>>2					//获取运行信号
-				_this.state.show.lock     = (buffer[count+0]&0x08)>>3					//获取门锁信号
-				_this.state.show.openBtn  = (buffer[count+0]&0x40)>>6					//获取开门按钮信号
-				_this.state.show.closeBtn = (buffer[count+0]&0x80)>>7					//获取关门按钮信号
-				_this.state.show.close    = (buffer[count+0]&0x10)>>5					//获取关门信号
-				_this.state.show.model    = buffer[count+1]&0xff						//获取电梯模式
-				_this.state.show.status   = buffer[count+2]&0xff						//获取电梯状态				
-				_this.state.show.floor    = buffer[count+27]&0xff           //获取电梯当前楼层
+				show.upCall   = buffer[count+0]&0x01
+				show.downCall = (buffer[count+0]&0x02)>>1
+				show.run      = (buffer[count+0]&0x04)>>2					//获取运行信号
+				show.lock     = (buffer[count+0]&0x08)>>3					//获取门锁信号
+				show.open    = (buffer[count+0]&0x10)>>4					//获取关门信号
+				show.close    = (buffer[count+0]&0x20)>>5					//获取关门信号
+				show.openBtn  = (buffer[count+0]&0x40)>>6					//获取开门按钮信号
+				show.closeBtn = (buffer[count+0]&0x80)>>7					//获取关门按钮信号
+				show.model    = buffer[count+1]&0xff						//获取电梯模式
+				show.status   = buffer[count+2]&0xff						//获取电梯状态				
+				show.floor    = buffer[count+27]&0xff           //获取电梯当前楼层
 				
 				count+=33
 			}
 		}, this.state.interval);
 		this.showChart()
+		this.forceUpdate();
 	}
 	getfloor = (val) => {
 		const {show, } = this.state
@@ -257,9 +256,6 @@ export default class CtrlRealtime extends Component {
 				let high = arr.length/3;
 				for(let i=0; i<high;i++){
 					floor[high-1-i]=arr[i*3]+arr[i*3+1]+arr[i*3+2]
-// 					if(floor[i] == 'GQQ'){
-// 						floor[i] = '1'
-// 					}
 				}
 				for(let i=0; i<high-2;i+=3){
 					let a = floor[i]
@@ -407,7 +403,7 @@ export default class CtrlRealtime extends Component {
 	}
 	render() {
 		let { ctrl: { event, view, device, floors, property, } } = this.props;
-		const { floor} = this.state;
+		const { floor, } = this.state;
 		const id = this.props.match.params.id;
 		return (
 			<div className="content tab-hide">

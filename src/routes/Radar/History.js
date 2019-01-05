@@ -200,6 +200,7 @@ export default class DoorHistory extends Component {
 			}
 		}).catch((e => console.info(e)));
 		this.setAnimation();
+		this.forceUpdate();
 	}
 	showChart = () =>{
 		const {events} = this.props;

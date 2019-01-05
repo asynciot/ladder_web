@@ -255,6 +255,7 @@ export default class DoorHistory extends Component {
 			}
 		}, this.state.interval);
 		this.showChart()
+		this.forceUpdate();
 	}
 	showChart = () =>{
 		const {openInarr,closeInarr,openToarr,closeToarr,currentarr,speedarr,} = this.state

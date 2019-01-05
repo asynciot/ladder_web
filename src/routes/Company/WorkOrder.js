@@ -92,15 +92,15 @@ export default class extends Component {
 				}, 800)
 			}).catch((e => console.info(e)));
 		}else{
-			getDispatch({ num: 10, page, follow:'yes' }).then((res) => {
+			getDispatch({ num: 10, page, follow:'yes',}).then((res) => {
 				const list = res.data.list.map((item) => {
 					const time = this.state.nowTime - item.create_time
+					item.create_time = moment(parseInt(item.create_time)).format('YYYY-MM-DD HH:mm:ss')
 					item.hour = parseInt((time)/(1000*3600))
 					item.minute = parseInt(time%(1000*3600)/(1000*60))
 					item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
 					return item;
 				})
-				
 				if(refreshing) {
 					page++
 				}
@@ -260,7 +260,7 @@ export default class extends Component {
               						</tr>
               						<tr>
               							<td className="tr">接单时间 ：</td>
-              							<td className="tl">{moment(parseInt(item.create_time)).format('YYYY-MM-DD HH:mm:ss')}</td>
+              							<td className="tl">{item.create_time}</td>
               						</tr>
               						<tr>
               							<td className="tr">接单时长 ：</td>

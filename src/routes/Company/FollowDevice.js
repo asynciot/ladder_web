@@ -7,6 +7,8 @@ import MobileNav from '../../components/MobileNav';
 import styles from './FollowDevice.less';
 import singalImg from '../../assets/signal.png';
 import { getFollowDevices, deleteFollowInfo, getDevicesStatus } from '../../services/api';
+
+var switchIdx = 0;
 const alert = Modal.alert;
 const tabs = [
   { title: '全部', device_type: '' },
@@ -209,8 +211,8 @@ export default class extends Component {
   state = {
     totalList: [],
     list: [],
-    switchIdx: 0,
     device_type: 0,
+		type:0,
     src: '',
     code: false,
     navs: {
@@ -221,26 +223,30 @@ export default class extends Component {
     },
   }
   componentWillMount() {
-		const params = this.props.location.state.vcode
-		this.getDevice('',1,params);
+		const type = this.props.location.state.device_type
+		switchIdx = this.props.location.state.vcode
+		if(type == "15"){
+			this.state.type = 1
+		}else if(type == "240"){
+			this.state.type = 2
+		}
+		this.getDevice(type,1,switchIdx);
   }
 	pageChange = (val) => {
-		console.log(this.state.switchIdx)
 		const { device_type,} =this.state
-		this.getDevice(device_type,val,this.state.switchIdx)
+		this.getDevice(device_type,val,switchIdx)
 	}
   getDevice = (device_type,val,state) => {
     let { navs } = this.state;
 		const page = val
-		this.state.switchIdx = state
-		console.log(this.state.switchIdx)
-		if(state == 0){
+		switchIdx = state
+		if(switchIdx == 0){
 			state = ""
-		}else if(state == 1){
+		}else if(switchIdx == 1){
 			state = "online"
-		}else if(state == 2){
+		}else if(switchIdx == 2){
 			state = "offline"
-		}else if(state == 3){
+		}else if(switchIdx == 3){
 			state = "longoffline"
 		}
 		this.setState({
@@ -251,39 +257,6 @@ export default class extends Component {
         const now = new Date().getTime();
 				const totalNumber = res.data.totalNumber
         const list = res.data.list.map((item) => {
-          if (!item.updateTime) {
-            item.isLoss = true;
-          } else if (now - item.updateTime > 120000) {
-            item.isLoss = true;
-            item.updateTime = moment(item.updateTime).format('YYYY-MM-DD HH:mm')
-          } else {
-            item.isLoss = false;
-            item.updateTime = moment(item.updateTime).format('YYYY-MM-DD HH:mm')
-          }
-          let arr = [];
-          if (item.Event) {
-              const buffer = base64url.toBuffer(item.Event);
-                buffer.forEach((item) => {
-                  arr = arr.concat(parseBuffer(item));
-              });
-            if (item.device_type == '15') {
-              item.event = parseEvent(arr);
-              item.event.status == '运行正常' ? item.Alert = 0 : item.Alert = 1;
-            }else if (item.device_type == '240') {
-              item.event = parseInfo(arr);
-              item.event.status == '自动' ? item.Alert = 0 : item.Alert = 1;
-            } else {
-              item.Alert = 0
-              item.event = {
-                status: '运行正常'
-              }
-            }
-          }else {
-            item.Alert = 0
-            item.isLoss ? item.event = {} : item.event = {
-              status: '运行正常'
-            }
-          }
           return item;
         });
 				getDevicesStatus().then((res) => {
@@ -301,7 +274,6 @@ export default class extends Component {
 //         navs.fault = (list.filter(item => item.state === 'offline') || []).length;
 //         navs.missing = (list.filter(item => item.state === 'longoffline') || []).length;
         this.setState({
-          switchIdx: 0,
           totalList: list,
           list,
 					page,
@@ -315,7 +287,6 @@ export default class extends Component {
           missing: 0,
         };
         this.setState({
-          switchIdx: 0,
           navs,
           totalList: [],
           list: [],
@@ -329,47 +300,6 @@ export default class extends Component {
     } else {
       this.props.history.push(`/ctrl/${item.device_id}/realtime`);
     }
-  }
-
-  switchList = (switchIdx) => {
-    const { totalList } = this.state;
-		const page = 0;
-    this.setState({
-      switchIdx,
-    });
-    switch (parseInt(switchIdx)) {
-      case 0:
-        this.setState({
-          list: totalList,
-        });
-				console.log(totalList)
-        break;
-      case 1:
-        this.setState({
-          list: totalList.filter(item => item.state  === "online"),
-        });
-				console.log(totalList)
-        break;
-      case 2:
-        this.setState({
-          list: totalList.filter(item => item.state  === "offline"),
-        });
-				console.log(this.state.list)
-        break;
-      case 3:
-        this.setState({
-          list: totalList.filter(item => item.state  === "longoffline"),
-        });
-				console.log(this.state.list)
-        break;
-      default:
-        this.setState({
-          list: totalList,
-        });
-				console.log(this.state.list)
-        break;
-    }
-		
   }
   edit = (e, detail) => {
     e.stopPropagation();
@@ -397,7 +327,7 @@ export default class extends Component {
         onPress: () => {
           deleteFollowInfo({ device_id: detail.device_id }).then((res) => {            
           });
-					this.getDevice('',1)
+					this.getDevice('',1,switchIdx)
         },
       },
     ]);
@@ -421,15 +351,15 @@ export default class extends Component {
         </Modal>
         <Tabs
           tabs={tabs}
-          initialPage={0}
+          initialPage={this.state.type}
           tabBarActiveTextColor="#1E90FF"
           tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
-          onChange={(tab, index) => { this.getDevice(tab.device_type,1); }}
+          onChange={(tab, index) => { this.getDevice(tab.device_type,1,switchIdx); }}
         >
           <div style={{ backgroundColor: '#fff' }}>
             <Tabs
             	tabs={tabs2}
-            	initialPage={0}
+            	initialPage={switchIdx}
             	tabBarActiveTextColor="#1E90FF"
             	tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
             	onChange={(tab, index) => { this.getDevice(this.state.device_type,1,index); }}
@@ -480,7 +410,7 @@ export default class extends Component {
           <div style={{ backgroundColor: '#fff' }}>
             <Tabs
             	tabs={tabs2}
-            	initialPage={0}
+            	initialPage={switchIdx}
             	tabBarActiveTextColor="#1E90FF"
             	tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
             	onChange={(tab, index) => { this.getDevice(this.state.device_type,1,index); }}
@@ -531,7 +461,7 @@ export default class extends Component {
           <div style={{ backgroundColor: '#fff' }}>
             <Tabs
             	tabs={tabs2}
-            	initialPage={0}
+            	initialPage={switchIdx}
             	tabBarActiveTextColor="#1E90FF"
             	tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
             	onChange={(tab, index) => { this.getDevice(this.state.device_type,1,index); }}

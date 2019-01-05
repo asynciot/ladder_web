@@ -95,36 +95,85 @@ export default class Home extends Component {
     const { history } = this.props;
     history.push('/company/device');
   }
+	toFollowDevicePage = () => {
+		const { history } = this.props;
+		const vcode = 0;
+		const device_type = "";
+		history.push({
+			pathname: '/company/followdevice',
+			state: { vcode,device_type }
+		});
+	}
 	toFollowDoorPage = () => {
 		const { history } = this.props;
 		const vcode = 0;
+		const device_type = "15";
 		history.push({
 			pathname: '/company/followdevice',
-			state: { vcode }
+			state: { vcode,device_type }
 		});
 	}
 	toFollowDoorOnline = () => {
 		const { history } = this.props;
 		const vcode = 1;
+		const device_type = "15";
 		history.push({
 			pathname: '/company/followdevice',
-			state: { vcode }
+			state: { vcode,device_type }
 		});
 	}
 	toFollowDoorOffline = () => {
 		const { history } = this.props;
 		const vcode = 2;
+		const device_type = "15";
 		history.push({
 			pathname: '/company/followdevice',
-			state: { vcode }
+			state: { vcode,device_type }
 		});
 	}
 	toFollowDoorLongOffline = () => {
 		const { history } = this.props;
 		const vcode = 3;
+		const device_type = "15";
 		history.push({
 			pathname: '/company/followdevice',
-			state: { vcode }
+			state: { vcode,device_type }
+		});
+	}
+	toFollowCtrlPage = () => {
+		const { history } = this.props;
+		const vcode = 0;
+		const device_type = "240";
+		history.push({
+			pathname: '/company/followdevice',
+			state: { vcode,device_type }
+		});
+	}
+	toFollowCtrlOnline = () => {
+		const { history } = this.props;
+		const vcode = 1;
+		const device_type = "240";
+		history.push({
+			pathname: '/company/followdevice',
+			state: { vcode,device_type }
+		});
+	}
+	toFollowCtrlOffline = () => {
+		const { history } = this.props;
+		const vcode = 2;
+		const device_type = "240";
+		history.push({
+			pathname: '/company/followdevice',
+			state: { vcode,device_type }
+		});
+	}
+	toFollowCtrlLongOffline = () => {
+		const { history } = this.props;
+		const vcode = 3;
+		const device_type = "240";
+		history.push({
+			pathname: '/company/followdevice',
+			state: { vcode,device_type }
 		});
 	}
   toHistoryEventPage = () => {
@@ -209,7 +258,7 @@ export default class Home extends Component {
 							</Row>
 							<Row gutter={20}>
 								<Col span={6}>
-									<Card>
+									<Card onClick={this.toFollowCtrlPage}>
 										<div className={styles.gridright}>													
 											<div className={styles.gridnum4}>
 												{ctrlnum}
@@ -219,7 +268,7 @@ export default class Home extends Component {
 									</Card>
 								</Col>
 								<Col span={6}>
-									<Card>
+									<Card onClick={this.toFollowCtrlOnline}>
 										<div className={styles.gridright}>													
 											<div className={styles.gridnum1}>
 												{devicesStatus.ctrlonline}
@@ -229,7 +278,7 @@ export default class Home extends Component {
 									</Card>
 								</Col>
 								<Col span={6}>
-									<Card>
+									<Card onClick={this.toFollowCtrlOffline}>
 										<div className={styles.gridright}>
 											<div className={styles.gridnum2}>
 												{devicesStatus.ctrloffline}
@@ -239,7 +288,7 @@ export default class Home extends Component {
 									</Card>
 								</Col>
 								<Col span={6}>
-									<Card>
+									<Card onClick={this.toFollowCtrlLongOffline}>
 										<div className={styles.gridright}>
 											<div className={styles.gridnum3}>
 												{devicesStatus.ctrllongoffline}
