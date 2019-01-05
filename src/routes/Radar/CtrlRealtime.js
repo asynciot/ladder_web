@@ -514,7 +514,7 @@ export default class CtrlRealtime extends Component {
 										<ul>
 											{
 												floor.map((item,index) => (
-													<li style={{ width: 40}} key={`${item}${index}`}>{item}</li>
+													<li style={{ width: 35}} key={`${item}${index}`}>{item}</li>
 												))
 											}
 										</ul>
