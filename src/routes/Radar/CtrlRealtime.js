@@ -13,7 +13,7 @@ import styles from './CtrlRealtime.less';
 import echarts from 'echarts';
 import {
 	getEvent, postMonitor, getFollowDevices, 
-	getDeviceList, getFloorData, getFileData,
+	getDeviceList, getFloorData, getBaseData,
 } from '../../services/api';
 const tabs = [
 	{ title: '门' 	},
@@ -155,7 +155,7 @@ export default class CtrlRealtime extends Component {
 		markFloor:[],
 	}
 	componentWillMount() {
-		this.getFileData()
+		this.getBaseData()
 		this.getfloor()
 		this.initWebsocket()
 	}
@@ -221,12 +221,12 @@ export default class CtrlRealtime extends Component {
 			}
 		})
 	}
-	getFileData = (val) => {
+	getBaseData = (val) => {
 		const { location } = this.props;
 		const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
 		const device_id = match[1];
 		const show = this.state.show
-		getFileData({device_id}).then((res) => {
+		getBaseData({device_id}).then((res) => {
 			let buffer = []
 			buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
 			show.upCall   = buffer[6]&0x01

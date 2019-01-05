@@ -123,7 +123,7 @@ export const getRouterData = (app) => {
       name: '控制器',
       component: dynamicWrapper(app, ['device'], () => import('../routes/Radar/Realtime')),
     },
-    '/door/:id/params/:type': {
+    '/door/:id/params/': {
       name: '参数',
       component: dynamicWrapper(app, ['device'], () => import('../routes/Radar/Params')),
     },

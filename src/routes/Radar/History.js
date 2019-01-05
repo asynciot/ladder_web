@@ -72,11 +72,11 @@ export default class DoorHistory extends Component {
   state = {
     leftAnimation: {
       left: '0%',
-      duration: 100,
+      duration: 5000,
     },
     rightAnimation: {
       right: '0%',
-      duration: 100,
+      duration: 5000,
     },
     pick: '',
     modal: false,
@@ -86,6 +86,8 @@ export default class DoorHistory extends Component {
 			openIn:[],
 			closeIn:[],
 			current:[],
+			openDecelerate:[],
+			closeDecelerate:[],
 			openToOut:[],
 			openTo:[],
 			closeToOut:[],
@@ -110,6 +112,8 @@ export default class DoorHistory extends Component {
 			openIn:'',
 			closeIn:'',
 			current:'',
+			openDecelerate:'',
+			closeDecelerate:'',
 			openToOut:'',
 			openTo:'',
 			closeToOut:'',
@@ -136,51 +140,54 @@ export default class DoorHistory extends Component {
     startTime: 0,
     stop: true,
 		interval:500,
+		doorWidth:4096,
   }
   componentWillMount() {
 		this.getHistory()
-		this.setAnimation()
   }
 	componentWillUpdate(){
-		this.showChart()
+		
 	}
 	getHistory = () => {
 		const { dispatch, location, } = this.props;
-		const { show,events,interval} = this.state;
+		const { show,events} = this.state;
 		const match = pathToRegexp('/door/:IMEI/history/:id').exec(location.pathname);
 		const id = match[2];
 		getEvent({id}).then((res) => {
 			this.setState({
 				historyEvents: res.data.list,				
 			});
-			if (res.code === 0) {
+			if (res.code == 0) {
 				let response = res.data.list[0]
 				show.nowtime = response.time
 				if(res.data.list[0].interval !=null ){					
-					interval = res.data.list[0].interval
+					this.state.interval = res.data.list[0].interval
 				}
 				let buffer = []
 				buffer = base64url.toBuffer(response.data);	//8位转流
+				console.log(buffer)
 				for(let i=0 ; i<response["length"] ; i++){
 					show.openIn = events.openIn[i] = buffer[i*8]&0x01						//获取开门信号
 					show.closeIn = events.closeIn[i] = (buffer[i*8]&0x02)>>1						//获取关门信号
-					show.openToOut = events.openToOut[i] = (buffer[i*8]&0x40)>>6					//获取开到位输出信号
-					show.closeToOut = events.closeToOut[i] = (buffer[i*8]&0x80)>>7					//获取关到位输出信号
 					show.openTo =	events.openTo[i] = (buffer[i*8+0]&0x04)>>2						//获取开到位输入信号
-					show.closeTo = events.closeTo[i] = (buffer[i*8+0]&0x08)>>3						//获取关到位输入信号				
-					show.door	= events.door[i] = buffer[i*8+1]&0x01						//门光幕信号
-					show.open	= events.open[i] = (buffer[i*8+1]&0x02)>>1						//正在开门信号
-					show.close =	events.close[i] = (buffer[i*8+1]&0x04)>>2						//正在关门信号
-					show.openKeep	= events.openKeep[i] = (buffer[i*8+1]&0x08)>>3					//开门到位维持信号
-					show.closeKeep	= events.closeKeep[i] = (buffer[i*8+1]&0x10)>>4					//关门到位维持信号
-					show.stop	= events.stop[i] = (buffer[i*8+1]&0x20)>>5					//停止输出信号
-					show.inHigh = events.inHigh[i] = (buffer[i*8+1]&0x40)>>6							//输入电压过高
+					show.closeTo = events.closeTo[i] = (buffer[i*8+0]&0x08)>>3						//获取关到位输入信号
+					show.openDecelerate =	events.openDecelerate[i] = (buffer[i*8+0]&0x10)>>4				//开减速输入信号 
+					show.closeDecelerate = events.closeDecelerate[i] = (buffer[i*8+0]&0x20)>>5			//关减速输入信号
+					show.openToOut = events.openToOut[i] = (buffer[i*8]&0x40)>>6				//获取开到位输出信号
+					show.closeToOut = events.closeToOut[i] = (buffer[i*8]&0x80)>>7			//获取关到位输出信号			
+					show.door	= events.door[i] = buffer[i*8+1]&0x01											//门光幕信号
+					show.open	= events.open[i] = (buffer[i*8+1]&0x02)>>1						    //正在开门信号
+					show.close =	events.close[i] = (buffer[i*8+1]&0x04)>>2						  //正在关门信号
+					show.openKeep	= events.openKeep[i] = (buffer[i*8+1]&0x08)>>3				//开门到位维持信号
+					show.closeKeep	= events.closeKeep[i] = (buffer[i*8+1]&0x10)>>4			//关门到位维持信号
+					show.stop	= events.stop[i] = (buffer[i*8+1]&0x20)>>5					      //停止输出信号
+					show.inHigh = events.inHigh[i] = (buffer[i*8+1]&0x40)>>6						//输入电压过高
 					show.inLow = events.inLow[i] = (buffer[i*8+1]&0x80)>>7							//输入电压过低
-					show.outHigh = events.outHigh[i] = buffer[i*8+2]&0x01					//输出过流
-					show.motorHigh = events.motorHigh[i] = (buffer[i*8+2]&0x02)>>1					//电机过载
-					show.flySafe = events.flySafe[i] = (buffer[i*8+2]&0x04)>>2						//飞车保护
-					show.closeStop = events.closeStop[i] = (buffer[i*8+2]&0x08)>>3					//开关门受阻
-					show.position	= events.position[i] = ((buffer[i*8+2]&0xf0)<<4)+(buffer[i*8+3]&0xff)		//获取位置信号
+					show.outHigh = events.outHigh[i] = buffer[i*8+2]&0x01					      //输出过流
+					show.motorHigh = events.motorHigh[i] = (buffer[i*8+2]&0x02)>>1			//电机过载
+					show.flySafe = events.flySafe[i] = (buffer[i*8+2]&0x04)>>2					//飞车保护
+					show.closeStop = events.closeStop[i] = (buffer[i*8+2]&0x08)>>3			//开关门受阻
+					show.position	= events.position[i] = ((buffer[i*8+2]&0x0f)<<8)+(buffer[i*8+3]&0xff)					//获取位置信号
 					show.current = events.current[i] = (((buffer[i*8+4]&0xff)<<8)+(buffer[i*8+5]&0xff))/1000		//获取电流信号
 					events.speed[i] = (((buffer[i*8+6]&0xff)<<8)+(buffer[i*8+7]&0xff))/1000
 					events.nums[i] = i
@@ -192,20 +199,20 @@ export default class DoorHistory extends Component {
 				this.setState({
 					show,
 					events,
-					interval,
 				});
 				setTimeout(() => {
 					this.showChart()
 				},this.state.interval)				
 			}
 		}).catch((e => console.info(e)));
-		this.setAnimation();
 		this.forceUpdate();
 	}
 	showChart = () =>{
 		const {events} = this.props;
 		let OpenIn = echarts.init(document.getElementById('OpenIn'));
+		let OpenTo = echarts.init(document.getElementById('OpenTo'));
 		let CloseIn = echarts.init(document.getElementById('CloseIn'));
+		let Decelerate = echarts.init(document.getElementById('Decelerate'));
 		let Current = echarts.init(document.getElementById('Current'));
 		let Speed = echarts.init(document.getElementById('Speed'));
 		OpenIn.setOption({
@@ -239,12 +246,12 @@ export default class DoorHistory extends Component {
 				data:this.state.events.closeIn,				
 			}]
 		})
-		CloseIn.setOption({
+		OpenTo.setOption({
 			tooltip: {
 				trigger: 'axis'
 			},
 			legend: {
-				data:['开门到位信号','关门到位信号']
+				data:['开到位输入信号','关到位输入信号']
 			},
 			grid: {					
 				left: '3%',
@@ -259,15 +266,77 @@ export default class DoorHistory extends Component {
 				data:[0,1]
 			},
 			series: [{
-				name:'开门到位信号',
+				name:'开到位输入信号',
+				type:'line',
+				step: 'start',
+				data:this.state.events.OpenTo,
+			},{
+				name:'关到位输入信号',
+				type:'line',
+				step: 'start',
+				data:this.state.events.closeTo,				
+			}]
+		})
+		CloseIn.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['开门到位输出信号','关门到位输出信号']
+			},
+			grid: {					
+				left: '3%',
+				right: '4%',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:this.state.events.nums,
+			},
+			yAxis: {
+				data:[0,1]
+			},
+			series: [{
+				name:'开门到位输出信号',
 				type:'line',
 				step: 'start',
 				data:this.state.events.openToOut,
 			},{
-				name:'关门到位信号',
+				name:'关门到位输出信号',
 				type:'line',
 				step: 'start',
 				data:this.state.events.closeToOut,
+			}]
+		})
+		Decelerate.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['开减速输入信号','关减速输入信号']
+			},
+			grid: {					
+				left: '3%',
+				right: '4%',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:this.state.events.nums,
+			},
+			yAxis: {
+				data:[0,1]
+			},
+			series: [{
+				name:'开减速输入信号',
+				type:'line',
+				step: 'start',
+				data:this.state.events.openDecelerate,
+			},{
+				name:'关减速输入信号',
+				type:'line',
+				step: 'start',
+				data:this.state.events.closeDecelerate,
 			}]
 		})
 		Current.setOption({
@@ -330,6 +399,8 @@ export default class DoorHistory extends Component {
 			_this.state.show.closeIn = _this.state.events.closeIn[i]				//获取关门信号
 			_this.state.show.openToOut = _this.state.events.openToOut[i]				//获取开到位输出信号
 			_this.state.show.closeToOut = _this.state.events.closeToOut[i]				//获取关到位输出信号
+			_this.state.show.openDecelerate =	_this.state.events.openDecelerate[i] 				//开减速输入信号 
+			_this.state.show.closeDecelerate = _this.state.events.closeDecelerate[i]			//关减速输入信号
 			_this.state.show.closeTo = _this.state.events.closeTo[i]				//获取关到位输入信号				
 			_this.state.show.openTo =	_this.state.events.openTo[i]				//获取开到位输入信号
 			_this.state.show.door	= _this.state.events.door[i]					//门光幕信号
@@ -352,17 +423,25 @@ export default class DoorHistory extends Component {
 			var i = params.name;//横坐标的值
 			ss(i)
 		});
+		OpenTo.on('click',function (params){					
+			var i = params.name;//横坐标的值
+			ss(i)
+		});
 		Current.on('click',function (params){					
+			var i = params.name;//横坐标的值
+			ss(i)
+		});
+		Decelerate.on('click',function (params){					
 			var i = params.name;//横坐标的值
 			ss(i)
 		});
 		CloseIn.on('click',function (params){					
 			var i = params.name;//横坐标的值
-			ss(i)	
+			ss(i)
 		});
 		Speed.on('click',function (params){					
 			var i = params.name;//横坐标的值
-			ss(i)	
+			ss(i)
 		});
 	}
   onChange = (val) => {
@@ -376,23 +455,9 @@ export default class DoorHistory extends Component {
 		const type = 'door'
 		history.push(`/events/${item.type}/${item.id}/`);
 	}
-  timeTicket = null;
-  setAnimation = () => {
-		const { device: {doorWidth} } = this.props;
-		this.setState({
-			leftAnimation: {
-				left: `-${(this.state.events.position / this.state.doorWidth) * 50}%`,
-				duration: this.state.interval,
-			},
-			rightAnimation: {
-				right: `-${(this.state.events.position / this.state.doorWidth) * 50}%`,
-				duration: this.state.interval,
-			},
-		});
-	}
 	goDetail = link => () => {
 		const id = this.props.match.params.id;
-		this.props.history.push(`/door/${id}/${link}`);
+		this.props.history.push(`/door/${id}/params`);
 	}
   goQrcode = () => {
     const id = this.props.match.params.id;
@@ -540,7 +605,7 @@ export default class DoorHistory extends Component {
                   <TweenOne
                     animation={this.state.leftAnimation}
                     // updateReStart={false}
-                    style={{ left: '0%' }}
+                    style={{ left: `-${(this.state.show.position / this.state.doorWidth) * 50}%` }}
                     className={styles.doorbox}
                   />
                   <section className={styles.doorstitle}>
@@ -553,7 +618,7 @@ export default class DoorHistory extends Component {
                   </section>
                   <TweenOne
                     animation={this.state.rightAnimation}
-                    style={{ right: '-0%' }}
+                    style={{ right: `-${(this.state.show.position / this.state.doorWidth) * 50}%` }}
                     className={styles.doorbox}
                   />
                 </div>
@@ -566,11 +631,21 @@ export default class DoorHistory extends Component {
 								<div id = "OpenIn" style={{ width: 320 , height: 80 }}></div>              
             	</Col>	            	            
             </Row>
+						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>	            
+							<Col xs={{ span: 24 }} md={{ span: 48 }}>
+								<div id = "OpenTo" style={{ width: 320 , height: 80 }}></div>              
+							</Col>	            	            
+						</Row>
             <Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
             	<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
             			<div id = "CloseIn" style={{ width: 320 , height: 80 }}></div>
             	</Col>
             </Row>
+						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
+							<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
+									<div id = "Decelerate" style={{ width: 320 , height: 80 }}></div>
+							</Col>
+						</Row>
 						 <Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
 						 	<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
 						 			<div id = "Current" style={{ width: 320 , height: 240 }}></div>

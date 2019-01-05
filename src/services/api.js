@@ -62,6 +62,9 @@ export async function getDeviceInfo(params) {
   return request(`/device/Device/ReadMore?IMEI=${params}`);
 }
 export async function getFileData(params) {
+  return request(`/device/Runtime?&num=20&page=1&device_id=${params}`);
+}
+export async function getBaseData(params) {
   return request(`/device/Runtime?&num=20&page=1&${stringify(params)}`);
 }
 export async function getFloorData(params) {
