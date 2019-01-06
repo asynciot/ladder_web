@@ -4,7 +4,7 @@ import { ImagePicker } from 'antd-mobile';
 import { connect } from 'dva';
 import { Modal, Accordion, List, Badge, Grid } from 'antd-mobile';
 import styles from './Index.less';
-import { uploadPicture, getFile,} from '../../services/api';
+import { uploadPicture, getFile, } from '../../services/api';
 
 var avatar = '';
 const { alert } = Modal;
@@ -57,16 +57,15 @@ export default class Company extends Component {
 	uploadPicture = (e) =>{
 		var files = e.target.files[0]
 		var formdata = new FormData()
-		formdata = new window.FormData()
 		formdata.append("file",files)
+		// uploadPicture(formdata).then((res) =>{})
 		fetch('http://server.asynciot.com/account/portrait', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json, text/plain, */*',
 			},
+			credentials: 'include',	
 			body: formdata
-		}).then(function(response){
-		}).then(function(data){
 		})
 	};
 

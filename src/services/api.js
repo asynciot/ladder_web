@@ -41,6 +41,7 @@ export async function updateUser(params) {
 export async function uploadPicture(params) {
   return request('/account/portrait', {
     method: 'POST',
+		headers : { 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8' },
     body: params,
   });
 }

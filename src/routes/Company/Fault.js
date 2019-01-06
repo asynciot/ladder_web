@@ -8,9 +8,10 @@ import { Row, Col, Button, Spin, DatePicker, Input,  } from 'antd';
 import { Picker, List, Tabs, Modal, Card, } from 'antd-mobile';
 import classNames from 'classnames';
 import styles from './Fault.less';
-import {getFault, postFinish, } from '../../services/api';
+import {getFault, postFinish, postFault, getDispatch } from '../../services/api';
 
 var _val = ""
+var dispatch_id = 0
 const desc = {
   'untreated': '是否接单',
   'treated': '是否完成',
@@ -30,6 +31,7 @@ export default class DoorHistory extends Component {
 		nowTime: new Date().getTime(),
 		file1:null,
 		file2:null,
+		disable1:false,
 		disable:false,
 		last:'',
 		val:'',
@@ -42,8 +44,8 @@ export default class DoorHistory extends Component {
 	getFault = () =>{
 		const { dispatch, location } = this.props;
 		const match = pathToRegexp('/company/order/:id').exec(location.pathname);
-		const order_id = match[1];
-		getFault({ order_id, page:1, num:1, }).then((res) => {
+		let id = match[1];
+		getFault({ id, page:1, num:1, }).then((res) => {
 			const list = res.data.list.map((item) => {
 				if(item.type == "2"){
 					this.state.maintenance = false
@@ -58,6 +60,9 @@ export default class DoorHistory extends Component {
 				item.code = res.data.list[res.data.list.length-1].code.toString(16)
 				if(item.state == 'treating'){
 					this.state.disable = true
+				}
+				if(item.state == 'untreated'){
+					this.state.disable1 = true
 				}
 				return item;
 			})
@@ -98,16 +103,17 @@ export default class DoorHistory extends Component {
 		if(this.state.inspection_nexttime !='' & this.state.inspection_nexttime != null){
 			formdata.append("inspection_nexttime",this.state.inspection_nexttime)
 		}
+		formdata.append("id",this.props.location.state.id)
 		formdata.append("result",'untransfer')
-		formdata.append("id",this.state.list[0].device_id)
 		if(!this.state.file1 || !this.state.file2){
 			alert("请上传维修前和维修后的图片！")
 		}else {
-			fetch('http://server.asynciot.com/device/Dispatch/finish', {
+			fetch('http://lengxia.natapp1.cc/device/Dispatch/finish', {
 				method: 'POST',
 				headers: {
 					Accept: 'application/json, text/plain, */*',
 				},
+				credentials: 'include',	
 				body: formdata
 			}).then(res=> { return res.json()}).then(json=>{
 				if(json.code == 0){
@@ -201,7 +207,7 @@ export default class DoorHistory extends Component {
 						<Button disabled={this.state.disable} onClick={() => this.postFault()} type="primary" style={{ width: '100%' }} >接单</Button>
 					</Col>
 					<Col xs={{ span: 12 }} sm={{ span: 18 }} md={{ span: 16 }} className={styles.btn1}>
-						<Button onClick={(event) => {this.uploadPicture(event)}} type="primary" style={{ width: '100%' }} >维修完成</Button>
+						<Button disabled={this.state.disable1} onClick={(event) => {this.uploadPicture(event)}} type="primary" style={{ width: '100%' }} >维修完成</Button>
 					</Col>
 				</Row>
 			</div>

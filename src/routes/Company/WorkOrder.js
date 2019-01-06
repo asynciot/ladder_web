@@ -6,7 +6,6 @@ import { getFault, postFault, postFinish, deleteFault, getDispatch, } from '../.
 
 
 const Item = List.Item;
-const Brief = Item.Brief;
 const PlaceHolder = ({ className = '', ...restProps }) => (
   <div className={`${className} ${styles.placeholder}`} {...restProps}>{restProps.children}</div>
 );
@@ -92,7 +91,7 @@ export default class extends Component {
 				}, 800)
 			}).catch((e => console.info(e)));
 		}else{
-			getDispatch({ num: 10, page, follow:'yes',}).then((res) => {
+			getDispatch({ num: 10, page, follow:'yes', state:'untreated'}).then((res) => {
 				const list = res.data.list.map((item) => {
 					const time = this.state.nowTime - item.create_time
 					item.create_time = moment(parseInt(item.create_time)).format('YYYY-MM-DD HH:mm:ss')
@@ -116,7 +115,19 @@ export default class extends Component {
 		}	
   }
 	goFault = item => () =>{
-		this.props.history.push(`/company/order/${item.id}`);
+		const id = item.id
+		this.props.history.push({
+			pathname:`/company/order/${item.id}`,
+			state: { id }
+		});
+	}
+	goFault1 = item => () =>{
+		const id = item.id
+		console.log(id)
+		this.props.history.push({
+			pathname:`/company/order/${item.order_id}`,
+			state: { id }
+		});
 	}
   deal = (e, detail) => {
 		const order_id = detail.id
@@ -244,7 +255,7 @@ export default class extends Component {
               	{
               		list.map((item, index) => (
               			<List.Item className={styles.item} key={index}  extra={<Finish remove={(event) => { this.remove(event, item); }} />}>
-              				<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault(item)}>
+              				<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault1(item)}>
               					<tbody>
               						<tr>
               							<td className="tr">订单编号 ：</td>
