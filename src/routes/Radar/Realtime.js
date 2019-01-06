@@ -92,6 +92,7 @@ export default class DoorHistory extends Component {
     modal: false,
     src: '',
     sliderCurrent: 0,
+		doorWidth:4096,
 		openInarr:[],
 		openToarr:[],
 		openDeceleratearr:[],
@@ -161,8 +162,8 @@ export default class DoorHistory extends Component {
     stop: 0,
   }
   componentWillMount() {
-		this.initWebsocket()
 		this.getBaseData()
+		this.initWebsocket()
   }
 	initWebsocket = () =>{ //初始化weosocket
 		const { dispatch, location } = this.props;
@@ -181,7 +182,6 @@ export default class DoorHistory extends Component {
 				this.closed
 			}else{
 				var redata = JSON.parse(e.data)
-				console.log(redata)
 				_this.getData(redata)
 			}
 		}
@@ -234,77 +234,81 @@ export default class DoorHistory extends Component {
 			
 		})
 	}
-	getBaseData = (val) => {
+	getBaseData = () => {
+		const {show} = this.state
 		const { location } = this.props;
 		const match = pathToRegexp('/door/:id/realtime').exec(location.pathname);
 		const device_id = match[1];
-		const show = this.state.show
 		getBaseData({device_id}).then((res) => {
 			let buffer = []
-			buffer = base64url.toBuffer(res.data.list[6].data);	//8位转流
-			show.openIn = buffer[0]&0x01
-			show.closeIn = (buffer[0]&0x02)>>1						//获取关门信号
-			show.openTo =	(buffer[0]&0x04)>>2								//获取开到位输入信号
-			show.closeTo = (buffer[0]&0x08)>>3								//获取关到位输入信号	
-			show.openDecelerate =	(buffer[0]&0x10)>>4				//开减速输入信号 
-			show.closeDecelerate = (buffer[0]&0x20)>>5			//关减速输入信号
-			show.openToOut = (buffer[0]&0x40)>>6					//获取开到位输出信号
-			show.closeToOut = (buffer[0]&0x80)>>7					//获取关到位输出信号			
-			show.door	= buffer[1]&0x01								//正在开门信号
-			show.open	= (buffer[1]&0x02)>>1								//正在开门信号
-			show.close =	(buffer[1]&0x04)>>2						//正在关门信号
-			show.openKeep	= (buffer[1]&0x08)>>3						//开门到位维持信号
-			show.closeKeep	= (buffer[1]&0x10)>>4						//关门到位维持信号
-			show.stop	= (buffer[1]&0x20)>>5								//停止输出信号
-			show.inHigh = (buffer[1]&0x40)>>6							//输入电压过高
-			show.inLow = (buffer[1]&0x80)>>7									//输入电压过低
-			show.outHigh = buffer[2]&&0x01						//输出过流
-			show.motorHigh = (buffer[2]&0x02)>>1				//电机过载
-			show.flySafe = (buffer[2]&0x04)>>2						//飞车保护
-			show.closeStop = (buffer[2]&0x08)>>3					//开关门受阻
-			show.position	= ((buffer[2]&0xf0)<<4)+(buffer[3]&0xff)		//获取位置信号
+			for(let i=0;i<res.data.totalNumber;i++){
+				if(res.data.list[i].type == 4096){
+					buffer = base64url.toBuffer(res.data.list[i].data);	//8位转流
+				}	
+			}
+			show.openIn = (buffer[0]&0x80)>>7 									//获取开门输入信号
+			show.closeIn = (buffer[0]&0x40)>>6						//获取关门输入信号
+			show.openTo =	(buffer[0]&0x20)>>5								//获取开到位输入信号
+			show.closeTo = (buffer[0]&0x10)>>4								//获取关到位输入信号	
+			show.openDecelerate =	(buffer[0]&0x08)>>3				//开减速输入信号 
+			show.closeDecelerate = 	(buffer[0]&0x04)>>2		//关减速输入信号
+			show.openToOut = (buffer[0]&0x02)>>1					//获取开到位输出信号
+			show.closeToOut = buffer[0]&0x01					//获取关到位输出信号			
+			show.door	= (buffer[1]&0x80)>>7								//门光幕信号
+			show.open	= (buffer[1]&0x40)>>6								//正在开门信号
+			show.close =	(buffer[1]&0x20)>>5						//正在关门信号
+			show.openKeep	= (buffer[1]&0x10)>>4						//开门到位维持信号
+			show.closeKeep	= (buffer[1]&0x08)>>3						//关门到位维持信号
+			show.stop	= (buffer[1]&0x04)>>2								//停止输出信号
+			show.inHigh = (buffer[1]&0x02)>>1							//输入电压过高
+			show.inLow = 	buffer[1]&0x01								//输入电压过低
+			show.outHigh = (buffer[2]&0x80)>>7						//输出过流
+			show.motorHigh = (buffer[2]&0x40)>>6				//电机过载
+			show.flySafe = (buffer[2]&0x20)>>5						//飞车保护
+			show.closeStop = (buffer[2]&0x10)>>4					//开关门受阻
+			show.position	= ((buffer[2]&0x0f)<<8)+(buffer[3]&0xff)		//获取位置信号
 			show.current = (((buffer[4]&0xff)<<8)+(buffer[5]&0xff))/1000		//获取电流信号
 			show.speed = (((buffer[6]&0xff)<<8)+(buffer[7]&0xff))/1000
 			if(show.speed>32.767){
 				show.speed = show.speed-65.535
-			}			
+			}
 			show.updateTime = res.data.list[0].t_update
 		});
+		this.forceUpdate();
 	}
 	getData = (val) => {
 		const {show} = this.state
 		let buffer = []
 		buffer = base64url.toBuffer(val.data);	//8位转流
-		console.log(buffer)
 		let count= 0
 		var inte = setInterval(function () {
 			if((count+8) <= buffer.length){
-				show.openIn = buffer[count+0]&0x01
-				show.closeIn = (buffer[count+0]&0x02)>>1						//获取关门信号
-				show.openTo =	(buffer[count+0]&0x04)>>2								//获取开到位输入信号
-				show.closeTo = (buffer[count+0]&0x08)>>3								//获取关到位输入信号	
-				show.openDecelerate =	(buffer[0]&0x10)>>4				//开减速输入信号 
-				show.closeDecelerate = (buffer[0]&0x20)>>5			//关减速输入信号
-				show.openToOut = (buffer[count+0]&0x40)>>6					//获取开到位输出信号
-				show.closeToOut = (buffer[count+0]&0x80)>>7					//获取关到位输出信号			
-				show.door	= buffer[count+1]&0x01								//正在开门信号
-				show.open	= (buffer[count+1]&0x02)>>1								//正在开门信号
-				show.close =	(buffer[count+1]&0x04)>>2						//正在关门信号
-				show.openKeep	= (buffer[count+1]&0x08)>>3						//开门到位维持信号
-				show.closeKeep	= (buffer[count+1]&0x10)>>4						//关门到位维持信号
-				show.stop	= (buffer[count+1]&0x20)>>5								//停止输出信号
-				show.inHigh = (buffer[count+1]&0x40)>>6							//输入电压过高
-				show.inLow = (buffer[count+1]&0x80)>>7									//输入电压过低
-				show.outHigh = buffer[count+2]&&0x01						//输出过流
-				show.motorHigh = (buffer[count+2]&0x02)>>1				//电机过载
-				show.flySafe = (buffer[count+2]&0x04)>>2						//飞车保护
-				show.closeStop = (buffer[count+2]&0x08)>>3					//开关门受阻
+				show.openIn = (buffer[count+0]&0x80)>>7							//获取开门输入信号
+				show.closeIn = (buffer[count+0]&0x40)>>6						//获取关门信号
+				show.openTo =	(buffer[count+0]&0x20)>>5								//获取开到位输入信号
+				show.closeTo = (buffer[count+0]&0x10)>>4								//获取关到位输入信号	
+				show.openDecelerate =	(buffer[count+0]&0x08)>>3				//开减速输入信号 
+				show.closeDecelerate = (buffer[count+0]&0x04)>>2			//关减速输入信号
+				show.openToOut = (buffer[count+0]&0x02)>>1					//获取开到位输出信号
+				show.closeToOut = buffer[count+0]&0x01					//获取关到位输出信号			
+				show.door	= (buffer[count+1]&0x80)>>7								//正在门光幕
+				show.open	= (buffer[count+1]&0x40)>>6								//正在开门信号
+				show.close =	(buffer[count+1]&0x20)>>5						//正在关门信号
+				show.openKeep	= (buffer[count+1]&0x10)>>4						//开门到位维持信号
+				show.closeKeep	= (buffer[count+1]&0x08)>>3						//关门到位维持信号
+				show.stop	= (buffer[count+1]&0x04)>>2								//停止输出信号
+				show.inHigh = (buffer[count+1]&0x02)>>1							//输入电压过高
+				show.inLow = 	buffer[count+1]&0x01								//输入电压过低
+				show.outHigh = (buffer[count+2]&0x80)>>7						//输出过流
+				show.motorHigh = (buffer[count+2]&0x40)>>6				//电机过载
+				show.flySafe = (buffer[count+2]&0x20)>>5						//飞车保护
+				show.closeStop = (buffer[count+2]&0x10)>>4					//开关门受阻
 				show.position	= ((buffer[count+2]&0x0f)<<8)+(buffer[count+3]&0xff)		//获取位置信号
 				show.current = (((buffer[count+4]&0xff)<<8)+(buffer[count+5]&0xff))/1000		//获取电流信号
 				show.speed = (((buffer[count+6]&0xff)<<8)+(buffer[count+7]&0xff))/1000
 				if(show.speed>32.767){
 					show.speed = show.speed-65.535
-				}					
+				}
 				count+=8
 			}
 		}, this.state.interval);
@@ -544,7 +548,7 @@ export default class DoorHistory extends Component {
 	}
 	goDetail = link => () => {
 		const id = this.props.match.params.id;
-		this.props.history.push(`/door/${id}/${link}`);
+		this.props.history.push(`/door/${id}`);
 	}
   goQrcode = () => {
     const device_id = this.props.match.params.id;
@@ -627,7 +631,7 @@ export default class DoorHistory extends Component {
                 <section>
                   <p>门坐标 ：<i className={styles.status}>{this.state.show.position || this.state.show.position === 0 ? this.state.show.position : '0'}</i>
                   </p>
-                  <p>门电流 ：<i className={styles.status}>{isNaN(this.state.show.current) ? '0' : `${this.state.show.current} A`}</i>
+                  <p>门电流 ：<i className={styles.status}>{this.state.show.current} A</i>
                   </p>
                   <p>门状态 ：<i className={styles.status}>{statusName || '无'}</i>
                   </p>
@@ -660,7 +664,7 @@ export default class DoorHistory extends Component {
                     }}
                   >
                     最后更新时间 ：
-                    <i className={styles.status}>{moment(this.state.show.updateTimee).format('YYYY-MM-DD HH:mm:ss')}</i>
+                    <i className={styles.status}>{moment(this.state.show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
                   </p>
                 </section>
               </Col>

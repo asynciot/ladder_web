@@ -210,7 +210,7 @@ export default {
 			var arr = '';
 			var buf = ['','','','','',''];
 			var buffer = [];
-      if (response.code === 0) {
+      if (response.code == 0) {
 				for(let i=0;i<response.data.totalNumber;i++){
 					if(response.data.list[i].type ==4099){
 						buf[0] = response.data.list[i].data;
@@ -231,7 +231,7 @@ export default {
 				yield put({
 					type: 'getMenu', 
 					payload: parseMenu(buffer, payload.type),
-				});				
+				});
       }
     },
     *changeView({

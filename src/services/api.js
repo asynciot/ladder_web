@@ -144,8 +144,8 @@ export function postFollowInfo(params) {
   });
 }
 export function putFollowInfo(params) {
-  return request('/device/Update', {
-    method: 'POST',
+  return request('/device/Device', {
+    method: 'PUT',
     body: params,
   });
 }

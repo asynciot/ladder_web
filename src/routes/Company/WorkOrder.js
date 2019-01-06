@@ -247,16 +247,14 @@ export default class extends Component {
               				<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault(item)}>
               					<tbody>
               						<tr>
-              							<td className="tr">故障代码 ：</td>
-              							<td className="tl" style={{ width: '100px' }}>E{item.code}</td>
+              							<td className="tr">订单编号 ：</td>
+              							<td className="tl" style={{ width: '100px' }}>{item.order_id}</td>
               							<td className="tl">设备编号 ：</td>
               							<td className="tl">{item.device_id}</td>
               						</tr>
               						<tr>
               							<td className="tr">故障类型 ：</td>
-              							<td className="tl" style={{ width: '100px' }}>{names[item.type]}</td>
-              							<td className="tl">设备类型 ：</td>
-              							<td className="tl">{typeName[item.device_type] ||''}</td>
+              							<td className="tl" style={{ width: '100px' }}>{names[item.order_type]}</td>
               						</tr>
               						<tr>
               							<td className="tr">接单时间 ：</td>

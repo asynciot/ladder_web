@@ -221,7 +221,7 @@ export default class CtrlRealtime extends Component {
 			}
 		})
 	}
-	getBaseData = (val) => {
+	getBaseData = () => {
 		const { location } = this.props;
 		const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
 		const device_id = match[1];

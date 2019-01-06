@@ -56,7 +56,6 @@ export default class DoorHistory extends Component {
 				item.minute = parseInt(time%(1000*3600)/(1000*60))
 				item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
 				item.code = res.data.list[res.data.list.length-1].code.toString(16)
-				console.log(item.device_id)
 				if(item.state == 'treating'){
 					this.state.disable = true
 				}
@@ -93,8 +92,12 @@ export default class DoorHistory extends Component {
 		formdata = new window.FormData()
 		formdata.append("file1",this.state.file1)
 		formdata.append("file2",this.state.file2)
-		formdata.append("maintenance_nexttime",this.state.maintenance_nexttime)
-		formdata.append("inspection_nexttime",this.state.inspection_nexttime)
+		if(this.state.maintenance_nexttime !='' & this.state.maintenance_nexttime != null){
+			formdata.append("maintenance_nexttime",this.state.maintenance_nexttime)
+		}
+		if(this.state.inspection_nexttime !='' & this.state.inspection_nexttime != null){
+			formdata.append("inspection_nexttime",this.state.inspection_nexttime)
+		}
 		formdata.append("result",'untransfer')
 		formdata.append("id",this.state.list[0].device_id)
 		if(!this.state.file1 || !this.state.file2){
@@ -106,9 +109,12 @@ export default class DoorHistory extends Component {
 					Accept: 'application/json, text/plain, */*',
 				},
 				body: formdata
-			}).then(function(response){
-				alert("上传成功！")
-			}).then(function(data){
+			}).then(res=> { return res.json()}).then(json=>{
+				if(json.code == 0){
+					alert("上传成功")
+				}else{
+					alert("上传失败")
+				}
 			})
 		}
 	}

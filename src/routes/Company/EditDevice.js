@@ -51,18 +51,29 @@ export default class extends Component {
 			inspection_remind: _val2,
 		});
 	}
-  onChange = (value, name) => {
-    const val = {};
-    val[`${name}`] = value;
-    this.setState(val);
+  onAddr = async(val) => {
+    await this.setState({
+    	install_addr: val,
+    });
   }
+	onName = async(val) => {
+		await this.setState({
+			device_name: val,
+		});
+	}
   submit = () => {
 		const time1 = this.state.maintenance_remind*24*3600*1000
 		const time2 = this.state.inspection_remind*24*3600*1000
+		if(this.state.device_name == ''){
+			this.state.device_name = this.state.list.device_name
+		}
+		if(this.state.install_addr == ''){
+			this.state.install_addr = this.state.list.install_addr
+		}
     putFollowInfo({
       device_id: this.state.list.device_id,
-      device_name: this.state.list.device_name,
-      install_addr: this.state.list.install_addr,
+      device_name: this.state.device_name,
+      install_addr: this.state.install_addr,
 			maintenance_nexttime: this.state.maintenance_nexttime,
 			inspection_nexttime: this.state.inspection_nexttime,
 			maintenance_remind: time1,
@@ -94,14 +105,14 @@ export default class extends Component {
       <div className="content">
         <List>
           <InputItem
-            onChange={value => this.onChange(value, 'install_addr')}
-            value={list.install_addr}
+            onChange={value => this.onAddr(value)}
+            value={this.state.install_addr}
           >
             地点
           </InputItem>
           <InputItem
-            onChange={value => this.onChange(value, 'device_name')}
-            value={list.device_name}
+            onChange={value => this.onName(value)}
+            value={this.state.device_name}
           >
             别名
           </InputItem>
@@ -142,7 +153,7 @@ export default class extends Component {
 						上次年检时间
 					</InputItem>
           <List.Item>
-            <Button disabled={!list.device_name && !list.install_addr } size="large" loading={submitting} style={{ width: '100%' }} type="primary" onClick={() => this.submit()}>
+            <Button size="large" loading={submitting} style={{ width: '100%' }} type="primary" onClick={() => this.submit()}>
               修改
             </Button>
           </List.Item>
