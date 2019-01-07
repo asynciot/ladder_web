@@ -249,6 +249,7 @@ export default class CtrlRealtime extends Component {
 		let markFloor = []
 		const show = this.state.show
 		const floor = this.state.floor
+		var _this = this
 		var inte = setInterval(function () {
 			if((count+33) <= buffer.length){
 				show.upCall   = buffer[count+0]&0x01							//上运行方向
@@ -283,10 +284,10 @@ export default class CtrlRealtime extends Component {
 					}			
 				}
 				count+=33
+				_this.forceUpdate();
 			}
 		}, this.state.interval);
 		this.showChart()
-		this.forceUpdate();
 	}
 	getfloor = (val) => {
 		const {show, } = this.state
@@ -304,7 +305,6 @@ export default class CtrlRealtime extends Component {
 				buffer.forEach((item) => {
 					arr.push(String.fromCharCode(item))
 				})
-				console.log(arr)
 				let high = arr.length/3;
 				for(let i=0; i<high;i++){
 					floor[high-1-i]=arr[i*3]+arr[i*3+1]+arr[i*3+2]
@@ -414,7 +414,7 @@ export default class CtrlRealtime extends Component {
 					data:_this.state.close
 				}]
 			});
-		},1000)
+		},this.state.interval)
 	}
 	goEvent = item => () => {
 		const { history } = this.props;
