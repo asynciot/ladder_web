@@ -154,8 +154,8 @@ export default class CtrlRealtime extends Component {
 		close:[],
 		markFloor:[],
 	}
-	async componentWillMount() {
-		await	this.getBaseData()
+	componentWillMount() {
+		this.getBaseData()
 		this.getfloor()
 		this.initWebsocket()
 	}
@@ -194,12 +194,8 @@ export default class CtrlRealtime extends Component {
 	websocketclosed(){
 		console.log("1")
 	}
-	onChange = async (val) => {		
-		await this.setState({
-			pick: val,
-		});
+	onChange = async (val) => {
 		const { dispatch, location } = this.props;
-		const {pick} = this.state;
 		const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
 		const device_id = match[1];
 		getFollowDevices({device_id}).then((res)=>{
@@ -208,8 +204,7 @@ export default class CtrlRealtime extends Component {
 				const IMEI = res.data.list[0].IMEI;
 				const interval = 1000;
 				const threshold = 1;
-				// const reset = this.state.pick;
-				const duration = 30;
+				const duration = val[0];
 				const device_type = '240';
 				const type = '0';
 				const segment = '0';
@@ -229,7 +224,6 @@ export default class CtrlRealtime extends Component {
 		getCtrlData({device_id}).then((res) => {
 				let buffer = []
 				buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
-				console.log(buffer)
 				show.upCall   = buffer[6]&0x01
 				show.downCall = (buffer[6]&0x02)>>1
 				show.run      = (buffer[6]&0x04)>>2					//获取运行信号
@@ -257,8 +251,8 @@ export default class CtrlRealtime extends Component {
 		const floor = this.state.floor
 		var inte = setInterval(function () {
 			if((count+33) <= buffer.length){
-				show.upCall   = buffer[count+0]&0x01
-				show.downCall = (buffer[count+0]&0x02)>>1
+				show.upCall   = buffer[count+0]&0x01							//上运行方向
+				show.downCall = (buffer[count+0]&0x02)>>1					//下运行方向
 				show.run      = (buffer[count+0]&0x04)>>2					//获取运行信号
 				show.lock     = (buffer[count+0]&0x08)>>3					//获取门锁信号
 				show.open    = (buffer[count+0]&0x10)>>4					//获取关门信号
@@ -270,48 +264,24 @@ export default class CtrlRealtime extends Component {
 				show.floor    = buffer[count+27]&0xff           //获取电梯当前楼层
 				for(let j=0; j<floor.length;j+=8){
 					for(let i =3;i<=10;i++){
-						markList[j] = (buffer[count+i]&0x01)
-						markList[j+1] = (buffer[count+i]&0x02)>>1
-						markList[j+2] = (buffer[count+i]&0x04)>>2
-						markList[j+3] = (buffer[count+i]&0x08)>>3
-						markList[j+4] = (buffer[count+i]&0x10)>>4
-						markList[j+5] = (buffer[count+i]&0x20)>>5
-						markList[j+6] = (buffer[count+i]&0x40)>>6
-						markList[j+7] = (buffer[count+i]&0x80)>>7
+						markList[j] = (buffer[count+i]&0x01)+','
+						markList[j+1] = (buffer[count+i]&0x02)>>1+','
+						markList[j+2] = (buffer[count+i]&0x04)>>2+','
+						markList[j+3] = (buffer[count+i]&0x08)>>3+','
+						markList[j+4] = (buffer[count+i]&0x10)>>4+','
+						markList[j+5] = (buffer[count+i]&0x20)>>5+','
+						markList[j+6] = (buffer[count+i]&0x40)>>6+','
+						markList[j+7] = (buffer[count+i]&0x80)>>7+','
 					}
 				}
 				for(let i=0;i<=floor.length;i++){
 					if(markList[i] == 1){
 						markFloor = markFloor.concat(markList[i])
-					}
+						this.setState({
+							markFloor,
+						});
+					}			
 				}
-				this.setState({
-					markFloor,
-				});
-// 				for(let j=0; j<this.state.floor.length;j+=8){
-// 					for(let i =3;i<=10;i++){
-// 						upfloorList[j] = (buffer[count+i]&0x01)
-// 						upfloorList[j+1] = (buffer[count+i]&0x02)>>1
-// 						upfloorList[j+2] = (buffer[count+i]&0x04)>>2
-// 						upfloorList[j+3] = (buffer[count+i]&0x08)>>3
-// 						upfloorList[j+4] = (buffer[count+i]&0x10)>>4
-// 						upfloorList[j+5] = (buffer[count+i]&0x20)>>5
-// 						upfloorList[j+6] = (buffer[count+i]&0x40)>>6
-// 						upfloorList[j+7] = (buffer[count+i]&0x80)>>7
-// 					}
-// 				}
-// 				for(let j=0; j<this.state.floor.length;j+=8){
-// 					for(let i =10;i<=18;i++){
-// 						downfloorList[j] = (buffer[count+i]&0x01)
-// 						downfloorList[j+1] = (buffer[count+i]&0x02)>>1
-// 						downfloorList[j+2] = (buffer[count+i]&0x04)>>2
-// 						downfloorList[j+3] = (buffer[count+i]&0x08)>>3
-// 						downfloorList[j+4] = (buffer[count+i]&0x10)>>4
-// 						downfloorList[j+5] = (buffer[count+i]&0x20)>>5
-// 						downfloorList[j+6] = (buffer[count+i]&0x40)>>6
-// 						downfloorList[j+7] = (buffer[count+i]&0x80)>>7
-// 					}
-// 				}
 				count+=33
 			}
 		}, this.state.interval);
@@ -330,9 +300,11 @@ export default class CtrlRealtime extends Component {
 				let arr = [];
 				let floor = [];
 				buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
+				console.log(buffer)
 				buffer.forEach((item) => {
 					arr.push(String.fromCharCode(item))
 				})
+				console.log(arr)
 				let high = arr.length/3;
 				for(let i=0; i<high;i++){
 					floor[high-1-i]=arr[i*3]+arr[i*3+1]+arr[i*3+2]
@@ -473,7 +445,6 @@ export default class CtrlRealtime extends Component {
 		let { ctrl: { event, view, device, floors, property, } } = this.props;
 		const { floor, markFloor, } = this.state;
 		const id = this.props.match.params.id;
-		console.log(this.state.show.floor)
 		return (
 			<div className="content tab-hide">
 				<div className={styles.content}>
