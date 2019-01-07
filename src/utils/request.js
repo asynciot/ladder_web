@@ -2,10 +2,10 @@ import fetch from 'dva/fetch';
 import { notification } from 'antd';
 
 export const api = process.env.NODE_ENV === 'production'
-  ? `${window.location.origin}`
-	: 'http://localhost:9000';
-//    	? 'http://server.asynciot.com'
-//    	:'http://server.asynciot.com';
+  // ? `${window.location.origin}/v1`
+	// : 'http://localhost:9001/v1';
+   	? 'http://server.asynciot.com'
+   	:'http://server.asynciot.com';
 // 		? 'http://lengxia.natapp1.cc'
 // 		:'http://lengxia.natapp1.cc'
 const codeMessage = {
