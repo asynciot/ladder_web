@@ -13,7 +13,7 @@ import styles from './CtrlRealtime.less';
 import echarts from 'echarts';
 import {
 	getEvent, postMonitor, getFollowDevices, 
-	getDeviceList, getFloorData, getBaseData,
+	getDeviceList, getFloorData, getCtrlData,
 } from '../../services/api';
 const tabs = [
 	{ title: '门' 	},
@@ -154,8 +154,8 @@ export default class CtrlRealtime extends Component {
 		close:[],
 		markFloor:[],
 	}
-	componentWillMount() {
-		this.getBaseData()
+	async componentWillMount() {
+		await	this.getBaseData()
 		this.getfloor()
 		this.initWebsocket()
 	}
@@ -226,21 +226,22 @@ export default class CtrlRealtime extends Component {
 		const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
 		const device_id = match[1];
 		const show = this.state.show
-		getBaseData({device_id}).then((res) => {
-			let buffer = []
-			buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
-			show.upCall   = buffer[6]&0x01
-			show.downCall = (buffer[6]&0x02)>>1
-			show.run      = (buffer[6]&0x04)>>2					//获取运行信号
-			show.lock     = (buffer[6]&0x08)>>3					//获取门锁信号
-			show.open    = (buffer[6]&0x10)>>4					//获取关门信号
-			show.close    = (buffer[6]&0x20)>>5					//获取关门信号
-			show.openBtn  = (buffer[6]&0x40)>>6					//获取开门按钮信号
-			show.closeBtn = (buffer[6]&0x80)>>7					//获取关门按钮信号
-			show.model    = buffer[7]&0xff						//获取电梯模式
-			show.status   = buffer[8]&0xff						//获取电梯状态				
-			show.floor    = buffer[9]&0xff           //获取电梯当前楼层
-			show.updateTime = res.data.list[0].t_update
+		getCtrlData({device_id}).then((res) => {
+				let buffer = []
+				buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
+				console.log(buffer)
+				show.upCall   = buffer[6]&0x01
+				show.downCall = (buffer[6]&0x02)>>1
+				show.run      = (buffer[6]&0x04)>>2					//获取运行信号
+				show.lock     = (buffer[6]&0x08)>>3					//获取门锁信号
+				show.open    = (buffer[6]&0x10)>>4					//获取关门信号
+				show.close    = (buffer[6]&0x20)>>5					//获取关门信号
+				show.openBtn  = (buffer[6]&0x40)>>6					//获取开门按钮信号
+				show.closeBtn = (buffer[6]&0x80)>>7					//获取关门按钮信号
+				show.model    = buffer[7]&0xff						//获取电梯模式
+				show.status   = buffer[8]&0xff						//获取电梯状态				
+				show.floor    = buffer[9]&0xff           //获取电梯当前楼层
+				show.updateTime = res.data.list[0].t_update
 		});
 	}
 	getData = (val) => {
@@ -335,16 +336,6 @@ export default class CtrlRealtime extends Component {
 				let high = arr.length/3;
 				for(let i=0; i<high;i++){
 					floor[high-1-i]=arr[i*3]+arr[i*3+1]+arr[i*3+2]
-				}
-				for(let i=0; i<high-2;i+=3){
-					let a = floor[i]
-					floor[i]=floor[i+2]
-					floor[i+2] = a
-					if(high%3==2){
-						const last = floor[high-1]
-						floor[high-1] = floor[high-2]
-						floor[high-2] = last
-					}
 				}
 				this.setState({
 					floor,
@@ -482,6 +473,7 @@ export default class CtrlRealtime extends Component {
 		let { ctrl: { event, view, device, floors, property, } } = this.props;
 		const { floor, markFloor, } = this.state;
 		const id = this.props.match.params.id;
+		console.log(this.state.show.floor)
 		return (
 			<div className="content tab-hide">
 				<div className={styles.content}>

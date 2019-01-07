@@ -58,13 +58,11 @@ export default class Company extends Component {
 		var files = e.target.files[0]
 		var formdata = new FormData()
 		formdata.append("file",files)
-		// uploadPicture(formdata).then((res) =>{})
 		fetch('http://server.asynciot.com/account/portrait', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json, text/plain, */*',
 			},
-			credentials: 'include',	
 			body: formdata
 		})
 	};

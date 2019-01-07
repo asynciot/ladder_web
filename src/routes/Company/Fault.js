@@ -108,7 +108,7 @@ export default class DoorHistory extends Component {
 		if(!this.state.file1 || !this.state.file2){
 			alert("请上传维修前和维修后的图片！")
 		}else {
-			fetch('http://lengxia.natapp1.cc/device/Dispatch/finish', {
+			fetch('http://server.asynciot.com/device/Dispatch/finish', {
 				method: 'POST',
 				headers: {
 					Accept: 'application/json, text/plain, */*',

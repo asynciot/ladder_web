@@ -12,7 +12,7 @@ import F2 from '@antv/f2';
 import styles from './History.less';
 import echarts from 'echarts';
 import ReactEcharts from 'echarts-for-react';
-import {getEvent, postMonitor, getFollowDevices, getDeviceList, getBaseData} from '../../services/api';
+import {getEvent, postMonitor, getFollowDevices, getDeviceList, getDoorData} from '../../services/api';
 const timeList = [{
   label: '90s',
   value: '90',
@@ -239,13 +239,9 @@ export default class DoorHistory extends Component {
 		const { location } = this.props;
 		const match = pathToRegexp('/door/:id/realtime').exec(location.pathname);
 		const device_id = match[1];
-		getBaseData({device_id}).then((res) => {
+		getDoorData({device_id}).then((res) => {
 			let buffer = []
-			for(let i=0;i<res.data.totalNumber;i++){
-				if(res.data.list[i].type == 4096){
-					buffer = base64url.toBuffer(res.data.list[i].data);	//8位转流
-				}	
-			}
+			buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
 			show.openIn = (buffer[0]&0x80)>>7 									//获取开门输入信号
 			show.closeIn = (buffer[0]&0x40)>>6						//获取关门输入信号
 			show.openTo =	(buffer[0]&0x20)>>5								//获取开到位输入信号
@@ -548,7 +544,7 @@ export default class DoorHistory extends Component {
 	}
 	goDetail = link => () => {
 		const id = this.props.match.params.id;
-		this.props.history.push(`/door/${id}`);
+		this.props.history.push(`/door/${id}/params`);
 	}
   goQrcode = () => {
     const device_id = this.props.match.params.id;
