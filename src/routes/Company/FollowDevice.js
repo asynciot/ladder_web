@@ -303,7 +303,11 @@ export default class extends Component {
   }
   goDevice = item => () => {
     if (item.device_type === '15') {
-      this.props.history.push(`/door/${item.device_id}/realtime`);
+			const type = item.device_model
+      this.props.history.push({
+				pathname:`/door/${item.device_id}/realtime`,
+				state: { type }
+			});
     } else {
       this.props.history.push(`/ctrl/${item.device_id}/realtime`);
     }

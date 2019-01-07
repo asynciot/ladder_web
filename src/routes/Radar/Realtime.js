@@ -544,7 +544,8 @@ export default class DoorHistory extends Component {
 	}
 	goDetail = link => () => {
 		const id = this.props.match.params.id;
-		this.props.history.push(`/door/${id}/params`);
+		const type = this.props.location.state.type
+		this.props.history.push(`/door/${id}/params/${type}`);
 	}
   goQrcode = () => {
     const device_id = this.props.match.params.id;

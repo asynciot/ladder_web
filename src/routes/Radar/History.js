@@ -12,7 +12,7 @@ import F2 from '@antv/f2';
 import styles from './History.less';
 import echarts from 'echarts';
 import ReactEcharts from 'echarts-for-react';
-import {getEvent,getDeviceList} from '../../services/api';
+import {getEvent, getDeviceList, getFollowDevices, } from '../../services/api';
 const tabs = [
   { title: '门' },
   { title: '分屏' },
@@ -457,7 +457,11 @@ export default class DoorHistory extends Component {
 	}
 	goDetail = link => () => {
 		const id = this.props.match.params.id;
-		this.props.history.push(`/door/${id}/params`);
+		getFollowDevices({ num: 1, page:1, device_id:id}).then((res) => {
+			const type = res.data.list[0].device_model
+			this.props.history.push(`/door/${id}/params/${type}`);
+		})
+		
 	}
   goQrcode = () => {
     const id = this.props.match.params.id;
