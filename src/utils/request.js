@@ -4,10 +4,10 @@ import { notification } from 'antd';
 export const api = process.env.NODE_ENV === 'production'
   // ? `${window.location.origin}/v1`
 	// : 'http://localhost:9001/v1';
-//    	? 'http://server.asynciot.com'
-//    	:'http://server.asynciot.com';
-		? 'http://lengxia.natapp1.cc'
-		:'http://lengxia.natapp1.cc'
+   	? 'http://server.asynciot.com'
+   	:'http://server.asynciot.com';
+// 		? 'http://lengxia.natapp1.cc'
+// 		:'http://lengxia.natapp1.cc'
 const codeMessage = {
   200: '服务器成功返回请求的数据',
   201: '新建或修改数据成功。',
