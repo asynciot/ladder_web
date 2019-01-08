@@ -472,49 +472,49 @@ export default {
         // notification.error({   message: '错误',   description: '读取失败', });
       }
     },
-    *info({
-      payload,
-    }, { call, put }) {
-      const response = yield call(getDeviceInfo, payload.id);
-      if (response.code === 0) {
-        const property = array2obj(response.data.list);
-        let arr = [];
-        if (property.Event) {
-          const buffer = base64url.toBuffer(property.Event.value);
-          buffer.forEach((item) => {
-            arr = arr.concat(parseBuffer(item));
-          });
-          property.updateTime = property.Event.updateTime
-        }
-        const event = parseInfo(arr, []);
-        let floorMax = 0, floors = [];
-        if (property.MaxFloorNum && property.MaxFloorNum.value && parseInt(property.MaxFloorNum.value)!=0) {
-          floorMax = parseInt(property.MaxFloorNum.value);
-        }
-        if (property.FloorNames && property.FloorNames.value.match(/\d+/g)) {
-          const floorsStr = property.FloorNames.value;
-          const l = floorsStr.length/3;
-          for (let i = 0; i < l; i++) {
-            floors.push((`${floorsStr[i*3]}${floorsStr[i*3+1]}${floorsStr[i*3+2]}`).trim())
-          }
-        }else {
-          floors = new Array(floorMax).fill(0).map((item, index)=> 1+index)
-        }
-        event.floor = floors[event.floor-1];
-        yield put({
-          type: 'getInfo',
-          payload: {
-            device: property,
-            property,
-            event,
-            floors: floors.reverse(),
-            floorMax,
-          },
-        });
-      } else {
-        // notification.error({   message: '错误',   description: '读取失败', });
-      }
-    },
+//     *info({
+//       payload,
+//     }, { call, put }) {
+//       const response = yield call(getDeviceInfo, payload.id);
+//       if (response.code === 0) {
+//         const property = array2obj(response.data.list);
+//         let arr = [];
+//         if (property.Event) {
+//           const buffer = base64url.toBuffer(property.Event.value);
+//           buffer.forEach((item) => {
+//             arr = arr.concat(parseBuffer(item));
+//           });
+//           property.updateTime = property.Event.updateTime
+//         }
+//         const event = parseInfo(arr, []);
+//         let floorMax = 0, floors = [];
+//         if (property.MaxFloorNum && property.MaxFloorNum.value && parseInt(property.MaxFloorNum.value)!=0) {
+//           floorMax = parseInt(property.MaxFloorNum.value);
+//         }
+//         if (property.FloorNames && property.FloorNames.value.match(/\d+/g)) {
+//           const floorsStr = property.FloorNames.value;
+//           const l = floorsStr.length/3;
+//           for (let i = 0; i < l; i++) {
+//             floors.push((`${floorsStr[i*3]}${floorsStr[i*3+1]}${floorsStr[i*3+2]}`).trim())
+//           }
+//         }else {
+//           floors = new Array(floorMax).fill(0).map((item, index)=> 1+index)
+//         }
+//         event.floor = floors[event.floor-1];
+//         yield put({
+//           type: 'getInfo',
+//           payload: {
+//             device: property,
+//             property,
+//             event,
+//             floors: floors.reverse(),
+//             floorMax,
+//           },
+//         });
+//       } else {
+//         // notification.error({   message: '错误',   description: '读取失败', });
+//       }
+//     },
     *socket({
       payload,
     }, { put, select }) {
@@ -708,17 +708,17 @@ export default {
         list: action.payload,
       };
     },
-    getInfo(state, { payload }) {
-      return {
-        ...state,
-        device: payload.device,
-        event: payload.event,
-        wave: state.wave.concat(payload.event),
-        property: payload.property,
-        floorMax: payload.floorMax,
-        floors: payload.floors,
-      };
-    },
+//     getInfo(state, { payload }) {
+//       return {
+//         ...state,
+//         device: payload.device,
+//         event: payload.event,
+//         wave: state.wave.concat(payload.event),
+//         property: payload.property,
+//         floorMax: payload.floorMax,
+//         floors: payload.floors,
+//       };
+//     },
     getDoor(state, action) {
       return {
         ...state,
