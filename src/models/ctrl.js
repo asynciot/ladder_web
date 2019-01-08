@@ -515,25 +515,25 @@ export default {
 //         // notification.error({   message: '错误',   description: '读取失败', });
 //       }
 //     },
-    *socket({
-      payload,
-    }, { put, select }) {
-      const event = yield select(state => state.ctrl.event);
-      const data = {
-        deviceId: payload.id,
-        delay: 0,
-        interval: 100,
-        duration: 30,
-        monitorId: payload.monitorId,
-      };
-      event.startId = -1;
-      yield ws = new WebSocket(`${wsApi}?${stringify(data)}`);
-      yield put({ type: 'setWs',
-        payload: {
-          ws,
-          event,
-        } });
-    },
+//     *socket({
+//       payload,
+//     }, { put, select }) {
+//       const event = yield select(state => state.ctrl.event);
+//       const data = {
+//         deviceId: payload.id,
+//         delay: 0,
+//         interval: 100,
+//         duration: 30,
+//         monitorId: payload.monitorId,
+//       };
+//       event.startId = -1;
+//       yield ws = new WebSocket(`${wsApi}?${stringify(data)}`);
+//       yield put({ type: 'setWs',
+//         payload: {
+//           ws,
+//           event,
+//         } });
+//     },
     *debug({
       payload,
     }, { put, select }) {

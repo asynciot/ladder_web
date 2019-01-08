@@ -75,8 +75,9 @@ const data = [{
   value: 0,
 }];
 
-@connect(({ device }) => ({
+@connect(({ device, user }) => ({
   device,
+	currentUser: user.currentUser
 }))
 export default class DoorHistory extends Component {
   state = {
@@ -166,11 +167,12 @@ export default class DoorHistory extends Component {
 		this.initWebsocket()
   }
 	initWebsocket = () =>{ //初始化weosocket
-		const { dispatch, location } = this.props;
+		const {location, currentUser } = this.props;
 		const {pick} = this.state;
 		const match = pathToRegexp('/door/:id/realtime').exec(location.pathname);
 		const device_id = match[1];
-		const wsurl = 'ws://47.96.162.192:9006/device/Monitor/socket?deviceId='+device_id;
+		const userId = currentUser.id
+		const wsurl = 'ws://47.96.162.192:9006/device/Monitor/socket?deviceId='+device_id+'&userId='+userId;
 		const websock = new WebSocket(wsurl);
 		websock.onopen = this.websocketonopen;
 		websock.onerror = this.websocketonerror;
@@ -179,12 +181,13 @@ export default class DoorHistory extends Component {
 			if(e.data=="closed"){
 				alert("此次实时数据已结束")
 				_this.state.stop = 1
-				this.closed
+				websock.close()
 			}else{
 				var redata = JSON.parse(e.data)
 				_this.getData(redata)
 			}
 		}
+		websock.onclose = this.websocketclosed;
 	}
 	websocketonopen() {
 		console.log("WebSocket连接成功");
@@ -192,19 +195,20 @@ export default class DoorHistory extends Component {
 	websocketonerror(e) { //错误
 		console.log("WebSocket连接发生错误");
 	}
-	websocketonmessage(e){ //数据接收
-	}
-	closed(){//数据发送
+	websocketclosed(){
+		console.log("WebSocket已关闭");
+		const {location } = this.props;
+		const match = pathToRegexp('/door/:id/realtime').exec(location.pathname);
+		const device_id = match[1];
 		const op = "close"
 		postMonitor({ op, device_id,}).then((res) => {});
 	}
-	websocketclosed(){
-	}
-	onChange = async (val) => {		
+	onChange = async (val) => {
+		this.initWebsocket()
 		await this.setState({
 			pick: val,
 		});
-		const { dispatch, location } = this.props;
+		const {location } = this.props;
 		const {pick} = this.state;
 		const match = pathToRegexp('/door/:id/realtime').exec(location.pathname);
 		const device_id = match[1];
@@ -225,8 +229,18 @@ export default class DoorHistory extends Component {
 			}
 		})
 	}
+	buffer2hex = (buffer) => {
+	  const unit16array = [];
+	  buffer.forEach((e) => {
+	    const num = e.toString(16);
+	    unit16array.push(num.length === 1
+	      ? `0${num}`
+	      : num);
+	  });
+	  return unit16array;
+	}
 	getTime = (val) => {
-		const { dispatch, location } = this.props;
+		const {location } = this.props;
 		const {pick} = this.state;
 		const match = pathToRegexp('/door/:id/realtime').exec(location.pathname);
 		const device_id = match[1];
@@ -239,7 +253,7 @@ export default class DoorHistory extends Component {
 		const { location } = this.props;
 		const match = pathToRegexp('/door/:id/realtime').exec(location.pathname);
 		const device_id = match[1];
-		getDoorData({device_id}).then((res) => {
+		getDoorData({device_id,type:4096,num:1,page:1}).then((res) => {
 			let buffer = []
 			buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
 			show.openIn = (buffer[0]&0x80)>>7 									//获取开门输入信号
@@ -269,6 +283,12 @@ export default class DoorHistory extends Component {
 				show.speed = show.speed-65.535
 			}
 			show.updateTime = res.data.list[0].t_update
+		});
+		getDoorData({device_id,num:20,page:1,type:4100}).then((res) => {
+			let buffer = []
+			buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
+			const hex = this.buffer2hex(buffer)
+			this.state.doorWidth =parseInt((hex[26] + hex[27]), 16);
 		});
 		this.forceUpdate();
 	}

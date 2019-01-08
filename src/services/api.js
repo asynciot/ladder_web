@@ -69,7 +69,7 @@ export async function getCtrlData(params) {
   return request(`/device/Runtime?&num=1&page=1&type=8192&${stringify(params)}`);
 }
 export async function getDoorData(params) {
-  return request(`/device/Runtime?&num=1&page=1&type=4096&${stringify(params)}`);
+  return request(`/device/Runtime?&${stringify(params)}`);
 }
 export async function getFloorData(params) {
   return request(`/device/Runtime?&num=1&page=1&type=8211&${stringify(params)}`);

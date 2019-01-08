@@ -13,9 +13,9 @@ export default {
       companyName: '',
       mobile: '',
       portrait: '',
+			id:'',
     },
   },
-
   effects: {
     *fetch(_, { call, put }) {
       const response = yield call(queryUsers);

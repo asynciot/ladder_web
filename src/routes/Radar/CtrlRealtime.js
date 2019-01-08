@@ -15,6 +15,8 @@ import {
 	getEvent, postMonitor, getFollowDevices, 
 	getDeviceList, getFloorData, getCtrlData,
 } from '../../services/api';
+
+
 const tabs = [
 	{ title: '门' 	},
 	{ title: '分屏' },
@@ -97,9 +99,11 @@ const data = [{
 	value: 0,
 }];
 
-@connect(({ ctrl }) => ({
+@connect(({ ctrl,user }) => ({
   ctrl,
+	currentUser: user.currentUser,
 }))
+
 export default class CtrlRealtime extends Component {
 	state = {
 		floor:[],
@@ -160,11 +164,12 @@ export default class CtrlRealtime extends Component {
 		this.initWebsocket()
 	}
 	initWebsocket = () =>{ //初始化weosocket
-		const { dispatch, location } = this.props;
+		const {location, currentUser } = this.props;
 		const {pick} = this.state;
 		const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
 		const device_id = match[1];
-		const wsurl = 'ws://47.96.162.192:9006/device/Monitor/socket?deviceId='+device_id;
+		const userId = currentUser.id
+		const wsurl = 'ws://47.96.162.192:9006/device/Monitor/socket?deviceId='+device_id;+'&userId='+userId;
 		const websock = new WebSocket(wsurl);
 		websock.onopen = this.websocketonopen;
 		websock.onerror = this.websocketonerror;
@@ -173,13 +178,13 @@ export default class CtrlRealtime extends Component {
 			if(e.data=="closed"){
 				alert("此次实时数据已结束")
 				_this.state.stop = 1
-				this.closed
+				websock.close()
 			}else{
 				var redata = JSON.parse(e.data)
 				_this.getData(redata)
-				
 			}
 		}
+		websock.onclose = this.websocketclosed;
 	}
 	websocketonopen() {
 		console.log("WebSocket连接成功");
@@ -188,14 +193,17 @@ export default class CtrlRealtime extends Component {
 		console.log("WebSocket连接发生错误");
 	}
 	closed(){//数据发送
+		const {location } = this.props;
+		const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
+		const device_id = match[1];
 		const op = "close"
 		postMonitor({ op, device_id,}).then((res) => {});
 	}
 	websocketclosed(){
-		console.log("1")
+		console.log("WebSocket已关闭")
 	}
 	onChange = async (val) => {
-		const { dispatch, location } = this.props;
+		const {location } = this.props;
 		const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
 		const device_id = match[1];
 		getFollowDevices({device_id}).then((res)=>{
@@ -203,7 +211,7 @@ export default class CtrlRealtime extends Component {
 				const op = 'open';
 				const IMEI = res.data.list[0].IMEI;
 				const interval = 1000;
-				const threshold = 10;
+				const threshold = 1;
 				const duration = val[0];
 				const device_type = '240';
 				const type = '0';
@@ -291,7 +299,7 @@ export default class CtrlRealtime extends Component {
 	}
 	getfloor = (val) => {
 		const {show, } = this.state
-		const { dispatch, location } = this.props;
+		const {location } = this.props;
 		const {pick} = this.state;
 		const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
 		const device_id = match[1];

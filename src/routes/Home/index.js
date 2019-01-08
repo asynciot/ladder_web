@@ -44,18 +44,6 @@ export default class Home extends Component {
 		this.getDevicesStatus();
 		this.getFault();
 	}
-//   getBanners = () => {
-//     getBanners({ num: 10, page: 1 }).then((res) => {
-//       if (res.code === 0) {
-//         this.setState({
-//           data: res.data.list,
-//         });
-//         this.getMessages();
-//         this.getDevicesStatus();
-//         this.getHistoryEvent();
-//       }
-//     }).catch((e => console.info(e)));
-//   }
   getMessages = () => {
     getMessages({ num: 1, page: 1 }).then((res) => {
       if (res.code === 0) {
@@ -89,7 +77,7 @@ export default class Home extends Component {
   }
   toMessagesPage = () => {
     const { history } = this.props;
-    history.push('/company/message/unfinished');
+    history.push('/company/message');
   }
   toDevicesStatusPage = () => {
     const { history } = this.props;

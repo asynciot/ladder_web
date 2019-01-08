@@ -174,23 +174,23 @@ export default {
     *fetch({payload,}, { call, put, select }) {
         const now = new Date().getTime();
     },
-    *socket({ payload, }, { put, select }) {
-      const event = yield select(state => state.device.event);
-      const data = {
-        deviceId: payload.id,
-        delay: 0,
-        interval: 100,
-        duration: 30,
-        monitorId: payload.monitorId,
-      };
-      event.startId = -1;
-      yield ws = new WebSocket(`${wsApi}?${stringify(data)}`);
-      yield put({ type: 'setWs',
-        payload: {
-          ws,
-          event,
-        } });
-    },
+//     *socket({ payload, }, { put, select }) {
+//       const event = yield select(state => state.device.event);
+//       const data = {
+//         deviceId: payload.id,
+//         delay: 0,
+//         interval: 100,
+//         duration: 30,
+//         monitorId: payload.monitorId,
+//       };
+//       event.startId = -1;
+//       yield ws = new WebSocket(`${wsApi}?${stringify(data)}`);
+//       yield put({ type: 'setWs',
+//         payload: {
+//           ws,
+//           event,
+//         } });
+//     },
     *play({ payload }, { put, select }) {
       const property = yield select(state => state.device.property);
       yield put({
@@ -214,10 +214,13 @@ export default {
 				for(let i=0;i<response.data.totalNumber;i++){
 					if(response.data.list[i].type ==4099){
 						buf[0] = response.data.list[i].data;
+						console.log(base64url.toBuffer(buf[0]))
 					}else if(response.data.list[i].type == 4100){
 						buf[1] = response.data.list[i].data;
+						console.log(buf[1])
 					}else if(response.data.list[i].type == 4101){
 						buf[2] = response.data.list[i].data;
+						console.log(buf[2])
 					}else if(response.data.list[i].type == 4102){
 						buf[3] = response.data.list[i].data;
 					}else if(response.data.list[i].type == 4103){
