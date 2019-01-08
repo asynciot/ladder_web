@@ -105,7 +105,7 @@ export default class Company extends Component {
 							<img className={styles.icon}  src={require('../../assets/icon/电梯.png')} />
 							<a className={styles.icon}>设备管理</a>
 						</Col>
-						<Col span={6} onClick={() => this.goDetail('message/all')}>
+						<Col span={6} onClick={() => this.goDetail('message')}>
 							<img className={styles.icon}  src={require('../../assets/icon/信息.png')} />
 							<a className={styles.icon}>消息处理</a>
 						</Col>
