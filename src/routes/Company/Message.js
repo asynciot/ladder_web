@@ -11,9 +11,12 @@ const PlaceHolder = ({ className = '', ...restProps }) => (
 ); 
 
 let page = 1
-const NUM = 20
 const format = "YY/MM/DD"
-
+const tabs = [
+  { title: '全部', type: '' },
+  { title: '已查看', type: 'done' },
+  { title: '未查看', type: 'unfinished' },
+];
 function closest(el, selector) {
   const matchesSelector = el.matches || el.webkitMatchesSelector || el.mozMatchesSelector || el.msMatchesSelector;
   while (el) {
@@ -82,20 +85,22 @@ export default class extends Component {
     }
   }
 	pageChange = (val) => {
+		const { device_type,} =this.state
+		this.getDevice(device_type,val,switchIdx)
 		const page = val
 		this.getMessages(val)
 	}
-  getMessages = (val) => {
-    const { type } = this.props.match.params
+  getMessages = (val,type) => {
     let params = {
-      num: NUM,
-      page: page++,
+      num: 10,
+      page: val,
     }
     if (type === 'done') {
       params.done = true
     } else if (type === 'unfinished') {
       params.done = false
     }
+		console.log(type)
     getMessages(params).then(res => {
 			const totalNumber = res.data.totalNumber
 			const page = val
@@ -106,11 +111,10 @@ export default class extends Component {
 				});
 			}
       const { messages } = this.state
-			
       const total = res.data.totalPage
       this.setState({
         total,
-        messages: messages.concat(res.data.list),
+        messages: res.data.list,
 				page,
 				totalNumber,
       });
@@ -134,71 +138,53 @@ export default class extends Component {
     return (
       <div className="content">
         <div style={{ backgroundColor: '#fff' }}>
-          <Flex>
-            <Flex.Item>
-              <PlaceHolder><NavLink activeClassName={styles[`active-all`]} to={`/company/message/all`}>全部 {all}</NavLink></PlaceHolder>
-            </Flex.Item>
-            <Flex.Item>
-              <PlaceHolder><NavLink activeClassName={styles[`active-done`]} to={`/company/message/done`}>已查看 {done}</NavLink></PlaceHolder>
-            </Flex.Item>
-            <Flex.Item>
-              <PlaceHolder><NavLink activeClassName={styles[`active-unfinished`]} to={`/company/message/unfinished`}>未查看 {unread}</NavLink></PlaceHolder>
-            </Flex.Item>
-          </Flex>
-					<Row className={styles.page}>
-						<Col span={6}>
-						</Col>
-						<Col span={18} >
-							<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
-						</Col>
-					</Row>
-          {
-            messages.length ? (
-              <div>
-                <List className="my-list">
-                  {
-                    messages.map((message) => (
-                      <List.Item
-                        key={message.id}
-                        extra={extra(message.isSettled)}
-                        onClick={this.showModal(message)}
-                      >
-                        <div>时间: {moment(message.createTime).format(format)}</div>
-                        <div>名称: {message.title}</div>
-                        <div>内容: {message.content}</div>
-                      </List.Item>
-                    ))
-                  }
-                </List>
-                {
-                  this.state.total > page && (
-                    <div className={styles.loading}>
-                      <Button onClick={this.getMessages} loading={this.state.isLoading}>加载更多</Button>
-                    </div>
-                  )
-                }
-              </div>
-            ) : (
-              <div style={{textAlign: 'center', padding: 8, color: '#ccc'}}>暂无消息</div>
-            )
-          }
-        </div>
-        <Modal
-          visible={this.state.modal}
-          transparent
-          maskClosable={true}
-          onClose={this.onClose}
-          title="消息"
-          wrapProps={{ onTouchStart: this.onWrapTouchStart }}
-          footer={[{ text: '确定', onPress: () => { this.onClose(); } }]}
-        >
-          <div style={{ height: 100, overflow: 'scroll' }}>
-            <div>时间: {moment(currMessage.createTime).format(format)}</div>
-            <div>名称: {currMessage.title}</div>
-            <div>内容: {currMessage.content}</div>
-          </div>
-        </Modal>
-      </div>
+					<Tabs
+						tabs={tabs}
+						initialPage={this.state.type}
+						tabBarActiveTextColor="#1E90FF"
+						tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
+						onChange={(tab, index) => { this.getMessages(1,tab.type); }}
+					>
+						<List className="my-list">
+							<Row className={styles.page}>
+								<Col span={6}>
+								</Col>
+								<Col span={18} >
+									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
+								</Col>
+							</Row>
+							{
+								messages.map((message) => (
+									<List.Item
+										key={message.id}
+										extra={extra(message.isSettled)}
+										onClick={this.showModal(message)}
+									>
+										<div>时间: {moment(message.createTime).format(format)}</div>
+										<div>名称: {message.title}</div>
+										<div>内容: {message.content}</div>
+									</List.Item>
+								))
+							}
+						</List>
+					</Tabs>	
+				</div>
+				<Modal
+					visible={this.state.modal}
+					transparent
+					maskClosable={true}
+					onClose={this.onClose}
+					title="消息"
+					wrapProps={{ onTouchStart: this.onWrapTouchStart }}
+					footer={[{ text: '确定', onPress: () => { this.onClose(); } }]}
+				>
+					<div style={{ height: 100, overflow: 'scroll' }}>
+						<div>时间: {moment(currMessage.createTime).format(format)}</div>
+						<div>名称: {currMessage.title}</div>
+						<div>内容: {currMessage.content}</div>
+					</div>
+				</Modal>
+			</div>
     );
   }
 }

@@ -259,7 +259,7 @@ export const getRouterData = (app) => {
       name: '设备管理',
       component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/ManageDevice')),
     },
-    '/company/message/:type': {
+    '/company/message': {
       name: '消息处理',
       component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/Message')),
     },

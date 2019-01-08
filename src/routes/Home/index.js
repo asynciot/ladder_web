@@ -77,7 +77,7 @@ export default class Home extends Component {
     }).catch((e => console.info(e)));
   }
   getFault = () => {
-    getFault({ num: 10, page: 1 }).then((res) => {
+    getFault({ num: 10, page: 1, state:"untreated"}).then((res) => {
       if (res.code === 0) {
 				const code = res.data.list[res.data.list.length-1].code
         this.setState({

@@ -203,12 +203,12 @@ export default class CtrlRealtime extends Component {
 				const op = 'open';
 				const IMEI = res.data.list[0].IMEI;
 				const interval = 1000;
-				const threshold = 1;
+				const threshold = 10;
 				const duration = val[0];
 				const device_type = '240';
 				const type = '0';
-				const segment = '0,0,0,0';
-				const address = '1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1';
+				const segment = '00,00,00,00';
+				const address = '00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00';
 				postMonitor({ op, IMEI, interval, threshold, duration, device_type, type, segment, address}).then((res) => {});
 				alert("请等待接收数据");
 			}else if(res.code == 670){
@@ -422,7 +422,6 @@ export default class CtrlRealtime extends Component {
 		history.push(`/events/ctrl/${item.id}/`);
 	}
 	timeTicket = null;
-
 	goDetail = link => () => {
 		const id = this.props.match.params.id;
 		this.props.history.push(`/ctrl/${id}/${link}`);

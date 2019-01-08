@@ -54,6 +54,15 @@ export default class Company extends Component {
       history.push(`/company/${link}`);
     }
   };
+	toFollow = () => {
+		const { history } = this.props;
+		const vcode = 1;
+		const device_type = "";
+		history.push({
+			pathname: '/company/followdevice',
+			state: { vcode,device_type }
+		});
+	}
 	uploadPicture = (e) =>{
 		var files = e.target.files[0]
 		var formdata = new FormData()
@@ -92,7 +101,7 @@ export default class Company extends Component {
         </div>
 				<div className={styles.back}>
 					<Row>
-						<Col span={6} onClick={() => this.goDetail('/company/followdevice')}>
+						<Col span={6} onClick={() => this.toFollow()}>
 							<img className={styles.icon}  src={require('../../assets/icon/电梯.png')} />
 							<a className={styles.icon}>设备管理</a>
 						</Col>

@@ -339,6 +339,7 @@ export default class extends Component {
           deleteFollowInfo({ device_id: detail.device_id }).then((res) => {            
           });
 					this.getDevice('',1,switchIdx)
+					this.forceUpdate()
         },
       },
     ]);

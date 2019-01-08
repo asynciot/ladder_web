@@ -51,7 +51,6 @@ export default class extends Component {
 		list:[],
     height: document.documentElement.clientHeight-150,
 		nowTime: new Date().getTime(),
-    refreshing: true,
     down: false,
     tab: 0,
     page: 1,
@@ -61,13 +60,8 @@ export default class extends Component {
     this.getFault('untreated');
   }
   getFault = (state) => {
-    let {page, total, historyEvents,refreshing} = this.state;
-    if (page > total) {
-      setTimeout(()=>{
-        this.setState({ refreshing: false });
-      }, 800)
-      return
-    }
+    let {page, total, historyEvents} = this.state;
+
 		if(state == 'untreated'){
 			getFault({ num: 10, page, state }).then((res) => {
 				const list = res.data.list.map((item) => {
@@ -78,17 +72,11 @@ export default class extends Component {
 					item.code = res.data.list[res.data.list.length-1].code.toString(16)
 					return item;
 				})
-				if(refreshing) {
-					page++
-				}
 				this.setState({
 					page,
 					list,
 					total: res.data.totalPage
 				});
-				setTimeout(()=>{
-					this.setState({ refreshing: false });
-				}, 800)
 			}).catch((e => console.info(e)));
 		}else{
 			getDispatch({ num: 10, page, follow:'yes', state:'untreated'}).then((res) => {
@@ -100,17 +88,11 @@ export default class extends Component {
 					item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
 					return item;
 				})
-				if(refreshing) {
-					page++
-				}
 				this.setState({
 					page,
 					list,
 					total: res.data.totalPage
 				});
-				setTimeout(()=>{
-					this.setState({ refreshing: false });
-				}, 800)
 			}).catch((e => console.info(e)));
 		}	
   }
@@ -136,7 +118,7 @@ export default class extends Component {
       { text: '确认',
         onPress: () => {
           postFault({order_id}).then(() => {
-            this.getFault(detail.state);
+            this.getFault(detail.state)
           });
         },
       },
@@ -147,9 +129,9 @@ export default class extends Component {
 			{ text: '取消', style: 'default' },
 			{ text: '确认',
 				onPress: () => {
-					postFinish({ order_id: detail.id }).then((res) => {            
+					postFinish({ order_id: detail.id }).then((res) => {     
+						this.getFault(detail.state)
 					});
-					this.getFault(detail.state);
 				},
 			},
 		]);
@@ -159,12 +141,13 @@ export default class extends Component {
 			{ text: '取消', style: 'default' },
 			{ text: '确认',
 				onPress: () => {
-					postFinish({ id: detail.id,result:'transfer' }).then((res) => {            
+					postFinish({ id: detail.id,result:'transfer' }).then((res) => {
+						this.getFault("")
 					});
-					this.getFault(detail.state);
 				},
 			},
 		]);
+		
 	}
 	tabChange = (tab, index) => {
 		this.setState({
@@ -180,7 +163,7 @@ export default class extends Component {
           initialPage={0}
           tabBarActiveTextColor="#1E90FF"
           tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
-          onChange={(tab, index) => { this.setState({tab: tab.type, refreshing: true, page: 1,total:1},()=>{this.getFault(tab.type);} );  }}
+          onChange={(tab, index) => { this.setState({tab: tab.type, page: 1,total:1},()=>{this.getFault(tab.type);} );  }}
           // onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }}
         >
           <div>
@@ -191,11 +174,8 @@ export default class extends Component {
                 height: this.state.height,
                 overflow: 'auto',
               }}
-              indicator={this.state.down ? {} : { deactivate: '上拉可以刷新' }}
-              direction={this.state.down ? 'down' : 'up'}
-              refreshing={this.state.refreshing}
               onRefresh={() => {
-                this.setState({ refreshing: true },()=>{
+                this.setState(()=>{
                   this.getFault(this.state.tab)
                 });
               }}
@@ -242,11 +222,8 @@ export default class extends Component {
                   height: this.state.height,
                   overflow: 'auto',
                 }}
-                indicator={this.state.down ? {} : { deactivate: '上拉可以刷新' }}
-                direction={this.state.down ? 'down' : 'up'}
-                refreshing={this.state.refreshing}
                 onRefresh={() => {
-                  this.setState({ refreshing: true },()=>{
+                  this.setState(()=>{
                     this.getFault(this.state.tab)
                   });
                 }}
