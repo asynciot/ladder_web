@@ -8,7 +8,6 @@ import base64url from 'base64url';
 import classNames from 'classnames';
 import StringMask from 'string-mask';
 import styles from './Debug.less';
-import {postMonitor,getFollowDevices} from '../../services/api';
 const Item = List.Item;
 const pattern =  /^[0-9a-fA-f]+$/
 const formatter = new StringMask('AA,AA,AA,AA,AA,AA,AA,AA,AA,AA,AA,AA,AA,AA,AA,AA');
@@ -167,7 +166,7 @@ export default class Debug extends Component {
         if (base[index-1] != '' || base[index] != '') {
           base[index-1] == '' ? base[index-1] = '00' : null;
           base[index] == '' ? base[index] = '00' : null;
-          baseVal += (base[index-1] + base[index]);
+          baseVal += (base[index-1] +','+ base[index]+',');
         }
       }
     })
@@ -197,7 +196,7 @@ export default class Debug extends Component {
         offsets[1] == '' ? offsets[1] = '00' : null;
         offsets[0] == '' ? offsets[0] = '00' : null;
       }
-      const first = offsets[0] + offsets[1];
+      const first = offsets[0];
       let num = Number(`0x${first}`);
       offsetsVal = first;
       if (first == '') {
@@ -205,16 +204,16 @@ export default class Debug extends Component {
       }else {
         if (first != 'ffff') {
           let i = 1;
-          while(i< 8) {
-            num++;
-            let str = num.toString(16)
-            while(str.length < 4){
-              str = '0'+ str;
-            }
-            offsetsVal += str;
+          while(i< 16) {
+//             num++;
+//             let str = num.toString(16)
+//             while(str.length < 4){
+//               str =','+'0'+ str;
+//             }
+            offsetsVal +=','+offsets[i];
             i++;
           }
-          offsets = formatter.apply(offsetsVal).split(',')
+          // offsets = formatter.apply(offsetsVal).split(',')
         }
       }
     }
@@ -262,12 +261,6 @@ export default class Debug extends Component {
             }else {
               message.error('内存诊断失败');
             }
-//             dispatch({
-//               type: 'ctrl/debugMs',
-//               payload: {
-//                 data: [],
-//               },
-//             });
             clearInterval(play)
             this.setState({
               switch: false,
@@ -279,12 +272,6 @@ export default class Debug extends Component {
                 message.error('内存诊断正在使用中');
                 ws.close()
               }else if (JSON.parse(msg.data).data) {
-//                 dispatch({
-//                   type: 'ctrl/debugMs',
-//                   payload: {
-//                     data: JSON.parse(msg.data),
-//                   },
-//                 });
 								console.log(JSON.parse(msg.data))
 								this.debugMs(JSON.parse(msg.data))						
               }
@@ -298,12 +285,6 @@ export default class Debug extends Component {
             }, 100);
           }
           debugWs.onclose = () => {
-//             dispatch({
-//               type: 'ctrl/debugMs',
-//               payload: {
-//                 data: [],
-//               },
-//             });
             clearInterval(play)
           }
         }
@@ -346,7 +327,6 @@ export default class Debug extends Component {
 		const {debugList} = this.state
     let debug= null;
     const lastId = debugList.length ? debugList[debugList.length - 1].startId : 0;
-		console.log(this.state.debugList)
     debug = debugList.shift();
     if (debug) {
       let data = ['','','','','','','','',];

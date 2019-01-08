@@ -546,21 +546,15 @@ export default {
 					const interval = 100;
 					const threshold = 50;
 					const duration = 30;
-					const device_type = '15';
+					const device_type = '240';
 					const type = '1';
-					postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {});
+					const segment = payload.base;
+					const address = payload.offsets;
+					postMonitor({ op, IMEI, interval, threshold, duration, device_type, type, segment, address}).then((res) => {});
 				}
 			})
       const data = {
         deviceId: payload.id,
-//         delay: 0,
-//         interval: 100,
-//         duration: 30,
-//         threshold: 50,
-// 				 type: 1,
-//         base: payload.base,
-//         offsets: payload.offsets,
-//         monitorId: payload.monitorId,
       };
       yield ws = new WebSocket(`${wsDebug}?${stringify(data)}`);
       yield put({ type: 'setDebugWs',

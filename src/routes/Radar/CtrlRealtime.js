@@ -278,9 +278,6 @@ export default class CtrlRealtime extends Component {
 				for(let i=0;i<=floor.length;i++){
 					if(markList[i] == 1){
 						markFloor = markFloor.concat(markList[i])
-						this.setState({
-							markFloor,
-						});
 					}			
 				}
 				count+=33
@@ -288,6 +285,9 @@ export default class CtrlRealtime extends Component {
 			}
 		}, this.state.interval);
 		this.showChart()
+		this.setState({
+			markFloor,
+		});
 	}
 	getfloor = (val) => {
 		const {show, } = this.state

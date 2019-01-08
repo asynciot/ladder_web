@@ -41,7 +41,7 @@ function buffer2hex(buffer) {
 function parseMenu(buffer, type) {
   const arr = [];
   const hex = buffer2hex(buffer);
-  let menu = type == 1 ? menuT : menuB
+  let menu = type == 1 ? menuB : menuT
   menu.forEach((item) => {
     item
       .children
