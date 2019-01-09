@@ -54,6 +54,7 @@ const alertName = (show) => {
   return str;
 };
 var inte =null;
+var websock = '';
 var charts = true;
 const data = [{
   time: 0,
@@ -157,7 +158,7 @@ export default class DoorHistory extends Component {
 	componentWillUnmount() {
 		charts = false;
 		clearInterval(inte)
-		const websock = new WebSocket('ws://47.96.162.192:9006/device/Monitor/socket');
+		websock = new WebSocket('ws://47.96.162.192:9006/device/Monitor/socket');
 		websock.close()
 	}
 	initWebsocket = () =>{ //初始化weosocket
@@ -165,7 +166,7 @@ export default class DoorHistory extends Component {
 		const device_id = this.state.id
 		const userId = currentUser.id
 		const wsurl = 'ws://47.96.162.192:9006/device/Monitor/socket?deviceId='+device_id+'&userId='+userId;
-		const websock = new WebSocket(wsurl);
+		websock = new WebSocket(wsurl);
 		websock.onopen = this.websocketonopen;
 		websock.onerror = this.websocketonerror;
 		const _this = this;

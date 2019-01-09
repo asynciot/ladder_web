@@ -17,6 +17,7 @@ import {
 } from '../../services/api';
 var inte = null;
 var charts = true;
+var websock = '';
 const tabs = [
 	{ title: '门' 	},
 	{ title: '分屏' },
@@ -166,7 +167,7 @@ export default class CtrlRealtime extends Component {
 	componentWillUnmount() {
 		charts = false;
 		clearInterval(inte)
-		const websock = new WebSocket('ws://47.96.162.192:9006/device/Monitor/socket');
+		websock = new WebSocket('ws://47.96.162.192:9006/device/Monitor/socket');
 		websock.close()
 	}
 	initWebsocket = () =>{ //初始化weosocket
@@ -176,7 +177,7 @@ export default class CtrlRealtime extends Component {
 		const device_id = match[1];
 		const userId = currentUser.id
 		const wsurl = 'ws://47.96.162.192:9006/device/Monitor/socket?deviceId='+device_id+'&userId='+userId;
-		const websock = new WebSocket(wsurl);
+		websock = new WebSocket(wsurl);
 		websock.onopen = this.websocketonopen;
 		websock.onerror = this.websocketonerror;
 		const _this = this;
