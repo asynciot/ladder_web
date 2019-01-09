@@ -33,6 +33,7 @@ export default class MobileHeader extends PureComponent {
     const match = pathToRegexp('/:name/:id?/:sub?/:end?').exec(location.pathname);
     if (match && match[2]) {
       history.goBack();
+			this.forceUpdate()
     }
   }
 

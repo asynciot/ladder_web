@@ -23,18 +23,8 @@ const timeList = [{
   label: '30s',
   value: '30',
 },];
-const tabs = [
-  { title: '门' },
-  { title: '分屏' },
-  { title: '滤波' },
-];
-const randomHexColor = () => { // 随机生成十六进制颜色
-  let hex = Math.floor(Math.random() * 11777216).toString(16); // 生成ffffff以内16进制数
-  while (hex.length < 6) { // while循环判断hex位数，少于6位前面加0凑够6位
-    hex = `0${hex}`;
-  }
-  return `#${hex}`; // 返回‘#'开头16进制颜色
-};
+
+
 const alertName = (show) => {
   if (show.isLoss) {
     return '无';
@@ -63,18 +53,12 @@ const alertName = (show) => {
   }
   return str;
 };
-const getRecord = (offset) => {
-  offset = offset || 0;
-  return {
-    time: new Date().getTime() + offset * 1000,
-    value: Math.random() + 10,
-  };
-};
+var inte =null;
+var charts = true;
 const data = [{
   time: 0,
   value: 0,
 }];
-
 @connect(({ device, user }) => ({
   device,
 	currentUser: user.currentUser
@@ -161,16 +145,24 @@ export default class DoorHistory extends Component {
     wave: [],
     startTime: 0,
     stop: 0,
+		id:0,
   }
   componentWillMount() {
+		const {location} = this.props;
+		const match = pathToRegexp('/door/:id/realtime').exec(location.pathname);
+		this.state.id = match[1];
 		this.getBaseData()
 		this.initWebsocket()
   }
+	componentWillUnmount() {
+		charts = false;
+		clearInterval(inte)
+		const websock = new WebSocket('ws://47.96.162.192:9006/device/Monitor/socket');
+		websock.close()
+	}
 	initWebsocket = () =>{ //初始化weosocket
-		const {location, currentUser } = this.props;
-		const {pick} = this.state;
-		const match = pathToRegexp('/door/:id/realtime').exec(location.pathname);
-		const device_id = match[1];
+		const { currentUser } = this.props;
+		const device_id = this.state.id
 		const userId = currentUser.id
 		const wsurl = 'ws://47.96.162.192:9006/device/Monitor/socket?deviceId='+device_id+'&userId='+userId;
 		const websock = new WebSocket(wsurl);
@@ -197,21 +189,14 @@ export default class DoorHistory extends Component {
 	}
 	websocketclosed(){
 		console.log("WebSocket已关闭");
-		const {location } = this.props;
-		const match = pathToRegexp('/door/:id/realtime').exec(location.pathname);
-		const device_id = match[1];
-		const op = "close"
-		postMonitor({ op, device_id,}).then((res) => {});
 	}
 	onChange = async (val) => {
 		this.initWebsocket()
 		await this.setState({
 			pick: val,
 		});
-		const {location } = this.props;
 		const {pick} = this.state;
-		const match = pathToRegexp('/door/:id/realtime').exec(location.pathname);
-		const device_id = match[1];
+		const device_id = this.state.id
 		getFollowDevices({device_id}).then((res)=>{
 			if(res.code == 0){
 				const op = 'open';
@@ -223,7 +208,7 @@ export default class DoorHistory extends Component {
 				const device_type = '15';
 				const type = '0';
 				postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {});
-				alert("请等待接收数据");
+				alert("请不要离开当前页面，等待数据传输");
 			}else if(res.code == 670){
 				alert("当前设备已被人启动监控")
 			}
@@ -240,19 +225,15 @@ export default class DoorHistory extends Component {
 	  return unit16array;
 	}
 	getTime = (val) => {
-		const {location } = this.props;
 		const {pick} = this.state;
-		const match = pathToRegexp('/door/:id/realtime').exec(location.pathname);
-		const device_id = match[1];
+		const device_id = this.state.id
 		getEvent({device_id,nums:1,page:1}).then((res)=>{
 			
 		})
 	}
 	getBaseData = () => {
 		const {show} = this.state
-		const { location } = this.props;
-		const match = pathToRegexp('/door/:id/realtime').exec(location.pathname);
-		const device_id = match[1];
+		const device_id = this.state.id
 		getDoorData({device_id,type:4096,num:1,page:1}).then((res) => {
 			let buffer = []
 			buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
@@ -297,7 +278,8 @@ export default class DoorHistory extends Component {
 		let buffer = []
 		buffer = base64url.toBuffer(val.data);	//8位转流
 		let count= 0
-		var inte = setInterval(function () {
+		const _this = this
+		const sins = setInterval(function () {
 			if((count+8) <= buffer.length){
 				show.openIn = (buffer[count+0]&0x80)>>7							//获取开门输入信号
 				show.closeIn = (buffer[count+0]&0x40)>>6						//获取关门信号
@@ -326,10 +308,13 @@ export default class DoorHistory extends Component {
 					show.speed = show.speed-65.535
 				}
 				count+=8
+				if(charts){
+					console.log(charts)
+					_this.showChart()
+					_this.forceUpdate();
+				}
 			}
-		}, this.state.interval);
-		this.showChart()
-		this.forceUpdate();
+		}, this.state.interval);		
 	}
 	showChart = () =>{
 		const {openInarr,closeInarr,openToarr,closeToarr,currentarr,speedarr,openToOutarr,openDeceleratearr,closeDeceleratearr,closeToOutarr} = this.state
@@ -340,7 +325,7 @@ export default class DoorHistory extends Component {
 		let Current = echarts.init(document.getElementById('Current'));
 		let Speed = echarts.init(document.getElementById('Speed'));
 		var _this = this
-		var inte = setInterval(function () {
+			console.log(1)
 			if(_this.state.stop == 1){
 				clearInterval(inte)
 			}
@@ -541,7 +526,6 @@ export default class DoorHistory extends Component {
 					data:_this.state.speedarr,
 				}]
 			})
-		},1000)		
 	}
 	goEvent = item => () => {
 		const { history } = this.props;

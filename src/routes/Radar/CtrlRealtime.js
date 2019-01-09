@@ -15,8 +15,8 @@ import {
 	getEvent, postMonitor, getFollowDevices, 
 	getDeviceList, getFloorData, getCtrlData,
 } from '../../services/api';
-
-
+var inte = null;
+var charts = true;
 const tabs = [
 	{ title: '门' 	},
 	{ title: '分屏' },
@@ -163,6 +163,12 @@ export default class CtrlRealtime extends Component {
 		this.getfloor()
 		this.initWebsocket()
 	}
+	componentWillUnmount() {
+		charts = false;
+		clearInterval(inte)
+		const websock = new WebSocket('ws://47.96.162.192:9006/device/Monitor/socket');
+		websock.close()
+	}
 	initWebsocket = () =>{ //初始化weosocket
 		const {location, currentUser } = this.props;
 		const {pick} = this.state;
@@ -191,13 +197,6 @@ export default class CtrlRealtime extends Component {
 	}
 	websocketonerror(e) { //错误
 		console.log("WebSocket连接发生错误");
-	}
-	closed(){//数据发送
-		const {location } = this.props;
-		const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
-		const device_id = match[1];
-		const op = "close"
-		postMonitor({ op, device_id,}).then((res) => {});
 	}
 	websocketclosed(){
 		console.log("WebSocket已关闭")
@@ -230,20 +229,20 @@ export default class CtrlRealtime extends Component {
 		const device_id = match[1];
 		const show = this.state.show
 		getCtrlData({device_id}).then((res) => {
-				let buffer = []
-				buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
-				show.upCall   = buffer[6]&0x01
-				show.downCall = (buffer[6]&0x02)>>1
-				show.run      = (buffer[6]&0x04)>>2					//获取运行信号
-				show.lock     = (buffer[6]&0x08)>>3					//获取门锁信号
-				show.open    = (buffer[6]&0x10)>>4					//获取关门信号
-				show.close    = (buffer[6]&0x20)>>5					//获取关门信号
-				show.openBtn  = (buffer[6]&0x40)>>6					//获取开门按钮信号
-				show.closeBtn = (buffer[6]&0x80)>>7					//获取关门按钮信号
-				show.model    = buffer[7]&0xff						//获取电梯模式
-				show.status   = buffer[8]&0xff						//获取电梯状态				
-				show.floor    = buffer[9]&0xff           //获取电梯当前楼层
-				show.updateTime = res.data.list[0].t_update
+			let buffer = []
+			buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
+			show.upCall   = buffer[6]&0x01
+			show.downCall = (buffer[6]&0x02)>>1
+			show.run      = (buffer[6]&0x04)>>2					//获取运行信号
+			show.lock     = (buffer[6]&0x08)>>3					//获取门锁信号
+			show.open    = (buffer[6]&0x10)>>4					//获取关门信号
+			show.close    = (buffer[6]&0x20)>>5					//获取关门信号
+			show.openBtn  = (buffer[6]&0x40)>>6					//获取开门按钮信号
+			show.closeBtn = (buffer[6]&0x80)>>7					//获取关门按钮信号
+			show.model    = buffer[7]&0xff						//获取电梯模式
+			show.status   = buffer[8]&0xff						//获取电梯状态				
+			show.floor    = buffer[9]&0xff           //获取电梯当前楼层
+			show.updateTime = res.data.list[0].t_update
 		});
 	}
 	getData = (val) => {
@@ -288,10 +287,13 @@ export default class CtrlRealtime extends Component {
 					}			
 				}
 				count+=33
-				_this.forceUpdate();
+				if(charts){
+					console.log(charts)
+					_this.showChart()
+					_this.forceUpdate();
+				}
 			}
 		}, this.state.interval);
-		this.showChart()
 		this.setState({
 			markFloor,
 		});
@@ -331,97 +333,92 @@ export default class CtrlRealtime extends Component {
 		let Lock = echarts.init(document.getElementById('lock'))
 		let Close = echarts.init(document.getElementById('close'))
 		var _this = this
-		var inte = setInterval(function () {
-			if(_this.state.stop == 1){
-				clearInterval(inte)
-			}
-			run.push(_this.state.show.run)
-			lock.push(_this.state.show.lock)
-			close.push(_this.state.show.close)
-			if(run.length > 10){
-				run.shift()
-				lock.shift()
-				close.shift()
-			}
-			Run.setOption({
-				tooltip: {
-					trigger: 'axis'
-				},
-				legend: {
-					data:['运行信号']
-				},
-				grid: {					
-					left: '3%',
-					right: '4%',
-					containLabel: true
-				},
-				xAxis: {
-					type: 'category',
-					data: _this.state.event.nums,
-				},
-				yAxis: {
-					data:[0,1]
-				},
-				series: [{
-					name:'运行信号',
-					type:'line',
-					step: 'start',
-					data:_this.state.run
-				}]
-			});
-			Lock.setOption({
-				tooltip: {
-					trigger: 'axis'
-				},
-				legend: {
-					data:['门锁信号']
-				},
-				grid: {					
-					left: '3%',
-					right: '4%',
-					containLabel: true
-				},
-				xAxis: {
-					type: 'category',
-					data: _this.state.event.nums,
-				},
-				yAxis: {
-					data:[0,1]
-				},
-				series: [{
-					name:'门锁信号',
-					type:'line',
-					step: 'start',
-					data:_this.state.lock
-				}]
-			});
-			Close.setOption({
-				tooltip: {
-					trigger: 'axis'
-				},
-				legend: {
-					data:['关门信号']
-				},
-				grid: {					
-					left: '3%',
-					right: '4%',
-					containLabel: true
-				},
-				xAxis: {
-					type: 'category',
-					data: _this.state.event.nums,
-				},
-				yAxis: {
-					data:[0,1]
-				},
-				series: [{
-					name:'关门信号',
-					type:'line',
-					step: 'start',
-					data:_this.state.close
-				}]
-			});
-		},this.state.interval)
+		run.push(_this.state.show.run)
+		lock.push(_this.state.show.lock)
+		close.push(_this.state.show.close)
+		if(run.length > 10){
+			run.shift()
+			lock.shift()
+			close.shift()
+		}
+		Run.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['运行信号']
+			},
+			grid: {					
+				left: '3%',
+				right: '4%',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data: _this.state.event.nums,
+			},
+			yAxis: {
+				data:[0,1]
+			},
+			series: [{
+				name:'运行信号',
+				type:'line',
+				step: 'start',
+				data:_this.state.run
+			}]
+		});
+		Lock.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['门锁信号']
+			},
+			grid: {					
+				left: '3%',
+				right: '4%',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data: _this.state.event.nums,
+			},
+			yAxis: {
+				data:[0,1]
+			},
+			series: [{
+				name:'门锁信号',
+				type:'line',
+				step: 'start',
+				data:_this.state.lock
+			}]
+		});
+		Close.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['关门信号']
+			},
+			grid: {					
+				left: '3%',
+				right: '4%',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data: _this.state.event.nums,
+			},
+			yAxis: {
+				data:[0,1]
+			},
+			series: [{
+				name:'关门信号',
+				type:'line',
+				step: 'start',
+				data:_this.state.close
+			}]
+		});
 	}
 	goEvent = item => () => {
 		const { history } = this.props;
