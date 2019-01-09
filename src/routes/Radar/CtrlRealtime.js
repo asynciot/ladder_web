@@ -169,7 +169,7 @@ export default class CtrlRealtime extends Component {
 		const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
 		const device_id = match[1];
 		const userId = currentUser.id
-		const wsurl = 'ws://47.96.162.192:9006/device/Monitor/socket?deviceId='+device_id;+'&userId='+userId;
+		const wsurl = 'ws://47.96.162.192:9006/device/Monitor/socket?deviceId='+device_id+'&userId='+userId;
 		const websock = new WebSocket(wsurl);
 		websock.onopen = this.websocketonopen;
 		websock.onerror = this.websocketonerror;
@@ -249,7 +249,6 @@ export default class CtrlRealtime extends Component {
 	getData = (val) => {
 		let buffer = []
 		buffer = base64url.toBuffer(val.data);	//8位转流
-		console.log(buffer)
 		let count= 0
 		let upfloorList = []
 		let downfloorList = []
