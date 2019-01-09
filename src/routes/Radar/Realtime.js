@@ -278,6 +278,7 @@ export default class DoorHistory extends Component {
 		const {show} = this.state
 		let buffer = []
 		buffer = base64url.toBuffer(val.data);	//8位转流
+		console.log(buffer)
 		let count= 0
 		const _this = this
 		const sins = setInterval(function () {
@@ -310,7 +311,6 @@ export default class DoorHistory extends Component {
 				}
 				count+=8
 				if(charts){
-					console.log(charts)
 					_this.showChart()
 					_this.forceUpdate();
 				}
@@ -326,207 +326,203 @@ export default class DoorHistory extends Component {
 		let Current = echarts.init(document.getElementById('Current'));
 		let Speed = echarts.init(document.getElementById('Speed'));
 		var _this = this
-			console.log(1)
-			if(_this.state.stop == 1){
-				clearInterval(inte)
-			}
-			openInarr.push(_this.state.show.openIn)
-			openToarr.push(_this.state.show.openTo)
-			openToOutarr.push(_this.state.show.openToOut)
-			openDeceleratearr.push(_this.state.show.openDecelerate)
-			closeDeceleratearr.push(_this.state.show.closeDecelerate)
-			closeInarr.push(_this.state.show.closeIn)
-			closeToarr.push(_this.state.show.closeTo)
-			closeToOutarr.push(_this.state.show.closeToOut)
-			currentarr.push(_this.state.show.current)
-			speedarr.push(_this.state.show.speed)
-			if(openInarr.length > 10){
-				openInarr.shift()
-				closeInarr.shift()
-				openToarr.shift()
-				closeToarr.shift()
-				openToOutarr.shift()
-				currentarr.shift()
-				speedarr.shift()
-			}
-			OpenIn.setOption({
-				tooltip: {
-					trigger: 'axis'
-				},
-				legend: {
-					data:['开门信号','关门信号']
-				},
-				grid: {					
-					left: '3%',
-					right: '4%',
-					containLabel: true
-				},
-				xAxis: {
-					type: 'category',
-					data:_this.state.events.nums,
-				},
-				yAxis: {
-					data:[0,1]
-				},
-				series: [{
-					name:'开门信号',
-					type:'line',
-					step: 'start',
-					data:_this.state.openInarr,
-				},{
-					name:'关门信号',
-					type:'line',
-					step: 'start',
-					data:_this.state.closeInarr,				
-				}]
-			})
-			OpenTo.setOption({
-				tooltip: {
-					trigger: 'axis'
-				},
-				legend: {
-					data:['开到位输入信号','关到位输入信号']
-				},
-				grid: {					
-					left: '3%',
-					right: '4%',
-					containLabel: true
-				},
-				xAxis: {
-					type: 'category',
-					data:_this.state.events.nums,
-				},
-				yAxis: {
-					data:[0,1]
-				},
-				series: [{
-					name:'开到位输入信号',
-					type:'line',
-					step: 'start',
-					data:_this.state.openToarr,
-				},{
-					name:'关到位输入信号',
-					type:'line',
-					step: 'start',
-					data:_this.state.closeToarr,				
-				}]
-			})
-			CloseTo.setOption({
-				tooltip: {
-					trigger: 'axis'
-				},
-				legend: {
-					data:['开门到位输出信号','关门到位输出信号']
-				},
-				grid: {					
-					left: '3%',
-					right: '4%',
-					containLabel: true
-				},
-				xAxis: {
-					type: 'category',
-					data:_this.state.events.nums,
-				},
-				yAxis: {
-					data:[0,1]
-				},
-				series: [{
-					name:'开门到位输出信号',
-					type:'line',
-					step: 'start',
-					data:_this.state.openToOutarr,
-				},{
-					name:'关门到位输出信号',
-					type:'line',
-					step: 'start',
-					data:_this.state.closeToOutarr,
-				}]
-			})
-			Decelerate.setOption({
-				tooltip: {
-					trigger: 'axis'
-				},
-				legend: {
-					data:['开减速输入信号','关减速输入信号']
-				},
-				grid: {					
-					left: '3%',
-					right: '4%',
-					containLabel: true
-				},
-				xAxis: {
-					type: 'category',
-					data:_this.state.events.nums,
-				},
-				yAxis: {
-					data:[0,1]
-				},
-				series: [{
-					name:'开减速输入信号',
-					type:'line',
-					step: 'start',
-					data:_this.state.events.openDeceleratearr,
-				},{
-					name:'关减速输入信号',
-					type:'line',
-					step: 'start',
-					data:_this.state.closeDeceleratearr,
-				}]
-			})
-			Current.setOption({
-				tooltip: {
-					trigger: 'axis'
-				},
-				legend: {
-					data:['电流']
-				},
-				grid: {					
-					left: '3%',
-					right: '4%',
-					top: '3%',
-					bottom:'20px',
-					containLabel: true
-				},
-				xAxis: {
-					type: 'category',
-					data:_this.state.events.nums,
-				},
-				yAxis: {
-				},
-				series: [{
-					name:'电流',
-					type:'line',
-					step: 'start',
-					data:_this.state.currentarr,
-				}]
-			})
-			Speed.setOption({
-				tooltip: {
-					trigger: 'axis'
-				},
-				legend: {
-					data:['速度']
-				},
-				grid: {					
-					left: '3%',
-					right: '4%',
-					top: '3%',
-					bottom:'20px',
-					containLabel: true
-				},
-				xAxis: {
-					type: 'category',
-					data:_this.state.events.nums,
-				},
-				yAxis: {
-				},
-				series: [{
-					name:'速度',
-					type:'line',
-					step: 'start',
-					data:_this.state.speedarr,
-				}]
-			})
+		openInarr.push(_this.state.show.openIn)
+		openToarr.push(_this.state.show.openTo)
+		openToOutarr.push(_this.state.show.openToOut)
+		openDeceleratearr.push(_this.state.show.openDecelerate)
+		closeDeceleratearr.push(_this.state.show.closeDecelerate)
+		closeInarr.push(_this.state.show.closeIn)
+		closeToarr.push(_this.state.show.closeTo)
+		closeToOutarr.push(_this.state.show.closeToOut)
+		currentarr.push(_this.state.show.current)
+		speedarr.push(_this.state.show.speed)
+		if(openInarr.length > 10){
+			openInarr.shift()
+			closeInarr.shift()
+			openToarr.shift()
+			closeToarr.shift()
+			openToOutarr.shift()
+			currentarr.shift()
+			speedarr.shift()
+		}
+		OpenIn.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['开门信号','关门信号']
+			},
+			grid: {					
+				left: '3%',
+				right: '4%',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:_this.state.events.nums,
+			},
+			yAxis: {
+				data:[0,1]
+			},
+			series: [{
+				name:'开门信号',
+				type:'line',
+				step: 'start',
+				data:_this.state.openInarr,
+			},{
+				name:'关门信号',
+				type:'line',
+				step: 'start',
+				data:_this.state.closeInarr,				
+			}]
+		})
+		OpenTo.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['开到位输入信号','关到位输入信号']
+			},
+			grid: {					
+				left: '3%',
+				right: '4%',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:_this.state.events.nums,
+			},
+			yAxis: {
+				data:[0,1]
+			},
+			series: [{
+				name:'开到位输入信号',
+				type:'line',
+				step: 'start',
+				data:_this.state.openToarr,
+			},{
+				name:'关到位输入信号',
+				type:'line',
+				step: 'start',
+				data:_this.state.closeToarr,				
+			}]
+		})
+		CloseTo.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['开门到位输出信号','关门到位输出信号']
+			},
+			grid: {					
+				left: '3%',
+				right: '4%',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:_this.state.events.nums,
+			},
+			yAxis: {
+				data:[0,1]
+			},
+			series: [{
+				name:'开门到位输出信号',
+				type:'line',
+				step: 'start',
+				data:_this.state.openToOutarr,
+			},{
+				name:'关门到位输出信号',
+				type:'line',
+				step: 'start',
+				data:_this.state.closeToOutarr,
+			}]
+		})
+		Decelerate.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['开减速输入信号','关减速输入信号']
+			},
+			grid: {					
+				left: '3%',
+				right: '4%',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:_this.state.events.nums,
+			},
+			yAxis: {
+				data:[0,1]
+			},
+			series: [{
+				name:'开减速输入信号',
+				type:'line',
+				step: 'start',
+				data:_this.state.events.openDeceleratearr,
+			},{
+				name:'关减速输入信号',
+				type:'line',
+				step: 'start',
+				data:_this.state.closeDeceleratearr,
+			}]
+		})
+		Current.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['电流']
+			},
+			grid: {					
+				left: '3%',
+				right: '4%',
+				top: '3%',
+				bottom:'20px',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:_this.state.events.nums,
+			},
+			yAxis: {
+			},
+			series: [{
+				name:'电流',
+				type:'line',
+				step: 'start',
+				data:_this.state.currentarr,
+			}]
+		})
+		Speed.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['速度']
+			},
+			grid: {					
+				left: '3%',
+				right: '4%',
+				top: '3%',
+				bottom:'20px',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:_this.state.events.nums,
+			},
+			yAxis: {
+			},
+			series: [{
+				name:'速度',
+				type:'line',
+				step: 'start',
+				data:_this.state.speedarr,
+			}]
+		})
 	}
 	goEvent = item => () => {
 		const { history } = this.props;

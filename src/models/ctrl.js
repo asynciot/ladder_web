@@ -555,6 +555,7 @@ export default {
 			})
       const data = {
         deviceId: payload.id,
+				userId: payload.userId,
       };
       yield ws = new WebSocket(`${wsDebug}?${stringify(data)}`);
       yield put({ type: 'setDebugWs',

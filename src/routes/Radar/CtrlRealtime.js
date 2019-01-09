@@ -311,7 +311,6 @@ export default class CtrlRealtime extends Component {
 				let arr = [];
 				let floor = [];
 				buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
-				console.log(buffer)
 				buffer.forEach((item) => {
 					arr.push(String.fromCharCode(item))
 				})

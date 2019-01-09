@@ -33,7 +33,11 @@ const timeList = [{
   value: 30,
 },];
 const defaultDebug = ['','','','','','','','',];
-@connect(({ ctrl, global }) => ({ ctrl, global }))
+@connect(({ ctrl, global, user }) => ({ 
+	ctrl,
+	global,
+	currentUser: user.currentUser,
+ }))
 export default class Debug extends Component {
   
   state = {
@@ -157,7 +161,7 @@ export default class Debug extends Component {
   }
   search = (val) => {
     let isNotFull = false
-    let { dispatch, match: { params: { id }}, ctrl: { debugWs} } = this.props;
+    let { dispatch, match: { params: { id }}, ctrl: { debugWs}, currentUser} = this.props;
     let { base, checked, offsets } = this.state;
     let baseVal = '', offsetsVal = '';
     let offsetIdx = [];
@@ -240,6 +244,7 @@ export default class Debug extends Component {
         type: 'ctrl/debug',
         payload: {
           id,
+					userId: currentUser.id,
           monitorId: random,
           base: baseVal,
           offsets: offsetsVal,
