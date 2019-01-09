@@ -52,9 +52,6 @@ export default {
         yield message.success(
           '修改成功',
           1,
-          () => {
-            window.history.back();
-          },
         );
 	    }
     },

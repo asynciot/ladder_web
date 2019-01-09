@@ -12,7 +12,7 @@ var sectionStyle = {
 const FormItem = Form.Item;
 @connect(({ login, loading }) => ({
 	login,
-	submitting: loading.effects['login/resetting'],
+	submitting: loading.effects['login/retrieve'],
 }))
 @Form.create()
 export default class Login extends Component {
@@ -64,7 +64,7 @@ export default class Login extends Component {
 			(err, values) => {
 				if (!err) {
 					this.props.dispatch({
-						type: 'login/resetting',
+						type: 'login/retrieve',
 						payload: {
 							...values,
 						},
@@ -82,7 +82,7 @@ export default class Login extends Component {
 	}
 	compareToFirstPassword = (rule, value, callback) => {
 		const form = this.props.form;
-		if (value && value !== form.getFieldValue('password')) {
+		if (value && value !== form.getFieldValue('newpassword')) {
 			callback('两次密码输入不一样!');
 		} else {
 			callback();
@@ -167,7 +167,7 @@ export default class Login extends Component {
 											<div>设置密码:</div>
 										</Col>
 										<Col span={18}>
-											{getFieldDecorator('password', {
+											{getFieldDecorator('newpassword', {
 												rules: [{ required: true, message: '请输入密码!' }],
 											})(<Input
 													type="password"
@@ -228,8 +228,8 @@ export default class Login extends Component {
 										<Row gutter={8}>
 											<Col span={16}>
 												{getFieldDecorator('remember', {
-														valuePropName: 'checked',
-														initialValue: true,
+													valuePropName: 'checked',
+													initialValue: true,
 													})(
 														<Checkbox>同意 <i className={styles.deal} onClick={this.showModal} loading={this.state.loading}>《服务条款》</i></Checkbox>
 													)}

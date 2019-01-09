@@ -167,7 +167,6 @@ export default class CtrlRealtime extends Component {
 	componentWillUnmount() {
 		charts = false;
 		clearInterval(inte)
-		websock = new WebSocket('ws://47.96.162.192:9006/device/Monitor/socket');
 		websock.close()
 	}
 	initWebsocket = () =>{ //初始化weosocket

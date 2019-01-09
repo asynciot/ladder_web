@@ -149,6 +149,7 @@ export default class DoorHistory extends Component {
 		id:0,
   }
   componentWillMount() {
+		charts = true;
 		const {location} = this.props;
 		const match = pathToRegexp('/door/:id/realtime').exec(location.pathname);
 		this.state.id = match[1];
@@ -158,7 +159,6 @@ export default class DoorHistory extends Component {
 	componentWillUnmount() {
 		charts = false;
 		clearInterval(inte)
-		websock = new WebSocket('ws://47.96.162.192:9006/device/Monitor/socket');
 		websock.close()
 	}
 	initWebsocket = () =>{ //初始化weosocket
@@ -172,7 +172,7 @@ export default class DoorHistory extends Component {
 		const _this = this;
 		websock.onmessage= (e) =>{
 			if(e.data=="closed"){
-				alert("此次实时数据已结束")
+				alert("数据传输结束")
 				_this.state.stop = 1
 				websock.close()
 			}else{
@@ -189,7 +189,7 @@ export default class DoorHistory extends Component {
 		console.log("WebSocket连接发生错误");
 	}
 	websocketclosed(){
-		console.log("WebSocket已关闭");
+		console.log("WebSocket连接关闭");
 	}
 	onChange = async (val) => {
 		this.initWebsocket()
@@ -204,7 +204,7 @@ export default class DoorHistory extends Component {
 				const IMEI = res.data.list[0].IMEI;
 				const interval = 1000;
 				const threshold = 1;
-				const reset = this.state.pick;
+				const reset = pick;
 				const duration = reset[0];
 				const device_type = '15';
 				const type = '0';
@@ -226,7 +226,6 @@ export default class DoorHistory extends Component {
 	  return unit16array;
 	}
 	getTime = (val) => {
-		const {pick} = this.state;
 		const device_id = this.state.id
 		getEvent({device_id,nums:1,page:1}).then((res)=>{
 			
@@ -266,7 +265,7 @@ export default class DoorHistory extends Component {
 			}
 			show.updateTime = res.data.list[0].t_update
 		});
-		getDoorData({device_id,num:20,page:1,type:4100}).then((res) => {
+		getDoorData({device_id,num:1,page:1,type:4100}).then((res) => {
 			let buffer = []
 			buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
 			const hex = this.buffer2hex(buffer)
@@ -275,6 +274,7 @@ export default class DoorHistory extends Component {
 		this.forceUpdate();
 	}
 	getData = (val) => {
+		console.log(charts)
 		const {show} = this.state
 		let buffer = []
 		buffer = base64url.toBuffer(val.data);	//8位转流
@@ -311,6 +311,7 @@ export default class DoorHistory extends Component {
 				}
 				count+=8
 				if(charts){
+					console.log(charts)
 					_this.showChart()
 					_this.forceUpdate();
 				}
@@ -530,19 +531,7 @@ export default class DoorHistory extends Component {
 		history.push(`/events/door/${item.id}/`);
 	}
   timeTicket = null;
-  setAnimation = () => {
-		const { device: {doorWidth,} } = this.props;
-		this.setState({
-			leftAnimation: {
-				left: `-${(this.state.show.position / this.state.doorWidth) * 50}%`,
-				duration: 500,
-			},
-			rightAnimation: {
-				right: `-${(this.state.show.position / this.state.doorWidth) * 50}%`,
-				duration: 500,
-			},
-		});
-	}
+
 	goDetail = link => () => {
 		const id = this.props.match.params.id;
 		const type = this.props.location.state.type

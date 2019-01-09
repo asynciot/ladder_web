@@ -20,11 +20,9 @@ export default class Login extends Component {
   state = {
     count: 0,
   }
-
   componentWillUnmount() {
     clearInterval(this.interval);
   }
-
   onGetCaptcha = () => {
     const { form } = this.props;
     if (this.state.count !== 0) return;

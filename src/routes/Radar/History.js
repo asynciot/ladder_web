@@ -12,7 +12,7 @@ import F2 from '@antv/f2';
 import styles from './History.less';
 import echarts from 'echarts';
 import ReactEcharts from 'echarts-for-react';
-import {getEvent, getDeviceList, getFollowDevices, } from '../../services/api';
+import {getEvent, getDeviceList, getFollowDevices, getDoorData } from '../../services/api';
 const tabs = [
   { title: '门' },
   { title: '分屏' },
@@ -72,11 +72,11 @@ export default class DoorHistory extends Component {
   state = {
     leftAnimation: {
       left: '0%',
-      duration: 5000,
+      duration: 1000,
     },
     rightAnimation: {
       right: '0%',
-      duration: 5000,
+      duration: 1000,
     },
     pick: '',
     modal: false,
@@ -153,6 +153,7 @@ export default class DoorHistory extends Component {
 		const { show,events} = this.state;
 		const match = pathToRegexp('/door/:IMEI/history/:id').exec(location.pathname);
 		const id = match[2];
+		const device_id = match[1];
 		getEvent({id}).then((res) => {
 			this.setState({
 				historyEvents: res.data.list,				
@@ -196,6 +197,12 @@ export default class DoorHistory extends Component {
 						show.speed = events.speed[i]
 					}
 				}
+				getDoorData({device_id,num:1,page:1,type:4100}).then((res) => {
+					let buffer = []
+					buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
+					const hex = this.buffer2hex(buffer)
+					this.state.doorWidth =parseInt((hex[26] + hex[27]), 16);
+				});
 				this.setState({
 					show,
 					events,
@@ -206,6 +213,16 @@ export default class DoorHistory extends Component {
 			}
 		}).catch((e => console.info(e)));
 		this.forceUpdate();
+	}
+	buffer2hex = (buffer) => {
+		const unit16array = [];
+		buffer.forEach((e) => {
+			const num = e.toString(16);
+			unit16array.push(num.length === 1
+				? `0${num}`
+				: num);
+		});
+		return unit16array;
 	}
 	showChart = () =>{
 		const {events} = this.props;
