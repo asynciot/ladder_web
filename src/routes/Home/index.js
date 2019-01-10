@@ -67,9 +67,10 @@ export default class Home extends Component {
   getFault = () => {
     getFault({ num: 10, page: 1, state:"untreated"}).then((res) => {
       if (res.code === 0) {
-				const code = res.data.list[res.data.list.length-1].code
+				const code = res.data.list[0].code
         this.setState({
           historyEvents: res.data.list,
+					total:res.data.totalNumber,
 					code: code.toString(16)
         });
       }
@@ -175,9 +176,9 @@ export default class Home extends Component {
 				background3,
 				background4,
 		]
-    const { devicesStatus, historyEvents, doornum, ctrlnum, } = this.state;
+    const { devicesStatus, historyEvents, doornum, ctrlnum, total } = this.state;
     let notClosedEvents = historyEvents.filter(item => item.state );
-		const len = notClosedEvents.length
+		const len = total
     len > 1 ? notClosedEvents = [notClosedEvents[0]]:null
     return (
       <div className="content">

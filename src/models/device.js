@@ -50,18 +50,12 @@ function parseMenu(buffer, type) {
       });
   });
   arr.forEach((item, i) => {
-    if (type == 1) {
       if (i < 86) {
         item.value = parseInt((hex[i * 2] + hex[i * 2 + 1]), 16);
         item.value = (item.value / item.num).toFixed(`${item.num}`.length - 1);
       } else {
         item.value = parseInt(hex[i + 86], 16);
       }
-    }else {
-      item.value = parseInt((hex[i * 2] + hex[i * 2 + 1]), 16);
-      item.value = (item.value / item.num).toFixed(`${item.num}`.length - 1);
-    }
-    
   });
   return menu;
 }
@@ -210,27 +204,33 @@ export default {
 			var arr = '';
 			var buf = ['','','','','',''];
 			var buffer = [];
+			var hex = []
       if (response.code == 0) {
 				for(let i=0;i<response.data.totalNumber;i++){
 					if(response.data.list[i].type ==4099){
 						buf[0] = response.data.list[i].data;
-						console.log(base64url.toBuffer(buf[0]))
+						buf[0] = Array.from(base64url.toBuffer(buf[0]))
 					}else if(response.data.list[i].type == 4100){
 						buf[1] = response.data.list[i].data;
-						console.log(buf[1])
+						buf[1] = Array.from(base64url.toBuffer(buf[1]))
 					}else if(response.data.list[i].type == 4101){
 						buf[2] = response.data.list[i].data;
-						console.log(buf[2])
+						buf[2] = Array.from(base64url.toBuffer(buf[2]))
 					}else if(response.data.list[i].type == 4102){
 						buf[3] = response.data.list[i].data;
+						buf[3] = Array.from(base64url.toBuffer(buf[3]))
 					}else if(response.data.list[i].type == 4103){
 						buf[4] = response.data.list[i].data;
+						buf[4] = Array.from(base64url.toBuffer(buf[4]))
 					}else if(response.data.list[i].type == 4104){
 						buf[5] = response.data.list[i].data;
+						buf[5] = Array.from(base64url.toBuffer(buf[5]))
 					}
 				}
-				arr = buf[0]+buf[1]+buf[2]+buf[3]+buf[4]+buf[5]				
-				buffer = base64url.toBuffer(arr)
+				for(let i=0;i<6;i++){
+					buffer = buffer.concat(buf[i])
+				}
+
 				yield put({
 					type: 'getMenu', 
 					payload: parseMenu(buffer, payload.type),

@@ -43,7 +43,7 @@ export default class DoorHistory extends Component {
 	}
 	getFault = () =>{
 		const { dispatch, location } = this.props;
-		const match = pathToRegexp('/company/order/:id').exec(location.pathname);
+		const match = pathToRegexp('/order/:id').exec(location.pathname);
 		let id = match[1];
 		getFault({ id, page:1, num:1, }).then((res) => {
 			const list = res.data.list.map((item) => {
@@ -91,7 +91,7 @@ export default class DoorHistory extends Component {
 	}
 	uploadPicture = (e) =>{
 		const { dispatch, location } = this.props;
-		const match = pathToRegexp('/company/order/:id').exec(location.pathname);
+		const match = pathToRegexp('/order/:id').exec(location.pathname);
 		const order_id = match[1];
 		var formdata = new FormData()
 		formdata = new window.FormData()
@@ -136,7 +136,7 @@ export default class DoorHistory extends Component {
 	}
 	postFault = (e) =>{
 		const { dispatch, location } = this.props;
-		const match = pathToRegexp('/company/order/:id').exec(location.pathname);
+		const match = pathToRegexp('/order/:id').exec(location.pathname);
 		const order_id = match[1];
 		postFault({order_id}).then((res) => {
 			if(res.code == 0){
