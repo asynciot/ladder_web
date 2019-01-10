@@ -68,7 +68,7 @@ export default class extends Component {
     let {page, total, historyEvents} = this.state;
 		this.state.type = state
 		if(state == 'untreated'){
-			getFault({ num: 10, page, state }).then((res) => {
+			getFault({ num: 10, page, state, islast:1 }).then((res) => {
 				const list = res.data.list.map((item,index) => {
 					const time = this.state.nowTime - item.createTime
 					item.hour = parseInt((time)/(1000*3600))
