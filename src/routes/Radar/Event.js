@@ -24,17 +24,20 @@ export default class DoorHistory extends Component {
 	}
 	componentWillMount() {
 		this.getEvent(0)
+		console.log(window.localStorage.getItem('starttime'))
 	}
 	onStart = async(val) => {
 		await this.setState({
 			start: val,
-		});		
+		});
+		window.localStorage.setItem('starttime',moment(this.state.start).format('YYYY-MM-DD'))
 		this.getEvent(1)
 	}
 	onEnd = async(val) => {
 		await this.setState({
 			end: val,
-		});		
+		});
+		window.localStorage.setItem('endtime',moment(this.state.end).format('YYYY-MM-DD'))
 		this.getEvent(1)
 	}
 	goHistory = (item) => {
@@ -47,9 +50,10 @@ export default class DoorHistory extends Component {
 	getEvent = (val) => {
 		const { dispatch, location,} = this.props;
 		const match = pathToRegexp('/events/:type/:id').exec(location.pathname);
-		const device_id = match[2];		
-		const starttime = moment(this.state.start).format('YYYY-MM-DD')
-		const endtime = moment(this.state.end).format('YYYY-MM-DD')
+		const device_id = match[2];
+		const starttime = window.localStorage.getItem('starttime')
+		const endtime = window.localStorage.getItem('endtime')
+		// console.log(window.localStorage.getItem('starttime'))
 		const page = val
 		getEvent({ device_id, num: 10, page, starttime, endtime, }).then((res) => {
 			if (res.code === 0) {

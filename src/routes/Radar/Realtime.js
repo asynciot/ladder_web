@@ -76,8 +76,8 @@ export default class DoorHistory extends Component {
     },
     pick: '',
     modal: false,
+		type:'',
     src: '',
-    sliderCurrent: 0,
 		doorWidth:4096,
 		openInarr:[],
 		openToarr:[],
@@ -87,6 +87,7 @@ export default class DoorHistory extends Component {
 		closeToarr:[],
 		openToOutarr:[],
 		closeToOutarr:[],
+		positionarr:[],
 		currentarr:[],
 		speedarr:[],
 		events:{
@@ -142,10 +143,6 @@ export default class DoorHistory extends Component {
 			nowtime:'',
 		},
 		historyEvents:[],
-    sliderMax: 0,
-    wave: [],
-    startTime: 0,
-    stop: 0,
 		id:0,
   }
   componentWillMount() {
@@ -153,6 +150,7 @@ export default class DoorHistory extends Component {
 		const {location} = this.props;
 		const match = pathToRegexp('/door/:id/realtime').exec(location.pathname);
 		this.state.id = match[1];
+		this.getType()
 		this.getBaseData()
 		this.initWebsocket()
   }
@@ -225,10 +223,10 @@ export default class DoorHistory extends Component {
 	  });
 	  return unit16array;
 	}
-	getTime = (val) => {
+	getType = () =>{
 		const device_id = this.state.id
-		getEvent({device_id,nums:1,page:1}).then((res)=>{
-			
+		getFollowDevices({ num: 1, page:1, device_type:15, device_id }).then((res) => {
+			this.state.type = res.data.list[0].device_model
 		})
 	}
 	getBaseData = () => {
@@ -265,12 +263,21 @@ export default class DoorHistory extends Component {
 			}
 			show.updateTime = res.data.list[0].t_update
 		});
-		getDoorData({device_id,num:1,page:1,type:4100}).then((res) => {
-			let buffer = []
-			buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
-			const hex = this.buffer2hex(buffer)
-			this.state.doorWidth =parseInt((hex[26] + hex[27]), 16);
-		});
+		if(this.state.type == '1'){
+			getDoorData({device_id,num:1,page:1,type:4100}).then((res) => {
+				let buffer = []
+				buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
+				const hex = this.buffer2hex(buffer)
+				this.state.doorWidth =parseInt((hex[26] + hex[27]), 16);
+			});
+		}else{
+			getDoorData({device_id,num:1,page:1,type:4101}).then((res) => {
+				let buffer = []
+				buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
+				const hex = this.buffer2hex(buffer)
+				this.state.doorWidth =parseInt((hex[14] + hex[15]), 16);
+			});
+		}	
 		this.forceUpdate();
 	}
 	getData = (val) => {
@@ -319,11 +326,14 @@ export default class DoorHistory extends Component {
 		}, this.state.interval);		
 	}
 	showChart = () =>{
-		const {openInarr,closeInarr,openToarr,closeToarr,currentarr,speedarr,openToOutarr,openDeceleratearr,closeDeceleratearr,closeToOutarr} = this.state
+		const {openInarr, closeInarr, openToarr, closeToarr, positionarr, currentarr, speedarr,
+		openToOutarr, openDeceleratearr, closeDeceleratearr, closeToOutarr
+		} = this.state
 		let OpenIn = echarts.init(document.getElementById('OpenIn'));
 		let OpenTo = echarts.init(document.getElementById('OpenTo'));
 		let Decelerate = echarts.init(document.getElementById('Decelerate'));
 		let CloseTo = echarts.init(document.getElementById('CloseTo'));
+		let Position = echarts.init(document.getElementById('Position'));
 		let Current = echarts.init(document.getElementById('Current'));
 		let Speed = echarts.init(document.getElementById('Speed'));
 		var _this = this
@@ -335,6 +345,7 @@ export default class DoorHistory extends Component {
 		closeInarr.push(_this.state.show.closeIn)
 		closeToarr.push(_this.state.show.closeTo)
 		closeToOutarr.push(_this.state.show.closeToOut)
+		positionarr.push(_this.state.show.position)
 		currentarr.push(_this.state.show.current)
 		speedarr.push(_this.state.show.speed)
 		if(openInarr.length > 10){
@@ -344,6 +355,7 @@ export default class DoorHistory extends Component {
 			closeToarr.shift()
 			openToOutarr.shift()
 			currentarr.shift()
+			positionarr.shift()
 			speedarr.shift()
 		}
 		OpenIn.setOption({
@@ -468,6 +480,33 @@ export default class DoorHistory extends Component {
 				type:'line',
 				step: 'start',
 				data:_this.state.closeDeceleratearr,
+			}]
+		})
+		Position.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['门坐标']
+			},
+			grid: {					
+				left: '3%',
+				right: '4%',
+				top: '3%',
+				bottom:'20px',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:_this.state.events.nums,
+			},
+			yAxis: {
+			},
+			series: [{
+				name:'门坐标',
+				type:'line',
+				step: 'start',
+				data:_this.state.positionarr,
 			}]
 		})
 		Current.setOption({
@@ -735,16 +774,21 @@ export default class DoorHistory extends Component {
 									<div id = "Decelerate" style={{ width: 320 , height: 80 }}></div>
 							</Col>
 						</Row>
-						 <Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
+						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
+							<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
+									<div id = "Position" style={{ width: 320 , height: 240 }}></div>
+							</Col>
+						</Row> 
+						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
 						 	<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
 						 			<div id = "Current" style={{ width: 320 , height: 240 }}></div>
 						 	</Col>
-						 </Row> 
-						 <Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
+						</Row> 
+						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
 						 	<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
 						 			<div id = "Speed" style={{ width: 320 , height: 240 }}></div>
 						 	</Col>
-						 </Row> 
+						</Row> 
           </div>
           <div className={styles.btns}>
             {/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}

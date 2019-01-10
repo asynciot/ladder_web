@@ -118,6 +118,7 @@ function parseEvent(event) {
 export default {
   namespace: 'device',
   state: {
+		type:0,
     device: [],
     status: 0,
     list: [],
@@ -230,7 +231,6 @@ export default {
 				for(let i=0;i<6;i++){
 					buffer = buffer.concat(buf[i])
 				}
-
 				yield put({
 					type: 'getMenu', 
 					payload: parseMenu(buffer, payload.type),
@@ -260,32 +260,10 @@ export default {
 			option: payload,
 		  };
 		},
-		getHbp(state, action) {
-		  return {
-			...state,
-			hbp: action.payload,
-		  };
-		},
-		queryList(state, action) {
-		  return {
-			...state,
-			list: action.payload,
-		  };
-		},
 		getInfo(state, { payload }) {
 		  return {
 			...state,
-			device: payload.device,
-			event: payload.event,
-			wave: state.wave.concat(payload.event),
-			property: payload.property,
 			doorWidth: payload.doorWidth,
-		  };
-		},
-		getDoor(state, action) {
-		  return {
-			...state,
-			eventList: action.payload.events,
 		  };
 		},
 		playEvent(state, action) {
@@ -320,33 +298,8 @@ export default {
 			menu: action.payload,
 		  };
 		},
-		getElectric(state, action) {
-		  return {
-			...state,
-			electric: action.payload,
-		  };
-		},
-		getWave(state, action) {
-		  return {
-			...state,
-			wave: action.payload.list,
-			interval: action.payload.interval,
-		  };
-		},
-		getWaveList(state, action) {
-		  return {
-			...state,
-			waveList: action.payload,
-		  };
-		},
-		follow(state, action){
-			return{
-				...state,
-			currentUser: action.payload,
-			};
-		},
-	  },
-	  subscriptions: {
+	},
+	subscriptions: {
 		setup({ dispatch, history }) {
 		  history.listen(({ pathname }) => {
 			const match = pathToRegexp('/:name/:sub?/:sec?/:end?').exec(pathname);

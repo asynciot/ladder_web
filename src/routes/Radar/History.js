@@ -134,30 +134,35 @@ export default class DoorHistory extends Component {
 			speed:'',
 			nowtime:'',
 		},
-		historyEvents:[],
     sliderMax: 0,
     wave: [],
     startTime: 0,
     stop: true,
 		interval:500,
 		doorWidth:4096,
+		type:'1',
+		device_id:0,
+		id:0,
   }
   componentWillMount() {
-		this.getHistory()
-  }
-	componentWillUpdate(){
-		
-	}
-	getHistory = () => {
 		const { dispatch, location, } = this.props;
-		const { show,events} = this.state;
 		const match = pathToRegexp('/door/:IMEI/history/:id').exec(location.pathname);
-		const id = match[2];
-		const device_id = match[1];
+		this.state.device_id = match[1];
+		this.state.id = match[2];
+		this.getHistory()
+		this.getType()
+  }
+	getType = () =>{
+		const device_id = this.state.device_id
+		getFollowDevices({ num: 1, page:1, device_type:15, device_id }).then((res) => {
+			this.state.type = res.data.list[0].device_model
+		})
+	}
+	getHistory = () => {		
+		const { show,events} = this.state;
+		const device_id = this.state.device_id
+		const id = this.state.id
 		getEvent({id}).then((res) => {
-			this.setState({
-				historyEvents: res.data.list,				
-			});
 			if (res.code == 0) {
 				let response = res.data.list[0]
 				show.nowtime = response.time
@@ -166,7 +171,6 @@ export default class DoorHistory extends Component {
 				}
 				let buffer = []
 				buffer = base64url.toBuffer(response.data);	//8位转流
-				console.log(buffer)
 				for(let i=0 ; i<response["length"] ; i++){
 					show.openIn = events.openIn[i] = (buffer[i*8]&0x80)>>7						//获取开门信号
 					show.closeIn = events.closeIn[i] = (buffer[i*8]&0x40)>>6						//获取关门信号
@@ -197,19 +201,26 @@ export default class DoorHistory extends Component {
 						show.speed = events.speed[i]
 					}
 				}
-				getDoorData({device_id,num:1,page:1,type:4100}).then((res) => {
-					let buffer = []
-					buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
-					const hex = this.buffer2hex(buffer)
-					this.state.doorWidth =parseInt((hex[26] + hex[27]), 16);
-				});
+				if(this.state.type == '1'){
+					getDoorData({device_id,num:1,page:1,type:4100}).then((res) => {
+						let buffer = []
+						buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
+						const hex = this.buffer2hex(buffer)
+						this.state.doorWidth =parseInt((hex[26] + hex[27]), 16);
+					});
+				}else{
+					getDoorData({device_id,num:1,page:1,type:4101}).then((res) => {
+						let buffer = []
+						buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
+						const hex = this.buffer2hex(buffer)
+						this.state.doorWidth =parseInt((hex[14] + hex[15]), 16);
+					});
+				}	
 				this.setState({
 					show,
 					events,
 				});
-				setTimeout(() => {
-					this.showChart()
-				},this.state.interval)				
+				this.showChart()			
 			}
 		}).catch((e => console.info(e)));
 		this.forceUpdate();
@@ -230,6 +241,7 @@ export default class DoorHistory extends Component {
 		let OpenTo = echarts.init(document.getElementById('OpenTo'));
 		let CloseIn = echarts.init(document.getElementById('CloseIn'));
 		let Decelerate = echarts.init(document.getElementById('Decelerate'));
+		let Position = echarts.init(document.getElementById('Position'));
 		let Current = echarts.init(document.getElementById('Current'));
 		let Speed = echarts.init(document.getElementById('Speed'));
 		OpenIn.setOption({
@@ -354,6 +366,33 @@ export default class DoorHistory extends Component {
 				type:'line',
 				step: 'start',
 				data:this.state.events.closeDecelerate,
+			}]
+		})
+		Position.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['门坐标']
+			},
+			grid: {					
+				left: '3%',
+				right: '4%',
+				top: '3%',
+				bottom:'20px',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:this.state.events.nums,
+			},
+			yAxis: {
+			},
+			series: [{
+				name:'门坐标',
+				type:'line',
+				step: 'start',
+				data:this.state.events.position,
 			}]
 		})
 		Current.setOption({
@@ -667,16 +706,21 @@ export default class DoorHistory extends Component {
 									<div id = "Decelerate" style={{ width: 320 , height: 80 }}></div>
 							</Col>
 						</Row>
-						 <Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
+						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
+							<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
+									<div id = "Position" style={{ width: 320 , height: 240 }}></div>
+							</Col>
+						</Row>
+						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
 						 	<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
 						 			<div id = "Current" style={{ width: 320 , height: 240 }}></div>
 						 	</Col>
-						 </Row> 
-						 <Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
+						</Row>
+						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
 						 	<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
 						 			<div id = "Speed" style={{ width: 320 , height: 240 }}></div>
 						 	</Col>
-						 </Row> 
+						</Row> 
           </div>
           <div className={styles.btns}>
             {/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}
