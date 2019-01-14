@@ -495,6 +495,10 @@ export default class extends Component {
             								<td className="tr">地点 ：</td>
             								<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
             							</tr>
+													<tr>
+														<td className="tr">设备编号 ：</td>
+														<td className="tl" style={{ width: '260px' }}>{item.id}</td>
+													</tr>
             							<tr>
             								<td className="tr">别名 ：</td>
             								<td className="tl">{item.device_name ? item.device_name : '无'}</td>
@@ -502,7 +506,7 @@ export default class extends Component {
             								<td className="tl">{typeName[item.device_type] ||''}</td>
             							</tr>
             							<tr>
-            								<td className="tr">编号 ：</td>
+            								<td className="tr">串号 ：</td>
             								<td className="tl">{item.IMEI}</td>
             								<td className="tl">信号 ：</td>
             								<td className="tl"><Signal width={item.rssi}/></td>
