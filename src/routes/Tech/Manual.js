@@ -9,10 +9,13 @@ const options = [
   {
     label: 'NSFC01-01B',
     link: 'NSFC01-01B',
-  }, {
+  },{
     label: 'NSFC01-02T',
     link: 'NSFC01-02T',
-  },  
+  },{
+    label: '控制柜故障代码',
+    link: 'CtrlCode',
+  },
 ];
 @connect(({ tech }) => ({
   tech,
@@ -48,7 +51,7 @@ export default class Tech extends Component {
           <List style={{ backgroundColor: 'white' }}>
             {
               options.map(item => (
-                <List.Item key={item.label} onClick={() => this.onClick(item.link)} arrow="horizontal">{item.label}门控制器说明书</List.Item>
+                <List.Item key={item.label} onClick={() => this.onClick(item.link)} arrow="horizontal">{item.label}说明书</List.Item>
               ))
             }
           </List>

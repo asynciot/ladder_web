@@ -13,6 +13,9 @@ const books = [
     label: 'NSFC01-02T',
     page: 38,
   }, {
+    label: 'CtrlCode',
+    page: 5,
+  },{
     label: 'FAMILY_LAD',
     page: 6,
   },

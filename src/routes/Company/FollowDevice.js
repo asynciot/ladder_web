@@ -496,7 +496,7 @@ export default class extends Component {
             								<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
             							</tr>
 													<tr>
-														<td className="tr">设备编号 ：</td>
+														<td className="tr">编号 ：</td>
 														<td className="tl" style={{ width: '260px' }}>{item.id}</td>
 													</tr>
             							<tr>

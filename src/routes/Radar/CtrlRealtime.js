@@ -153,14 +153,14 @@ export default class CtrlRealtime extends Component {
 		wave: [],
 		startTime: 0,
 		stop: true,
-		interval:500,
+		interval:1000,
 		run:[],
 		lock:[],
 		close:[],
 		markFloor:'',
 	}
-	componentWillMount() {
-		this.getBaseData()
+	async componentWillMount() {
+		await this.getBaseData()
 		this.getfloor()
 		this.initWebsocket()
 	}
@@ -252,17 +252,17 @@ export default class CtrlRealtime extends Component {
 		let upfloorList = []
 		let downfloorList = []
 		let markList = []
-		this.state.markFloor = ''
 		const show = this.state.show
 		const floor = this.state.floor
 		var _this = this
 		var inte = setInterval(function () {
+			let markfloor = ''
 			if((count+33) <= buffer.length){
 				show.upCall   = buffer[count+0]&0x01							//上运行方向
 				show.downCall = (buffer[count+0]&0x02)>>1					//下运行方向
 				show.run      = (buffer[count+0]&0x04)>>2					//获取运行信号
 				show.lock     = (buffer[count+0]&0x08)>>3					//获取门锁信号
-				show.open    = (buffer[count+0]&0x10)>>4					//获取关门信号
+				show.open     = (buffer[count+0]&0x10)>>4					//获取关门信号
 				show.close    = (buffer[count+0]&0x20)>>5					//获取关门信号
 				show.openBtn  = (buffer[count+0]&0x40)>>6					//获取开门按钮信号
 				show.closeBtn = (buffer[count+0]&0x80)>>7					//获取关门按钮信号
@@ -333,11 +333,12 @@ export default class CtrlRealtime extends Component {
 				markList[61] = (buffer[count+26]&0x20)>>5
 				markList[62] = (buffer[count+26]&0x40)>>6
 				markList[63] = (buffer[count+26]&0x80)>>7
-				for(let i=0;i<=floor.length;i++){
+				for(let i=0;i<floor.length;i++){
 					if(markList[i] == 1){
-						_this.state.markFloor+=floor[floor.length-i]+','
-					}			
+						markfloor+=floor[floor.length-1-i]+','
+					}
 				}
+				_this.state.markFloor = markfloor
 				if(_this.state.markFloor == ''){
 					_this.state.markFloor = '无'
 				}
@@ -497,6 +498,7 @@ export default class CtrlRealtime extends Component {
 	render() {
 		let { ctrl: { event, view, device, floors, property, } } = this.props;
 		const { floor, markFloor, } = this.state;
+		console.log(markFloor)
 		const id = this.props.match.params.id;
 		return (
 			<div className="content tab-hide">
