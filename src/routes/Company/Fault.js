@@ -72,10 +72,11 @@ export default class DoorHistory extends Component {
 		});
 	}
 	upFault = (e) =>{
-		var file = e.target.files[0]
+		var file = e.target.files[0]		
 		this.state.file1 = new File([file], "before"+new Date().getTime()+".jpg",{type:"image/*"});
 		var reader = new FileReader()
 		reader.onload = function (e) {
+			document.getElementById('beforeShow').src=e.target.result
 			document.querySelector("#upload1").src = e.target.result
 		}
 		reader.readAsDataURL(this.state.file1)
@@ -85,6 +86,7 @@ export default class DoorHistory extends Component {
 		this.state.file2 = new File([file], "after"+new Date().getTime()+".jpg",{type:"image/*"});
 		var reader = new FileReader()
 		reader.onload = function (e) {
+			document.getElementById('afterShow').src=e.target.result
 			document.querySelector("#upload2").src = e.target.result
 		}
 		reader.readAsDataURL(this.state.file2)
@@ -118,6 +120,7 @@ export default class DoorHistory extends Component {
 			}).then(res=> { return res.json()}).then(json=>{
 				if(json.code == 0){
 					alert("上传成功")
+					this.props.history.push(`/company/work-order`);
 				}else{
 					alert("上传失败")
 				}
@@ -194,13 +197,13 @@ export default class DoorHistory extends Component {
 				</List>
 				<Row gutter={40}>
 					<Col span={12} >						
-						<img className={styles.icon}  src={require('../../assets/icon/故障报修1.png')} />
-						<a className={styles.icon}>维修前图片上传</a>
+						<img className={styles.icon} id="beforeShow" src={require('../../assets/icon/故障报修1.png')} />
+						<a className={styles.icon1}>维修前图片上传</a>
 						<input accept="image/*" className={styles.input} type="file" id='upload1' onChange={this.upFault}/>
 					</Col>
 					<Col span={12} >						
-						<img className={styles.icon}  src={require('../../assets/icon/系统故障.png')} />
-						<a className={styles.icon}>维修后图片上传</a>
+						<img className={styles.icon} id="afterShow" src={require('../../assets/icon/系统故障.png')} />
+						<a className={styles.icon1}>维修后图片上传</a>
 						<input accept="image/*" className={styles.input} type="file" id='upload2' onChange={this.upFinish}/>
 					</Col>
 					<Col xs={{ span: 12 }} sm={{ span: 18 }} md={{ span: 16 }} className={styles.btn1}>

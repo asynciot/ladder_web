@@ -157,7 +157,7 @@ export default class CtrlRealtime extends Component {
 		run:[],
 		lock:[],
 		close:[],
-		markFloor:[],
+		markFloor:'',
 	}
 	componentWillMount() {
 		this.getBaseData()
@@ -252,7 +252,7 @@ export default class CtrlRealtime extends Component {
 		let upfloorList = []
 		let downfloorList = []
 		let markList = []
-		let markFloor = []
+		this.state.markFloor = ''
 		const show = this.state.show
 		const floor = this.state.floor
 		var _this = this
@@ -269,34 +269,85 @@ export default class CtrlRealtime extends Component {
 				show.model    = buffer[count+1]&0xff						//获取电梯模式
 				show.status   = buffer[count+2]&0xff						//获取电梯状态				
 				show.floor    = buffer[count+27]&0xff           //获取电梯当前楼层
-				for(let j=0; j<floor.length;j+=8){
-					for(let i =3;i<=10;i++){
-						markList[j] = (buffer[count+i]&0x01)+','
-						markList[j+1] = (buffer[count+i]&0x02)>>1+','
-						markList[j+2] = (buffer[count+i]&0x04)>>2+','
-						markList[j+3] = (buffer[count+i]&0x08)>>3+','
-						markList[j+4] = (buffer[count+i]&0x10)>>4+','
-						markList[j+5] = (buffer[count+i]&0x20)>>5+','
-						markList[j+6] = (buffer[count+i]&0x40)>>6+','
-						markList[j+7] = (buffer[count+i]&0x80)>>7+','
-					}
-				}
+				markList[0] = (buffer[count+19]&0x01)
+				markList[1] = (buffer[count+19]&0x02)>>1
+				markList[2] = (buffer[count+19]&0x04)>>2
+				markList[3] = (buffer[count+19]&0x08)>>3
+				markList[4] = (buffer[count+19]&0x10)>>4
+				markList[5] = (buffer[count+19]&0x20)>>5
+				markList[6] = (buffer[count+19]&0x40)>>6
+				markList[7] = (buffer[count+19]&0x80)>>7
+				markList[8] = (buffer[count+20]&0x01)
+				markList[9] = (buffer[count+20]&0x02)>>1
+				markList[10] = (buffer[count+20]&0x04)>>2
+				markList[11] = (buffer[count+20]&0x08)>>3
+				markList[12] = (buffer[count+20]&0x10)>>4
+				markList[13] = (buffer[count+20]&0x20)>>5
+				markList[14] = (buffer[count+20]&0x40)>>6
+				markList[15] = (buffer[count+20]&0x80)>>7
+				markList[16] = (buffer[count+21]&0x01)
+				markList[17] = (buffer[count+21]&0x02)>>1
+				markList[18] = (buffer[count+21]&0x04)>>2
+				markList[19] = (buffer[count+21]&0x08)>>3
+				markList[20] = (buffer[count+21]&0x10)>>4
+				markList[21] = (buffer[count+21]&0x20)>>5
+				markList[22] = (buffer[count+21]&0x40)>>6
+				markList[23] = (buffer[count+21]&0x80)>>7
+				markList[24] = (buffer[count+22]&0x01)
+				markList[25] = (buffer[count+22]&0x02)>>1
+				markList[26] = (buffer[count+22]&0x04)>>2
+				markList[27] = (buffer[count+22]&0x08)>>3
+				markList[28] = (buffer[count+22]&0x10)>>4
+				markList[29] = (buffer[count+22]&0x20)>>5
+				markList[30] = (buffer[count+22]&0x40)>>6
+				markList[31] = (buffer[count+22]&0x80)>>7
+				markList[32] = (buffer[count+23]&0x01)
+				markList[33] = (buffer[count+23]&0x02)>>1
+				markList[34] = (buffer[count+23]&0x04)>>2
+				markList[35] = (buffer[count+23]&0x08)>>3
+				markList[36] = (buffer[count+23]&0x10)>>4
+				markList[37] = (buffer[count+23]&0x20)>>5
+				markList[38] = (buffer[count+23]&0x40)>>6
+				markList[39] = (buffer[count+23]&0x80)>>7
+				markList[40] = (buffer[count+24]&0x01)
+				markList[41] = (buffer[count+24]&0x02)>>1
+				markList[42] = (buffer[count+24]&0x04)>>2
+				markList[43] = (buffer[count+24]&0x08)>>3
+				markList[44] = (buffer[count+24]&0x10)>>4
+				markList[45] = (buffer[count+24]&0x20)>>5
+				markList[46] = (buffer[count+24]&0x40)>>6
+				markList[47] = (buffer[count+24]&0x80)>>7
+				markList[48] = (buffer[count+25]&0x01)
+				markList[49] = (buffer[count+25]&0x02)>>1
+				markList[50] = (buffer[count+25]&0x04)>>2
+				markList[51] = (buffer[count+25]&0x08)>>3
+				markList[52] = (buffer[count+25]&0x10)>>4
+				markList[53] = (buffer[count+25]&0x20)>>5
+				markList[54] = (buffer[count+25]&0x40)>>6
+				markList[55] = (buffer[count+25]&0x80)>>7
+				markList[56] = (buffer[count+26]&0x01)
+				markList[57] = (buffer[count+26]&0x02)>>1
+				markList[58] = (buffer[count+26]&0x04)>>2
+				markList[59] = (buffer[count+26]&0x08)>>3
+				markList[60] = (buffer[count+26]&0x10)>>4
+				markList[61] = (buffer[count+26]&0x20)>>5
+				markList[62] = (buffer[count+26]&0x40)>>6
+				markList[63] = (buffer[count+26]&0x80)>>7
 				for(let i=0;i<=floor.length;i++){
 					if(markList[i] == 1){
-						markFloor = markFloor.concat(markList[i])
+						_this.state.markFloor+=floor[floor.length-i]+','
 					}			
 				}
-				count+=33
-				if(charts){
-					console.log(charts)
-					_this.showChart()
-					_this.forceUpdate();
+				if(_this.state.markFloor == ''){
+					_this.state.markFloor = '无'
 				}
 			}
+			count+=33
+			if(charts){
+				_this.showChart()
+				_this.forceUpdate();
+			}
 		}, this.state.interval);
-		this.setState({
-			markFloor,
-		});
 	}
 	getfloor = (val) => {
 		const {show, } = this.state
@@ -500,22 +551,11 @@ export default class CtrlRealtime extends Component {
 									</p>
 									<p>关门信号 ：<i className={styles.status}>{this.state.show.close ? '动作':'不动作'}</i>
 									</p>
-									<p>开门按钮信号 ：<i className={styles.status}>{this.state.show.openBtn ? '有':'无'}</i>
+									{/* <p>开门按钮信号 ：<i className={styles.status}>{this.state.show.openBtn ? '有':'无'}</i>
 									</p>
 									<p>关门按钮信号 ：<i className={styles.status}>{this.state.show.closeBtn ? '有':'无'}</i>
-									</p>
+									</p>*/}
 									<p>电梯模式 ：<i className={styles.status}>{parseModel(this.state.show.model)}</i>
-									</p>
-									<p style={{
-											width: '100%',
-											justifyContent: 'flex-start',
-										}}
-									>轿厢登记信号 ：
-										{
-											markFloor.map((item,index) => (
-												<i className={styles.status} key={`${item}${index}`}>{item}</i>
-											))
-										}
 									</p>
 									<p style={{
 											width: '100%',
@@ -532,6 +572,18 @@ export default class CtrlRealtime extends Component {
 										最后更新时间 ：
 										<i className={styles.status}>{moment(this.state.show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
 									</p>
+									<p style={{
+											width: '100%',
+											justifyContent: 'flex-start',
+										}}
+									>轿厢登记信号 ：<i className={styles.status}>{markFloor}</i>
+										{/*{
+											markFloor.map((item,index) => (
+												<i className={styles.status} key={`${item}${index}`}>{item}</i>
+											))
+										}*/}
+									</p>
+									<p></p>
 									{/* <p style={{
 										width: '100%',
 										justifyContent: 'flex-start',
