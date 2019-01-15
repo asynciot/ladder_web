@@ -79,6 +79,7 @@ export default class DoorHistory extends Component {
 		type:'',
     src: '',
 		doorWidth:4096,
+		change:false,
 		openInarr:[],
 		openToarr:[],
 		openDeceleratearr:[],
@@ -171,6 +172,7 @@ export default class DoorHistory extends Component {
 		websock.onmessage= (e) =>{
 			if(e.data=="closed"){
 				alert("数据传输结束")
+				this.state.change = false;
 				_this.state.stop = 1
 				websock.close()
 			}else{
@@ -190,6 +192,7 @@ export default class DoorHistory extends Component {
 		console.log("WebSocket连接关闭");
 	}
 	onChange = async (val) => {
+		this.state.change = true;
 		this.initWebsocket()
 		await this.setState({
 			pick: val,
@@ -633,6 +636,7 @@ export default class DoorHistory extends Component {
 							<List style={{ backgroundColor: 'white' }} className="picker-list">
 								<Picker
 									title="实时时长"
+										disabled={this.state.change}
 									cols={1}
 									data={timeList}
 									value={this.state.pick}

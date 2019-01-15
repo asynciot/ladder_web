@@ -158,6 +158,7 @@ export default class CtrlRealtime extends Component {
 		lock:[],
 		close:[],
 		markFloor:'',
+		change:false,
 	}
 	async componentWillMount() {
 		await this.getBaseData()
@@ -183,6 +184,7 @@ export default class CtrlRealtime extends Component {
 		websock.onmessage= (e) =>{
 			if(e.data=="closed"){
 				alert("此次实时数据已结束")
+				this.state.change = false;
 				_this.state.stop = 1
 				websock.close()
 			}else{
@@ -201,10 +203,12 @@ export default class CtrlRealtime extends Component {
 	websocketclosed(){
 		console.log("WebSocket已关闭")
 	}
-	onChange = async (val) => {
+	onChange = (val) => {
+		this.state.change = true;
 		const {location } = this.props;
 		const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
 		const device_id = match[1];
+		this.initWebsocket()
 		getFollowDevices({device_id}).then((res)=>{
 			if(res.code == 0){
 				const op = 'open';
@@ -521,6 +525,7 @@ export default class CtrlRealtime extends Component {
 								<List style={{ backgroundColor: 'white' }} className="picker-list">
 									<Picker
 										title="实时时长"
+										disabled={this.state.change}
 										cols={1}
 										data={timeList}
 										value={this.state.pick}
