@@ -70,7 +70,9 @@ export default class extends Component {
 		if(this.state.install_addr == ''){
 			this.state.install_addr = this.state.list.install_addr
 		}
-    putFollowInfo({
+		this.state.maintenance_nexttime = new Date(this.state.maintenance_nexttime).getTime();
+    this.state.inspection_nexttime = new Date(this.state.inspection_nexttime).getTime();
+		putFollowInfo({
       device_id: this.state.list.device_id,
       device_name: this.state.device_name,
       install_addr: this.state.install_addr,

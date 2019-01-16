@@ -100,7 +100,7 @@ export default class Device extends Component {
         match={match}
       >
         {
-          pathName[2] !== 'params' && (
+          pathName[2] !== 'params' && pathName[2] !== 'fault'  && (
             <div className={classNames(styles.menu)}>
               <Dropdown overlay={menuList} placement="bottomCenter" trigger={['click']}>
                 <a className={styles.dropdown} href="#">

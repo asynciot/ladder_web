@@ -72,7 +72,7 @@ export default {
 					type: 'login',
 					payload: {
 						username: payload.username,
-						password: payload.password,
+						password: payload.newpassword,
 					},
 				});
 			}else {

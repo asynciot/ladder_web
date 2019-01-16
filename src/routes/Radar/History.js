@@ -724,7 +724,7 @@ export default class DoorHistory extends Component {
           </div>
           <div className={styles.btns}>
             {/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}
-            <section onClick={this.goDetail(type == 2 ? 'params/2': 'params/1')}>参数</section>
+            <section onClick={this.goDetail(type == 2 ? 'params/2': 'params/1')}>菜单</section>
             <section onClick={this.goQrcode}>二维码</section>
           </div>
         </div>

@@ -46,7 +46,7 @@ function checkCode(response) {
       message: '登录信息已过期，请重新登录',
       duration: 1,
       onClose: () => {
-        localStorage.removeItem('companyId');
+//      localStorage.removeItem('companyId');
         localStorage.setItem('role', 'guest');
         window.location.reload();
         return response;

@@ -499,6 +499,10 @@ export default class CtrlRealtime extends Component {
 		const id = this.props.match.params.id;
 		this.props.history.push(`/company/debug/${id}`);
 	}
+	gohistory = () => {
+		const id = this.props.match.params.id;
+		this.props.history.push(`/ctrl/${id}/fault`);
+	}
 	render() {
 		let { ctrl: { event, view, device, floors, property, } } = this.props;
 		const { floor, markFloor, } = this.state;
@@ -548,7 +552,7 @@ export default class CtrlRealtime extends Component {
 								className={classNames(styles.door)}
 							>
 								<section>
-									<p>运行信号 ：<i className={styles.status}>{this.state.show.run ? '运行':'停车'}</i>
+									<p>运行状态 ：<i className={styles.status}>{this.state.show.run ? '运行':'停车'}</i>
 									</p>
 									{/* <p>速度 ：<i className={styles.status}>0.5m/s</i>
 									</p> */}
@@ -637,9 +641,10 @@ export default class CtrlRealtime extends Component {
 						</div>
 						<div className={styles.btns}>
 							{/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}
-							<section onClick={this.goDetail('params')}>参数</section>
+							<section onClick={this.goDetail('params')}>菜单</section>
 							<section onClick={this.goQrcode}>二维码</section>
-							<section onClick={this.goDebug}>调试</section>
+							<section onClick={this.goDebug}>查看</section>
+							<section onClick={this.gohistory}>历史故障</section>
 						</div>
 					</div>
 					<div className={classNames(styles.tab, view == 1 ?'tab-active' : 'tab-notactive')}>
