@@ -589,6 +589,10 @@ export default class DoorHistory extends Component {
 			});
 		})
   }
+	gohistory = () => {
+		const id = this.props.match.params.id;
+		this.props.history.push(`/company/door/${id}/fault`);
+	}
   render() {
     const { device: { events, view, property, updateTime, }} = this.props;
     const id = this.props.match.params.id;
@@ -798,6 +802,7 @@ export default class DoorHistory extends Component {
             {/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}
             <section onClick={this.goDetail(type == 2 ? 'params/2': 'params/1')}>菜单</section>
             <section onClick={this.goQrcode}>二维码</section>
+						<section onClick={this.gohistory}>历史故障</section>
           </div>
         </div>
       </div>

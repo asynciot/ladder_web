@@ -7,6 +7,9 @@ import background1 from '../../assets/menu-bg.png';
 import background3 from '../../assets/bg-menu.jpg';
 import background2 from '../../assets/menu-bg1.jpg';
 import background4 from '../../assets/service-img4.jpg';
+import BMap  from 'BMap';
+
+var inte = null;
 const Item = List.Item;
 const Brief = Item.Brief;
 const names = {
@@ -18,7 +21,8 @@ const typeName ={
   'ctrl':'控制柜',
   'door':'控制器',
 }
-const code = {
+const faultCode = {
+	'0': '暂无',
 	'01': '过流',
 	'02': '母线过压',
 	'03': '母线欠压',
@@ -76,8 +80,15 @@ export default class Home extends Component {
 		code:'',
   }
   componentWillMount() {
-    this.getdata();
+		this.getdata();
+		var _this =this
+		inte = setInterval(function () {
+			_this.getdata();
+		}, 60000);
   }
+	componentWillUnmount() {
+		clearInterval(inte)
+	}
 	getdata = () => {
 		this.getMessages();
 		this.getDevicesStatus();
@@ -101,13 +112,17 @@ export default class Home extends Component {
 					ctrlnum:parseInt(res.data.ctrlonline)+parseInt(res.data.ctrloffline)+parseInt(res.data.ctrllongoffline),
         });
       }
+			let num = parseInt(res.data.dooronline)+parseInt(res.data.dooroffline)+parseInt(res.data.doorlongoffline)+parseInt(res.data.ctrlonline)+parseInt(res.data.ctrloffline)+parseInt(res.data.ctrllongoffline)
+			if(num==0){
+				alert("请在个人界面使用关注设备，或使用微信扫一扫关注设备！")
+			}
     }).catch((e => console.info(e)));
   }
   getFault = () => {
     getFault({ num: 10, page: 1, state:"untreated"}).then((res) => {
       if (res.code === 0) {
 				const code = res.data.list[0].code
-				if(device_type=="ctrl"){
+				if(res.data.list[0].device_type=="ctrl"){
 					this.setState({
 						historyEvents: res.data.list,
 						total:res.data.totalNumber,
@@ -120,10 +135,21 @@ export default class Home extends Component {
 						code: 0,
 					});
 				}
-        
       }
     }).catch((e => console.info(e)));
   }
+	onpress = () =>{
+		var geolocation = new BMap.Geolocation();
+		geolocation.getCurrentPosition(function(r){
+		if(this.getStatus() == BMAP_STATUS_SUCCESS){
+			console.log('您的位置：'+r.point.lng+','+r.point.lat);
+			alert("正在获取当前位置")
+		}
+		else {
+			alert('failed'+this.getStatus());
+		}        
+	});
+	}
   toMessagesPage = () => {
     const { history } = this.props;
     history.push('/company/message');
@@ -246,11 +272,6 @@ export default class Home extends Component {
         </Carousel>
 				<div className={styles.pre}>
 					<List className="list">
-						<Item
-							arrow="horizontal"
-							multipleLine
-							platform="android"
-						>
 							<Row gutter={20}>
 								<Col span={6}>
 									<Card className={styles.gridcontent} onClick={this.toFollowDoorPage}>
@@ -258,7 +279,7 @@ export default class Home extends Component {
 											<div className={styles.gridnum4}>
 												{doornum}
 											</div>
-											控制器
+											门机
 										</div>
 									</Card>
 								</Col>
@@ -335,7 +356,6 @@ export default class Home extends Component {
 									</Card>
 								</Col>
 							</Row>
-						</Item>
 						<Item
 							arrow="horizontal"
 							multipleLine
@@ -365,7 +385,7 @@ export default class Home extends Component {
 												<Flex.Item>型号:<span className={styles.tips}>{typeName[item.device_type] ||''}</span></Flex.Item>
 											</Flex>
 										</Brief>
-										<Brief>故障名称:<span className={styles.tips}>{code[this.state.code]}</span></Brief>
+										<Brief>故障名称:<span className={styles.tips}>{faultCode[this.state.code]}</span></Brief>
 									</span>
 								)) : (
 									<span>
@@ -376,6 +396,7 @@ export default class Home extends Component {
 							}
 						</Item>
 					</List>
+					<Button onClick={this.onpress} type="primary" style={{ width: '100%' }}>定位打卡</Button>
 				</div>
       </div>
     );

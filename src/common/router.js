@@ -131,10 +131,14 @@ export const getRouterData = (app) => {
       name: '控制器',
       component: dynamicWrapper(app, ['device'], () => import('../routes/Radar/History')),
     },
-	'/events/:type/:id/': {
-		name: '历史事件',
-		component: dynamicWrapper(app, ['device'], () => import('../routes/Radar/Event')),
-	},
+		'/company/door/:id/fault': {
+			name: '历史故障',
+			component: dynamicWrapper(app, [], () => import('../routes/Radar/DoorFault')),
+		},
+		'/events/:type/:id/': {
+			name: '历史事件',
+			component: dynamicWrapper(app, ['device'], () => import('../routes/Radar/Event')),
+		},
     '/ctrl/:id': {
       name: '运行状态',
       component: dynamicWrapper(app, ['ctrl'], () => import('../routes/Radar/Ctrl')),
@@ -246,14 +250,6 @@ export const getRouterData = (app) => {
 		'/company/followdevice': {
 			name: '关注列表',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/FollowDevice')),
-		},
-    '/company/map': {
-      name: '地图列表',
-      component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Radar/Event')),
-    },
-		'/company/event': {
-			name: '事件列表',
-			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/Map')),
 		},
     '/company/edit-device/:IMEI/': {
       name: '编辑设备',

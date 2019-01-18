@@ -4,7 +4,7 @@ import { Tabs, Flex, Modal, List,PullToRefresh } from 'antd-mobile';
 import styles from './WorkOrder.less';
 import { getFault, postFault, postFinish, deleteFault, getDispatch, } from '../../services/api';
 
-
+var inte = null;
 const Item = List.Item;
 const PlaceHolder = ({ className = '', ...restProps }) => (
   <div className={`${className} ${styles.placeholder}`} {...restProps}>{restProps.children}</div>
@@ -28,6 +28,46 @@ const names = {
 const typeName = {
 	 'door':'控制器',
 	 'ctrl':'控制柜',
+}
+const faultCode = {
+	'0': '暂无',
+	'01': '过流',
+	'02': '母线过压',
+	'03': '母线欠压',
+	'04': '输入缺相',
+	'05': '输出缺相',
+	'06': '输出过力矩',
+	'07': '编码器故障',
+	'08': '模块过热',
+	'09': '运行接触器故障',
+	'10': '抱闸接触器故障',
+	'11': '封星继电器故障',
+	'12': '抱闸开关故障',
+	'13': '运行中安全回路断开',
+	'14': '运行中门锁断开',
+	'15': '门锁短接故障',
+	'16': '层站召唤通讯故障',
+	'17': '轿厢通讯故障',
+	'18': '并联通讯故障',
+	'19': '开门故障',
+	'20': '关门故障',
+	'21': '开关门到位故障',
+	'22': '平层信号异常',
+	'23': '终端减速开关故障',
+	'24': '下限位信号异常',
+	'25': '上限位信号异常',
+	'26': '打滑故障',
+	'27': '电梯速度异常',
+	'28': '电机反转故障',
+	'31': '停车速度检测',
+	'33': '马达过热故障',
+	'34': '制动力严重不足',
+	'35': '制动力不足警告',
+	'36': 'UCMP故障',
+	'37': 'IPM故障',
+	'38': '再平层开关异常',
+	'40': '驱动保护故障',
+	'41': '平层位置异常',
 }
 const ListButton = ({ className = '', ...restProps }) => (
   <div className={`${className} ${styles['list-btn']}`}>
@@ -57,8 +97,15 @@ export default class extends Component {
 		totalNumber:0,
   }
   componentWillMount() {
-    this.getFault('untreated');
+		this.getFault('untreated')
+		var _this =this
+		inte = setInterval(function () {
+			_this.getFault('untreated');
+		}, 60000);
   }
+	componentWillUnmount() {
+		clearInterval(inte)
+	}
 	pageChange = (val) => {
 		const {type} =this.state
 		this.state.page = val
@@ -73,8 +120,12 @@ export default class extends Component {
 					const time = this.state.nowTime - item.createTime
 					item.hour = parseInt((time)/(1000*3600))
 					item.minute = parseInt(time%(1000*3600)/(1000*60))
-					item.second = parseInt(time%(1000*3600)%(1000*60)/1000)					
-					item.code = res.data.list[index].code.toString(16)
+					item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
+					if(item.device_type=='ctrl'){
+						item.code = res.data.list[index].code.toString(16)
+					}else{
+						item.code = 0
+					}
 					this.state.totalNumber=res.data.totalNumber
 					return item;
 				})
@@ -179,9 +230,11 @@ export default class extends Component {
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault(item)}>
 											<tbody>
 												<tr>
-													<td className="tr">故障代码 ：</td>
-													<td className="tl" style={{ width: '100px' }}>E{item.code}</td>
-													<td className="tl">设备编号 ：</td>
+													<td className="tr">故障名称 ：</td>
+													<td className="tl" style={{ width: '100px' }}>{faultCode[item.code]}</td>
+												</tr>
+												<tr>	
+													<td className="tr">设备编号 ：</td>
 													<td className="tl">{item.device_id}</td>
 												</tr>
 												<tr>

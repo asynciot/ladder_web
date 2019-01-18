@@ -159,6 +159,7 @@ export default class CtrlRealtime extends Component {
 		close:[],
 		markFloor:'',
 		change:false,
+		markList:[],
 	}
 	async componentWillMount() {
 		await this.getBaseData()
@@ -169,6 +170,10 @@ export default class CtrlRealtime extends Component {
 		charts = false;
 		clearInterval(inte)
 		websock.close()
+	}
+	componentDidMount(){
+		const arr = document.getElementById('23')
+		console.log(arr)
 	}
 	initWebsocket = () =>{ //初始化weosocket
 		const {location, currentUser } = this.props;
@@ -259,7 +264,7 @@ export default class CtrlRealtime extends Component {
 		const show = this.state.show
 		const floor = this.state.floor
 		var _this = this
-		var inte = setInterval(function () {
+		inte = setInterval(function () {
 			let markfloor = ''
 			if((count+33) <= buffer.length){
 				show.upCall   = buffer[count+0]&0x01							//上运行方向
@@ -338,14 +343,9 @@ export default class CtrlRealtime extends Component {
 				markList[62] = (buffer[count+26]&0x40)>>6
 				markList[63] = (buffer[count+26]&0x80)>>7
 				for(let i=0;i<floor.length;i++){
-					if(markList[i] == 1){
-						markfloor+=floor[floor.length-1-i]+','
-					}
+					_this.state.markList[i] = markList[i]
 				}
-				_this.state.markFloor = markfloor
-				if(_this.state.markFloor == ''){
-					_this.state.markFloor = '无'
-				}
+				_this.state.markList.reverse()
 			}
 			count+=33
 			if(charts){
@@ -379,7 +379,7 @@ export default class CtrlRealtime extends Component {
 			}else{
 				alert("获取楼层高度失败！")
 			}
-		});
+		})
 	}
 	showChart = () =>{
 		const {event} = this.props;
@@ -505,8 +505,8 @@ export default class CtrlRealtime extends Component {
 	}
 	render() {
 		let { ctrl: { event, view, device, floors, property, } } = this.props;
-		const { floor, markFloor, } = this.state;
-		console.log(markFloor)
+		const { floor, markFloor, markList} = this.state;
+		console.log(markList)
 		const id = this.props.match.params.id;
 		return (
 			<div className="content tab-hide">
@@ -556,11 +556,11 @@ export default class CtrlRealtime extends Component {
 									</p>
 									{/* <p>速度 ：<i className={styles.status}>0.5m/s</i>
 									</p> */}
-									<p>门锁信号 ：<i className={styles.status}>{this.state.show.lock ? '通':'断'}</i>
+									<p>门锁回路 ：<i className={styles.status}>{this.state.show.lock ? '通':'断'}</i>
 									</p>
-									<p>开门信号 ：<i className={styles.status}>{this.state.show.open ? '动作':'不动作'}</i>
+									<p>开门到位信号 ：<i className={styles.status}>{this.state.show.open ? '动作':'不动作'}</i>
 									</p>
-									<p>关门信号 ：<i className={styles.status}>{this.state.show.close ? '动作':'不动作'}</i>
+									<p>关门到位信号 ：<i className={styles.status}>{this.state.show.close ? '动作':'不动作'}</i>
 									</p>
 									{/* <p>开门按钮信号 ：<i className={styles.status}>{this.state.show.openBtn ? '有':'无'}</i>
 									</p>
@@ -583,19 +583,18 @@ export default class CtrlRealtime extends Component {
 										最后更新时间 ：
 										<i className={styles.status}>{moment(this.state.show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
 									</p>
-									<p style={{
+									{/*<p style={{
 											width: '100%',
 											justifyContent: 'flex-start',
 										}}
 									>轿厢登记信号 ：<i className={styles.status}>{markFloor}</i>
-										{/*{
+										{
 											markFloor.map((item,index) => (
 												<i className={styles.status} key={`${item}${index}`}>{item}</i>
 											))
-										}*/}
+										}
 									</p>
-									<p></p>
-									{/* <p style={{
+									<p style={{
 										width: '100%',
 										justifyContent: 'flex-start',
 									}}
@@ -632,7 +631,10 @@ export default class CtrlRealtime extends Component {
 										<ul>
 											{
 												floor.map((item,index) => (
-													<li style={{ width: 35}} key={`${item}${index}`}>{item}</li>
+													markList[index] ?
+													<li style={{ width: 35, color:'red'}} key={`${index}`} id={`${index}`}>{item}</li>
+													:
+													<li style={{ width: 35}} key={`${index}`} id={`${index}`}>{item}</li>
 												))
 											}
 										</ul>

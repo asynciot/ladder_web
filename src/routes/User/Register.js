@@ -123,7 +123,9 @@ export default class Login extends Component {
 										<Col span={18}>
 											{getFieldDecorator('username', {
 													rules: [{
-														required: true, message: '请输入用户名!',
+														required: true, 
+														message: '用户名不得少于六位!',
+														min:6,
 													}],
 												})(<Input
 													type="text"
@@ -144,7 +146,8 @@ export default class Login extends Component {
 													rules: [{
 														required: true, message: '请输入手机号!',
 													}, {
-														pattern: /^[1][3,4,5,7,8][0-9]{9}$/, message: '手机号格式错误！',
+														pattern: /^[1][3,4,5,7,8][0-9]{9}$/, 
+														message: '手机号格式错误！',
 													}],
 												})(<Input
 													type="text"
@@ -163,7 +166,8 @@ export default class Login extends Component {
 										<Col span={13}>
 											{getFieldDecorator('verifyCode', {
 												rules: [{
-													required: true, message: '请输入验证码!',
+													required: true, 
+													message: '请输入验证码!',
 												}],
 											})(<Input
 												type="text"
@@ -190,7 +194,11 @@ export default class Login extends Component {
 										</Col>
 										<Col span={18}>
 											{getFieldDecorator('password', {
-												rules: [{ required: true, message: '请输入密码!' }],
+												rules: [{ 
+													required: true, 
+													message: '密码不得少于六位!',
+													min:6,
+												}],
 											})(<Input
 													type="password"
 													size="large"

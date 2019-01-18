@@ -69,7 +69,7 @@ export default class DoorHistory extends Component {
 	}
 	componentWillMount() {
 		const {location, currentUser } = this.props;
-		const match = pathToRegexp('/ctrl/:id/fault').exec(location.pathname);
+		const match = pathToRegexp('/company/door/:id/fault').exec(location.pathname);
 		device_id = match[1];
 		this.getFault(1)
 	}
@@ -77,16 +77,14 @@ export default class DoorHistory extends Component {
 		let page = val
 		getFault({ num: 10, page, device_id}).then((res) => {
 			if (res.code == 0) {
-				const list = res.data.list.map((item,index) => {
-					item.code = res.data.list[index].code.toString(16)
-				})
+				const list = res.data.list
 				const totalNumber = res.data.totalNumber
 				this.setState({
 					page,
 					list,
 					totalNumber,
 				});
-			}else{
+			} else {
 				this.setState({
 					list: [],
 				});
@@ -146,7 +144,7 @@ export default class DoorHistory extends Component {
 												<td className="tr">故障名称 ：</td>
 												<td className="tl" style={{ width: '130px' }}>{faultCode[item.code]}</td>
 												<td className="tl">发起人 ：</td>
-												<td className="tl" style={{ width: '260px' }}>{item.producer}</td>
+												<td className="tl" style={{ width: '100px' }}>{item.producer}</td>
 											</tr>
 											<tr>
 												<td className="tr">开始时间 ：</td>

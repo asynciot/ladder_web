@@ -46,7 +46,7 @@ export default class Device extends Component {
   componentWillMount() {
     const { dispatch, location } = this.props;
     const pathName = pathToRegexp('/ctrl/:id/:name?/:end?').exec(location.pathname);
-    pathName[2] == 'params' ? '' : this.setState({
+    pathName[2] == 'params' || pathName[2] == 'fault' ? '' : this.setState({
       menuName: menus.filter(item => item.link === pathName[2])[0].name,
     });
   }
