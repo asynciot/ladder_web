@@ -75,6 +75,10 @@ const ListButton = ({ className = '', ...restProps }) => (
       <Icon className={`${styles.edit} ${styles.icon}`} type="form" />
       <em>接单</em>
     </span>
+		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.address ? restProps.address:''}>
+			<Icon className={`${styles.edit} ${styles.icon}`} type="form" />
+			<em>设备地址</em>
+		</span>
   </div>
 );
 const Finish = ({ className = '', ...restProps }) => (
@@ -82,6 +86,10 @@ const Finish = ({ className = '', ...restProps }) => (
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.remove ? restProps.remove:''}>
 			<Icon className={`${styles.delete} ${styles.icon}`} type="close" />
 			<em>转办</em>
+		</span>
+		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.address ? restProps.address:''}>
+			<Icon className={`${styles.edit} ${styles.icon}`} type="form" />
+			<em>设备地址</em>
 		</span>
   </div>
 );
@@ -179,17 +187,8 @@ export default class extends Component {
       },
     ]);
   }
-	finish = (e,detail) => {
-		alert('提示', '是否完成', [
-			{ text: '取消', style: 'default' },
-			{ text: '确认',
-				onPress: () => {
-					postFinish({ order_id: detail.id }).then((res) => {     
-						this.getFault(detail.state)
-					});
-				},
-			},
-		]);
+	address = (e,detail) => {
+		
 	}
 	remove = (e,detail) => {
 		alert('提示', '是否完成', [
@@ -231,7 +230,7 @@ export default class extends Component {
 											<tbody>
 												<tr>
 													<td className="tr">故障名称 ：</td>
-													<td className="tl" style={{ width: '100px' }}>{faultCode[item.code]}</td>
+													<td className="tl" style={{ width: '200px' }}>{faultCode[item.code]}</td>
 												</tr>
 												<tr>	
 													<td className="tr">设备编号 ：</td>
@@ -239,7 +238,7 @@ export default class extends Component {
 												</tr>
 												<tr>
 													<td className="tr">故障类型 ：</td>
-													<td className="tl" style={{ width: '100px' }}>{names[item.type]}</td>
+													<td className="tl" style={{ width: '80px' }}>{names[item.type]}</td>
 													<td className="tl">设备类型 ：</td>
 													<td className="tl">{typeName[item.device_type] ||''}</td>
 												</tr>

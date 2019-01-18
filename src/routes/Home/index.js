@@ -119,7 +119,7 @@ export default class Home extends Component {
     }).catch((e => console.info(e)));
   }
   getFault = () => {
-    getFault({ num: 10, page: 1, state:"untreated"}).then((res) => {
+    getFault({ num: 10, page: 1, state:"untreated", islast:1}).then((res) => {
       if (res.code === 0) {
 				const code = res.data.list[0].code
 				if(res.data.list[0].device_type=="ctrl"){
@@ -244,12 +244,12 @@ export default class Home extends Component {
     history.push('/company/work-order');
   }
   render() {		
-		const imgList = [
-				// background1,
-				background2,
-				background3,
-				background4,
-		]
+	const imgList = [
+		// background1,
+		background2,
+		background3,
+		background4,
+	]
     const { devicesStatus, historyEvents, doornum, ctrlnum, total } = this.state;
     let notClosedEvents = historyEvents.filter(item => item.state );
 		const len = total

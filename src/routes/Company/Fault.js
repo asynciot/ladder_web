@@ -4,11 +4,52 @@ import { connect } from 'dva';
 import _ from 'lodash';
 import base64url from 'base64url';
 import { Debounce } from 'lodash-decorators/debounce';
-import { Row, Col, Button, Spin, DatePicker, Input,  } from 'antd';
-import { Picker, List, Tabs, Modal, Card, } from 'antd-mobile';
+import { Row, Col, Button, Spin, DatePicker, Input, Modal, } from 'antd';
+import { Picker, List, Tabs,  Card, } from 'antd-mobile';
 import classNames from 'classnames';
 import styles from './Fault.less';
 import {getFault, postFinish, postFault, getDispatch } from '../../services/api';
+import c01 from '../../assets/fault/c01.png';
+import c02 from '../../assets/fault/c02.png';
+import c03 from '../../assets/fault/c03.png';
+import c04 from '../../assets/fault/c04.png';
+import c05 from '../../assets/fault/c05.png';
+import c06 from '../../assets/fault/c06.png';
+import c07 from '../../assets/fault/c07.png';
+import c08 from '../../assets/fault/c08.png';
+import c09 from '../../assets/fault/c09.png';
+import c10 from '../../assets/fault/c10.png';
+import c11 from '../../assets/fault/c11.png';
+import c12 from '../../assets/fault/c12.png';
+import c13 from '../../assets/fault/c13.png';
+import c14 from '../../assets/fault/c14.png';
+import c15 from '../../assets/fault/c15.png';
+import c16 from '../../assets/fault/c16.png';
+import c17 from '../../assets/fault/c17.png';
+import c18 from '../../assets/fault/c18.png';
+import c19 from '../../assets/fault/c19.png';
+import c20 from '../../assets/fault/c20.png';
+import c21 from '../../assets/fault/c21.png';
+import c22 from '../../assets/fault/c22.png';
+import c23 from '../../assets/fault/c23.png';
+import c24 from '../../assets/fault/c24.png';
+import c25 from '../../assets/fault/c25.png';
+import c26 from '../../assets/fault/c26.png';
+import c27 from '../../assets/fault/c27.png';
+import c28 from '../../assets/fault/c28.png';
+import c29 from '../../assets/fault/c29.png';
+// import c30 from '../../assets/fault/c30.png';
+import c31 from '../../assets/fault/c31.png';
+import c32 from '../../assets/fault/c32.png';
+import c33 from '../../assets/fault/c33.png';
+import c34 from '../../assets/fault/c34.png';
+import c35 from '../../assets/fault/c35.png';
+import c36 from '../../assets/fault/c36.png';
+import c37 from '../../assets/fault/c37.png';
+import c38 from '../../assets/fault/c38.png';
+// import c39 from '../../assets/fault/c39.png';
+import c40 from '../../assets/fault/c40.png';
+import c41 from '../../assets/fault/c41.png';
 
 var _val = ""
 var dispatch_id = 0
@@ -192,7 +233,19 @@ export default class DoorHistory extends Component {
 				alert("接单失败！")
 			}
 		})
-	}	
+	}
+	info = (item) => {
+		let a = 'c'+item.code
+		Modal.info({
+			title: '故障详情',
+			content: (
+				<div>
+					<img className={styles.img} src={c05} />
+				</div>
+			),
+			onOk() {},
+		});
+	}
 	render() {
 		const { list, } = this.state;
 		return (
@@ -205,6 +258,7 @@ export default class DoorHistory extends Component {
 									<tr>
 										<td className="tr">故障名称 ：</td>
 										<td className="tl" style={{ width: '200px' }}>{faultCode[item.code]}</td>
+										<td className="tl" onClick={() => this.info(item)}>详情</td>
 									</tr>
 									<tr>
 										<td className="tr">设备编号 ：</td>
