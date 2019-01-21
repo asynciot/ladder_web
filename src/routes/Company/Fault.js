@@ -9,15 +9,15 @@ import { Picker, List, Tabs,  Card, } from 'antd-mobile';
 import classNames from 'classnames';
 import styles from './Fault.less';
 import {getFault, postFinish, postFault, getDispatch } from '../../services/api';
-import c01 from '../../assets/fault/c01.png';
-import c02 from '../../assets/fault/c02.png';
-import c03 from '../../assets/fault/c03.png';
-import c04 from '../../assets/fault/c04.png';
-import c05 from '../../assets/fault/c05.png';
-import c06 from '../../assets/fault/c06.png';
-import c07 from '../../assets/fault/c07.png';
-import c08 from '../../assets/fault/c08.png';
-import c09 from '../../assets/fault/c09.png';
+import c1 from '../../assets/fault/c1.png';
+import c2 from '../../assets/fault/c2.png';
+import c3 from '../../assets/fault/c3.png';
+import c4 from '../../assets/fault/c4.png';
+import c5 from '../../assets/fault/c5.png';
+import c6 from '../../assets/fault/c6.png';
+import c7 from '../../assets/fault/c7.png';
+import c8 from '../../assets/fault/c8.png';
+import c9 from '../../assets/fault/c9.png';
 import c10 from '../../assets/fault/c10.png';
 import c11 from '../../assets/fault/c11.png';
 import c12 from '../../assets/fault/c12.png';
@@ -52,11 +52,10 @@ import c40 from '../../assets/fault/c40.png';
 import c41 from '../../assets/fault/c41.png';
 import c51 from '../../assets/fault/c51.png';
 import c52 from '../../assets/fault/c52.png';
-import c54 from '../../assets/fault/c54.png';
-import c58 from '../../assets/fault/c58.png';
 import c66 from '../../assets/fault/c66.png';
 import c82 from '../../assets/fault/c82.png';
-
+import c114 from '../../assets/fault/c114.png';
+import c178 from '../../assets/fault/c178.png';
 var _val = ""
 var dispatch_id = 0
 const { TextArea } = Input;
@@ -74,16 +73,15 @@ const typeName = {
 	 'ctrl':'控制柜',
 }
 const faultCode = {
-	'0': '暂无',
-	'01': '过流',
-	'02': '母线过压',
-	'03': '母线欠压',
-	'04': '输入缺相',
-	'05': '输出缺相',
-	'06': '输出过力矩',
-	'07': '编码器故障',
-	'08': '模块过热',
-	'09': '运行接触器故障',
+	'1': '过流',
+	'2': '母线过压',
+	'3': '母线欠压',
+	'4': '输入缺相',
+	'5': '输出缺相',
+	'6': '输出过力矩',
+	'7': '编码器故障',
+	'8': '模块过热',
+	'9': '运行接触器故障',
 	'10': '抱闸接触器故障',
 	'11': '封星继电器故障',
 	'12': '抱闸开关故障',
@@ -114,10 +112,10 @@ const faultCode = {
 	'41': '平层位置异常',
 	'51': '开关门受阻',
 	'52': '飞车保护',
-	'54': '电机过载',
-	'58': '输出过流',
-	'66': '输入电压过低',
-	'82': '输入电压过高',
+	'66': '电机过载',
+	'82': '输出过流',
+	'114': '输入电压过低',
+	'178': '输入电压过高',
 }
 export default class DoorHistory extends Component {
 	state = {
@@ -131,6 +129,7 @@ export default class DoorHistory extends Component {
 		val:'',
 		maintenance:true,
 		inspection:true,
+		src: '../../assets/fault/c01.png',
 	}
 	componentWillMount() {
 		this.getFault()
@@ -158,10 +157,13 @@ export default class DoorHistory extends Component {
 				}								
 				if(item.state == 'treating'){
 					this.state.disable = true
-				}
-				if(item.state == 'untreated'){
+				}else if(item.state == 'untreated'){
+					this.state.disable1 = true
+				}else{
+					this.state.disable = true
 					this.state.disable1 = true
 				}
+				
 				return item;
 			})
 			this.setState({
@@ -248,12 +250,77 @@ export default class DoorHistory extends Component {
 		})
 	}
 	info = (item) => {
-		let a = 'c'+item.code
+		let imgList= [
+			c1,
+			c2,
+			c3,
+			c4,
+			c5,
+			c6,
+			c7,
+			c8,
+			c9,
+			c10,
+			c11,
+			c12,
+			c13,
+			c14,
+			c15,
+			c16,
+			c17,
+			c18,
+			c19,
+			c20,
+			c21,
+			c22,
+			c23,
+			c24,
+			c25,
+			c26,
+			c27,
+			c28,
+			c29,
+			c31,
+			c31,
+			c32,
+			c33,
+			c34,
+			c35,
+			c36,
+			c37,
+			c38,
+			c38,
+			c40,
+			c41,
+			c51,
+			c52,
+			c66,
+			c82,
+			c114,
+			c178,
+		]
+		if(item.device_type == 'ctrl'){
+			imgList=imgList[item.code-1]
+		}else{
+			if(item.code=='51'){
+				imgList=imgList[41]
+			}else if(item.code=='52'){
+				imgList=imgList[42]
+			}else if(item.code=='66'){
+				imgList=imgList[43]
+			}else if(item.code=='82'){
+				imgList=imgList[44]
+			}else if(item.code=='114'){
+				imgList=imgList[45]
+			}else if(item.code=='178'){
+				imgList=imgList[46]
+			}
+		}
 		Modal.info({
 			title: '故障详情',
 			content: (
 				<div>
-					<img className={styles.img} src={a} />
+					<img className={styles.img} src={imgList} />
 				</div>
 			),
 			onOk() {},

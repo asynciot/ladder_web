@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Carousel, WingBlank, List, Flex, Card,} from 'antd-mobile';
 import { Row, Col, Button, Spin, DatePicker, Pagination, } from 'antd';
 import styles from './index.less';
-import { getBanners, getMessages, getDevicesStatus, getFault, } from '../../services/api';
+import { getBanners, getMessages, getDevicesStatus, getFault, postLocation } from '../../services/api';
 import background1 from '../../assets/menu-bg.png';
 import background3 from '../../assets/bg-menu.jpg';
 import background2 from '../../assets/menu-bg1.jpg';
@@ -22,16 +22,15 @@ const typeName ={
   'door':'控制器',
 }
 const faultCode = {
-	'0': '暂无',
-	'01': '过流',
-	'02': '母线过压',
-	'03': '母线欠压',
-	'04': '输入缺相',
-	'05': '输出缺相',
-	'06': '输出过力矩',
-	'07': '编码器故障',
-	'08': '模块过热',
-	'09': '运行接触器故障',
+	'1': '过流',
+	'2': '母线过压',
+	'3': '母线欠压',
+	'4': '输入缺相',
+	'5': '输出缺相',
+	'6': '输出过力矩',
+	'7': '编码器故障',
+	'8': '模块过热',
+	'9': '运行接触器故障',
 	'10': '抱闸接触器故障',
 	'11': '封星继电器故障',
 	'12': '抱闸开关故障',
@@ -62,10 +61,10 @@ const faultCode = {
 	'41': '平层位置异常',
 	'51': '开关门受阻',
 	'52': '飞车保护',
-	'54': '电机过载',
-	'58': '输出过流',
-	'66': '输入电压过低',
-	'82': '输入电压过高',
+	'66': '电机过载',
+	'82': '输出过流',
+	'114': '输入电压过低',
+	'178': '输入电压过高',
 }
 export default class Home extends Component {
   state = {
@@ -150,7 +149,11 @@ export default class Home extends Component {
 		geolocation.getCurrentPosition(function(r){
 			if(this.getStatus() == BMAP_STATUS_SUCCESS){
 				console.log('您的位置：'+r.point.lng+','+r.point.lat);
+				const lat = r.point.lat
+				const lon = r.point.lng
 				alert("正在获取当前位置")
+				postLocation({ lat, lon,}).then((res) => {
+				})
 			}
 			else {
 				alert('failed'+this.getStatus());
@@ -251,12 +254,13 @@ export default class Home extends Component {
     history.push('/company/work-order');
   }
   render() {		
-	const imgList = [
-		// background1,
-		background2,
-		background3,
-		background4,
-	]
+		const imgList = [
+			// background1,
+			background2,
+			background3,
+			background4,
+		]
+		console.log(imgList)
     const { devicesStatus, historyEvents, doornum, ctrlnum, total } = this.state;
     let notClosedEvents = historyEvents.filter(item => item.state );
 		const len = total

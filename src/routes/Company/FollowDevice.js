@@ -308,11 +308,10 @@ export default class extends Component {
         onPress: () => {
           deleteFollowInfo({ device_id: detail.device_id }).then((res) => {            
           });
-					this.getDevice('',1,switchIdx)
-					this.forceUpdate()
         },
       },
     ]);
+		this.forceUpdate()
   }
 	onChange = (e) =>{
 		console.log(e.target.value)

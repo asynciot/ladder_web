@@ -14,13 +14,12 @@ import {getEvent, getFault} from '../../services/api';
 
 var device_id = 0;
 const faultCode = {
-	'01': '开关门受阻',
-	'02': '飞车保护',
-	'04': '电机过载',
-	'08': '输出过流',
-	'16': '输入电压过低',
-	'32': '输入电压过高',
-
+	'1': '开关门受阻',
+	'2': '飞车保护',
+	'16': '电机过载',
+	'32': '输出过流',
+	'64': '输入电压过低',
+	'128': '输入电压过高',
 }
 const state = {
 	"treated": '已处理',
@@ -90,6 +89,13 @@ export default class DoorHistory extends Component {
 		const page = val
 		this.getFault(val)
 	}
+	goOrder = item => () =>{
+		const id = item.id
+		this.props.history.push({
+			pathname:`/order/${item.id}`,
+			state: { id }
+		});
+	}
 	render(){
 		const { navs, list, switchIdx } = this.state;
 		return(		
@@ -115,7 +121,7 @@ export default class DoorHistory extends Component {
 							list.map((item, index) => (
 								list.length ?
 								<List.Item className={styles.item} key={index}>
-									<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
+									<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goOrder(item)}>
 										<tbody>
 											<tr>
 												<td className="tr">id ：</td>

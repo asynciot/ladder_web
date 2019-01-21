@@ -14,16 +14,15 @@ import {getEvent, getFault} from '../../services/api';
 
 var device_id = 0;
 const faultCode = {
-	'0': '暂无',
-	'01': '过流',
-	'02': '母线过压',
-	'03': '母线欠压',
-	'04': '输入缺相',
-	'05': '输出缺相',
-	'06': '输出过力矩',
-	'07': '编码器故障',
-	'08': '模块过热',
-	'09': '运行接触器故障',
+	'1': '过流',
+	'2': '母线过压',
+	'3': '母线欠压',
+	'4': '输入缺相',
+	'5': '输出缺相',
+	'6': '输出过力矩',
+	'7': '编码器故障',
+	'8': '模块过热',
+	'9': '运行接触器故障',
 	'10': '抱闸接触器故障',
 	'11': '封星继电器故障',
 	'12': '抱闸开关故障',
@@ -120,6 +119,13 @@ export default class DoorHistory extends Component {
 		});
 		this.getFault(1)
 	}
+	goOrder = item => () =>{
+		const id = item.id
+		this.props.history.push({
+			pathname:`/order/${item.id}`,
+			state: { id }
+		});
+	}
 	pageChange = (val) => {
 		const page = val
 		this.getFault(val)
@@ -148,8 +154,8 @@ export default class DoorHistory extends Component {
 						{
 							list.map((item, index) => (
 								list.length ?
-								<List.Item className={styles.item} key={index}>
-									<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
+								<List.Item className={styles.item} key={index} >
+									<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goOrder(item)}>
 										<tbody>
 											<tr>
 												<td className="tr">id ：</td>

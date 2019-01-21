@@ -86,11 +86,21 @@ export async function queryMessage(params) {
   return request(`/common/message?${stringify(params)}`);
 }
 export async function deleteMessage(params) {
-  return request(`/common/message`,{
+  return request(`/common/message?${stringify(params)}`,{
 	 method: 'DELETE',
   });
-  
 }
+export function getMessages(params) {
+  return request(`/common/message?${stringify(params)}`);
+}
+export function getMessageCount(params) {
+  return request(`/common/message/count?${stringify(params)}`);
+}
+export async function unreadMessage() {
+  return request('/common/message/count');
+}
+
+//company
 export async function rejectApply(params) {
   return request('/documents/company/reject', {
     method: 'POST',
@@ -103,9 +113,6 @@ export async function acceptApply(params) {
     method: 'POST',
     body: params,
   });
-}
-export async function unreadMessage() {
-  return request('/common/message/count');
 }
 
 // group
@@ -135,13 +142,6 @@ export async function errorCode(params) {
 
 export function getBanners(params) {
   return request(`/common/banner?${stringify(params)}`);
-}
-
-export function getMessages(params) {
-  return request(`/common/message?${stringify(params)}`);
-}
-export function getMessageCount(params) {
-  return request(`/common/message/count?${stringify(params)}`);
 }
 
 
@@ -205,6 +205,13 @@ export function postFinish(params) {
     body: params,
   });
 }
+export function postLocation(params) {
+  return request('/device/artlocation', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 // statistic
 export function getStatistic(params) {
   return request(`/mointors/statistic?${stringify(params)}`);
