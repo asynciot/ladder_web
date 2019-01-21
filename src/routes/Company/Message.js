@@ -5,18 +5,27 @@ import classNames from 'classnames';
 import styles from './Message.less';
 import { NavLink } from 'dva/router';
 import moment from 'moment'
-import { getMessages, getMessageCount } from '../../services/api';
+import { getMessages, getMessageCount, deleteMessage } from '../../services/api';
 const PlaceHolder = ({ className = '', ...restProps }) => (
   <div className={`${className} ${styles.placeholder}`} {...restProps}>{restProps.children}</div>
 ); 
 
 let page = 1
 const format = "YY/MM/DD"
+const alert = Modal.alert;
 const tabs = [
   { title: '全部', type: '' },
   { title: '已查看', type: 'done' },
   { title: '未查看', type: 'unfinished' },
 ];
+const Delete = ({ className = '', ...restProps }) => (
+  <div className={`${className} ${styles['list-btn']}`}>
+    <span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.delete ? restProps.delete:''}>
+      <Icon className={`${styles.delete} ${styles.icon}`} type="close" />
+      <em>删除</em>
+    </span>
+	</div>
+);
 function closest(el, selector) {
   const matchesSelector = el.matches || el.webkitMatchesSelector || el.mozMatchesSelector || el.msMatchesSelector;
   while (el) {
@@ -127,6 +136,20 @@ export default class extends Component {
       });
     })
   }
+	delete = (e, detail) => {
+		const id = detail.id
+		console.log(1)
+		alert('提示', '是否确定', [
+			{ text: '取消', style: 'default' },
+			{ text: '确认',
+				onPress: () => {
+					deleteMessage({id}).then(() => {
+						this.getMessages(0)
+					});
+				},
+			},
+		]);
+	}
   render() {
     const { type } = this.props.match.params
     const { messages, currMessage, all, done, unread, } = this.state
@@ -157,12 +180,13 @@ export default class extends Component {
 								messages.map((message) => (
 									<List.Item
 										key={message.id}
-										extra={extra(message.isSettled)}
-										onClick={this.showModal(message)}
+										extra={<Delete delete={(event) => { this.delete(event,message); }} />}
 									>
-										<div>时间: {moment(message.createTime).format(format)}</div>
-										<div>名称: {message.title}</div>
-										<div>内容: {message.content}</div>
+										<div onClick={this.showModal(message)} >
+											<div>时间: {moment(message.createTime).format(format)}</div>
+											<div>名称: {message.title}</div>
+											<div>内容: {message.content}</div>
+										</div>
 									</List.Item>
 								))
 							}

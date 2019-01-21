@@ -41,10 +41,19 @@
 .deal {
   color: #1E90FF !important;
 }
+.ls {
+	margin-top: 5px;
+	margin-left: -5px;
+	height: 100px;
+	width: 92%;
+}
 .table {
   display: block;
   width: 100%;
   margin: 0 auto;
+	tbody {
+		padding-top: 5px;
+	}
 	td {
     display: inline-block;
 		color: #999;
@@ -55,10 +64,12 @@
     vertical-align: top;
     padding: 4px 0;
   }
+
 	.tb > tr td:nth-child(1){
 		width: 200px;
 	}
   tr td:nth-child(1){
+		height:42px;
     width: 84px;
   }
   tr td:nth-child(2){
@@ -68,13 +79,6 @@
   tr td:nth-child(3){
     width: 70px;
   }
-  tr td:nth-child(4){
-    width: 90px;
-  }
-	tr td:nth-child(7){
-		margin-top: 5px;
-		width: 150px;
-	}
   tr > td:nth-child(odd) {
     color: #333;
     white-space: nowrap;

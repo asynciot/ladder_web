@@ -214,7 +214,6 @@ const ListButton = ({ className = '', ...restProps }) => (
 
 export default class extends Component {
   state = {
-    totalList: [],
     list: [],
 		switchIdx:0,
     device_type: 0,
@@ -261,14 +260,12 @@ export default class extends Component {
           return item;
         });
         this.setState({
-          totalList: list,
           list,
 					page,
 					totalNumber,
         });
       } else {
         this.setState({
-          totalList: [],
           list: [],
         });
       }
@@ -334,13 +331,11 @@ export default class extends Component {
 					return item;
 				});
 				this.setState({
-					totalList: list,
 					list,
 					totalNumber,
 				});
 			} else {
 				this.setState({
-					totalList: [],
 					list: [],
 				});
 			}
@@ -384,7 +379,6 @@ export default class extends Component {
 										<Input
 											placeholder="设备编号或串号"
 											onChange={this.onChange}
-											id='1'
 											value={this.state.search_info}
 											maxlength="16"></Input>
 									</Col>
@@ -394,7 +388,7 @@ export default class extends Component {
 								</Row>
             		{
             			list.map((item, index) => (
-            				<List.Item className={styles.item} key={index} onClick={this.goDevice(item)} extra={<ListButton qrcode={(event) => { this.qrcode(event, item); }} remove={(event) => { this.remove(event, item); }} edit={(event) => { this.edit(event, item); }} />}>
+            				<List.Item className={styles.item} key={index} onClick={this.goDevice(item)} extra={<ListButton  remove={(event) => { this.remove(event, item); }} edit={(event) => { this.edit(event, item); }} />}>
             					<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
             						<tbody>
             							<tr>
@@ -453,7 +447,6 @@ export default class extends Component {
             				<Input
             					placeholder="设备编号或串号"
             					onChange={this.onChange}
-            					id='1'
             					value={this.state.search_info}
             					maxlength="16"></Input>
             			</Col>
@@ -522,7 +515,6 @@ export default class extends Component {
             				<Input
 											placeholder="设备编号或串号"
 											onChange={this.onChange}
-											id='1'
 											value={this.state.search_info}
 											maxlength="16"></Input>
             			</Col>

@@ -14,44 +14,13 @@ import {getEvent, getFault} from '../../services/api';
 
 var device_id = 0;
 const faultCode = {
-	'0': '暂无',
-	'01': '过流',
-	'02': '母线过压',
-	'03': '母线欠压',
-	'04': '输入缺相',
-	'05': '输出缺相',
-	'06': '输出过力矩',
-	'07': '编码器故障',
-	'08': '模块过热',
-	'09': '运行接触器故障',
-	'10': '抱闸接触器故障',
-	'11': '封星继电器故障',
-	'12': '抱闸开关故障',
-	'13': '运行中安全回路断开',
-	'14': '运行中门锁断开',
-	'15': '门锁短接故障',
-	'16': '层站召唤通讯故障',
-	'17': '轿厢通讯故障',
-	'18': '并联通讯故障',
-	'19': '开门故障',
-	'20': '关门故障',
-	'21': '开关门到位故障',
-	'22': '平层信号异常',
-	'23': '终端减速开关故障',
-	'24': '下限位信号异常',
-	'25': '上限位信号异常',
-	'26': '打滑故障',
-	'27': '电梯速度异常',
-	'28': '电机反转故障',
-	'31': '停车速度检测',
-	'33': '马达过热故障',
-	'34': '制动力严重不足',
-	'35': '制动力不足警告',
-	'36': 'UCMP故障',
-	'37': 'IPM故障',
-	'38': '再平层开关异常',
-	'40': '驱动保护故障',
-	'41': '平层位置异常',
+	'01': '开关门受阻',
+	'02': '飞车保护',
+	'04': '电机过载',
+	'08': '输出过流',
+	'16': '输入电压过低',
+	'32': '输入电压过高',
+
 }
 const state = {
 	"treated": '已处理',
@@ -66,6 +35,8 @@ export default class DoorHistory extends Component {
 		src: '',
 		code: false,
 		totalNumber:0,
+		start:'',
+		end:'',
 	}
 	componentWillMount() {
 		const {location, currentUser } = this.props;
@@ -75,7 +46,19 @@ export default class DoorHistory extends Component {
 	}
 	getFault = (val) => {
 		let page = val
-		getFault({ num: 10, page, device_id}).then((res) => {
+		let starttime = ''
+		let endtime = ''
+		if(this.state.start != 0){
+			starttime = moment(this.state.start).format('YYYY-MM-DD')
+		}else{
+			starttime = ''
+		}
+		if(this.state.end != 0){
+			endtime = moment(this.state.end).format('YYYY-MM-DD')
+		}else{
+			endtime = ''
+		}
+		getFault({ num: 10, page, device_id, starttime, endtime}).then((res) => {
 			if (res.code == 0) {
 				const list = res.data.list
 				const totalNumber = res.data.totalNumber
@@ -142,7 +125,7 @@ export default class DoorHistory extends Component {
 											</tr>
 											<tr>
 												<td className="tr">故障名称 ：</td>
-												<td className="tl" style={{ width: '130px' }}>{faultCode[item.code]}</td>
+												<td className="tl" style={{ width: '130px' }}>{faultCode[item.code]?faultCode[item.code]:'无'}</td>
 												<td className="tl">发起人 ：</td>
 												<td className="tl" style={{ width: '100px' }}>{item.producer}</td>
 											</tr>

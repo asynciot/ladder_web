@@ -85,6 +85,12 @@ export async function followDevice(IMEI, params) {
 export async function queryMessage(params) {
   return request(`/common/message?${stringify(params)}`);
 }
+export async function deleteMessage(params) {
+  return request(`/common/message`,{
+	 method: 'DELETE',
+  });
+  
+}
 export async function rejectApply(params) {
   return request('/documents/company/reject', {
     method: 'POST',

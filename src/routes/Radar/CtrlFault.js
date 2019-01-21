@@ -66,6 +66,8 @@ export default class DoorHistory extends Component {
 		src: '',
 		code: false,
 		totalNumber:0,
+		start:'',
+		end:'',
 	}
 	componentWillMount() {
 		const {location, currentUser } = this.props;
@@ -75,10 +77,23 @@ export default class DoorHistory extends Component {
 	}
 	getFault = (val) => {
 		let page = val
-		getFault({ num: 10, page, device_id}).then((res) => {
+		let starttime = ''
+		let endtime = ''
+		if(this.state.start != 0){
+			starttime = moment(this.state.start).format('YYYY-MM-DD')
+		}else{
+			starttime = ''
+		}
+		if(this.state.end != 0){
+			endtime = moment(this.state.end).format('YYYY-MM-DD')
+		}else{
+			endtime = ''
+		}		
+		getFault({ num: 10, page, device_id,starttime,endtime}).then((res) => {
 			if (res.code == 0) {
 				const list = res.data.list.map((item,index) => {
 					item.code = res.data.list[index].code.toString(16)
+					return item;
 				})
 				const totalNumber = res.data.totalNumber
 				this.setState({
@@ -144,7 +159,7 @@ export default class DoorHistory extends Component {
 											</tr>
 											<tr>
 												<td className="tr">故障名称 ：</td>
-												<td className="tl" style={{ width: '130px' }}>{faultCode[item.code]}</td>
+												<td className="tl" style={{ width: '130px' }}>{faultCode[item.code]?faultCode[item.code]: ('E'+item.code) }</td>
 												<td className="tl">发起人 ：</td>
 												<td className="tl" style={{ width: '260px' }}>{item.producer}</td>
 											</tr>

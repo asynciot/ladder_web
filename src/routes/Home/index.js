@@ -60,6 +60,12 @@ const faultCode = {
 	'38': '再平层开关异常',
 	'40': '驱动保护故障',
 	'41': '平层位置异常',
+	'51': '开关门受阻',
+	'52': '飞车保护',
+	'54': '电机过载',
+	'58': '输出过流',
+	'66': '输入电压过低',
+	'82': '输入电压过高',
 }
 export default class Home extends Component {
   state = {
@@ -129,10 +135,11 @@ export default class Home extends Component {
 						code: code.toString(16)
 					});
 				}else{
+					code = (code+50)
 					this.setState({
 						historyEvents: res.data.list,
 						total:res.data.totalNumber,
-						code: 0,
+						code,
 					});
 				}
       }
@@ -141,14 +148,14 @@ export default class Home extends Component {
 	onpress = () =>{
 		var geolocation = new BMap.Geolocation();
 		geolocation.getCurrentPosition(function(r){
-		if(this.getStatus() == BMAP_STATUS_SUCCESS){
-			console.log('您的位置：'+r.point.lng+','+r.point.lat);
-			alert("正在获取当前位置")
-		}
-		else {
-			alert('failed'+this.getStatus());
-		}        
-	});
+			if(this.getStatus() == BMAP_STATUS_SUCCESS){
+				console.log('您的位置：'+r.point.lng+','+r.point.lat);
+				alert("正在获取当前位置")
+			}
+			else {
+				alert('failed'+this.getStatus());
+			}
+		});
 	}
   toMessagesPage = () => {
     const { history } = this.props;

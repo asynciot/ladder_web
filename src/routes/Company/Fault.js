@@ -50,9 +50,16 @@ import c38 from '../../assets/fault/c38.png';
 // import c39 from '../../assets/fault/c39.png';
 import c40 from '../../assets/fault/c40.png';
 import c41 from '../../assets/fault/c41.png';
+import c51 from '../../assets/fault/c51.png';
+import c52 from '../../assets/fault/c52.png';
+import c54 from '../../assets/fault/c54.png';
+import c58 from '../../assets/fault/c58.png';
+import c66 from '../../assets/fault/c66.png';
+import c82 from '../../assets/fault/c82.png';
 
 var _val = ""
 var dispatch_id = 0
+const { TextArea } = Input;
 const desc = {
   'untreated': '是否接单',
   'treated': '是否完成',
@@ -105,6 +112,12 @@ const faultCode = {
 	'38': '再平层开关异常',
 	'40': '驱动保护故障',
 	'41': '平层位置异常',
+	'51': '开关门受阻',
+	'52': '飞车保护',
+	'54': '电机过载',
+	'58': '输出过流',
+	'66': '输入电压过低',
+	'82': '输入电压过高',
 }
 export default class DoorHistory extends Component {
 	state = {
@@ -141,7 +154,7 @@ export default class DoorHistory extends Component {
 				if(item.device_type=='ctrl'){
 					item.code = res.data.list[res.data.list.length-1].code.toString(16)
 				}else{
-					item.code = 0
+					item.code = (res.data.list[res.data.list.length-1].code+50)
 				}								
 				if(item.state == 'treating'){
 					this.state.disable = true
@@ -240,7 +253,7 @@ export default class DoorHistory extends Component {
 			title: '故障详情',
 			content: (
 				<div>
-					<img className={styles.img} src={c05} />
+					<img className={styles.img} src={a} />
 				</div>
 			),
 			onOk() {},
@@ -289,8 +302,12 @@ export default class DoorHistory extends Component {
 										<td className="tl"><DatePicker title="下次年检时间" disabled={this.state.inspection} size="large" value={this.state.inspection_nexttime} onChange={this.onEnd} /></td>
 									</tr>
 									<tr>
-										<td className="tr">维修报告 ：</td>
-										<td className="tl"><Input placeholder="50字以内" maxlength="50"></Input></td>
+										<Col span="6">
+											<td className="tr">维修报告 ：</td>
+										</Col>
+										<Col span="18">
+											<div className={styles.ls}><TextArea placeholder="50字以内" maxlength="50" autosize autosize={{ minRows: 2, maxRows: 8 }}/></div>
+										</Col>	
 									</tr>
 								</tbody>
 							</table>

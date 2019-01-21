@@ -6,9 +6,6 @@ import { getFault, postFault, postFinish, deleteFault, getDispatch, } from '../.
 
 var inte = null;
 const Item = List.Item;
-const PlaceHolder = ({ className = '', ...restProps }) => (
-  <div className={`${className} ${styles.placeholder}`} {...restProps}>{restProps.children}</div>
-);
 const format = "YYYY-MM-DD HH:mm";
 const tabs = [
   { title: '待接单', type: 'untreated', count: 0 },
@@ -68,6 +65,12 @@ const faultCode = {
 	'38': '再平层开关异常',
 	'40': '驱动保护故障',
 	'41': '平层位置异常',
+	'51': '开关门受阻',
+	'52': '飞车保护',
+	'54': '电机过载',
+	'58': '输出过流',
+	'66': '输入电压过低',
+	'82': '输入电压过高',
 }
 const ListButton = ({ className = '', ...restProps }) => (
   <div className={`${className} ${styles['list-btn']}`}>
@@ -76,7 +79,7 @@ const ListButton = ({ className = '', ...restProps }) => (
       <em>接单</em>
     </span>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.address ? restProps.address:''}>
-			<Icon className={`${styles.edit} ${styles.icon}`} type="form" />
+			<Icon className={`${styles.edit} ${styles.icon}`} type="arrow-down" />
 			<em>设备地址</em>
 		</span>
   </div>
@@ -88,7 +91,7 @@ const Finish = ({ className = '', ...restProps }) => (
 			<em>转办</em>
 		</span>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.address ? restProps.address:''}>
-			<Icon className={`${styles.edit} ${styles.icon}`} type="form" />
+			<Icon className={`${styles.edit} ${styles.icon}`} type="arrow-down" />
 			<em>设备地址</em>
 		</span>
   </div>
@@ -132,7 +135,7 @@ export default class extends Component {
 					if(item.device_type=='ctrl'){
 						item.code = res.data.list[index].code.toString(16)
 					}else{
-						item.code = 0
+						item.code = (item.code+50)
 					}
 					this.state.totalNumber=res.data.totalNumber
 					return item;
@@ -187,8 +190,12 @@ export default class extends Component {
       },
     ]);
   }
-	address = (e,detail) => {
-		
+	address = (item) =>{
+		const id = item.device_id
+		this.props.history.push({
+			pathname:`/company/${item.device_id}/map`,
+			state: { id }
+		});
 	}
 	remove = (e,detail) => {
 		alert('提示', '是否完成', [
@@ -225,7 +232,7 @@ export default class extends Component {
 							</Row>
 							{
 								list.map((item, index) => (
-									<List.Item className={styles.item} key={index}  extra={<ListButton edit={(event) => { this.deal(event,item,); }} />}>
+									<List.Item className={styles.item} key={index}  extra={<ListButton address={(event) => { this.address(item); }} edit={(event) => { this.deal(event,item,); }} />}>
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault(item)}>
 											<tbody>
 												<tr>
@@ -268,7 +275,7 @@ export default class extends Component {
 							</Row>
 							{
 								list.map((item, index) => (
-									<List.Item className={styles.item} key={index}  extra={<Finish remove={(event) => { this.remove(event, item); }} />}>
+									<List.Item className={styles.item} key={index}  extra={<Finish address={(event) => { this.address(item) }} remove={(event) => { this.remove(event, item); }} />}>
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault1(item)}>
 											<tbody>
 												<tr>
