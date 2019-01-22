@@ -79,12 +79,14 @@ export default class DoorHistory extends Component {
 		let starttime = ''
 		let endtime = ''
 		if(this.state.start != 0){
-			starttime = moment(this.state.start).format('YYYY-MM-DD')
+			console.log(this.state.start)
+			starttime = new Date(this.state.start).getTime()
+			console.log(starttime)
 		}else{
 			starttime = ''
 		}
 		if(this.state.end != 0){
-			endtime = moment(this.state.end).format('YYYY-MM-DD')
+			endtime = new Date(this.state.end).getTime()
 		}else{
 			endtime = ''
 		}		

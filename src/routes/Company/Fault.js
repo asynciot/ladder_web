@@ -129,7 +129,7 @@ export default class DoorHistory extends Component {
 		val:'',
 		maintenance:true,
 		inspection:true,
-		src: '../../assets/fault/c01.png',
+		remark:'',
 	}
 	componentWillMount() {
 		this.getFault()
@@ -206,6 +206,7 @@ export default class DoorHistory extends Component {
 			formdata.append("inspection_nexttime",this.state.inspection_nexttime)
 		}
 		formdata.append("id",this.props.location.state.id)
+		formdata.append("remarks",this.state.remark)
 		formdata.append("result",'untransfer')
 		if(!this.state.file1 || !this.state.file2){
 			alert("请上传维修前和维修后的图片！")
@@ -326,6 +327,12 @@ export default class DoorHistory extends Component {
 			onOk() {},
 		});
 	}
+	onChange = (e) =>{
+		let val = e.target.value
+		this.setState({
+			remark:val,
+		});
+	}
 	render() {
 		const { list, } = this.state;
 		return (
@@ -373,7 +380,14 @@ export default class DoorHistory extends Component {
 											<td className="tr">维修报告 ：</td>
 										</Col>
 										<Col span="18">
-											<div className={styles.ls}><TextArea placeholder="50字以内" maxlength="50" autosize autosize={{ minRows: 2, maxRows: 8 }}/></div>
+											<div className={styles.ls}>
+												<TextArea 
+													placeholder="50字以内" 
+													maxlength="50" 
+													value={this.state.remark}
+													onChange={this.onChange}
+													autosize={{ minRows: 2, maxRows: 8 }}/>,
+											</div>
 										</Col>	
 									</tr>
 								</tbody>
