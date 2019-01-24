@@ -197,7 +197,7 @@ export default class DoorHistory extends Component {
 					events.speed[i] = (((buffer[i*8+6]&0xff)<<8)+(buffer[i*8+7]&0xff))/1000
 					events.nums[i] = i
 					if(events.speed[i]>32.767){
-						events.speed[i] = events.speed[i]-65.535
+						events.speed[i] = (events.speed[i]-65.535).toFixed(2)
 						show.speed = events.speed[i]
 					}
 				}

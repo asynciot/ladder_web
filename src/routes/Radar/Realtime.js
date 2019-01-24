@@ -317,7 +317,7 @@ export default class DoorHistory extends Component {
 				show.current = (((buffer[count+4]&0xff)<<8)+(buffer[count+5]&0xff))/1000		//获取电流信号
 				show.speed = (((buffer[count+6]&0xff)<<8)+(buffer[count+7]&0xff))/1000
 				if(show.speed>32.767){
-					show.speed = show.speed-65.535
+					show.speed = (show.speed-65.535).toFixed(2)
 				}
 				count+=8
 				if(charts){

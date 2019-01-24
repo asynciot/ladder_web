@@ -126,7 +126,7 @@ export default class Home extends Component {
   getFault = () => {
     getFault({ num: 10, page: 1, state:"untreated", islast:1}).then((res) => {
       if (res.code === 0) {
-				const code = res.data.list[0].code
+				let code = res.data.list[0].code
 				if(res.data.list[0].device_type=="ctrl"){
 					this.setState({
 						historyEvents: res.data.list,
@@ -260,7 +260,6 @@ export default class Home extends Component {
 			background3,
 			background4,
 		]
-		console.log(imgList)
     const { devicesStatus, historyEvents, doornum, ctrlnum, total } = this.state;
     let notClosedEvents = historyEvents.filter(item => item.state );
 		const len = total

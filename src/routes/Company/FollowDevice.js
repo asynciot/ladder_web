@@ -207,7 +207,7 @@ const ListButton = ({ className = '', ...restProps }) => (
     </span>
     <span onClick={restProps.remove ? restProps.remove:''}>
       <Icon className={`${styles.delete} ${styles.icon}`} type="close" />
-      <em>取消关住</em>
+      <em>取消关注</em>
     </span>
   </div>
 );
@@ -252,7 +252,7 @@ export default class extends Component {
 		this.setState({
 			device_type
 		});
-    getFollowDevices({ num: 10, page, device_type, state }).then((res) => {
+    getFollowDevices({ num: 10, page, device_type, state, register:'registered' }).then((res) => {
       if (res.code === 0) {
         const now = new Date().getTime();
 				const totalNumber = res.data.totalNumber
@@ -417,7 +417,7 @@ export default class extends Component {
 													<tr>
 														<Col span={12}>
 															<td className="tr">型号 ：</td>
-															<td className="tl">{item.device_model ? item.device_model : '无'}</td>
+															<td className="tl">{modelName[item.device_model] ? item.device_model : '无'}</td>
 														</Col>
 														<Col span={12}>	
 															<td className="tl">状态：</td>
@@ -485,7 +485,7 @@ export default class extends Component {
             							<tr>
             								<Col span={12}>
             									<td className="tr">型号 ：</td>
-            									<td className="tl">{item.device_model ? item.device_model : '无'}</td>
+            									<td className="tl">{modelName[item.device_model] ? item.device_model : '无'}</td>
             								</Col>
             								<Col span={12}>	
             									<td className="tl">状态：</td>
