@@ -121,9 +121,17 @@ export default class extends Component {
 		this.state.page = val
 		this.getFault(type)
 	}
+	init = (val) => {
+		clearInterval(inte)
+		var _this =this
+		inte = setInterval(function () {
+			_this.getFault(val);
+		}, 60000);
+	}
   getFault = (state) => {
     let {page, total, historyEvents} = this.state;
 		this.state.type = state
+		const _this = this
 		if(state == 'untreated'){
 			getFault({ num: 10, page, state, islast:1 }).then((res) => {
 				const list = res.data.list.map((item,index) => {
@@ -146,6 +154,7 @@ export default class extends Component {
 			}).catch((e => console.info(e)));
 		}else{
 			getDispatch({ num: 10, page, follow:'yes', state:'untreated'}).then((res) => {
+				clearInterval(inte)
 				const list = res.data.list.map((item) => {
 					const time = this.state.nowTime - item.create_time
 					item.create_time = moment(parseInt(item.create_time)).format('YYYY-MM-DD HH:mm:ss')
@@ -217,7 +226,7 @@ export default class extends Component {
           initialPage={0}
           tabBarActiveTextColor="#1E90FF"
           tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
-          onChange={(tab, index) => { this.setState({tab: tab.type, page: 1,total:1},()=>{this.getFault(tab.type);} );  }}
+          onChange={(tab, index) => { this.setState({tab: tab.type, page: 1,total:1},()=>{this.getFault(tab.type);this.init(tab.type);} );  }}
           // onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }}
         >
           <div>

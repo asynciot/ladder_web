@@ -88,7 +88,7 @@ export default class Home extends Component {
 		this.getdata();
 		var _this =this
 		inte = setInterval(function () {
-			_this.getdata();
+			_this.getdata()
 		}, 60000);
   }
 	componentWillUnmount() {

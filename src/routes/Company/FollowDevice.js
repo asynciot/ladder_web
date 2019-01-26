@@ -35,153 +35,11 @@ const state ={
 	'offline':'离线',
 	'longoffline':'长期离线',
 }
-const alertName = (event) => {
-  if (event.isLoss) {
-    return '无';
-  }
-  let str = '';
-  if (event.inHigh) {
-    str += ' 输入电压过高 ';
-  }
-  if (event.inLow) {
-    str += ' 输入电压过低 ';
-  }
-  if (event.outHigh) {
-    str += ' 输出过流 ';
-  }
-  if (event.motorHigh) {
-    str += ' 电机过载 ';
-  }
-  if (event.flySafe) {
-    str += ' 飞车保护 ';
-  }
-  if (event.closeStop) {
-    str += ' 开关门受阻 ';
-  }
-  if (str === '') {
-    str = '运行正常';
-  }
-  return str;
-};
 const PlaceHolder = ({ className = '', ...restProps }) => (
   <div className={`${className} ${styles.placeholder}`} {...restProps}>{restProps.children}</div>
 );
-function parseBuffer(val) {
-  if (val && val != 0) {
-    let bit = (+val).toString(2);
-    while (bit.length < 8) {
-      bit = `0${bit}`;
-    }
-    return bit.split('');
-  } else {
-    return '00000000'.split('');
-  }
-}
-function parseInfo(event) {
-  const name = [
-    'closeBtn',
-    'openBtn',
-    'close',
-    'open',
-    'lock',
-    'run',
-    'toDown',
-    'toUp',
-    'group',
-    'parallel',
-    'single',
-    'full',
-    'over',
-    'error',
-    'lockbd',
-    'fire',
-    'driver',
-    'check',
-    'auto',
-    'floor',
-    'lastCode',
-    'lastFloor',
-    'lastTime',
-  ];
-  const obj = {};
-  const model = { '01': '单梯', '10': '并联', '100': '群控', '000': '无' };
-  const status = ['自动', '检修', '司机', '消防', '锁体', '故障', '超载', '满载'];
-  const btn = { '00': '无', '01': '开门', 10: '关门' };
-  let floor = '', lastCode = '', lastFloor = '', lastTime= '';
-  event.forEach((item, index) => {
-    if (index <= 7) {
-      obj[name[index]] = parseInt(item);
-    }
-    if (index > 11 && index <= 23) {
-      obj[name[index - 5]] = parseInt(item);
-    }
-    if (index>=24 && index<=31) {
-      floor += `${item}`;
-    }
-    if (index>=32 && index<=39) {
-      lastCode += `${item}`;
-    }
-    if (index>=40 && index<=47) {
-      lastFloor += `${item}`;
-    }
-    if (index>=48 && index<=79) {
-      lastTime += `${item}`;
-    }
-  });
-  const statusBit = [obj.auto, obj.check, obj.driver, obj.fire, obj.lockbd, obj.error, obj.over, obj.full];
-  obj.status = statusBit.map((item, index) => (item === 1 ? status[index] : '')).filter(item => item).toString();
-  obj.model = model[`0${obj.single}`] || model[`${obj.parallel}0`] || model[`${obj.group}00`];
-  obj.btn = btn[`${obj.closeBtn}${obj.openBtn}`];
-  obj.floor = parseInt( floor, 2);
-  obj.lastCode = parseInt( floor, 2);
-  obj.lastFloor = parseInt( floor, 2);
-  obj.lastTime = parseInt( floor, 2);
-  return obj;
-}
-function parseEvent(event) {
-  const name = [
-    'openIn',
-    'closeIn',
-    'openTo',
-    'closeTo',
-    'openSlow',
-    'closeSlow',
-    'openToOut',
-    'closeToOut',
-    'door',
-    'open',
-    'close',
-    'openKeep',
-    'closeKeep',
-    'stop',
-    'inHigh',
-    'inLow',
-    'outHigh',
-    'motorHigh',
-    'flySafe',
-    'closeStop',
-  ];
-  const obj = {};
-  let position = '';
-  let current = '';
-  let speed = '';
-  event.forEach((item, index) => {
-    if (name[index]) {
-      obj[name[index]] = parseInt(item);
-    } else if (index > 19 && index <= 31) {
-      position += `${item}`;
-    } else if (index > 31 && index <= 47) {
-      current += `${item}`;
-    } else if (index > 47 && index <= 63) {
-      speed += `${item}`;
-    }
-  });
-  obj.position = parseInt(position, 2);
-  obj.current = (parseInt(current, 2) / 1000).toFixed(3);
-  obj.speed = ((parseInt(speed, 2) << 16 >> 16) / 1000).toFixed(3);
-  obj.status = alertName(obj)
-  return obj;
-}
+
+
 const Signal = ({ className = '', ...restProps }) => {
   let width = 1;
   if (restProps.width >= 0 && restProps.width <= 31) {
@@ -391,8 +249,10 @@ export default class extends Component {
             					<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
             						<tbody>
             							<tr>
-														<td className="tr">地点 ：</td>
-														<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
+														<Col span={20}>
+															<td className="tr">地点 ：</td>
+															<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>,
+														</Col>
             							</tr>
             							<tr>
 														<Col span={12}>
@@ -459,8 +319,10 @@ export default class extends Component {
             					<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
             						<tbody>
             							<tr>
-            								<td className="tr">地点 ：</td>
-            								<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
+														<Col span={20}>
+															<td className="tr">地点 ：</td>
+															<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>,
+														</Col>
             							</tr>
             							<tr>
             								<Col span={12}>
@@ -534,8 +396,10 @@ export default class extends Component {
             					<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
             						<tbody>
             							<tr>
-            								<td className="tr">地点 ：</td>
-            								<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
+														<Col span={20}>
+															<td className="tr">地点 ：</td>
+															<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>,
+														</Col>
             							</tr>
             							<tr>
             								<Col span={12}>
