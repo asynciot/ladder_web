@@ -254,6 +254,12 @@ export default class extends Component {
 															<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>,
 														</Col>
             							</tr>
+													<tr>
+														<Col span={12}>
+															<td className="tr">编号 ：</td>
+															<td className="tl">{item.id}</td>
+														</Col>
+													</tr>
             							<tr>
 														<Col span={12}>
 															<td className="tr">别名 ：</td>
@@ -266,7 +272,7 @@ export default class extends Component {
             							</tr>
 													<tr>
 														<Col span={12}>
-															<td className="tr">编号 ：</td>
+															<td className="tr">串号 ：</td>
 															<td className="tl">{item.IMEI}</td>
 														</Col>
 														<Col span={12}>	
@@ -324,6 +330,12 @@ export default class extends Component {
 															<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>,
 														</Col>
             							</tr>
+													<tr>
+														<Col span={12}>
+															<td className="tr">编号 ：</td>
+															<td className="tl">{item.id}</td>
+														</Col>
+													</tr>
             							<tr>
             								<Col span={12}>
             									<td className="tr">别名 ：</td>
@@ -336,7 +348,7 @@ export default class extends Component {
             							</tr>
             							<tr>
             								<Col span={12}>
-            									<td className="tr">编号 ：</td>
+            									<td className="tr">串号 ：</td>
             									<td className="tl">{item.IMEI}</td>
             								</Col>
             								<Col span={12}>	
@@ -401,6 +413,12 @@ export default class extends Component {
 															<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>,
 														</Col>
             							</tr>
+													<tr>
+														<Col span={12}>
+															<td className="tr">编号 ：</td>
+															<td className="tl">{item.id}</td>
+														</Col>
+													</tr>
             							<tr>
             								<Col span={12}>
             									<td className="tr">别名 ：</td>
@@ -413,7 +431,7 @@ export default class extends Component {
             							</tr>
             							<tr>
             								<Col span={12}>
-            									<td className="tr">编号 ：</td>
+            									<td className="tr">串号 ：</td>
             									<td className="tl">{item.IMEI}</td>
             								</Col>
             								<Col span={12}>	
