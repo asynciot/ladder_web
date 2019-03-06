@@ -3,6 +3,7 @@ import { Row, Col, Button, Spin, DatePicker, Pagination, Icon, Input,} from 'ant
 import { Tabs, Flex, Badge, List, Modal,} from 'antd-mobile';
 import classNames from 'classnames';
 import base64url from 'base64url';
+import pathToRegexp from 'path-to-regexp';
 import MobileNav from '../../components/MobileNav';
 import styles from './FollowDevice.less';
 import singalImg from '../../assets/signal.png';
@@ -22,9 +23,9 @@ const tabs2 = [
 	{ title: '长期离线', state: 'longoffline' },
 ];
 const modelName = {
-	'0':'0',
-	'1':'NSFC01-01B',
-	'2':'NSFC01 -02T',
+	'0':'无',
+	"1":'NSFC01-01B',
+	"2":'NSFC01 -02T',
 }
 const typeName ={
   '240':'控制柜',
@@ -80,14 +81,25 @@ export default class extends Component {
     code: false,
   }
   componentWillMount() {
+		const { location } = this.props;
+		const match = pathToRegexp('/company/followdevice/:state').exec(location.pathname);
+		const state =match[1]
 		const type = this.props.location.state.device_type
-		switchIdx = this.props.location.state.vcode
-		this.state.switchIdx = switchIdx
-		if(type == "15"){
-			this.state.type = 1
-		}else if(type == "240"){
-			this.state.type = 2
+		if(state=="all"){
+			switchIdx = 0
+		}else if(state=="online"){
+			switchIdx = 1
+		}else if(state=="offline"){
+			switchIdx = 2
+		}else if(state=="longoffline"){
+			switchIdx = 3
 		}
+		this.state.switchIdx = switchIdx
+// 		if(type == "15"){
+// 			this.state.type = 1
+// 		}else if(type == "240"){
+// 			this.state.type = 2
+// 		}
 		this.getDevice(type,1,switchIdx);
   }
 	pageChange = (val) => {
@@ -171,6 +183,23 @@ export default class extends Component {
     ]);
 		this.forceUpdate()
   }
+	goFollowList(item,val){
+		const { history } = this.props;
+		let state = 'all'
+		if(val==1){
+			state = "online"
+		}else if(val==2){
+			state = "offline"
+		}else if(val==3){
+			state = "longoffline"
+		}
+		const device_type = item;
+		history.push({
+			pathname: `/company/followdevice/${state}`,
+			state: { device_type }
+		});
+		this.getDevice(item,1,val)
+	}
 	onChange = (e) =>{
 		console.log(e.target.value)
 		let val = e.target.value
@@ -216,20 +245,13 @@ export default class extends Component {
           </div>
         </Modal>
         <Tabs
-          tabs={tabs}
-          initialPage={this.state.type}
+          tabs={tabs2}
+          initialPage={this.state.switchIdx}
           tabBarActiveTextColor="#1E90FF"
           tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
-          onChange={(tab, index) => { this.getDevice(tab.device_type,1,switchIdx); }}
+          onChange={(tab, index) => { this.goFollowList(tab.device_type,index); }}
         >
           <div style={{ backgroundColor: '#fff' }}>
-            <Tabs
-            	tabs={tabs2}
-            	initialPage={this.state.switchIdx}
-            	tabBarActiveTextColor="#1E90FF"
-            	tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
-            	onChange={(tab, index) => { this.getDevice(this.state.device_type,1,index); }}
-            >
             	<List>
 								<Row className={styles.page}>
 									<Col span={16} style={{margin:'5px',}}>
@@ -244,24 +266,17 @@ export default class extends Component {
 									</Col>
 								</Row>
             		{
+									list.length ?
             			list.map((item, index) => (
             				<List.Item className={styles.item} key={index} onClick={this.goDevice(item)} extra={<ListButton  remove={(event) => { this.remove(event, item); }} edit={(event) => { this.edit(event, item); }} />}>
             					<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
             						<tbody>
             							<tr>
-														<Col span={20}>
-															<td className="tr">地点 ：</td>
-															<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>,
-														</Col>
+														<a className={styles.text}>安装地址 ：</a>
+														<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>,
             							</tr>
-													<tr>
-														<Col span={12}>
-															<td className="tr">编号 ：</td>
-															<td className="tl">{item.id}</td>
-														</Col>
-													</tr>
             							<tr>
-														<Col span={12}>
+														<Col span={11}>
 															<td className="tr">别名 ：</td>
 															<td className="tl">{item.device_name ? item.device_name : '无'}</td>
 														</Col>
@@ -271,7 +286,7 @@ export default class extends Component {
 														</Col>	
             							</tr>
 													<tr>
-														<Col span={12}>
+														<Col span={11}>
 															<td className="tr">串号 ：</td>
 															<td className="tl">{item.IMEI}</td>
 														</Col>
@@ -281,181 +296,29 @@ export default class extends Component {
 														</Col>	
 													</tr>
 													<tr>
-														<Col span={12}>
+														<Col span={11}>
 															<td className="tr">型号 ：</td>
-															<td className="tl">{modelName[item.device_model] ? item.device_model : '无'}</td>
+															<td className="tl">{modelName[item.device_model]}</td>
 														</Col>
+													</tr>
+													<tr>	
 														<Col span={12}>	
-															<td className="tl">状态：</td>
+															<td className="tr">状态：</td>
 															<td className="tl">{state[item.state] ||''}</td>
 														</Col>	
 													</tr>
             						</tbody>
             					</table>
             				</List.Item>
-            			))
+            			)):
+									<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
+										<Col span={24} className={styles.center}>
+											<td></td>
+											<td className="tl" style={{margin:'5px',}}>暂无数据</td>
+										</Col>
+									</table>
             		}
             	</List>
-            </Tabs>
-          </div>
-          <div style={{ backgroundColor: '#fff' }}>
-            <Tabs
-            	tabs={tabs2}
-            	initialPage={this.state.switchIdx}
-            	tabBarActiveTextColor="#1E90FF"
-            	tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
-            	onChange={(tab, index) => { this.getDevice(this.state.device_type,1,index); }}
-            >
-            	<List>
-            		<Row className={styles.page}>
-            			<Col span={16} style={{margin:'5px',}}>
-            				<Input
-            					placeholder="设备编号或串号"
-            					onChange={this.onChange}
-            					value={this.state.search_info}
-            					maxlength="16"></Input>
-            			</Col>
-            			<Col span={6}>
-            				<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} >搜索</Button>
-            			</Col>
-            		</Row>
-            		{
-            			list.map((item, index) => (
-            				<List.Item className={styles.item} key={index} onClick={this.goDevice(item)} extra={<ListButton qrcode={(event) => { this.qrcode(event, item); }} remove={(event) => { this.remove(event, item); }} edit={(event) => { this.edit(event, item); }} />}>
-            					<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
-            						<tbody>
-            							<tr>
-														<Col span={20}>
-															<td className="tr">地点 ：</td>
-															<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>,
-														</Col>
-            							</tr>
-													<tr>
-														<Col span={12}>
-															<td className="tr">编号 ：</td>
-															<td className="tl">{item.id}</td>
-														</Col>
-													</tr>
-            							<tr>
-            								<Col span={12}>
-            									<td className="tr">别名 ：</td>
-            									<td className="tl">{item.device_name ? item.device_name : '无'}</td>
-            								</Col>
-            								<Col span={12}>	
-            									<td className="tl">类型：</td>
-            									<td className="tl">{typeName[item.device_type] ||''}</td>
-            								</Col>	
-            							</tr>
-            							<tr>
-            								<Col span={12}>
-            									<td className="tr">串号 ：</td>
-            									<td className="tl">{item.IMEI}</td>
-            								</Col>
-            								<Col span={12}>	
-            									<td className="tl">信号：</td>
-            									<td className="tl"><Signal width={item.rssi}/></td>
-            								</Col>	
-            							</tr>
-            							<tr>
-            								<Col span={12}>
-            									<td className="tr">型号 ：</td>
-            									<td className="tl">{modelName[item.device_model] ? item.device_model : '无'}</td>
-            								</Col>
-            								<Col span={12}>	
-            									<td className="tl">状态：</td>
-            									<td className="tl">{state[item.state] ||''}</td>
-            								</Col>	
-            							</tr>
-            						</tbody>
-            					</table>
-            				</List.Item>
-            			))
-            		}
-            	</List>
-            </Tabs>
-          </div>
-          <div style={{ backgroundColor: '#fff' }}>
-            <Tabs
-            	tabs={tabs2}
-            	initialPage={this.state.switchIdx}
-            	tabBarActiveTextColor="#1E90FF"
-            	tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
-            	onChange={(tab, index) => { this.getDevice(this.state.device_type,1,index); }}
-            >
-            	<List>
-            		<Row className={styles.page}>
-            			<Col span={16} style={{margin:'5px',}}>
-            				<Input
-											placeholder="设备编号或串号"
-											onChange={this.onChange}
-											value={this.state.search_info}
-											maxlength="16"></Input>
-            			</Col>
-            			<Col span={6}>
-            				<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} >搜索</Button>
-            			</Col>
-            		</Row>
-            		<Row className={styles.page}>
-            			<Col span={6}>
-            			</Col>
-            			<Col span={18} >
-            				<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
-            			</Col>
-            		</Row>
-            		{
-            			list.map((item, index) => (
-            				<List.Item className={styles.item} key={index} onClick={this.goDevice(item)} extra={<ListButton qrcode={(event) => { this.qrcode(event, item); }} remove={(event) => { this.remove(event, item); }} edit={(event) => { this.edit(event, item); }} />}>
-            					<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
-            						<tbody>
-            							<tr>
-														<Col span={20}>
-															<td className="tr">地点 ：</td>
-															<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>,
-														</Col>
-            							</tr>
-													<tr>
-														<Col span={12}>
-															<td className="tr">编号 ：</td>
-															<td className="tl">{item.id}</td>
-														</Col>
-													</tr>
-            							<tr>
-            								<Col span={12}>
-            									<td className="tr">别名 ：</td>
-            									<td className="tl">{item.device_name ? item.device_name : '无'}</td>
-            								</Col>
-            								<Col span={12}>	
-            									<td className="tl">类型：</td>
-            									<td className="tl">{typeName[item.device_type] ||''}</td>
-            								</Col>	
-            							</tr>
-            							<tr>
-            								<Col span={12}>
-            									<td className="tr">串号 ：</td>
-            									<td className="tl">{item.IMEI}</td>
-            								</Col>
-            								<Col span={12}>	
-            									<td className="tl">信号：</td>
-            									<td className="tl"><Signal width={item.rssi}/></td>
-            								</Col>	
-            							</tr>
-            							<tr>
-            								<Col span={12}>
-            									<td className="tr">型号 ：</td>
-            									<td className="tl">{item.device_model ? item.device_model : '无'}</td>
-            								</Col>
-            								<Col span={12}>	
-            									<td className="tl">状态：</td>
-            									<td className="tl">{state[item.state] ||''}</td>
-            								</Col>	
-            							</tr>
-            						</tbody>
-            					</table>
-            				</List.Item>
-            			))
-            		}
-            	</List>
-            </Tabs>
           </div>
         </Tabs>
       </div>

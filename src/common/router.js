@@ -251,7 +251,19 @@ export const getRouterData = (app) => {
       name: '设备管理',
       component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/Device')),
     },
-		'/company/followdevice': {
+		'/company/followdevice/all/': {
+			name: '关注列表',
+			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/FollowDevice')),
+		},
+		'/company/followdevice/online/': {
+			name: '关注列表',
+			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/FollowDevice')),
+		},
+		'/company/followdevice/offline/': {
+			name: '关注列表',
+			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/FollowDevice')),
+		},
+		'/company/followdevice/longoffline/': {
 			name: '关注列表',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/FollowDevice')),
 		},

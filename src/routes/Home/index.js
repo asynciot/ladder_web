@@ -179,11 +179,10 @@ export default class Home extends Component {
 	}
 	toFollowDoorPage = () => {
 		const { history } = this.props;
-		const vcode = 0;
 		const device_type = "15";
 		history.push({
-			pathname: '/company/followdevice',
-			state: { vcode,device_type }
+			pathname: '/company/followdevice/all',
+			state: { device_type }
 		});
 	}
 	toFollowDoorOnline = () => {
@@ -191,8 +190,8 @@ export default class Home extends Component {
 		const vcode = 1;
 		const device_type = "15";
 		history.push({
-			pathname: '/company/followdevice',
-			state: { vcode,device_type }
+			pathname: '/company/followdevice/online',
+			state: { device_type }
 		});
 	}
 	toFollowDoorOffline = () => {
@@ -200,8 +199,8 @@ export default class Home extends Component {
 		const vcode = 2;
 		const device_type = "15";
 		history.push({
-			pathname: '/company/followdevice',
-			state: { vcode,device_type }
+			pathname: '/company/followdevice/offline',
+			state: { device_type }
 		});
 	}
 	toFollowDoorLongOffline = () => {
@@ -209,44 +208,40 @@ export default class Home extends Component {
 		const vcode = 3;
 		const device_type = "15";
 		history.push({
-			pathname: '/company/followdevice',
-			state: { vcode,device_type }
+			pathname: '/company/followdevice/longoffline',
+			state: { device_type }
 		});
 	}
 	toFollowCtrlPage = () => {
 		const { history } = this.props;
-		const vcode = 0;
 		const device_type = "240";
 		history.push({
-			pathname: '/company/followdevice',
-			state: { vcode,device_type }
+			pathname: '/company/followdevice/all',
+			state: { device_type }
 		});
 	}
 	toFollowCtrlOnline = () => {
 		const { history } = this.props;
-		const vcode = 1;
 		const device_type = "240";
 		history.push({
-			pathname: '/company/followdevice',
-			state: { vcode,device_type }
+			pathname: '/company/followdevice/online',
+			state: { device_type }
 		});
 	}
 	toFollowCtrlOffline = () => {
 		const { history } = this.props;
-		const vcode = 2;
 		const device_type = "240";
 		history.push({
-			pathname: '/company/followdevice',
-			state: { vcode,device_type }
+			pathname: '/company/followdevice/offline',
+			state: { device_type }
 		});
 	}
 	toFollowCtrlLongOffline = () => {
 		const { history } = this.props;
-		const vcode = 3;
 		const device_type = "240";
 		history.push({
-			pathname: '/company/followdevice',
-			state: { vcode,device_type }
+			pathname: '/company/followdevice/longoffline',
+			state: { device_type }
 		});
 	}
   toHistoryEventPage = () => {

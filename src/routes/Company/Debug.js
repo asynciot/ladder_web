@@ -29,8 +29,8 @@ const timeList = [{
   label: '60s',
   value: 60,
 }, {
-  label: '30s',
-  value: 30,
+  label: '120s',
+  value: 120,
 },];
 const defaultDebug = ['','','','','','','','',];
 @connect(({ ctrl, global, user }) => ({ 
@@ -39,7 +39,6 @@ const defaultDebug = ['','','','','','','','',];
 	currentUser: user.currentUser,
  }))
 export default class Debug extends Component {
-  
   state = {
 		debugList:[],
     disabled: false,
@@ -48,7 +47,7 @@ export default class Debug extends Component {
     offsets: ['','','','','','','','','','','','','','','','',],
     switch: false,
     debug: ['','','','','','','','',],
-    pick: [30],
+    pick: [120],
     offsetIdx:[],
   }
   baseDom = []
@@ -110,6 +109,18 @@ export default class Debug extends Component {
   }
 
   inputChange = (e, val, index) => {
+		if(this.state.base[0].length==1){
+			document.getElementById("fir").focus()
+		}
+		if(this.state.base[1].length==1){
+			document.getElementById("sec").focus()
+		}
+		if(this.state.base[2].length==1){
+			document.getElementById("thr").focus()
+		}
+		if(this.state.offsets[0].length==1){
+			document.getElementById("fif").focus()
+		}
     if(pattern.test(e.target.value) || e.target.value == '') {
       let arr = this.state[val]
       arr[index] = e.target.value
@@ -362,20 +373,20 @@ export default class Debug extends Component {
               段地址：
               <ul className={classNames(styles.ul, styles.addr)}>
                 <li>
-                  <input maxLength="2" disabled={this.state.switch} className={styles.input} type="text" value={base[0]} onChange={(e) =>this.inputChange(e, 'base', 0)}/>
+                  <input maxLength="2"  disabled={this.state.switch} className={styles.input} type="text" value={base[0]} onChange={(e) =>this.inputChange(e, 'base', 0)}/>
                 </li>
                 <li>:</li>
                 <li>
-                  <input maxLength="2" disabled={this.state.switch} className={styles.input} type="text" value={base[1]} onChange={(e) =>this.inputChange(e, 'base', 1)}/>
+                  <input maxLength="2" id="fir" disabled={this.state.switch} className={styles.input} type="text" value={base[1]} onChange={(e) =>this.inputChange(e, 'base', 1)}/>
                 </li>
               </ul>
               <ul className={classNames(styles.ul, styles.addr)}>
                 <li>
-                  <input maxLength="2" disabled={this.state.switch} className={styles.input} type="text" value={base[2]} onChange={(e) =>this.inputChange(e, 'base', 2)}/>
+                  <input maxLength="2" id="sec" disabled={this.state.switch} className={styles.input} type="text" value={base[2]} onChange={(e) =>this.inputChange(e, 'base', 2)}/>
                 </li>
                 <li>:</li>
                 <li>
-                  <input maxLength="2" disabled={this.state.switch} className={styles.input} type="text" value={base[3]} onChange={(e) =>this.inputChange(e, 'base', 3)}/>
+                  <input maxLength="2" id="thr" disabled={this.state.switch} className={styles.input} type="text" value={base[3]} onChange={(e) =>this.inputChange(e, 'base', 3)}/>
                 </li>
               </ul>
             </Item>
@@ -383,7 +394,7 @@ export default class Debug extends Component {
               title="实时时长"
               cols={1}
               data={timeList}
-              disabled={this.state.switch}
+              disabled={true}
               value={this.state.pick}
               onOk={v => this.onTimeChange(v)}
             >
@@ -406,14 +417,14 @@ export default class Debug extends Component {
             </Item>
           </List>
           <Row style={{ paddingTop: '20px'}}>
-            <Col xs={{ span: 20, offset: 2 }} sm={{ span: 18 }} md={{ span: 16 }}>
+            <Col xs={{ span: 22, offset: 2 }} sm={{ span: 18 }} md={{ span: 16 }}>
               <ul className={styles.ul}>
                 <li>
-                  <input maxLength="2" disabled={this.state.switch} className={styles.input} type="text" value={offsets[0]} onChange={(e) =>this.inputChange(e, 'offsets', 0)} onBlur={(e) =>this.inputOffset(e, 'offsets', 0)}/>
+                  <input maxLength="2" id="fou" disabled={this.state.switch} className={styles.input} type="text" value={offsets[0]} onChange={(e) =>this.inputChange(e, 'offsets', 0)} onBlur={(e) =>this.inputOffset(e, 'offsets', 0)}/>
                 </li>
                 <li>:</li>
                 <li>
-                  <input maxLength="2" disabled={this.state.switch} className={styles.input} type="text" value={offsets[1]} onChange={(e) =>this.inputChange(e, 'offsets', 1)} onBlur={(e) =>this.inputOffset(e, 'offsets', 1)}/>
+                  <input maxLength="2" id="fif" disabled={this.state.switch} className={styles.input} type="text" value={offsets[1]} onChange={(e) =>this.inputChange(e, 'offsets', 1)} onBlur={(e) =>this.inputOffset(e, 'offsets', 1)}/>
                 </li>
               </ul>
               <ul className={styles.ul}>
@@ -435,7 +446,7 @@ export default class Debug extends Component {
                 </li>
               </ul>
             </Col>
-            <Col xs={{ span: 20, offset: 2 }} sm={{ span: 18 }} md={{ span: 16 }}>
+            <Col xs={{ span: 22, offset: 2 }} sm={{ span: 18 }} md={{ span: 16 }}>
               <ul className={styles.ul}>
                 <li>
                   <input disabled={disabled || this.state.switch} maxLength="2" className={styles.input} type="text" value={offsets[6]} onChange={(e) =>this.inputChange(e, 'offsets', 6)}/>
@@ -464,7 +475,7 @@ export default class Debug extends Component {
                 </li>
               </ul>
             </Col>
-            <Col style={{ marginBottom: 0 }} xs={{ span: 20, offset: 2 }} sm={{ span: 18 }} md={{ span: 16 }}>
+            <Col style={{ marginBottom: 0 }} xs={{ span: 22, offset: 2 }} sm={{ span: 18 }} md={{ span: 16 }}>
               <ul className={styles.ul}>
                 <li>
                   <input disabled={disabled || this.state.switch} maxLength="2" className={styles.input} type="text" value={offsets[12]} onChange={(e) =>this.inputChange(e, 'offsets', 12)}/>
@@ -486,7 +497,7 @@ export default class Debug extends Component {
             </Col>
           </Row>
           <Row style={{ paddingTop: '16px', margin: '16px', border: '1px solid #ccc', borderRadius: '4px'}}>
-            <Col style={{ marginBottom: 0 }} xs={{ span: 22, offset: 1 }} sm={{ span: 18 }} md={{ span: 16 }}>
+            <Col style={{ marginBottom: 0 }} xs={{ span: 24, offset: 1 }} sm={{ span: 18 }} md={{ span: 16 }}>
               <ul className={classNames(styles.ul, styles.detail)}>
                 <li>{debug[0]}</li>
                 <li></li>
@@ -498,7 +509,7 @@ export default class Debug extends Component {
                 <li>{debug[3]}</li>
               </ul>
             </Col>
-            <Col style={{ marginBottom: 0 }} xs={{ span: 22, offset: 1 }} sm={{ span: 18 }} md={{ span: 16 }}>
+            <Col style={{ marginBottom: 0 }} xs={{ span: 24, offset: 1 }} sm={{ span: 18 }} md={{ span: 16 }}>
               <ul className={classNames(styles.ul, styles.detail)}>
                 <li>{debug[4]}</li>
                 <li></li>
