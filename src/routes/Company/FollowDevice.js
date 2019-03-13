@@ -18,9 +18,9 @@ const tabs = [
 ];
 const tabs2 = [
   { title: '全部', state: '' },
-  { title: '在线', state: 'online' },
-  { title: '离线', state: 'offline' },
-	{ title: '长期离线', state: 'longoffline' },
+  { title: '正常', state: 'online' },
+  { title: '故障', state: 'offline' },
+	{ title: '离线', state: 'longoffline' },
 ];
 const modelName = {
 	'0':'无',
@@ -32,9 +32,9 @@ const typeName ={
   '15':'门机',
 }
 const state ={
-	'online':'在线',
-	'offline':'离线',
-	'longoffline':'长期离线',
+	'online':'正常',
+	'offline':'故障',
+	'longoffline':'离线',
 }
 const PlaceHolder = ({ className = '', ...restProps }) => (
   <div className={`${className} ${styles.placeholder}`} {...restProps}>{restProps.children}</div>
@@ -64,10 +64,6 @@ const ListButton = ({ className = '', ...restProps }) => (
       <Icon className={`${styles.edit} ${styles.icon}`} type="form" />
       <em>编辑</em>
     </span>
-    <span onClick={restProps.remove ? restProps.remove:''}>
-      <Icon className={`${styles.delete} ${styles.icon}`} type="close" />
-      <em>取消关注</em>
-    </span>
   </div>
 );
 
@@ -79,11 +75,19 @@ export default class extends Component {
 		type:0,
     src: '',
     code: false,
+		device:'',
+		search_info:'',
+		iddr:'',
   }
   componentWillMount() {
 		const { location } = this.props;
-		const match = pathToRegexp('/company/followdevice/:state').exec(location.pathname);
-		const state =match[1]
+		const match = pathToRegexp('/company/:id/:state').exec(location.pathname);
+		if(match[1]=="followdoor"){
+			this.state.device =	"door"
+		}else{
+			this.state.device =	"ctrl"
+		}
+		const state =match[2]
 		const type = this.props.location.state.device_type
 		if(state=="all"){
 			switchIdx = 0
@@ -122,7 +126,7 @@ export default class extends Component {
 		this.setState({
 			device_type
 		});
-    getFollowDevices({ num: 10, page, device_type, state, register:'registered' }).then((res) => {
+    getFollowDevices({ num: 10, page, device_type, state, register:'registered',}).then((res) => {
       if (res.code === 0) {
         const now = new Date().getTime();
 				const totalNumber = res.data.totalNumber
@@ -193,23 +197,35 @@ export default class extends Component {
 		}else if(val==3){
 			state = "longoffline"
 		}
-		const device_type = item;
+		let device_type = ''
+		if(this.state.device=="ctrl"){
+			device_type = "240"
+		}else{
+			device_type = "15"
+		}
+		
 		history.push({
-			pathname: `/company/followdevice/${state}`,
+			pathname: `/company/follow${this.state.device}/${state}`,
 			state: { device_type }
 		});
-		this.getDevice(item,1,val)
+		this.getDevice(device_type,1,val)
 	}
 	onChange = (e) =>{
-		console.log(e.target.value)
 		let val = e.target.value
 		this.setState({
 			search_info:val,
 		});
 	}
+	onChangel = (e) =>{
+		let val = e.target.value
+		this.setState({
+			iddr:val,
+		});
+	}
 	search = () =>{
 		let search_info = this.state.search_info
-		getFollowDevices({ num: 10, page:1, search_info}).then((res) => {
+		let install_addr = this.state.iddr
+		getFollowDevices({ num: 10, page:1, search_info, install_addr}).then((res) => {
 			if (res.code === 0) {
 				const now = new Date().getTime();
 				const totalNumber = res.data.totalNumber
@@ -254,15 +270,25 @@ export default class extends Component {
           <div style={{ backgroundColor: '#fff' }}>
             	<List>
 								<Row className={styles.page}>
-									<Col span={16} style={{margin:'5px',}}>
+									<Col span={8} style={{margin:'5px',}}>
 										<Input
 											placeholder="设备编号或串号"
 											onChange={this.onChange}
 											value={this.state.search_info}
 											maxlength="16"></Input>
 									</Col>
+									<Col span={8} style={{margin:'5px',}}>
+										<Input
+											placeholder="安装地址"
+											onChange={this.onChangel}
+											value={this.state.iddr}
+											maxlength="16"></Input>
+									</Col>
 									<Col span={6}>
 										<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} >搜索</Button>
+									</Col>
+									<Col span={24} className={styles.center}>
+										<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
 									</Col>
 								</Row>
             		{
@@ -276,7 +302,7 @@ export default class extends Component {
 														<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>,
             							</tr>
             							<tr>
-														<Col span={11}>
+														<Col span={12}>
 															<td className="tr">别名 ：</td>
 															<td className="tl">{item.device_name ? item.device_name : '无'}</td>
 														</Col>
@@ -286,7 +312,7 @@ export default class extends Component {
 														</Col>	
             							</tr>
 													<tr>
-														<Col span={11}>
+														<Col span={12}>
 															<td className="tr">串号 ：</td>
 															<td className="tl">{item.IMEI}</td>
 														</Col>
@@ -296,16 +322,14 @@ export default class extends Component {
 														</Col>	
 													</tr>
 													<tr>
-														<Col span={11}>
+														<Col span={12}>
 															<td className="tr">型号 ：</td>
 															<td className="tl">{modelName[item.device_model]}</td>
 														</Col>
-													</tr>
-													<tr>	
-														<Col span={12}>	
-															<td className="tr">状态：</td>
+														<Col span={12}>
+															<td className="tl">状态 ：</td>
 															<td className="tl">{state[item.state] ||''}</td>
-														</Col>	
+														</Col>
 													</tr>
             						</tbody>
             					</table>

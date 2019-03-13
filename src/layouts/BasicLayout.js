@@ -105,13 +105,12 @@ class BasicLayout extends React.PureComponent {
   getPageTitle() {
     const { routerData, location } = this.props;
     const { pathname } = location;
-    let title = '电梯管理';
+    let title = '';
 
     if (routerData[pathname] && routerData[pathname].name) {
       title = routerData[pathname].name;
     } else {
       const match = pathToRegexp('/:name/:id/:sub?/:end?').exec(pathname);
-      
       if (match && match[3]) {
         let path = `/${match[1]}/:id/${match[3]}`;
         if (match[2] === 'statistics' || match[2] === 'follow' || match[2] === 'door' || match[2] === 'speed' || match[2] === 'electric'|| match[2] === 'params') {
@@ -129,6 +128,18 @@ class BasicLayout extends React.PureComponent {
         if (match[2] === "message") {
           path = `/${match[1]}/${match[2]}/:type`
         }
+				if (match[2] === "follow") {
+					path = `/${match[1]}/${match[2]}/:IMEI`
+				}
+				if (match[2] === "followdoor") {
+					path = `/company/followdoor/all/`
+				}
+				if (match[2] === "followctrl") {
+					path = `/company/followctrl/all/`
+				}
+				if (match[2] === "edit-device") {
+					path = `/company/edit-device/:IMEI/`
+				}
         if (routerData[path]) {
           title = routerData[path].name;
         }

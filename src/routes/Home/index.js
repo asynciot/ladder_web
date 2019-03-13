@@ -181,7 +181,7 @@ export default class Home extends Component {
 		const { history } = this.props;
 		const device_type = "15";
 		history.push({
-			pathname: '/company/followdevice/all',
+			pathname: '/company/followdoor/all',
 			state: { device_type }
 		});
 	}
@@ -190,7 +190,7 @@ export default class Home extends Component {
 		const vcode = 1;
 		const device_type = "15";
 		history.push({
-			pathname: '/company/followdevice/online',
+			pathname: '/company/followdoor/online',
 			state: { device_type }
 		});
 	}
@@ -199,7 +199,7 @@ export default class Home extends Component {
 		const vcode = 2;
 		const device_type = "15";
 		history.push({
-			pathname: '/company/followdevice/offline',
+			pathname: '/company/followdoor/offline',
 			state: { device_type }
 		});
 	}
@@ -208,7 +208,7 @@ export default class Home extends Component {
 		const vcode = 3;
 		const device_type = "15";
 		history.push({
-			pathname: '/company/followdevice/longoffline',
+			pathname: '/company/followdoor/longoffline',
 			state: { device_type }
 		});
 	}
@@ -216,7 +216,7 @@ export default class Home extends Component {
 		const { history } = this.props;
 		const device_type = "240";
 		history.push({
-			pathname: '/company/followdevice/all',
+			pathname: '/company/followctrl/all',
 			state: { device_type }
 		});
 	}
@@ -224,7 +224,7 @@ export default class Home extends Component {
 		const { history } = this.props;
 		const device_type = "240";
 		history.push({
-			pathname: '/company/followdevice/online',
+			pathname: '/company/followctrl/online',
 			state: { device_type }
 		});
 	}
@@ -232,7 +232,7 @@ export default class Home extends Component {
 		const { history } = this.props;
 		const device_type = "240";
 		history.push({
-			pathname: '/company/followdevice/offline',
+			pathname: '/company/followctrl/offline',
 			state: { device_type }
 		});
 	}
@@ -240,7 +240,7 @@ export default class Home extends Component {
 		const { history } = this.props;
 		const device_type = "240";
 		history.push({
-			pathname: '/company/followdevice/longoffline',
+			pathname: '/company/followctrl/longoffline',
 			state: { device_type }
 		});
 	}
@@ -294,7 +294,7 @@ export default class Home extends Component {
 											<div className={styles.gridnum1}>
 												{devicesStatus.dooronline}
 											</div>
-											在线
+											正常
 										</div>
 									</Card>
 								</Col>
@@ -304,7 +304,7 @@ export default class Home extends Component {
 											<div className={styles.gridnum2}>
 												{devicesStatus.dooroffline}
 											</div>
-											离线
+											故障
 										</div>
 									</Card>
 								</Col>
@@ -314,7 +314,7 @@ export default class Home extends Component {
 											<div className={styles.gridnum3}>
 												{devicesStatus.doorlongoffline}
 											</div>
-											长期离线
+											离线
 										</div>
 									</Card>
 								</Col>
@@ -336,7 +336,7 @@ export default class Home extends Component {
 											<div className={styles.gridnum1}>
 												{devicesStatus.ctrlonline}
 											</div>
-											在线
+											正常
 										</div>
 									</Card>
 								</Col>
@@ -346,7 +346,7 @@ export default class Home extends Component {
 											<div className={styles.gridnum2}>
 												{devicesStatus.ctrloffline}
 											</div>
-											离线
+											故障
 										</div>
 									</Card>
 								</Col>
@@ -356,7 +356,7 @@ export default class Home extends Component {
 											<div className={styles.gridnum3}>
 												{devicesStatus.ctrllongoffline}
 											</div>
-											长期离线
+											离线
 										</div>
 									</Card>
 								</Col>

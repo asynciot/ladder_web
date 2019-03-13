@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Button, message, DatePicker } from 'antd';
-import { List, InputItem } from 'antd-mobile';
+import { Button, message, Form, Col, Row, } from 'antd';
+import { List, InputItem, DatePicker, Modal} from 'antd-mobile';
 import styles from './EditDevice.less';
 import { putFollowInfo, getDevices } from '../../services/api';
 import pathToRegexp from 'path-to-regexp';
 var _val1 = '';
 var _val2 = '';
+
+const alert = Modal.alert;
 export default class extends Component {
   state = {
     device_name: '',
@@ -90,6 +92,20 @@ export default class extends Component {
       }
     });
   }
+	remove = () => {
+		const { dispatch, location } = this.props;
+		const match = pathToRegexp('/company/edit-device/:id').exec(location.pathname);
+		const device_id =match[1]
+		alert('提示', '是否取消关注', [
+			{ text: '取消', style: 'default' },
+			{ text: '确认',
+				onPress: () => {
+					deleteFollowInfo({ device_id}).then((res) => {            
+					});
+				},
+			},
+		]);
+	}
 	onStart = async(val) => {
 		await this.setState({
 			maintenance_nexttime: val,
@@ -104,24 +120,27 @@ export default class extends Component {
     const { submitting } = this.state;
 		const list = this.state.list
     return (
-      <div className="content">
-        <List>
-          <InputItem
-            onChange={value => this.onAddr(value)}
-            value={this.state.install_addr}
-          >
-            地点
-          </InputItem>
-          <InputItem
-            onChange={value => this.onName(value)}
-            value={this.state.device_name}
-          >
-            别名
-          </InputItem>
-					<tr>
-						<td className="tr">下次维保时间 ：</td>
-						<DatePicker title="下次维保时间" size="large" value={this.state.maintenance_nexttime} onChange={this.onStart} />
-					</tr>
+      <div >
+				<Form labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
+					<InputItem
+						onChange={value => this.onAddr(value)}
+						value={this.state.list.install_addr}
+					>
+						地点
+					</InputItem>
+					<InputItem
+						onChange={value => this.onName(value)}
+						value={this.state.list.device_name}
+						className={styles.center}
+					>
+						别名
+					</InputItem>
+					<DatePicker
+						value={this.state.maintenance_nexttime}
+						onChange={this.onStart}
+					>
+						<List.Item arrow="horizontal">下次维保时间</List.Item>
+					</DatePicker>
 					<InputItem
 						id='1'
 						onChange={value => this.remind()}
@@ -132,14 +151,17 @@ export default class extends Component {
 					<InputItem
 						disabled={true}
 						onChange={value => this.onChange(value, 'maintenance_lasttime')}
-						value={moment(parseInt(list.maintenance_lasttime)).format('YYYY-MM-DD HH:mm:ss')}
+						className={styles.center}
+						value={list.maintenance_lasttime ? moment(parseInt(list.maintenance_lasttime)).format('YYYY-MM-DD HH:mm:ss') : '无'}
 					>
 						上次维保时间
 					</InputItem>
-					<tr>
-						<td className="tr">下次年检时间 ：</td>
-						<DatePicker title="下次年检时间" size="large" value={this.state.inspection_nexttime} onChange={this.onEnd} />
-					</tr>
+					<DatePicker
+						value={this.state.inspection_nexttime}
+						onChange={this.onEnd}
+					>
+						<List.Item arrow="horizontal">下次年检时间</List.Item>
+					</DatePicker>
 					<InputItem
 						id='2'
 						onChange={value => this.remind()}
@@ -150,16 +172,24 @@ export default class extends Component {
 					<InputItem
 						disabled={true}
 						onChange={value => this.onChange(value, 'inspection_lasttime')}
-						value={moment(parseInt(list.inspection_lasttime)).format('YYYY-MM-DD HH:mm:ss')}
+						className={styles.center}
+						value={list.inspection_lasttime ? moment(parseInt(list.inspection_lasttime)).format('YYYY-MM-DD HH:mm:ss') : '无'}
 					>
 						上次年检时间
 					</InputItem>
-          <List.Item>
-            <Button size="large" loading={submitting} style={{ width: '100%' }} type="primary" onClick={() => this.submit()}>
-              修改
-            </Button>
-          </List.Item>
-        </List>
+					<Row gutter={5}>	
+						<Col span={12}>
+							<Button size="large" loading={submitting} style={{ width: '100%' }} type="primary" onClick={() => this.submit()}>
+								修改
+							</Button>
+						</Col>
+						<Col span={12}>
+							<Button size="large" loading={submitting} style={{ width: '100%' }} type="danger" onClick={() => this.remove()}>
+								取消关注
+							</Button>
+						</Col>
+					</Row>
+				</Form>
       </div>
     );
   }

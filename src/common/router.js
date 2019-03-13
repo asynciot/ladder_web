@@ -251,20 +251,36 @@ export const getRouterData = (app) => {
       name: '设备管理',
       component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/Device')),
     },
-		'/company/followdevice/all/': {
-			name: '关注列表',
+		'/company/followdoor/all/': {
+			name: '门机管理',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/FollowDevice')),
 		},
-		'/company/followdevice/online/': {
-			name: '关注列表',
+		'/company/followdoor/online/': {
+			name: '门机管理',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/FollowDevice')),
 		},
-		'/company/followdevice/offline/': {
-			name: '关注列表',
+		'/company/followdoor/offline/': {
+			name: '门机管理',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/FollowDevice')),
 		},
-		'/company/followdevice/longoffline/': {
-			name: '关注列表',
+		'/company/followdoor/longoffline/': {
+			name: '门机管理',
+			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/FollowDevice')),
+		},
+		'/company/followctrl/all/': {
+			name: '控制柜管理',
+			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/FollowDevice')),
+		},
+		'/company/followctrl/online/': {
+			name: '控制柜管理',
+			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/FollowDevice')),
+		},
+		'/company/followctrl/offline/': {
+			name: '控制柜管理',
+			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/FollowDevice')),
+		},
+		'/company/followctrl/longoffline/': {
+			name: '控制柜管理',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/FollowDevice')),
 		},
     '/company/edit-device/:IMEI/': {
