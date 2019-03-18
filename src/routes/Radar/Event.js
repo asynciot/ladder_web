@@ -23,7 +23,7 @@ export default class DoorHistory extends Component {
 		totalNumber:0,
 	}
 	componentWillMount() {
-		this.getEvent(0)
+		this.getEvent(1)
 	}
 	onStart = async(val) => {
 		await this.setState({

@@ -140,6 +140,9 @@ class BasicLayout extends React.PureComponent {
 				if (match[2] === "edit-device") {
 					path = `/company/edit-device/:IMEI/`
 				}
+				if (match[1] === "events") {
+					path = `/events/:type/:id/`
+				}
         if (routerData[path]) {
           title = routerData[path].name;
         }

@@ -67,30 +67,30 @@ const faultCode = {
 	'178': '输入电压过高',
 }
 export default class Home extends Component {
-  state = {
-    data: [],
-    imgHeight: 176,
-    messages: [],
+	state = {
+		data: [],
+		imgHeight: 176,
+		messages: [],
 		doornum:0,
 		ctrlnum:0,
-    devicesStatus: {			
-      dooronline:0,
-      dooroffline:0,
+		devicesStatus: {
+			dooronline:0,
+			dooroffline:0,
 			doorlongoffline:0,			
 			ctrlonline:0,
 			ctrloffline:0,
 			ctrllongoffline:0,			
-    },
-    historyEvents: [],
-		code:'',
-  }
-  componentWillMount() {
+		},
+		historyEvents: [],
+			code:'',
+	}
+	componentWillMount() {
 		this.getdata();
 		var _this =this
 		inte = setInterval(function () {
 			_this.getdata()
 		}, 60000);
-  }
+	}
 	componentWillUnmount() {
 		clearInterval(inte)
 	}
@@ -99,33 +99,33 @@ export default class Home extends Component {
 		this.getDevicesStatus();
 		this.getFault();
 	}
-  getMessages = () => {
-    getMessages({ num: 1, page: 1 }).then((res) => {
-      if (res.code === 0) {
-        this.setState({
-          messages: res.data.list,
-        });
-      }
-    }).catch((e => console.info(e)));
-  }
-  getDevicesStatus = () => {
-    getDevicesStatus().then((res) => {
-      if (res.code === 0) {
-        this.setState({
-          devicesStatus: res.data,
+	getMessages = () => {
+		getMessages({ num: 1, page: 1 }).then((res) => {
+			if (res.code === 0) {
+				this.setState({
+					messages: res.data.list,
+				});
+			}
+		}).catch((e => console.info(e)));
+	}
+	getDevicesStatus = () => {
+		getDevicesStatus().then((res) => {
+			if (res.code === 0) {
+				this.setState({
+					devicesStatus: res.data,
 					doornum: parseInt(res.data.dooronline)+parseInt(res.data.dooroffline)+parseInt(res.data.doorlongoffline),
 					ctrlnum:parseInt(res.data.ctrlonline)+parseInt(res.data.ctrloffline)+parseInt(res.data.ctrllongoffline),
-        });
-      }
+				});
+			}
 			let num = parseInt(res.data.dooronline)+parseInt(res.data.dooroffline)+parseInt(res.data.doorlongoffline)+parseInt(res.data.ctrlonline)+parseInt(res.data.ctrloffline)+parseInt(res.data.ctrllongoffline)
 			if(num==0){
 				alert("请在个人界面使用关注设备，或使用微信扫一扫关注设备！")
 			}
-    }).catch((e => console.info(e)));
-  }
-  getFault = () => {
-    getFault({ num: 10, page: 1, state:"untreated", islast:1}).then((res) => {
-      if (res.code === 0) {
+		}).catch((e => console.info(e)));
+	}
+	getFault = () => {
+		getFault({ num: 10, page: 1, state:"untreated", islast:1}).then((res) => {
+			if (res.code === 0) {
 				let code = res.data.list[0].code
 				if(res.data.list[0].device_type=="ctrl"){
 					this.setState({
@@ -141,9 +141,9 @@ export default class Home extends Component {
 						code,
 					});
 				}
-      }
-    }).catch((e => console.info(e)));
-  }
+			}
+		}).catch((e => console.info(e)));
+	}
 	onpress = () =>{
 		var geolocation = new BMap.Geolocation();
 		geolocation.getCurrentPosition(function(r){
@@ -160,14 +160,14 @@ export default class Home extends Component {
 			}
 		});
 	}
-  toMessagesPage = () => {
-    const { history } = this.props;
-    history.push('/company/message');
-  }
-  toDevicesStatusPage = () => {
-    const { history } = this.props;
-    history.push('/company/device');
-  }
+	toMessagesPage = () => {
+		const { history } = this.props;
+		history.push('/company/message');
+	}
+	toDevicesStatusPage = () => {
+		const { history } = this.props;
+		history.push('/company/device');
+	}
 	toFollowDevicePage = () => {
 		const { history } = this.props;
 		const vcode = 0;
@@ -244,29 +244,29 @@ export default class Home extends Component {
 			state: { device_type }
 		});
 	}
-  toHistoryEventPage = () => {
-    const { history } = this.props;
-    history.push('/company/work-order');
-  }
-  render() {		
+	toHistoryEventPage = () => {
+		const { history } = this.props;
+		history.push('/company/work-order');
+	}
+	render() {		
 		const imgList = [
 			// background1,
 			background2,
 			background3,
 			background4,
 		]
-    const { devicesStatus, historyEvents, doornum, ctrlnum, total } = this.state;
-    let notClosedEvents = historyEvents.filter(item => item.state );
+		const { devicesStatus, historyEvents, doornum, ctrlnum, total } = this.state;
+		let notClosedEvents = historyEvents.filter(item => item.state );
 		const len = total
-    len > 1 ? notClosedEvents = [notClosedEvents[0]]:null
-    return (
-      <div className="content">
-        <Carousel
-          autoplay={false}
-          infinite
-          beforeChange={(from, to) => console.log(`slide from ${from} to ${to}`)}
-          afterChange={index => console.log('slide to', index)}
-        >
+		len > 1 ? notClosedEvents = [notClosedEvents[0]]:null
+		return (
+			<div className="content">
+				<Carousel
+				  autoplay={false}
+				  infinite
+				  beforeChange={(from, to) => console.log(`slide from ${from} to ${to}`)}
+				  afterChange={index => console.log('slide to', index)}
+				>
 					{imgList.map((item, index) => {
 						return (
 							<a key={index} className={styles.link} href="javascript:;">
@@ -274,93 +274,93 @@ export default class Home extends Component {
 							</a>
 						);
 					})}
-        </Carousel>
+				</Carousel>
 				<div className={styles.pre}>
 					<List className="list">
-							<Row gutter={20}>
-								<Col span={6}>
-									<Card className={styles.gridcontent} onClick={this.toFollowDoorPage}>
-										<div className={styles.gridright}>													
-											<div className={styles.gridnum4}>
-												{doornum}
-											</div>
-											门机
+						<Row gutter={20}>
+							<Col span={6}>
+								<Card className={styles.gridcontent} onClick={this.toFollowDoorPage}>
+									<div className={styles.gridright}>													
+										<div className={styles.gridnum4}>
+											{doornum}
 										</div>
-									</Card>
-								</Col>
-								<Col span={6}>
-									<Card onClick={this.toFollowDoorOnline}>
-										<div className={styles.gridright}>													
-											<div className={styles.gridnum1}>
-												{devicesStatus.dooronline}
-											</div>
-											正常
+										门机
+									</div>
+								</Card>
+							</Col>
+							<Col span={6}>
+								<Card onClick={this.toFollowDoorOnline}>
+									<div className={styles.gridright}>													
+										<div className={styles.gridnum1}>
+											{devicesStatus.dooronline}
 										</div>
-									</Card>
-								</Col>
-								<Col span={6}>
-									<Card onClick={this.toFollowDoorOffline}>
-										<div className={styles.gridright}>													
-											<div className={styles.gridnum2}>
-												{devicesStatus.dooroffline}
-											</div>
-											故障
+										正常
+									</div>
+								</Card>
+							</Col>
+							<Col span={6}>
+								<Card onClick={this.toFollowDoorOffline}>
+									<div className={styles.gridright}>													
+										<div className={styles.gridnum2}>
+											{devicesStatus.dooroffline}
 										</div>
-									</Card>
-								</Col>
-								<Col span={6}>
-									<Card onClick={this.toFollowDoorLongOffline}>
-										<div className={styles.gridright}>													
-											<div className={styles.gridnum3}>
-												{devicesStatus.doorlongoffline}
-											</div>
-											离线
+										故障
+									</div>
+								</Card>
+							</Col>
+							<Col span={6}>
+								<Card onClick={this.toFollowDoorLongOffline}>
+									<div className={styles.gridright}>													
+										<div className={styles.gridnum3}>
+											{devicesStatus.doorlongoffline}
 										</div>
-									</Card>
-								</Col>
-							</Row>
-							<Row gutter={20}>
-								<Col span={6}>
-									<Card onClick={this.toFollowCtrlPage}>
-										<div className={styles.gridright}>													
-											<div className={styles.gridnum4}>
-												{ctrlnum}
-											</div>
-											控制柜
+										离线
+									</div>
+								</Card>
+							</Col>
+						</Row>
+						<Row gutter={20}>
+							<Col span={6}>
+								<Card onClick={this.toFollowCtrlPage}>
+									<div className={styles.gridright}>													
+										<div className={styles.gridnum4}>
+											{ctrlnum}
 										</div>
-									</Card>
-								</Col>
-								<Col span={6}>
-									<Card onClick={this.toFollowCtrlOnline}>
-										<div className={styles.gridright}>													
-											<div className={styles.gridnum1}>
-												{devicesStatus.ctrlonline}
-											</div>
-											正常
+										控制柜
+									</div>
+								</Card>
+							</Col>
+							<Col span={6}>
+								<Card onClick={this.toFollowCtrlOnline}>
+									<div className={styles.gridright}>													
+										<div className={styles.gridnum1}>
+											{devicesStatus.ctrlonline}
 										</div>
-									</Card>
-								</Col>
-								<Col span={6}>
-									<Card onClick={this.toFollowCtrlOffline}>
-										<div className={styles.gridright}>
-											<div className={styles.gridnum2}>
-												{devicesStatus.ctrloffline}
-											</div>
-											故障
+										正常
+									</div>
+								</Card>
+							</Col>
+							<Col span={6}>
+								<Card onClick={this.toFollowCtrlOffline}>
+									<div className={styles.gridright}>
+										<div className={styles.gridnum2}>
+											{devicesStatus.ctrloffline}
 										</div>
-									</Card>
-								</Col>
-								<Col span={6}>
-									<Card onClick={this.toFollowCtrlLongOffline}>
-										<div className={styles.gridright}>
-											<div className={styles.gridnum3}>
-												{devicesStatus.ctrllongoffline}
-											</div>
-											离线
+										故障
+									</div>
+								</Card>
+							</Col>
+							<Col span={6}>
+								<Card onClick={this.toFollowCtrlLongOffline}>
+									<div className={styles.gridright}>
+										<div className={styles.gridnum3}>
+											{devicesStatus.ctrllongoffline}
 										</div>
-									</Card>
-								</Col>
-							</Row>
+										离线
+									</div>
+								</Card>
+							</Col>
+						</Row>
 						<Item
 							arrow="horizontal"
 							multipleLine
@@ -382,7 +382,7 @@ export default class Home extends Component {
 								notClosedEvents.map(item => (
 									<span className={styles.msg} key={item.id}>
 										工单状态
-										<Brief>待处理<span>{len}</span></Brief>
+										<Brief>待处理:<span>{len}</span></Brief>
 										<Brief>最新工单</Brief>
 										<Brief>
 											<Flex>
@@ -403,7 +403,7 @@ export default class Home extends Component {
 					</List>
 					<Button onClick={this.onpress} type="primary" style={{ width: '100%' }}>定位打卡</Button>
 				</div>
-      </div>
-    );
-  }
+			</div>
+		);
+	}
 }

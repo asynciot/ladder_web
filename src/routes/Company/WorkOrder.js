@@ -2,16 +2,11 @@ import React, { Component } from 'react';
 import { Icon, Button, Row, Col, Pagination, } from 'antd';
 import { Tabs, Flex, Modal, List,PullToRefresh } from 'antd-mobile';
 import styles from './WorkOrder.less';
-import { getFault, postFault, postFinish, deleteFault, getDispatch, } from '../../services/api';
+import { getFault, postFault, postFinish, deleteFault, getDispatch, getFollowDevices} from '../../services/api';
 
 var inte = null;
 const Item = List.Item;
 const format = "YYYY-MM-DD HH:mm";
-const tabs = [
-  { title: '待接单', type: 'untreated', count: 0 },
-  { title: '急修中', type: 'treated', count: 0 },
-  // { title: '已完成', type: 2, count: 0 },
-];
 const alert = Modal.alert;
 const desc = {
   'untreated': '是否接单',
@@ -105,7 +100,13 @@ export default class extends Component {
     total: 1,
 		type:'',
 		totalNumber:0,
+		device_name:'',
   }
+	tabs = [
+	  { title: '待接单', type: 'untreated', count: 0 },
+	  { title: '急修中', type: 'treated', count: 0 },
+	  // { title: '已完成', type: 2, count: 0 },
+	];
   componentWillMount() {
 		this.getFault('untreated')
 		var _this =this
@@ -132,6 +133,7 @@ export default class extends Component {
     let {page, total, historyEvents} = this.state;
 		this.state.type = state
 		const _this = this
+		let device_name=[]
 		if(state == 'untreated'){
 			getFault({ num: 10, page, state, islast:1 }).then((res) => {
 				const list = res.data.list.map((item,index) => {
@@ -139,6 +141,17 @@ export default class extends Component {
 					item.hour = parseInt((time)/(1000*3600))
 					item.minute = parseInt(time%(1000*3600)/(1000*60))
 					item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
+					let device_id = item.device_id
+					getFollowDevices({num:1,page:1,device_id}).then((res) => {
+						device_name[index] = res.data.list[0].device_name
+						_this.setState({
+							device_name,
+						});
+					})
+					setTimeout(function(){
+						item.device_name = _this.state.device_name[index]
+						_this.forceUpdate();
+					}, 300);
 					if(item.device_type=='ctrl'){
 						item.code = res.data.list[index].code.toString(16)
 					}else{
@@ -222,7 +235,7 @@ export default class extends Component {
     return (
       <div className="content">
         <Tabs
-          tabs={tabs}
+          tabs={this.tabs}
           initialPage={0}
           tabBarActiveTextColor="#1E90FF"
           tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
@@ -243,18 +256,20 @@ export default class extends Component {
 									<List.Item className={styles.item} key={index}  extra={<ListButton address={(event) => { this.address(item); }} edit={(event) => { this.deal(event,item,); }} />}>
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault(item)}>
 											<tbody>
+												<tr>	
+													<td className="tr">设备名称 ：</td>
+													<td className="tl">{item.device_name}</td>
+												</tr>
 												<tr>
 													<td className="tr">故障名称 ：</td>
 													<td className="tl" style={{ width: '200px' }}>{faultCode[item.code]}</td>
 												</tr>
-												<tr>	
-													<td className="tr">设备编号 ：</td>
-													<td className="tl">{item.device_id}</td>
-												</tr>
 												<tr>
 													<td className="tr">故障类型 ：</td>
 													<td className="tl" style={{ width: '80px' }}>{names[item.type]}</td>
-													<td className="tl">设备类型 ：</td>
+												</tr>
+												<tr>	
+													<td className="tr">设备类型 ：</td>
 													<td className="tl">{typeName[item.device_type] ||''}</td>
 												</tr>
 												<tr>

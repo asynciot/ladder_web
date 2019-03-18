@@ -18,8 +18,29 @@ const FormItem = Form.Item;
 @Form.create()
 export default class Login extends Component {
   state = {
-    count: 0,
+		checkList:[{
+			op:false,
+		}],
+		username:'',
+		password:'',
   }
+	componentWillMount() {
+		this.state.checkList[0].op = window.localStorage.getItem("rem")
+		this.forceUpdate()
+		if(this.state.checkList[0].op == "true"){
+			this.state.checkList[0].op = true
+			const u = window.localStorage.getItem("u")
+			const p = window.localStorage.getItem("p")
+			this.state.username = u
+			this.state.password = p
+		}else{
+			this.state.checkList[0].op = false
+			window.localStorage.setItem('u','')
+			window.localStorage.setItem('p','')
+		}
+	}
+	componentDidMount() {
+	}
   componentWillUnmount() {
     clearInterval(this.interval);
   }
@@ -38,8 +59,13 @@ export default class Login extends Component {
     });
   }
   handleSubmit = (e) => {
+		const { form } = this.props
+		if(this.state.checkList[0].op == true){
+			window.localStorage.setItem('u',form.getFieldValue('username'))
+			window.localStorage.setItem('p',form.getFieldValue('password'))
+		}
     e.preventDefault();
-    this.props.form.validateFields({ force: true },
+    form.validateFields({ force: true },
       (err, values) => {
         if (!err) {
           this.props.dispatch({
@@ -69,11 +95,15 @@ export default class Login extends Component {
       />
     );
   }
+	test = () =>{
+		this.state.checkList[0].op = !this.state.checkList[0].op
+		window.localStorage.setItem('rem',this.state.checkList[0].op)
+	}
 
   render() {
     const { form, login, submitting } = this.props;
+		const {checkList} = this.state
     const { getFieldDecorator } = form;
-    const { count } = this.state;
     const suffix = form.getFieldValue('username') ? <Icon type="close-circle" onClick={this.emitEmpty} /> : null;
     return (
 			<div className={styles.back} style={sectionStyle}>
@@ -96,6 +126,7 @@ export default class Login extends Component {
 										</Col>
 										<Col span={20}>
 											{getFieldDecorator('username', {
+												initialValue:this.state.username,
 												rules: [{
 													required: true, message: '请输入手机号或个人编号！',
 												}, {
@@ -119,6 +150,7 @@ export default class Login extends Component {
 										</Col>
 										<Col span={20}>
 											{getFieldDecorator('password', {
+												initialValue:this.state.password,
 												rules: [{
 													required: true, class: 'explain', message: '请输入密码！',
 												}],
@@ -133,6 +165,17 @@ export default class Login extends Component {
 										</Col>
 									</Row>
 								</FormItem>
+								<Row gutter={8}>
+									<Col span={16}>
+									</Col>
+									<Col span={8}>
+										{
+											checkList.map((item, index)=>(
+												<Checkbox defaultChecked={item.op} className={styles.pd} key={index} onChange={this.test}>记住密码</Checkbox>
+											))
+										}
+									</Col>
+								</Row>
 							</Col>
 							<Col span={22} offset={1}>
 								<FormItem className={styles.additional}>
