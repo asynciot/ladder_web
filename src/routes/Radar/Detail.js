@@ -16,10 +16,10 @@ const menu = [{
   label: '分屏',
   view: 1,
 }, 
-// {
-//   label: '滤波',
-//   view: 2,
-// },
+{
+  label: '控制柜',
+  view: 2,
+},
 ];
 const activeNav = (data, idx) => {
   return data === idx ? styles.active : '';
@@ -65,7 +65,11 @@ export default class Device extends Component {
 		}			
   }
   changeView = (item) => {
-    this.props.dispatch({
+		const { dispatch, match } = this.props;
+		if(item.view==2){
+			dispatch(routerRedux.replace(`/events/door/${match.params.id}`));
+		}
+    dispatch({
       type: 'device/changeView',
       payload: item.view,
     });

@@ -149,8 +149,7 @@ export default class DoorHistory extends Component {
   componentWillMount() {
 		charts = true;
 		const {location} = this.props;
-		const match = pathToRegexp('/door/:id/realtime').exec(location.pathname);
-		this.state.id = match[1];
+		this.state.id = this.props.match.params.id
 		this.getType()
 		this.getBaseData()
 		this.initWebsocket()
@@ -284,11 +283,9 @@ export default class DoorHistory extends Component {
 		this.forceUpdate();
 	}
 	getData = (val) => {
-		console.log(charts)
 		const {show} = this.state
 		let buffer = []
 		buffer = base64url.toBuffer(val.data);	//8位转流
-		console.log(buffer)
 		let count= 0
 		const _this = this
 		const sins = setInterval(function () {
@@ -569,18 +566,18 @@ export default class DoorHistory extends Component {
 	}
 	goEvent = item => () => {
 		const { history } = this.props;
-		const id = this.props.match.params.id;
+		const id = this.state.id;
 		history.push(`/events/door/${item.id}/`);
 	}
   timeTicket = null;
 
 	goDetail = link => () => {
-		const id = this.props.match.params.id;
+		const id = this.state.id;
 		const type = this.props.location.state.type
 		this.props.history.push(`/door/${id}/params/${type}`);
 	}
   goQrcode = () => {
-    const device_id = this.props.match.params.id;
+    const device_id = this.state.id;
 		getDeviceList({device_id}).then((res)=>{
 			const id = res.data.list[0].IMEI
 			this.setState({
@@ -590,12 +587,12 @@ export default class DoorHistory extends Component {
 		})
   }
 	gohistory = () => {
-		const id = this.props.match.params.id;
+		const id = this.state.id;
 		this.props.history.push(`/company/door/${id}/fault`);
 	}
   render() {
     const { device: { events, view, property, updateTime, }} = this.props;
-    const id = this.props.match.params.id;
+    const id = this.state.id;
     const width = parseInt((window.innerWidth - 100) / 2);
     let type = null
     if (property.Model) {

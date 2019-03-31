@@ -200,7 +200,7 @@ export default class CtrlRealtime extends Component {
 		websock.onclose = this.websocketclosed;
 	}
 	websocketonopen() {
-		console.log("WebSocket连接成功");
+		// console.log("WebSocket连接成功");
 	}
 	websocketonerror(e) { //错误
 		console.log("WebSocket连接发生错误");
@@ -265,7 +265,6 @@ export default class CtrlRealtime extends Component {
 		const floor = this.state.floor
 		var _this = this
 		inte = setInterval(function () {
-			let markfloor = ''
 			if((count+33) <= buffer.length){
 				show.upCall   = buffer[count+0]&0x01							//上运行方向
 				show.downCall = (buffer[count+0]&0x02)>>1					//下运行方向
@@ -403,7 +402,7 @@ export default class CtrlRealtime extends Component {
 			legend: {
 				data:['运行信号']
 			},
-			grid: {					
+			grid: {
 				left: '3%',
 				right: '4%',
 				containLabel: true
@@ -502,6 +501,10 @@ export default class CtrlRealtime extends Component {
 	gohistory = () => {
 		const id = this.props.match.params.id;
 		this.props.history.push(`/ctrl/${id}/fault`);
+	}
+	gocall = () => {
+		const id = this.props.match.params.id;
+		this.props.history.push(`/company/${id}/call`);
 	}
 	render() {
 		let { ctrl: { event, view, device, floors, property, } } = this.props;
@@ -647,6 +650,7 @@ export default class CtrlRealtime extends Component {
 							<section onClick={this.goQrcode}>二维码</section>
 							<section onClick={this.goDebug}>查看</section>
 							<section onClick={this.gohistory}>历史故障</section>
+							<section onClick={this.gocall}>呼梯</section>
 						</div>
 					</div>
 					<div className={classNames(styles.tab, view == 1 ?'tab-active' : 'tab-notactive')}>

@@ -129,7 +129,7 @@ export default class extends Component {
                 onChange={this.onChange}
                 value={this.state.deviceNo}
               >
-                串号
+                串号:
               </InputItem>
               <List.Item>
                 <Button disabled={!this.state.deviceNo} size="large" loading={submitting} style={{ width: '100%' }} type="primary" onClick={() => this.submit()}>

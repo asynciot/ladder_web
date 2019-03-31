@@ -161,13 +161,13 @@ export default class DoorHistory extends Component {
 										<tbody>
 											<tr>
 												<td className="tr">id ：</td>
-												<td className="tl" style={{ width: '130px' }}>{item.id}</td>
+												<td className="tl" style={{ width: '100px' }}>{item.id}</td>
 												<td className="tl">状态 ：</td>
 												<td className="tl" style={{ width: '260px' }}>{state[item.state]}</td>
 											</tr>
 											<tr>
 												<td className="tr">故障名称 ：</td>
-												<td className="tl" style={{ width: '130px' }}>{faultCode[item.code]?faultCode[item.code]: ('E'+item.code) }</td>
+												<td className="tl" style={{ width: '100px' }}>{faultCode[item.code]?faultCode[item.code]: ('E'+item.code) }</td>
 												<td className="tl">发起人 ：</td>
 												<td className="tl" style={{ width: '260px' }}>{item.producer}</td>
 											</tr>

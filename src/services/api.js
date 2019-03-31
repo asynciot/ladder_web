@@ -222,3 +222,9 @@ export async function postMonitor(params) {
     body: params,
   });
 }
+export async function postCall(params) {
+  return request('/device/Call', {
+    method: 'POST',
+    body: params,
+  });
+}

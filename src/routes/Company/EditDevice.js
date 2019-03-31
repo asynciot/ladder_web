@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import { Button, message, Form, Col, Row, } from 'antd';
 import { List, InputItem, DatePicker, Modal} from 'antd-mobile';
 import styles from './EditDevice.less';
-import { putFollowInfo, getDevices } from '../../services/api';
+import { putFollowInfo, getDevices, deleteFollowInfo } from '../../services/api';
 import pathToRegexp from 'path-to-regexp';
 var _val1 = '';
 var _val2 = '';
@@ -93,9 +93,8 @@ export default class extends Component {
     });
   }
 	remove = () => {
-		const { dispatch, location } = this.props;
-		const match = pathToRegexp('/company/edit-device/:id').exec(location.pathname);
-		const device_id =match[1]
+		const { dispatch, location,match } = this.props;
+		const device_id =match.id
 		alert('提示', '是否取消关注', [
 			{ text: '取消', style: 'default' },
 			{ text: '确认',

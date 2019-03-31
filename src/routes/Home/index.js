@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Carousel, WingBlank, List, Flex, Card,} from 'antd-mobile';
+import { Carousel, WingBlank, List, Flex, Card, Modal} from 'antd-mobile';
 import { Row, Col, Button, Spin, DatePicker, Pagination, } from 'antd';
 import styles from './index.less';
 import { getBanners, getMessages, getDevicesStatus, getFault, postLocation } from '../../services/api';
@@ -9,6 +9,7 @@ import background2 from '../../assets/menu-bg1.jpg';
 import background4 from '../../assets/service-img4.jpg';
 import BMap  from 'BMap';
 
+const alert = Modal.alert;
 var inte = null;
 const Item = List.Item;
 const Brief = Item.Brief;

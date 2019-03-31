@@ -167,6 +167,10 @@ export const getRouterData = (app) => {
 			name: '内存查看',
 			component: dynamicWrapper(app, ['ctrl'], () => import('../routes/Company/Debug')),
 		},
+		'/company/:id/call': {
+			name: '呼梯',
+			component: dynamicWrapper(app, ['ctrl'], () => import('../routes/Radar/CallLadder')),
+		},
 		'/ctrl/:id/params': {
 			name: '菜单',
 			component: dynamicWrapper(app, ['ctrl'], () => import('../routes/Radar/CtrlParams')),

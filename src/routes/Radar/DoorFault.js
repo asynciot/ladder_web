@@ -12,7 +12,6 @@ import styles from './CtrlFault.less';
 import ReactEcharts from 'echarts-for-react';
 import {getEvent, getFault} from '../../services/api';
 
-var device_id = 0;
 const faultCode = {
 	'1': '开关门受阻',
 	'2': '飞车保护',
@@ -36,17 +35,18 @@ export default class DoorHistory extends Component {
 		totalNumber:0,
 		start:'',
 		end:'',
+		device_id:'',
 	}
 	componentWillMount() {
-		const {location, currentUser } = this.props;
-		const match = pathToRegexp('/company/door/:id/fault').exec(location.pathname);
-		device_id = match[1];
+		const {location, currentUser, match} = this.props;
+		this.state.device_id = match.params.id
 		this.getFault(1)
 	}
 	getFault = (val) => {
 		let page = val
 		let starttime = ''
 		let endtime = ''
+		const device_id = this.state.device_id
 		if(this.state.start != 0){
 			starttime = new Date(this.state.start).getTime()
 		}else{
@@ -125,13 +125,13 @@ export default class DoorHistory extends Component {
 										<tbody>
 											<tr>
 												<td className="tr">id ：</td>
-												<td className="tl" style={{ width: '130px' }}>{item.id}</td>
+												<td className="tl" style={{ width: '95px' }}>{item.id}</td>
 												<td className="tl">状态 ：</td>
 												<td className="tl" style={{ width: '260px' }}>{state[item.state]}</td>
 											</tr>
 											<tr>
 												<td className="tr">故障名称 ：</td>
-												<td className="tl" style={{ width: '130px' }}>{faultCode[item.code]?faultCode[item.code]:'无'}</td>
+												<td className="tl" style={{ width: '95px' }}>{faultCode[item.code]?faultCode[item.code]:'无'}</td>
 												<td className="tl">发起人 ：</td>
 												<td className="tl" style={{ width: '100px' }}>{item.producer}</td>
 											</tr>

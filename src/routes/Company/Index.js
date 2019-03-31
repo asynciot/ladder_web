@@ -59,7 +59,7 @@ export default class Company extends Component {
 		const vcode = 1;
 		const device_type = "";
 		history.push({
-			pathname: '/company/followdevice',
+			pathname: '/company/followdoor/all',
 			state: { vcode,device_type }
 		});
 	}
