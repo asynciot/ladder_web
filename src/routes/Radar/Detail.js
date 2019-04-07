@@ -16,10 +16,10 @@ const menu = [{
   label: '分屏',
   view: 1,
 }, 
-{
-  label: '控制柜',
-  view: 2,
-},
+// {
+//   label: '控制柜',
+//   view: 2,
+// },
 ];
 const activeNav = (data, idx) => {
   return data === idx ? styles.active : '';

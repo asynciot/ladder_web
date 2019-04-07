@@ -4,15 +4,16 @@ import { connect } from 'dva';
 import _ from 'lodash';
 import base64url from 'base64url';
 import { Debounce } from 'lodash-decorators/debounce';
-import { Row, Col, Button, Spin, DatePicker,  } from 'antd';
+import { Row, Col, Button, Spin, DatePicker, Switch, } from 'antd';
 import { Picker, List, Tabs, Modal } from 'antd-mobile';
 import classNames from 'classnames';
 import TweenOne from 'rc-tween-one';
 import F2 from '@antv/f2';
-import styles from './History.less';
+import styles from './Realtime.less';
 import echarts from 'echarts';
 import ReactEcharts from 'echarts-for-react';
 import {getEvent, postMonitor, getFollowDevices, getDeviceList, getDoorData} from '../../services/api';
+
 const timeList = [{
   label: '90s',
   value: '90',
@@ -24,7 +25,7 @@ const timeList = [{
   value: '30',
 },];
 
-
+const alert = Modal.alert;
 const alertName = (show) => {
   if (show.isLoss) {
     return '无';
@@ -55,7 +56,6 @@ const alertName = (show) => {
 };
 var inte =null;
 var websock = '';
-var charts = true;
 const data = [{
   time: 0,
   value: 0,
@@ -66,88 +66,89 @@ const data = [{
 }))
 export default class DoorHistory extends Component {
   state = {
+	charts:true,
     leftAnimation: {
-      left: '0%',
-      duration: 1000,
+		left: '0%',
+		duration: 1000,
     },
     rightAnimation: {
-      right: '0%',
-      duration: 1000,
+		right: '0%',
+		duration: 1000,
     },
+	switch:false,
     pick: '',
     modal: false,
-		type:'',
+	type:'',
     src: '',
-		doorWidth:4096,
-		change:false,
-		openInarr:[],
-		openToarr:[],
-		openDeceleratearr:[],
-		closeDeceleratearr:[],
-		closeInarr:[],
-		closeToarr:[],
-		openToOutarr:[],
-		closeToOutarr:[],
-		positionarr:[],
-		currentarr:[],
-		speedarr:[],
-		events:{
-			openIn:[],
-			closeIn:[],
-			current:[],
-			openDecelerate:[],
-			closeDecelerate:[],
-			openToOut:[],
-			openTo:[],
-			closeToOut:[],
-			closeTo:[],
-			door:[],
-			open:[],
-			close:[],
-			openKeep:[],
-			closeKeep:[],
-			stop:[],
-			inHigh:[],
-			inLow:[],
-			outHigh:[],
-			motorHigh:[],
-			flySafe:[],
-			closeStop:[],
-			position:[],
-			speed:[],
-			nums:[1,2,3,4,5,6,7,8,9,10],
-		},
-		show:{
-			openIn:'',
-			closeIn:'',
-			current:'',
-			openDecelerate:'',
-			closeDecelerate:'',
-			openToOut:'',
-			openTo:'',
-			closeToOut:'',
-			closeTo:'',
-			door:'',
-			open:'',
-			close:'',
-			openKeep:'',
-			closeKeep:'',
-			stop:'',
-			inHigh:'',
-			inLow:'',
-			outHigh:'',
-			motorHigh:'',
-			flySafe:'',
-			closeStop:'',
-			position:'',
-			speed:'',
-			nowtime:'',
-		},
-		historyEvents:[],
-		id:0,
+	doorWidth:4096,
+	change:false,
+	openInarr:[],
+	openToarr:[],
+	openDeceleratearr:[],
+	closeDeceleratearr:[],
+	closeInarr:[],
+	closeToarr:[],
+	openToOutarr:[],
+	closeToOutarr:[],
+	positionarr:[],
+	currentarr:[],
+	speedarr:[],
+	events:{
+		openIn:[],
+		closeIn:[],
+		current:[],
+		openDecelerate:[],
+		closeDecelerate:[],
+		openToOut:[],
+		openTo:[],
+		closeToOut:[],
+		closeTo:[],
+		door:[],
+		open:[],
+		close:[],
+		openKeep:[],
+		closeKeep:[],
+		stop:[],
+		inHigh:[],
+		inLow:[],
+		outHigh:[],
+		motorHigh:[],
+		flySafe:[],
+		closeStop:[],
+		position:[],
+		speed:[],
+		nums:[1,2,3,4,5,6,7,8,9,10],
+	},
+	show:{
+		openIn:'',
+		closeIn:'',
+		current:'',
+		openDecelerate:'',
+		closeDecelerate:'',
+		openToOut:'',
+		openTo:'',
+		closeToOut:'',
+		closeTo:'',
+		door:'',
+		open:'',
+		close:'',
+		openKeep:'',
+		closeKeep:'',
+		stop:'',
+		inHigh:'',
+		inLow:'',
+		outHigh:'',
+		motorHigh:'',
+		flySafe:'',
+		closeStop:'',
+		position:'',
+		speed:'',
+		nowtime:'',
+	},
+	historyEvents:[],
+	id:0,
   }
   componentWillMount() {
-		charts = true;
 		const {location} = this.props;
 		this.state.id = this.props.match.params.id
 		this.getType()
@@ -155,7 +156,7 @@ export default class DoorHistory extends Component {
 		this.initWebsocket()
   }
 	componentWillUnmount() {
-		charts = false;
+		this.state.charts = false;
 		clearInterval(inte)
 		websock.close()
 	}
@@ -171,9 +172,10 @@ export default class DoorHistory extends Component {
 		websock.onmessage= (e) =>{
 			if(e.data=="closed"){
 				alert("数据传输结束")
-				this.state.change = false;
+				this.state.switch = false;
 				_this.state.stop = 1
 				websock.close()
+				this.forceUpdate()
 			}else{
 				var redata = JSON.parse(e.data)
 				_this.getData(redata)
@@ -191,29 +193,30 @@ export default class DoorHistory extends Component {
 		console.log("WebSocket连接关闭");
 	}
 	onChange = async (val) => {
-		this.state.change = true;
-		this.initWebsocket()
-		await this.setState({
-			pick: val,
-		});
-		const {pick} = this.state;
-		const device_id = this.state.id
-		getFollowDevices({device_id}).then((res)=>{
-			if(res.code == 0){
-				const op = 'open';
-				const IMEI = res.data.list[0].IMEI;
-				const interval = 1000;
-				const threshold = 1;
-				const reset = pick;
-				const duration = reset[0];
-				const device_type = '15';
-				const type = '0';
-				postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {});
-				alert("请不要离开当前页面，等待数据传输");
-			}else if(res.code == 670){
-				alert("当前设备已被人启动监控")
-			}
-		})
+		this.state.switch = !this.state.switch
+		this.forceUpdate()
+		if(this.state.switch == true){
+			this.initWebsocket()
+			const device_id = this.state.id
+			getFollowDevices({device_id}).then((res)=>{
+				if(res.code == 0){
+					const op = 'open';
+					const IMEI = res.data.list[0].IMEI;
+					const interval = 1000;
+					const threshold = 2;
+					const duration = 600;
+					const device_type = '15';
+					const type = '0';
+					postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {});
+					alert("请不要离开当前页面，等待数据传输");
+				}else if(res.code == 670){
+					alert("当前设备已被人启动监控")
+				}
+			})
+		}else{
+			websock.close()
+			this.forceUpdate()
+		}
 	}
 	buffer2hex = (buffer) => {
 	  const unit16array = [];
@@ -279,7 +282,7 @@ export default class DoorHistory extends Component {
 				const hex = this.buffer2hex(buffer)
 				this.state.doorWidth =parseInt((hex[14] + hex[15]), 16);
 			});
-		}	
+		}
 		this.forceUpdate();
 	}
 	getData = (val) => {
@@ -288,42 +291,52 @@ export default class DoorHistory extends Component {
 		buffer = base64url.toBuffer(val.data);	//8位转流
 		let count= 0
 		const _this = this
-		const sins = setInterval(function () {
+		inte = setInterval(function () {
 			if((count+8) <= buffer.length){
 				show.openIn = (buffer[count+0]&0x80)>>7							//获取开门输入信号
 				show.closeIn = (buffer[count+0]&0x40)>>6						//获取关门信号
-				show.openTo =	(buffer[count+0]&0x20)>>5								//获取开到位输入信号
-				show.closeTo = (buffer[count+0]&0x10)>>4								//获取关到位输入信号	
+				show.openTo =	(buffer[count+0]&0x20)>>5						//获取开到位输入信号
+				show.closeTo = (buffer[count+0]&0x10)>>4						//获取关到位输入信号	
 				show.openDecelerate =	(buffer[count+0]&0x08)>>3				//开减速输入信号 
-				show.closeDecelerate = (buffer[count+0]&0x04)>>2			//关减速输入信号
-				show.openToOut = (buffer[count+0]&0x02)>>1					//获取开到位输出信号
-				show.closeToOut = buffer[count+0]&0x01					//获取关到位输出信号			
-				show.door	= (buffer[count+1]&0x80)>>7								//正在门光幕
-				show.open	= (buffer[count+1]&0x40)>>6								//正在开门信号
+				show.closeDecelerate = (buffer[count+0]&0x04)>>2				//关减速输入信号
+				show.openToOut = (buffer[count+0]&0x02)>>1						//获取开到位输出信号
+				show.closeToOut = buffer[count+0]&0x01							//获取关到位输出信号			
+				show.door	= (buffer[count+1]&0x80)>>7							//正在门光幕
+				show.open	= (buffer[count+1]&0x40)>>6							//正在开门信号
 				show.close =	(buffer[count+1]&0x20)>>5						//正在关门信号
 				show.openKeep	= (buffer[count+1]&0x10)>>4						//开门到位维持信号
 				show.closeKeep	= (buffer[count+1]&0x08)>>3						//关门到位维持信号
-				show.stop	= (buffer[count+1]&0x04)>>2								//停止输出信号
+				show.stop	= (buffer[count+1]&0x04)>>2							//停止输出信号
 				show.inHigh = (buffer[count+1]&0x02)>>1							//输入电压过高
-				show.inLow = 	buffer[count+1]&0x01								//输入电压过低
+				show.inLow = 	buffer[count+1]&0x01							//输入电压过低
 				show.outHigh = (buffer[count+2]&0x80)>>7						//输出过流
-				show.motorHigh = (buffer[count+2]&0x40)>>6				//电机过载
+				show.motorHigh = (buffer[count+2]&0x40)>>6						//电机过载
 				show.flySafe = (buffer[count+2]&0x20)>>5						//飞车保护
-				show.closeStop = (buffer[count+2]&0x10)>>4					//开关门受阻
+				show.closeStop = (buffer[count+2]&0x10)>>4						//开关门受阻
 				show.position	= ((buffer[count+2]&0x0f)<<8)+(buffer[count+3]&0xff)		//获取位置信号
 				show.current = (((buffer[count+4]&0xff)<<8)+(buffer[count+5]&0xff))/1000		//获取电流信号
 				show.speed = (((buffer[count+6]&0xff)<<8)+(buffer[count+7]&0xff))/1000
 				if(show.speed>32.767){
 					show.speed = (show.speed-65.535).toFixed(2)
 				}
+				_this.state.openInarr.push(show.openIn)
+				_this.state.openToarr.push(show.openTo)
+				_this.state.openToOutarr.push(show.openToOut)
+				_this.state.openDeceleratearr.push(show.openDecelerate)
+				_this.state.closeDeceleratearr.push(show.closeDecelerate)
+				_this.state.closeInarr.push(show.closeIn)
+				_this.state.closeToarr.push(show.closeTo)
+				_this.state.closeToOutarr.push(show.closeToOut)
+				_this.state.positionarr.push(show.position)
+				_this.state.currentarr.push(show.current)
+				_this.state.speedarr.push(show.speed)
 				count+=8
-				if(charts){
-					console.log(charts)
+				if(_this.state.charts){
 					_this.showChart()
 					_this.forceUpdate();
 				}
 			}
-		}, this.state.interval);		
+		}, this.state.interval/2);
 	}
 	showChart = () =>{
 		const {openInarr, closeInarr, openToarr, closeToarr, positionarr, currentarr, speedarr,
@@ -337,17 +350,6 @@ export default class DoorHistory extends Component {
 		let Current = echarts.init(document.getElementById('Current'));
 		let Speed = echarts.init(document.getElementById('Speed'));
 		var _this = this
-		openInarr.push(_this.state.show.openIn)
-		openToarr.push(_this.state.show.openTo)
-		openToOutarr.push(_this.state.show.openToOut)
-		openDeceleratearr.push(_this.state.show.openDecelerate)
-		closeDeceleratearr.push(_this.state.show.closeDecelerate)
-		closeInarr.push(_this.state.show.closeIn)
-		closeToarr.push(_this.state.show.closeTo)
-		closeToOutarr.push(_this.state.show.closeToOut)
-		positionarr.push(_this.state.show.position)
-		currentarr.push(_this.state.show.current)
-		speedarr.push(_this.state.show.speed)
 		if(openInarr.length > 10){
 			openInarr.shift()
 			closeInarr.shift()
@@ -569,15 +571,15 @@ export default class DoorHistory extends Component {
 		const id = this.state.id;
 		history.push(`/events/door/${item.id}/`);
 	}
-  timeTicket = null;
+	timeTicket = null;
 
 	goDetail = link => () => {
 		const id = this.state.id;
 		const type = this.props.location.state.type
 		this.props.history.push(`/door/${id}/params/${type}`);
 	}
-  goQrcode = () => {
-    const device_id = this.state.id;
+	goQrcode = () => {
+		const device_id = this.state.id;
 		getDeviceList({device_id}).then((res)=>{
 			const id = res.data.list[0].IMEI
 			this.setState({
@@ -585,185 +587,187 @@ export default class DoorHistory extends Component {
 				modal: true,
 			});
 		})
-  }
+	}
 	gohistory = () => {
 		const id = this.state.id;
 		this.props.history.push(`/company/door/${id}/fault`);
 	}
-  render() {
-    const { device: { events, view, property, updateTime, }} = this.props;
-    const id = this.state.id;
-    const width = parseInt((window.innerWidth - 100) / 2);
-    let type = null
-    if (property.Model) {
-      property.Model.value == "NSFC01-02T" ? type = 1 : type = 2
-    } else {
-      type = 1
-    }
-    let statusName = '无';
-    if (this.state.show.openKeep) {
-      statusName = '开门到位维持';
-    }
-    if (this.state.show.closeKeep) {
-      statusName = '关门到位维持';
-    }
-    if (this.state.show.open) {
-      statusName = '正在开门';
-    }
-    if (this.state.show.close) {
-      statusName = '正在关门';
-    }
-    if (this.state.show.stop) {
-      statusName = '停止输出';
-    }
-    return (
-      <div className="content tab-hide">
-        <div className={styles.content}>
-          <Modal
-            visible={this.state.modal}
-            transparent
-            maskClosable={false}
-            title="二维码"
-            footer={[{ text: '确定', onPress: () => this.setState({modal: false}) }] }
-            wrapProps={{ onTouchStart: this.onWrapTouchStart }}
-          >
-            <div className="qrcode">
-              <Spin className="qrcode-loading"/>
-              <img src={this.state.src} alt="code"/>
-            </div>
-          </Modal>
+	render() {
+		const { device: { events, view, property, updateTime, }} = this.props;
+		const id = this.state.id;
+		const width = parseInt((window.innerWidth - 100) / 2);
+		let type = null
+		if (property.Model) {
+			property.Model.value == "NSFC01-02T" ? type = 1 : type = 2
+		} else {
+			type = 1
+		}
+		let statusName = '无';
+		if (this.state.show.openKeep) {
+			statusName = '开门到位维持';
+		}
+		if (this.state.show.closeKeep) {
+			statusName = '关门到位维持';
+		}
+		if (this.state.show.open) {
+			statusName = '正在开门';
+		}
+		if (this.state.show.close) {
+			statusName = '正在关门';
+		}
+		if (this.state.show.stop) {
+			statusName = '停止输出';
+		}
+		return (
+			<div className="content tab-hide">
+				<div className={styles.content}>
+					<Modal
+						visible={this.state.modal}
+						transparent
+						maskClosable={false}
+						title="二维码"
+						footer={[{ text: '确定', onPress: () => this.setState({modal: false}) }] }
+						wrapProps={{ onTouchStart: this.onWrapTouchStart }}
+					>
+						<div className="qrcode">
+							<Spin className="qrcode-loading"/>
+							<img src={this.state.src} alt="code"/>
+						</div>
+					</Modal>
 					<Row type="flex" justify="center" align="middle">
-						<Col span={24}>
-							<List style={{ backgroundColor: 'white' }} className="picker-list">
-								<Picker
-									title="实时时长"
-										disabled={this.state.change}
-									cols={1}
-									data={timeList}
-									value={this.state.pick}
-									onOk={v => this.onChange(v)}
-								>
-									<List.Item arrow="horizontal">实时时长</List.Item>
-								</Picker>
-							</List>
+						<Col span={18}>
+							<p className={styles.shishi}>实时监控:</p>
+						</Col>
+						<Col span={6}>
+							<Switch
+							  checkedChildren="开"
+							  unCheckedChildren="关"
+							  onChange={this.onChange}
+							  checked={this.state.switch}
+							  defaultChecked={this.state.switch}
+							/>
 						</Col>
 					</Row>
-          <div className={classNames(styles.tab, view == 0 ?'tab-active' : 'tab-notactive')}>
-            <Row
-              type="flex"
-              justify="space-around"
-              align="middle"
-              className={styles.ladder}
-            >
-              <Col
-                span={24}
-                className={classNames(styles.door)}
-              >
-                <section>
-                  <p>门坐标 ：<i className={styles.status}>{this.state.show.position || this.state.show.position === 0 ? this.state.show.position : '0'}</i>
-                  </p>
-                  <p>门电流 ：<i className={styles.status}>{this.state.show.current} A</i>
-                  </p>
-                  <p>门状态 ：<i className={styles.status}>{statusName || '无'}</i>
-                  </p>
-                  {/*<p>开门次数 ：<i className={styles.status}>{this.state.show.times || '无'}</i>
-                  </p>*/}
-                  <p>开门信号 ：<i className={styles.status}>{this.state.show.openIn ? '开' : '关'}</i>
-                  </p>
-                  <p>关门信号 ：<i className={styles.status}>{this.state.show.closeIn ? '开' : '关'}</i>
-                  </p>
-                  <p>开到位输出信号 ：<i className={styles.status}>{this.state.show.openToOut ? '开' : '关'}</i>
-                  </p>
-                  <p>关到位输出信号 ：<i className={styles.status}>{this.state.show.closeToOut ? '开' : '关'}</i>
-                  </p>
-                  <p style={{
-                    width: '100%',
-                    justifyContent: 'flex-start',
-                  }}
-                  >
-                    <i style={{
-                      flexShrink: 0,
-                    }}
-                    >报警 ：
-                    </i>
-                    <i className={styles.status}>{alertName(this.state.show)}</i>
-                  </p>
-                  <p
-                    style={{
-                      width: '100%',
-                      justifyContent: 'flex-start',
-                    }}
-                  >
-                    最后更新时间 ：
-                    <i className={styles.status}>{moment(this.state.show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
-                  </p>
-                </section>
-              </Col>
-            </Row>
-            <Row
-              type="flex"
-              justify="space-around"
-              align="middle"
-              className={styles.ladder}
-            >
-              <Col
-                span={21}
-              >
-                <div className={styles.shaft}>
-                  <section>
-                    <div />
-                  </section>
-                  <section className={styles.noborder}>
-                    <div />
-                  </section>
-                  <p />
-                  <div className={styles.shaftinfo}>
-                    <p>关到位输入
-                      <i
-                        className={classNames(styles.signal, this.state.show.closeTo
-                        ? styles.ready
-                        : '')}
-                      />
-                    </p>
-                    <p>开到位输入
-                      <i
-                        className={classNames(styles.signal, this.state.show.openTo
-                        ? styles.ready
-                        : '')}
-                      />
-                    </p>
-                  </div>
-                </div>
-                <div className={styles.doors}>
-                  <TweenOne
-                  	animation={this.state.leftAnimation}
-                  	// updateReStart={false}
-                  	style={{ left: `-${(this.state.show.position / this.state.doorWidth) * 50}%` }}
-                  	className={styles.doorbox}
-                  />
-                  <section className={styles.doorstitle}>
-                  	<div
-                  		className={this.state.show.door
-                  		? styles.screen
-                  		: ''}
-                  	/>
-                  	<p>光幕信号</p>
-                  </section>
-                  <TweenOne
-                  	animation={this.state.rightAnimation}
-                  	style={{ right: `-${(this.state.show.position / this.state.doorWidth) * 50}%` }}
-                  	className={styles.doorbox}
-                  />
-                </div>
-              </Col>
-            </Row>
-          </div>
-          <div className={classNames(styles.tab, view == 1 ?'tab-active' : 'tab-notactive')}>
-            <Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>	            
-            	<Col xs={{ span: 24 }} md={{ span: 48 }}>
-								<div id = "OpenIn" style={{ width: 320 , height: 80 }}></div>              
-            	</Col>	            	            
-            </Row>
+					<div className={classNames(styles.tab, view == 0 ?'tab-active' : 'tab-notactive')}>
+						<Row
+						  type="flex"
+						  justify="space-around"
+						  align="middle"
+						  className={styles.ladder}
+						>
+							<Col
+								span={24}
+								className={classNames(styles.door)}
+							>
+								<section>
+									<p>门坐标 ：<i className={styles.status}>{this.state.show.position || this.state.show.position === 0 ? this.state.show.position : '0'}</i>
+									</p>
+									<p>门电流 ：<i className={styles.status}>{this.state.show.current} A</i>
+									</p>
+									{/*<p>开门次数 ：<i className={styles.status}>{this.state.show.times || '无'}</i>
+									</p>*/}
+									<p>开门信号 ：<i className={styles.status}>{this.state.show.openIn ? '开' : '关'}</i>
+									</p>
+									<p>关门信号 ：<i className={styles.status}>{this.state.show.closeIn ? '开' : '关'}</i>
+									</p>
+									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}>门状态 ：<i className={styles.status}>{statusName || '无'}</i>
+									</p>
+									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}>开到位输出信号 ：<i className={styles.status}>{this.state.show.openToOut ? '开' : '关'}</i>
+									</p>
+									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}>关到位输出信号 ：<i className={styles.status}>{this.state.show.closeToOut ? '开' : '关'}</i>
+									</p>
+									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}
+									>
+										<i style={{flexShrink: 0,}}>报警 ：</i>
+										<i className={styles.status}>{alertName(this.state.show)}</i>
+									</p>
+									<p
+										style={{
+										  width: '100%',
+										  justifyContent: 'flex-start',
+										}}
+									>
+										最后更新时间 ：
+										<i className={styles.status}>{moment(this.state.show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
+									</p>
+								</section>
+							</Col>
+						</Row>
+						<Row
+							type="flex"
+							justify="space-around"
+							align="middle"
+							className={styles.ladder}
+						>
+							<Col
+								span={21}
+							>
+								<div className={styles.shaft}>
+									<section>
+										<div />
+									</section>
+									<section className={styles.noborder}>
+										<div />
+									</section>
+									<div className={styles.shaftinfo}>
+										<p>关到位输入
+											<i
+												className={classNames(styles.signal, this.state.show.closeTo
+												? styles.ready
+												: '')}
+											/>
+										</p>
+										<p>开到位输入
+											<i
+												className={classNames(styles.signal, this.state.show.openTo
+												? styles.ready
+												: '')}
+											/>
+										</p>
+									</div>
+								</div>
+									<div className={styles.doors}>
+									  <TweenOne
+										animation={this.state.leftAnimation}
+										// updateReStart={false}
+										style={{ left: `-${(this.state.show.position / this.state.doorWidth) * 50}%` }}
+										className={styles.doorbox}
+									  />
+										<section className={styles.doorstitle}>
+											<div
+												className={this.state.show.door
+												? styles.screen
+												: ''}
+											/>
+											<p>光幕信号</p>
+										</section>
+										<TweenOne
+											animation={this.state.rightAnimation}
+											style={{ right: `-${(this.state.show.position / this.state.doorWidth) * 50}%` }}
+											className={styles.doorbox}
+										/>
+									</div>
+								</Col>
+							</Row>
+					</div>
+					<div className={classNames(styles.tab, view == 1 ?'tab-active' : 'tab-notactive')}>
+						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>	            
+							<Col xs={{ span: 24 }} md={{ span: 48 }}>
+											<div id = "OpenIn" style={{ width: 320 , height: 80 }}></div>              
+							</Col>	            	            
+						</Row>
 						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>	            
 							<Col xs={{ span: 24 }} md={{ span: 48 }}>
 								<div id = "OpenTo" style={{ width: 320 , height: 80 }}></div>              
@@ -785,24 +789,24 @@ export default class DoorHistory extends Component {
 							</Col>
 						</Row> 
 						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
-						 	<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
-						 			<div id = "Current" style={{ width: 320 , height: 240 }}></div>
-						 	</Col>
+							<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
+									<div id = "Current" style={{ width: 320 , height: 240 }}></div>
+							</Col>
 						</Row> 
 						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
-						 	<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
-						 			<div id = "Speed" style={{ width: 320 , height: 240 }}></div>
-						 	</Col>
-						</Row> 
-          </div>
-          <div className={styles.btns}>
-            {/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}
-            <section onClick={this.goDetail(type == 2 ? 'params/2': 'params/1')}>菜单</section>
-            <section onClick={this.goQrcode}>二维码</section>
+							<Col xs={{ span: 24 }} md={{ span: 48 }}>
+								<div id = "Speed" style={{ width: 320 , height: 240 }}></div>
+							</Col>
+						</Row>
+					</div>
+					<div className={styles.btns}>
+						{/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}
+						<section onClick={this.goDetail(type == 2 ? 'params/2': 'params/1')}>菜单</section>
+						<section onClick={this.goQrcode}>二维码</section>
 						<section onClick={this.gohistory}>历史故障</section>
-          </div>
-        </div>
-      </div>
-    );
-  }
+					</div>
+				</div>
+			</div>
+		);
+	}
 }

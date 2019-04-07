@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import _ from 'lodash';
 import base64url from 'base64url';
 import { Debounce } from 'lodash-decorators/debounce';
-import { Row, Col, Button, Spin, Icon, DatePicker,  } from 'antd';
+import { Row, Col, Button, Spin, Icon, DatePicker, Switch, } from 'antd';
 import { Picker, List, Tabs, Modal } from 'antd-mobile';
 import classNames from 'classnames';
 import TweenOne from 'rc-tween-one';
@@ -15,9 +15,12 @@ import {
 	getEvent, postMonitor, getFollowDevices, 
 	getDeviceList, getFloorData, getCtrlData,
 } from '../../services/api';
+
+
 var inte = null;
 var charts = true;
 var websock = '';
+const alert = Modal.alert
 const tabs = [
 	{ title: '门' 	},
 	{ title: '分屏' },
@@ -107,6 +110,7 @@ const data = [{
 
 export default class CtrlRealtime extends Component {
 	state = {
+		charts:true,
 		floor:[],
 		leftAnimation: {
 			left: '0%',
@@ -116,6 +120,7 @@ export default class CtrlRealtime extends Component {
 			right: '0%',
 			duration: 100,
 		},
+		switch:false,
 		pick: '',
 		modal: false,
 		src: '',
@@ -165,15 +170,18 @@ export default class CtrlRealtime extends Component {
 		await this.getBaseData()
 		this.getfloor()
 		this.initWebsocket()
+		// this.test()
 	}
 	componentWillUnmount() {
-		charts = false;
+		this.state.charts = false;
 		clearInterval(inte)
 		websock.close()
 	}
-	componentDidMount(){
-		const arr = document.getElementById('23')
-		console.log(arr)
+	test(){
+		let asd = setInterval(function () {
+			let ss = new Date()
+			console.log(ss.toLocaleTimeString())
+		}, this.state.interval);
 	}
 	initWebsocket = () =>{ //初始化weosocket
 		const {location, currentUser } = this.props;
@@ -189,10 +197,13 @@ export default class CtrlRealtime extends Component {
 		websock.onmessage= (e) =>{
 			if(e.data=="closed"){
 				alert("此次实时数据已结束")
-				this.state.change = false;
+				this.state.switch = false;
 				_this.state.stop = 1
 				websock.close()
+				clearInterval(inte)
 			}else{
+				let ss = new Date()
+				console.log(ss.toLocaleTimeString())
 				var redata = JSON.parse(e.data)
 				_this.getData(redata)
 			}
@@ -200,7 +211,7 @@ export default class CtrlRealtime extends Component {
 		websock.onclose = this.websocketclosed;
 	}
 	websocketonopen() {
-		// console.log("WebSocket连接成功");
+		console.log("WebSocket连接成功");
 	}
 	websocketonerror(e) { //错误
 		console.log("WebSocket连接发生错误");
@@ -208,29 +219,35 @@ export default class CtrlRealtime extends Component {
 	websocketclosed(){
 		console.log("WebSocket已关闭")
 	}
-	onChange = (val) => {
-		this.state.change = true;
-		const {location } = this.props;
-		const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
-		const device_id = match[1];
-		this.initWebsocket()
-		getFollowDevices({device_id}).then((res)=>{
-			if(res.code == 0){
-				const op = 'open';
-				const IMEI = res.data.list[0].IMEI;
-				const interval = 1000;
-				const threshold = 1;
-				const duration = val[0];
-				const device_type = '240';
-				const type = '0';
-				const segment = '00,00,00,00';
-				const address = '00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00';
-				postMonitor({ op, IMEI, interval, threshold, duration, device_type, type, segment, address}).then((res) => {});
-				alert("请等待接收数据");
-			}else if(res.code == 670){
-				alert("当前设备已被人启动监控")
-			}
-		})
+	onChange = async (val) => {
+		this.state.switch = !this.state.switch
+		this.forceUpdate()
+		if(this.state.switch == true){
+			const {location } = this.props;
+			const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
+			const device_id = match[1];
+			this.initWebsocket()
+			getFollowDevices({device_id}).then((res)=>{
+				if(res.code == 0){
+					const op = 'open';
+					const IMEI = res.data.list[0].IMEI;
+					const interval = 1000;
+					const threshold = 2;
+					const duration = 600;
+					const device_type = '240';
+					const type = '0';
+					const segment = '00,00,00,00';
+					const address = '00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00';
+					postMonitor({ op, IMEI, interval, threshold, duration, device_type, type, segment, address}).then((res) => {});
+					alert("请等待接收数据");
+				}else if(res.code == 670){
+					alert("当前设备已被人启动监控")
+				}
+			})
+		}else{
+			websock.close()
+			this.forceUpdate()
+		}
 	}
 	getBaseData = () => {
 		const { location } = this.props;
@@ -255,11 +272,11 @@ export default class CtrlRealtime extends Component {
 		});
 	}
 	getData = (val) => {
+		const {run,lock,close,} = this.state;
 		let buffer = []
 		buffer = base64url.toBuffer(val.data);	//8位转流
+		console.log(buffer)
 		let count= 0
-		let upfloorList = []
-		let downfloorList = []
 		let markList = []
 		const show = this.state.show
 		const floor = this.state.floor
@@ -277,6 +294,9 @@ export default class CtrlRealtime extends Component {
 				show.model    = buffer[count+1]&0xff						//获取电梯模式
 				show.status   = buffer[count+2]&0xff						//获取电梯状态				
 				show.floor    = buffer[count+27]&0xff           //获取电梯当前楼层
+				_this.state.run.push(show.run)
+				_this.state.lock.push(show.lock)
+				_this.state.close.push(show.close)
 				markList[0] = (buffer[count+19]&0x01)
 				markList[1] = (buffer[count+19]&0x02)>>1
 				markList[2] = (buffer[count+19]&0x04)>>2
@@ -347,11 +367,10 @@ export default class CtrlRealtime extends Component {
 				_this.state.markList.reverse()
 			}
 			count+=33
-			if(charts){
+			if(_this.state.charts){
 				_this.showChart()
-				_this.forceUpdate();
 			}
-		}, this.state.interval);
+		}, this.state.interval/2);
 	}
 	getfloor = (val) => {
 		const {show, } = this.state
@@ -370,13 +389,13 @@ export default class CtrlRealtime extends Component {
 				})
 				let high = arr.length/3;
 				for(let i=0; i<high;i++){
-					floor[high-1-i]=arr[i*3]+arr[i*3+1]+arr[i*3+2]
+					floor[high-1-i]=arr[i*3]+arr[i*3+1]+arr[i*3+2];
 				}
 				this.setState({
 					floor,
 				});
 			}else{
-				alert("获取楼层高度失败！")
+				alert("获取楼层高度失败！");
 			}
 		})
 	}
@@ -387,9 +406,6 @@ export default class CtrlRealtime extends Component {
 		let Lock = echarts.init(document.getElementById('lock'))
 		let Close = echarts.init(document.getElementById('close'))
 		var _this = this
-		run.push(_this.state.show.run)
-		lock.push(_this.state.show.lock)
-		close.push(_this.state.show.close)
 		if(run.length > 10){
 			run.shift()
 			lock.shift()
@@ -509,7 +525,6 @@ export default class CtrlRealtime extends Component {
 	render() {
 		let { ctrl: { event, view, device, floors, property, } } = this.props;
 		const { floor, markFloor, markList} = this.state;
-		console.log(markList)
 		const id = this.props.match.params.id;
 		return (
 			<div className="content tab-hide">
@@ -528,20 +543,18 @@ export default class CtrlRealtime extends Component {
 						</div>
 					</Modal>
 					<Row type="flex" justify="center" align="middle">
-							<Col span={24}>
-								<List style={{ backgroundColor: 'white' }} className="picker-list">
-									<Picker
-										title="实时时长"
-										disabled={this.state.change}
-										cols={1}
-										data={timeList}
-										value={this.state.pick}
-										onOk={v => this.onChange(v)}
-									>
-										<List.Item arrow="horizontal">实时时长</List.Item>
-									</Picker>
-								</List>
-							</Col>
+						<Col span={18}>
+							<p className={styles.shishi}>实时监控:</p>
+						</Col>
+						<Col span={6}>
+							<Switch
+							  checkedChildren="开"
+							  unCheckedChildren="关"
+							  onChange={this.onChange}
+							  checked={this.state.switch}
+							  defaultChecked={this.state.switch}
+							/>
+						</Col>
 					</Row>
 					<div className={classNames(styles.tab, view == 0 ?'tab-active' : 'tab-notactive')}>
 						<Row

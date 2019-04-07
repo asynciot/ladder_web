@@ -8,9 +8,11 @@ import base64url from 'base64url';
 import classNames from 'classnames';
 import StringMask from 'string-mask';
 import styles from './Debug.less';
+
 const Item = List.Item;
 const pattern =  /^[0-9a-fA-f]+$/
 const formatter = new StringMask('AA,AA,AA,AA,AA,AA,AA,AA,AA,AA,AA,AA,AA,AA,AA,AA');
+
 function str2format (val, len, format) {
   while(val.length < len) {
     val += ' '
