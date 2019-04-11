@@ -144,6 +144,20 @@ export default class Home extends Component {
 				}
 			}
 		}).catch((e => console.info(e)));
+		getFault({ num: 10, page:1, islast:1, device_type:'door', state:'untreated' }).then((res) => {
+			const pos = res.data.list.map((item,index) => {
+			})
+			this.setState({
+				dooroffline:res.data.totalNumber,
+			});
+		})
+		getFault({ num: 10, page:1, islast:1, device_type:'ctrl', state:'untreated' }).then((res) => {
+			const pos = res.data.list.map((item,index) => {
+			})
+			this.setState({
+				ctrloffline:res.data.totalNumber,
+			});
+		})
 	}
 	onpress = () =>{
 		var geolocation = new BMap.Geolocation();
@@ -295,7 +309,7 @@ export default class Home extends Component {
 										<div className={styles.gridnum1}>
 											{devicesStatus.dooronline}
 										</div>
-										正常
+										在线
 									</div>
 								</Card>
 							</Col>
@@ -303,7 +317,7 @@ export default class Home extends Component {
 								<Card onClick={this.toFollowDoorOffline}>
 									<div className={styles.gridright}>													
 										<div className={styles.gridnum2}>
-											{devicesStatus.dooroffline}
+											{this.state.dooroffline}
 										</div>
 										故障
 									</div>
@@ -337,7 +351,7 @@ export default class Home extends Component {
 										<div className={styles.gridnum1}>
 											{devicesStatus.ctrlonline}
 										</div>
-										正常
+										在线
 									</div>
 								</Card>
 							</Col>
@@ -345,7 +359,7 @@ export default class Home extends Component {
 								<Card onClick={this.toFollowCtrlOffline}>
 									<div className={styles.gridright}>
 										<div className={styles.gridnum2}>
-											{devicesStatus.ctrloffline}
+											{this.state.ctrloffline}
 										</div>
 										故障
 									</div>

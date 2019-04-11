@@ -177,11 +177,8 @@ export default class CtrlRealtime extends Component {
 		clearInterval(inte)
 		websock.close()
 	}
-	test(){
-		let asd = setInterval(function () {
-			let ss = new Date()
-			console.log(ss.toLocaleTimeString())
-		}, this.state.interval);
+	getLadder(){
+		
 	}
 	initWebsocket = () =>{ //初始化weosocket
 		const {location, currentUser } = this.props;
@@ -231,9 +228,9 @@ export default class CtrlRealtime extends Component {
 				if(res.code == 0){
 					const op = 'open';
 					const IMEI = res.data.list[0].IMEI;
-					const interval = 1000;
-					const threshold = 2;
-					const duration = 600;
+					const interval = 500;
+					const threshold = 4;
+					const duration = 120;
 					const device_type = '240';
 					const type = '0';
 					const segment = '00,00,00,00';
@@ -261,13 +258,13 @@ export default class CtrlRealtime extends Component {
 			show.downCall = (buffer[6]&0x02)>>1
 			show.run      = (buffer[6]&0x04)>>2					//获取运行信号
 			show.lock     = (buffer[6]&0x08)>>3					//获取门锁信号
-			show.open    = (buffer[6]&0x10)>>4					//获取关门信号
+			show.open     = (buffer[6]&0x10)>>4					//获取关门信号
 			show.close    = (buffer[6]&0x20)>>5					//获取关门信号
 			show.openBtn  = (buffer[6]&0x40)>>6					//获取开门按钮信号
 			show.closeBtn = (buffer[6]&0x80)>>7					//获取关门按钮信号
 			show.model    = buffer[7]&0xff						//获取电梯模式
-			show.status   = buffer[8]&0xff						//获取电梯状态				
-			show.floor    = buffer[9]&0xff           //获取电梯当前楼层
+			show.status   = buffer[8]&0xff						//获取电梯状态
+			show.floor    = buffer[9]&0xff           			//获取电梯当前楼层
 			show.updateTime = res.data.list[0].t_update
 		});
 	}
@@ -281,96 +278,96 @@ export default class CtrlRealtime extends Component {
 		const show = this.state.show
 		const floor = this.state.floor
 		var _this = this
-		inte = setInterval(function () {
-			if((count+33) <= buffer.length){
-				show.upCall   = buffer[count+0]&0x01							//上运行方向
-				show.downCall = (buffer[count+0]&0x02)>>1					//下运行方向
-				show.run      = (buffer[count+0]&0x04)>>2					//获取运行信号
-				show.lock     = (buffer[count+0]&0x08)>>3					//获取门锁信号
-				show.open     = (buffer[count+0]&0x10)>>4					//获取关门信号
-				show.close    = (buffer[count+0]&0x20)>>5					//获取关门信号
-				show.openBtn  = (buffer[count+0]&0x40)>>6					//获取开门按钮信号
-				show.closeBtn = (buffer[count+0]&0x80)>>7					//获取关门按钮信号
-				show.model    = buffer[count+1]&0xff						//获取电梯模式
-				show.status   = buffer[count+2]&0xff						//获取电梯状态				
-				show.floor    = buffer[count+27]&0xff           //获取电梯当前楼层
-				_this.state.run.push(show.run)
-				_this.state.lock.push(show.lock)
-				_this.state.close.push(show.close)
-				markList[0] = (buffer[count+19]&0x01)
-				markList[1] = (buffer[count+19]&0x02)>>1
-				markList[2] = (buffer[count+19]&0x04)>>2
-				markList[3] = (buffer[count+19]&0x08)>>3
-				markList[4] = (buffer[count+19]&0x10)>>4
-				markList[5] = (buffer[count+19]&0x20)>>5
-				markList[6] = (buffer[count+19]&0x40)>>6
-				markList[7] = (buffer[count+19]&0x80)>>7
-				markList[8] = (buffer[count+20]&0x01)
-				markList[9] = (buffer[count+20]&0x02)>>1
-				markList[10] = (buffer[count+20]&0x04)>>2
-				markList[11] = (buffer[count+20]&0x08)>>3
-				markList[12] = (buffer[count+20]&0x10)>>4
-				markList[13] = (buffer[count+20]&0x20)>>5
-				markList[14] = (buffer[count+20]&0x40)>>6
-				markList[15] = (buffer[count+20]&0x80)>>7
-				markList[16] = (buffer[count+21]&0x01)
-				markList[17] = (buffer[count+21]&0x02)>>1
-				markList[18] = (buffer[count+21]&0x04)>>2
-				markList[19] = (buffer[count+21]&0x08)>>3
-				markList[20] = (buffer[count+21]&0x10)>>4
-				markList[21] = (buffer[count+21]&0x20)>>5
-				markList[22] = (buffer[count+21]&0x40)>>6
-				markList[23] = (buffer[count+21]&0x80)>>7
-				markList[24] = (buffer[count+22]&0x01)
-				markList[25] = (buffer[count+22]&0x02)>>1
-				markList[26] = (buffer[count+22]&0x04)>>2
-				markList[27] = (buffer[count+22]&0x08)>>3
-				markList[28] = (buffer[count+22]&0x10)>>4
-				markList[29] = (buffer[count+22]&0x20)>>5
-				markList[30] = (buffer[count+22]&0x40)>>6
-				markList[31] = (buffer[count+22]&0x80)>>7
-				markList[32] = (buffer[count+23]&0x01)
-				markList[33] = (buffer[count+23]&0x02)>>1
-				markList[34] = (buffer[count+23]&0x04)>>2
-				markList[35] = (buffer[count+23]&0x08)>>3
-				markList[36] = (buffer[count+23]&0x10)>>4
-				markList[37] = (buffer[count+23]&0x20)>>5
-				markList[38] = (buffer[count+23]&0x40)>>6
-				markList[39] = (buffer[count+23]&0x80)>>7
-				markList[40] = (buffer[count+24]&0x01)
-				markList[41] = (buffer[count+24]&0x02)>>1
-				markList[42] = (buffer[count+24]&0x04)>>2
-				markList[43] = (buffer[count+24]&0x08)>>3
-				markList[44] = (buffer[count+24]&0x10)>>4
-				markList[45] = (buffer[count+24]&0x20)>>5
-				markList[46] = (buffer[count+24]&0x40)>>6
-				markList[47] = (buffer[count+24]&0x80)>>7
-				markList[48] = (buffer[count+25]&0x01)
-				markList[49] = (buffer[count+25]&0x02)>>1
-				markList[50] = (buffer[count+25]&0x04)>>2
-				markList[51] = (buffer[count+25]&0x08)>>3
-				markList[52] = (buffer[count+25]&0x10)>>4
-				markList[53] = (buffer[count+25]&0x20)>>5
-				markList[54] = (buffer[count+25]&0x40)>>6
-				markList[55] = (buffer[count+25]&0x80)>>7
-				markList[56] = (buffer[count+26]&0x01)
-				markList[57] = (buffer[count+26]&0x02)>>1
-				markList[58] = (buffer[count+26]&0x04)>>2
-				markList[59] = (buffer[count+26]&0x08)>>3
-				markList[60] = (buffer[count+26]&0x10)>>4
-				markList[61] = (buffer[count+26]&0x20)>>5
-				markList[62] = (buffer[count+26]&0x40)>>6
-				markList[63] = (buffer[count+26]&0x80)>>7
-				for(let i=0;i<floor.length;i++){
-					_this.state.markList[i] = markList[i]
-				}
-				_this.state.markList.reverse()
+		if((count+33) <= buffer.length){
+			show.upCall   = buffer[count+0]&0x01							//上运行方向
+			show.downCall = (buffer[count+0]&0x02)>>1					//下运行方向
+			show.run      = (buffer[count+0]&0x04)>>2					//获取运行信号
+			show.lock     = (buffer[count+0]&0x08)>>3					//获取门锁信号
+			show.open     = (buffer[count+0]&0x10)>>4					//获取关门信号
+			show.close    = (buffer[count+0]&0x20)>>5					//获取关门信号
+			show.openBtn  = (buffer[count+0]&0x40)>>6					//获取开门按钮信号
+			show.closeBtn = (buffer[count+0]&0x80)>>7					//获取关门按钮信号
+			show.model    = buffer[count+1]&0xff						//获取电梯模式
+			show.status   = buffer[count+2]&0xff						//获取电梯状态				
+			show.floor    = buffer[count+27]&0xff           //获取电梯当前楼层
+			_this.state.run.push(show.run)
+			_this.state.lock.push(show.lock)
+			_this.state.close.push(show.close)
+			markList[0] = (buffer[count+19]&0x01)
+			markList[1] = (buffer[count+19]&0x02)>>1
+			markList[2] = (buffer[count+19]&0x04)>>2
+			markList[3] = (buffer[count+19]&0x08)>>3
+			markList[4] = (buffer[count+19]&0x10)>>4
+			markList[5] = (buffer[count+19]&0x20)>>5
+			markList[6] = (buffer[count+19]&0x40)>>6
+			markList[7] = (buffer[count+19]&0x80)>>7
+			markList[8] = (buffer[count+20]&0x01)
+			markList[9] = (buffer[count+20]&0x02)>>1
+			markList[10] = (buffer[count+20]&0x04)>>2
+			markList[11] = (buffer[count+20]&0x08)>>3
+			markList[12] = (buffer[count+20]&0x10)>>4
+			markList[13] = (buffer[count+20]&0x20)>>5
+			markList[14] = (buffer[count+20]&0x40)>>6
+			markList[15] = (buffer[count+20]&0x80)>>7
+			markList[16] = (buffer[count+21]&0x01)
+			markList[17] = (buffer[count+21]&0x02)>>1
+			markList[18] = (buffer[count+21]&0x04)>>2
+			markList[19] = (buffer[count+21]&0x08)>>3
+			markList[20] = (buffer[count+21]&0x10)>>4
+			markList[21] = (buffer[count+21]&0x20)>>5
+			markList[22] = (buffer[count+21]&0x40)>>6
+			markList[23] = (buffer[count+21]&0x80)>>7
+			markList[24] = (buffer[count+22]&0x01)
+			markList[25] = (buffer[count+22]&0x02)>>1
+			markList[26] = (buffer[count+22]&0x04)>>2
+			markList[27] = (buffer[count+22]&0x08)>>3
+			markList[28] = (buffer[count+22]&0x10)>>4
+			markList[29] = (buffer[count+22]&0x20)>>5
+			markList[30] = (buffer[count+22]&0x40)>>6
+			markList[31] = (buffer[count+22]&0x80)>>7
+			markList[32] = (buffer[count+23]&0x01)
+			markList[33] = (buffer[count+23]&0x02)>>1
+			markList[34] = (buffer[count+23]&0x04)>>2
+			markList[35] = (buffer[count+23]&0x08)>>3
+			markList[36] = (buffer[count+23]&0x10)>>4
+			markList[37] = (buffer[count+23]&0x20)>>5
+			markList[38] = (buffer[count+23]&0x40)>>6
+			markList[39] = (buffer[count+23]&0x80)>>7
+			markList[40] = (buffer[count+24]&0x01)
+			markList[41] = (buffer[count+24]&0x02)>>1
+			markList[42] = (buffer[count+24]&0x04)>>2
+			markList[43] = (buffer[count+24]&0x08)>>3
+			markList[44] = (buffer[count+24]&0x10)>>4
+			markList[45] = (buffer[count+24]&0x20)>>5
+			markList[46] = (buffer[count+24]&0x40)>>6
+			markList[47] = (buffer[count+24]&0x80)>>7
+			markList[48] = (buffer[count+25]&0x01)
+			markList[49] = (buffer[count+25]&0x02)>>1
+			markList[50] = (buffer[count+25]&0x04)>>2
+			markList[51] = (buffer[count+25]&0x08)>>3
+			markList[52] = (buffer[count+25]&0x10)>>4
+			markList[53] = (buffer[count+25]&0x20)>>5
+			markList[54] = (buffer[count+25]&0x40)>>6
+			markList[55] = (buffer[count+25]&0x80)>>7
+			markList[56] = (buffer[count+26]&0x01)
+			markList[57] = (buffer[count+26]&0x02)>>1
+			markList[58] = (buffer[count+26]&0x04)>>2
+			markList[59] = (buffer[count+26]&0x08)>>3
+			markList[60] = (buffer[count+26]&0x10)>>4
+			markList[61] = (buffer[count+26]&0x20)>>5
+			markList[62] = (buffer[count+26]&0x40)>>6
+			markList[63] = (buffer[count+26]&0x80)>>7
+			for(let i=0;i<floor.length;i++){
+				_this.state.markList[i] = markList[i]
 			}
-			count+=33
-			if(_this.state.charts){
-				_this.showChart()
-			}
-		}, this.state.interval/2);
+			_this.state.markList.reverse()
+			_this.forceUpdate()
+		}
+		count+=33
+		if(_this.state.charts){
+			_this.showChart()
+			_this.forceUpdate()
+		}
 	}
 	getfloor = (val) => {
 		const {show, } = this.state

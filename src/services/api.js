@@ -55,7 +55,7 @@ export async function getCaptcha(params) {
 		body: params,
   });
 }
-// ladder
+// device
 export async function getDeviceList(params) {
   return request(`/device/Device/ReadMore?${stringify(params)}`);
 }
@@ -80,73 +80,6 @@ export async function followDevice(IMEI, params) {
     body: params,
   });  
 }
-
-// message
-export async function queryMessage(params) {
-  return request(`/common/message?${stringify(params)}`);
-}
-export async function deleteMessage(params) {
-  return request(`/common/message?${stringify(params)}`,{
-	 method: 'DELETE',
-  });
-}
-export function getMessages(params) {
-  return request(`/common/message?${stringify(params)}`);
-}
-export function getMessageCount(params) {
-  return request(`/common/message/count?${stringify(params)}`);
-}
-export async function unreadMessage() {
-  return request('/common/message/count');
-}
-
-//company
-export async function rejectApply(params) {
-  return request('/documents/company/reject', {
-    method: 'POST',
-    body: params,
-  });
-}
-
-export async function acceptApply(params) {
-  return request('/documents/company/accept', {
-    method: 'POST',
-    body: params,
-  });
-}
-
-// group
-export async function newGroup(params) {
-  return request('/documents/company', {
-    method: 'POST',
-    body: params,
-  });
-}
-
-export async function joinGroup(params) {
-  return request('/documents/company/join', {
-    method: 'POST',
-    body: params,
-  });
-}
-export async function readCompany(params) {
-  return request(`/documents/company?${stringify(params)}`);
-}
-export async function readGroup() {
-  return request('/account/company');
-}
-// error code
-export async function errorCode(params) {
-  return request(`/events/errorCode?${stringify(params)}`);
-}
-
-export function getBanners(params) {
-  return request(`/common/banner?${stringify(params)}`);
-}
-
-
-
-// device
 export function postFollowInfo(params) {
   return request('/device/follow', {
     method: 'POST',
@@ -211,11 +144,6 @@ export function postLocation(params) {
     body: params,
   });
 }
-
-// statistic
-export function getStatistic(params) {
-  return request(`/mointors/statistic?${stringify(params)}`);
-}
 export async function postMonitor(params) {
   return request('/device/Monitor', {
     method: 'POST',
@@ -228,3 +156,75 @@ export async function postCall(params) {
     body: params,
   });
 }
+// ladder
+export function getLadder(params) {
+  return request(`/device/Ladder/ReadMore?${stringify(params)}`);
+}
+
+// message
+export async function queryMessage(params) {
+  return request(`/common/message?${stringify(params)}`);
+}
+export async function deleteMessage(params) {
+  return request(`/common/message?${stringify(params)}`,{
+	 method: 'DELETE',
+  });
+}
+export function getMessages(params) {
+  return request(`/common/message?${stringify(params)}`);
+}
+export function getMessageCount(params) {
+  return request(`/common/message/count?${stringify(params)}`);
+}
+export async function unreadMessage() {
+  return request('/common/message/count');
+}
+
+//company
+export async function rejectApply(params) {
+  return request('/documents/company/reject', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function acceptApply(params) {
+  return request('/documents/company/accept', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function newGroup(params) {
+  return request('/documents/company', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function joinGroup(params) {
+  return request('/documents/company/join', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function readCompany(params) {
+  return request(`/documents/company?${stringify(params)}`);
+}
+export async function readGroup() {
+  return request('/account/company');
+}
+
+// error code
+export async function errorCode(params) {
+  return request(`/events/errorCode?${stringify(params)}`);
+}
+
+export function getBanners(params) {
+  return request(`/common/banner?${stringify(params)}`);
+}
+
+
+
+// statistic
+export function getStatistic(params) {
+  return request(`/mointors/statistic?${stringify(params)}`);
+}
+

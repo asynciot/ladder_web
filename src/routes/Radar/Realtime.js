@@ -202,12 +202,25 @@ export default class DoorHistory extends Component {
 				if(res.code == 0){
 					const op = 'open';
 					const IMEI = res.data.list[0].IMEI;
-					const interval = 1000;
-					const threshold = 2;
-					const duration = 600;
+					const interval = 500;
+					const threshold = 4;
+					const duration = 30;
 					const device_type = '15';
 					const type = '0';
+					let a=0;
+					const b=5;
+					var intevalT = null;
 					postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {});
+					function posta(){
+						a=a+1;
+						if(a<b){
+							console.log(a)
+							let ss = new Date()
+							console.log(ss.toLocaleTimeString())
+							postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {});
+						}
+					}
+					intevalT=setInterval(posta,30000);
 					alert("请不要离开当前页面，等待数据传输");
 				}else if(res.code == 670){
 					alert("当前设备已被人启动监控")
@@ -291,52 +304,51 @@ export default class DoorHistory extends Component {
 		buffer = base64url.toBuffer(val.data);	//8位转流
 		let count= 0
 		const _this = this
-		inte = setInterval(function () {
-			if((count+8) <= buffer.length){
-				show.openIn = (buffer[count+0]&0x80)>>7							//获取开门输入信号
-				show.closeIn = (buffer[count+0]&0x40)>>6						//获取关门信号
-				show.openTo =	(buffer[count+0]&0x20)>>5						//获取开到位输入信号
-				show.closeTo = (buffer[count+0]&0x10)>>4						//获取关到位输入信号	
-				show.openDecelerate =	(buffer[count+0]&0x08)>>3				//开减速输入信号 
-				show.closeDecelerate = (buffer[count+0]&0x04)>>2				//关减速输入信号
-				show.openToOut = (buffer[count+0]&0x02)>>1						//获取开到位输出信号
-				show.closeToOut = buffer[count+0]&0x01							//获取关到位输出信号			
-				show.door	= (buffer[count+1]&0x80)>>7							//正在门光幕
-				show.open	= (buffer[count+1]&0x40)>>6							//正在开门信号
-				show.close =	(buffer[count+1]&0x20)>>5						//正在关门信号
-				show.openKeep	= (buffer[count+1]&0x10)>>4						//开门到位维持信号
-				show.closeKeep	= (buffer[count+1]&0x08)>>3						//关门到位维持信号
-				show.stop	= (buffer[count+1]&0x04)>>2							//停止输出信号
-				show.inHigh = (buffer[count+1]&0x02)>>1							//输入电压过高
-				show.inLow = 	buffer[count+1]&0x01							//输入电压过低
-				show.outHigh = (buffer[count+2]&0x80)>>7						//输出过流
-				show.motorHigh = (buffer[count+2]&0x40)>>6						//电机过载
-				show.flySafe = (buffer[count+2]&0x20)>>5						//飞车保护
-				show.closeStop = (buffer[count+2]&0x10)>>4						//开关门受阻
-				show.position	= ((buffer[count+2]&0x0f)<<8)+(buffer[count+3]&0xff)		//获取位置信号
-				show.current = (((buffer[count+4]&0xff)<<8)+(buffer[count+5]&0xff))/1000		//获取电流信号
-				show.speed = (((buffer[count+6]&0xff)<<8)+(buffer[count+7]&0xff))/1000
-				if(show.speed>32.767){
-					show.speed = (show.speed-65.535).toFixed(2)
-				}
-				_this.state.openInarr.push(show.openIn)
-				_this.state.openToarr.push(show.openTo)
-				_this.state.openToOutarr.push(show.openToOut)
-				_this.state.openDeceleratearr.push(show.openDecelerate)
-				_this.state.closeDeceleratearr.push(show.closeDecelerate)
-				_this.state.closeInarr.push(show.closeIn)
-				_this.state.closeToarr.push(show.closeTo)
-				_this.state.closeToOutarr.push(show.closeToOut)
-				_this.state.positionarr.push(show.position)
-				_this.state.currentarr.push(show.current)
-				_this.state.speedarr.push(show.speed)
-				count+=8
-				if(_this.state.charts){
-					_this.showChart()
-					_this.forceUpdate();
-				}
+		if((count+8) <= buffer.length){
+			show.openIn = (buffer[count+0]&0x80)>>7							//获取开门输入信号
+			show.closeIn = (buffer[count+0]&0x40)>>6						//获取关门信号
+			show.openTo =	(buffer[count+0]&0x20)>>5						//获取开到位输入信号
+			show.closeTo = (buffer[count+0]&0x10)>>4						//获取关到位输入信号	
+			show.openDecelerate =	(buffer[count+0]&0x08)>>3				//开减速输入信号 
+			show.closeDecelerate = (buffer[count+0]&0x04)>>2				//关减速输入信号
+			show.openToOut = (buffer[count+0]&0x02)>>1						//获取开到位输出信号
+			show.closeToOut = buffer[count+0]&0x01							//获取关到位输出信号			
+			show.door	= (buffer[count+1]&0x80)>>7							//正在门光幕
+			show.open	= (buffer[count+1]&0x40)>>6							//正在开门信号
+			show.close =	(buffer[count+1]&0x20)>>5						//正在关门信号
+			show.openKeep	= (buffer[count+1]&0x10)>>4						//开门到位维持信号
+			show.closeKeep	= (buffer[count+1]&0x08)>>3						//关门到位维持信号
+			show.stop	= (buffer[count+1]&0x04)>>2							//停止输出信号
+			show.inHigh = (buffer[count+1]&0x02)>>1							//输入电压过高
+			show.inLow = 	buffer[count+1]&0x01							//输入电压过低
+			show.outHigh = (buffer[count+2]&0x80)>>7						//输出过流
+			show.motorHigh = (buffer[count+2]&0x40)>>6						//电机过载
+			show.flySafe = (buffer[count+2]&0x20)>>5						//飞车保护
+			show.closeStop = (buffer[count+2]&0x10)>>4						//开关门受阻
+			show.position	= ((buffer[count+2]&0x0f)<<8)+(buffer[count+3]&0xff)		//获取位置信号
+			show.current = (((buffer[count+4]&0xff)<<8)+(buffer[count+5]&0xff))/1000		//获取电流信号
+			show.speed = (((buffer[count+6]&0xff)<<8)+(buffer[count+7]&0xff))/1000
+			if(show.speed>32.767){
+				show.speed = (show.speed-65.535).toFixed(2)
 			}
-		}, this.state.interval/2);
+			_this.state.openInarr.push(show.openIn)
+			_this.state.openToarr.push(show.openTo)
+			_this.state.openToOutarr.push(show.openToOut)
+			_this.state.openDeceleratearr.push(show.openDecelerate)
+			_this.state.closeDeceleratearr.push(show.closeDecelerate)
+			_this.state.closeInarr.push(show.closeIn)
+			_this.state.closeToarr.push(show.closeTo)
+			_this.state.closeToOutarr.push(show.closeToOut)
+			_this.state.positionarr.push(show.position)
+			_this.state.currentarr.push(show.current)
+			_this.state.speedarr.push(show.speed)
+			_this.forceUpdate();
+			count+=8
+			if(_this.state.charts){
+				_this.showChart()
+				_this.forceUpdate();
+			}
+		}
 	}
 	showChart = () =>{
 		const {openInarr, closeInarr, openToarr, closeToarr, positionarr, currentarr, speedarr,

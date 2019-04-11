@@ -53,6 +53,7 @@ const faultCode = {
 	'41': '平层位置异常',
 }
 const state = {
+	"treating": '未处理',
 	"treated": '已处理',
 	"untreated": '未处理',
 }

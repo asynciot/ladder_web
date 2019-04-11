@@ -22,7 +22,12 @@ const options = [
 }))
 export default class Tech extends Component {
   state = {
-    navs: [{
+    navs: [
+// 			{
+//       label: '故障代码查询',
+//       link: '/tech/code',
+//     },
+		{
       label: '产品说明书',
       link: '/tech/manual',
     }, {

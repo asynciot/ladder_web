@@ -21,6 +21,7 @@ const faultCode = {
 	'128': '输入电压过高',
 }
 const state = {
+	"treating": '未处理',
 	"treated": '已处理',
 	"untreated": '未处理',
 }
