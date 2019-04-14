@@ -187,10 +187,6 @@ export const getRouterData = (app) => {
 			name: '控制柜',
 			component: dynamicWrapper(app, ['device'], () => import('../routes/Radar/IO')),
 		},
-		'/ctrl/:id/roof': {
-			name: '控制柜',
-			component: dynamicWrapper(app, ['device'], () => import('../routes/Radar/Roof')),
-		},
 		'/ctrl/:id/version': {
 			name: '控制柜',
 			component: dynamicWrapper(app, ['device'], () => import('../routes/Radar/Version')),

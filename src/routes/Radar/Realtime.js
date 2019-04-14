@@ -68,143 +68,153 @@ const data = [{
 	currentUser: user.currentUser
 }))
 export default class DoorHistory extends Component {
-  state = {
-	charts:true,
-    leftAnimation: {
-		left: '0%',
-		duration: 100,
-    },
-    rightAnimation: {
-		right: '0%',
-		duration: 100,
-    },
-	switch:false,
-    pick: '',
-    modal: false,
-	type:'',
-    src: '',
-	doorWidth:4096,
-	change:false,
-	openInarr:[],
-	closeInarr:[],
-	openToarr:[],
-	openDeceleratearr:[],
-	closeDeceleratearr:[],
-	closeToarr:[],
-	openToOutarr:[],
-	closeToOutarr:[],
-	doorarr:[],
-	openarr:[],
-	closearr:[],
-	openKeeparr:[],
-	closeKeeparr:[],
-	stoparr:[],
-	inHigharr:[],
-	inLowarr:[],
-	outHigharr:[],
-	motorHigharr:[],
-	flySafearr:[],
-	closeStoparr:[],
-	positionarr:[],
-	chartPosition:[],
-	currentarr:[],
-	speedarr:[],
-	events:{
-		openIn:[],
-		closeIn:[],
-		current:[],
-		openDecelerate:[],
-		closeDecelerate:[],
-		openToOut:[],
-		openTo:[],
-		closeToOut:[],
-		closeTo:[],
-		door:[],
-		open:[],
-		close:[],
-		openKeep:[],
-		closeKeep:[],
-		stop:[],
-		inHigh:[],
-		inLow:[],
-		outHigh:[],
-		motorHigh:[],
-		flySafe:[],
-		closeStop:[],
-		position:[],
-		speed:[],
-		nums:[1,2,3,4,5,6,7,8,9,10],
-	},
-	page:{
-		openIn:'',
-		closeIn:'',
-		current:'',
-		openDecelerate:'',
-		closeDecelerate:'',
-		openToOut:'',
-		openTo:'',
-		closeToOut:'',
-		closeTo:'',
-		door:'',
-		open:'',
-		close:'',
-		openKeep:'',
-		closeKeep:'',
-		stop:'',
-		inHigh:'',
-		inLow:'',
-		outHigh:'',
-		motorHigh:'',
-		flySafe:'',
-		closeStop:'',
-		position:'',
-		speed:'',
-		nowtime:'',
-	},
-	show:{
-		openIn:'',
-		closeIn:'',
-		current:'',
-		openDecelerate:'',
-		closeDecelerate:'',
-		openToOut:'',
-		openTo:'',
-		closeToOut:'',
-		closeTo:'',
-		door:'',
-		open:'',
-		close:'',
-		openKeep:'',
-		closeKeep:'',
-		stop:'',
-		inHigh:'',
-		inLow:'',
-		outHigh:'',
-		motorHigh:'',
-		flySafe:'',
-		closeStop:'',
-		position:'',
-		speed:'',
-		nowtime:'',
-	},
-	buffer:[],
-	historyEvents:[],
-	id:0,
-  }
-  componentWillMount() {
+	state = {
+		active:true,
+		charts:true,
+		leftAnimation: {
+			left: '0%',
+			duration: 100,
+		},
+		rightAnimation: {
+			right: '0%',
+			duration: 100,
+		},
+		switch:false,
+		pick: '',
+		modal: false,
+		type:'',
+		src: '',
+		doorWidth:4096,
+		change:false,
+		openInarr:[],
+		closeInarr:[],
+		openToarr:[],
+		openDeceleratearr:[],
+		closeDeceleratearr:[],
+		closeToarr:[],
+		openToOutarr:[],
+		closeToOutarr:[],
+		doorarr:[],
+		openarr:[],
+		closearr:[],
+		openKeeparr:[],
+		closeKeeparr:[],
+		stoparr:[],
+		inHigharr:[],
+		inLowarr:[],
+		outHigharr:[],
+		motorHigharr:[],
+		flySafearr:[],
+		closeStoparr:[],
+		positionarr:[],
+		chartPosition:[],
+		currentarr:[],
+		speedarr:[],
+		events:{
+			openIn:[],
+			closeIn:[],
+			current:[],
+			openDecelerate:[],
+			closeDecelerate:[],
+			openToOut:[],
+			openTo:[],
+			closeToOut:[],
+			closeTo:[],
+			door:[],
+			open:[],
+			close:[],
+			openKeep:[],
+			closeKeep:[],
+			stop:[],
+			inHigh:[],
+			inLow:[],
+			outHigh:[],
+			motorHigh:[],
+			flySafe:[],
+			closeStop:[],
+			position:[],
+			speed:[],
+			nums:[1,2,3,4,5,6,7,8,9,10],
+		},
+		page:{
+			openIn:'',
+			closeIn:'',
+			current:'',
+			openDecelerate:'',
+			closeDecelerate:'',
+			openToOut:'',
+			openTo:'',
+			closeToOut:'',
+			closeTo:'',
+			door:'',
+			open:'',
+			close:'',
+			openKeep:'',
+			closeKeep:'',
+			stop:'',
+			inHigh:'',
+			inLow:'',
+			outHigh:'',
+			motorHigh:'',
+			flySafe:'',
+			closeStop:'',
+			position:'',
+			speed:'',
+			nowtime:'',
+		},
+		show:{
+			openIn:'',
+			closeIn:'',
+			current:'',
+			openDecelerate:'',
+			closeDecelerate:'',
+			openToOut:'',
+			openTo:'',
+			closeToOut:'',
+			closeTo:'',
+			door:'',
+			open:'',
+			close:'',
+			openKeep:'',
+			closeKeep:'',
+			stop:'',
+			inHigh:'',
+			inLow:'',
+			outHigh:'',
+			motorHigh:'',
+			flySafe:'',
+			closeStop:'',
+			position:'',
+			speed:'',
+			nowtime:'',
+		},
+		buffer:[],
+		historyEvents:[],
+		id:0,
+	}
+	componentWillMount() {
 		const {location} = this.props;
 		this.state.id = this.props.match.params.id
 		this.getType()
 		this.getBaseData()
 		this.initWebsocket()
-  }
+		const _this=this
+		document.addEventListener('visibilitychange', function() {
+			var isHidden = document.hidden;
+			if (isHidden) {
+				_this.state.active =false
+			} else {
+				_this.state.active =true
+			}
+		})
+	}
 	componentWillUnmount() {
 		this.state.charts = false;
 		clearInterval(inte)
 		clearInterval(intes)
 		websock.close()
 	}
-	 initWebsocket (){ //初始化weosocket
+	initWebsocket (){ //初始化weosocket
 		const { currentUser } = this.props;
 		const device_id = this.state.id
 		const userId = currentUser.id
@@ -346,8 +356,7 @@ export default class DoorHistory extends Component {
 	}
 	getData = () => {
 		const {page,show} = this.state
-		let buffers = this.state.buffer
-		let buffer =  buffers[0]
+		let buffer = this.state.buffer[0]
 		let count= 0
 		const _this = this
 		if(buffer!=null){
@@ -379,34 +388,37 @@ export default class DoorHistory extends Component {
 					if(show.speed>32.767){
 						page.speed = (page.speed-65.535).toFixed(2)
 					}
-					this.state.openInarr.push(page.openIn)
-					this.state.openToarr.push(page.openTo)
-					this.state.openToOutarr.push(page.openToOut)
-					this.state.openDeceleratearr.push(page.openDecelerate)
-					this.state.closeInarr.push(page.closeIn)
-					this.state.closeToarr.push(page.closeTo)
-					this.state.closeToOutarr.push(page.closeToOut)
-					this.state.closeDeceleratearr.push(page.closeDecelerate)
-					this.state.positionarr.push(page.position)
-					this.state.chartPosition.push(page.position)
-					this.state.currentarr.push(page.current)
-					this.state.speedarr.push(page.speed)
-					this.state.doorarr.push(page.door)
-					this.state.openarr.push(page.open)
-					this.state.closearr.push(page.close)
-					this.state.openKeeparr.push(page.openKeep)
-					this.state.closeKeeparr.push(page.closeKeep)
-					this.state.stoparr.push(page.stop)
-					this.state.inHigharr.push(page.inHigh)
-					this.state.inLowarr.push(page.inLow)
-					this.state.outHigharr.push(page.outHigh)
-					this.state.motorHigharr.push(page.motorHigh)
-					this.state.flySafearr.push(page.flySafe)
-					this.state.closeStoparr.push(page.closeStop)
+					if(this.state.active==true){
+						this.state.openInarr.push(page.openIn)
+						this.state.openToarr.push(page.openTo)
+						this.state.openToOutarr.push(page.openToOut)
+						this.state.openDeceleratearr.push(page.openDecelerate)
+						this.state.closeInarr.push(page.closeIn)
+						this.state.closeToarr.push(page.closeTo)
+						this.state.closeToOutarr.push(page.closeToOut)
+						this.state.closeDeceleratearr.push(page.closeDecelerate)
+						this.state.positionarr.push(page.position)
+						this.state.chartPosition.push(page.position)
+						this.state.currentarr.push(page.current)
+						this.state.speedarr.push(page.speed)
+						this.state.doorarr.push(page.door)
+						this.state.openarr.push(page.open)
+						this.state.closearr.push(page.close)
+						this.state.openKeeparr.push(page.openKeep)
+						this.state.closeKeeparr.push(page.closeKeep)
+						this.state.stoparr.push(page.stop)
+						this.state.inHigharr.push(page.inHigh)
+						this.state.inLowarr.push(page.inLow)
+						this.state.outHigharr.push(page.outHigh)
+						this.state.motorHigharr.push(page.motorHigh)
+						this.state.flySafearr.push(page.flySafe)
+						this.state.closeStoparr.push(page.closeStop)
+					}
 					count+=8
 				}
 			}
 			this.state.buffer.shift()
+			console.log("length:"+this.state.buffer.length)
 			if(ct==0){
 				ct = ct+1
 				inte = setInterval(function () {
@@ -463,7 +475,6 @@ export default class DoorHistory extends Component {
 			this.state.motorHigharr.shift()
 			this.state.flySafearr.shift()
 			this.state.closeStoparr.shift()
-			console.log(this.state.positionarr)
 		}
 	}
 	showChart = () =>{
