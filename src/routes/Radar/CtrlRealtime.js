@@ -230,7 +230,7 @@ export default class CtrlRealtime extends Component {
 					const IMEI = res.data.list[0].IMEI;
 					const interval = 500;
 					const threshold = 4;
-					const duration = 120;
+					const duration = 1440;
 					const device_type = '240';
 					const type = '0';
 					const segment = '00,00,00,00';
@@ -272,14 +272,13 @@ export default class CtrlRealtime extends Component {
 		const {run,lock,close,} = this.state;
 		let buffer = []
 		buffer = base64url.toBuffer(val.data);	//8位转流
-		console.log(buffer)
 		let count= 0
 		let markList = []
 		const show = this.state.show
 		const floor = this.state.floor
 		var _this = this
 		if((count+33) <= buffer.length){
-			show.upCall   = buffer[count+0]&0x01							//上运行方向
+			show.upCall   = buffer[count+0]&0x01						//上运行方向
 			show.downCall = (buffer[count+0]&0x02)>>1					//下运行方向
 			show.run      = (buffer[count+0]&0x04)>>2					//获取运行信号
 			show.lock     = (buffer[count+0]&0x08)>>3					//获取门锁信号
@@ -362,8 +361,9 @@ export default class CtrlRealtime extends Component {
 			}
 			_this.state.markList.reverse()
 			_this.forceUpdate()
+			count+=33
 		}
-		count+=33
+		console.log(this.state.floor[this.state.floor.length-this.state.show.floor])
 		if(_this.state.charts){
 			_this.showChart()
 			_this.forceUpdate()

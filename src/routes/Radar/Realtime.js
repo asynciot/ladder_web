@@ -25,6 +25,8 @@ const timeList = [{
   value: '30',
 },];
 
+var counts=0;
+var ct=0;
 const alert = Modal.alert;
 const alertName = (show) => {
   if (show.isLoss) {
@@ -55,6 +57,7 @@ const alertName = (show) => {
   return str;
 };
 var inte =null;
+var intes = null;
 var websock = '';
 const data = [{
   time: 0,
@@ -69,11 +72,11 @@ export default class DoorHistory extends Component {
 	charts:true,
     leftAnimation: {
 		left: '0%',
-		duration: 1000,
+		duration: 100,
     },
     rightAnimation: {
 		right: '0%',
-		duration: 1000,
+		duration: 100,
     },
 	switch:false,
     pick: '',
@@ -83,14 +86,27 @@ export default class DoorHistory extends Component {
 	doorWidth:4096,
 	change:false,
 	openInarr:[],
+	closeInarr:[],
 	openToarr:[],
 	openDeceleratearr:[],
 	closeDeceleratearr:[],
-	closeInarr:[],
 	closeToarr:[],
 	openToOutarr:[],
 	closeToOutarr:[],
+	doorarr:[],
+	openarr:[],
+	closearr:[],
+	openKeeparr:[],
+	closeKeeparr:[],
+	stoparr:[],
+	inHigharr:[],
+	inLowarr:[],
+	outHigharr:[],
+	motorHigharr:[],
+	flySafearr:[],
+	closeStoparr:[],
 	positionarr:[],
+	chartPosition:[],
 	currentarr:[],
 	speedarr:[],
 	events:{
@@ -119,6 +135,32 @@ export default class DoorHistory extends Component {
 		speed:[],
 		nums:[1,2,3,4,5,6,7,8,9,10],
 	},
+	page:{
+		openIn:'',
+		closeIn:'',
+		current:'',
+		openDecelerate:'',
+		closeDecelerate:'',
+		openToOut:'',
+		openTo:'',
+		closeToOut:'',
+		closeTo:'',
+		door:'',
+		open:'',
+		close:'',
+		openKeep:'',
+		closeKeep:'',
+		stop:'',
+		inHigh:'',
+		inLow:'',
+		outHigh:'',
+		motorHigh:'',
+		flySafe:'',
+		closeStop:'',
+		position:'',
+		speed:'',
+		nowtime:'',
+	},
 	show:{
 		openIn:'',
 		closeIn:'',
@@ -145,6 +187,7 @@ export default class DoorHistory extends Component {
 		speed:'',
 		nowtime:'',
 	},
+	buffer:[],
 	historyEvents:[],
 	id:0,
   }
@@ -158,9 +201,10 @@ export default class DoorHistory extends Component {
 	componentWillUnmount() {
 		this.state.charts = false;
 		clearInterval(inte)
+		clearInterval(intes)
 		websock.close()
 	}
-	initWebsocket = () =>{ //初始化weosocket
+	 initWebsocket (){ //初始化weosocket
 		const { currentUser } = this.props;
 		const device_id = this.state.id
 		const userId = currentUser.id
@@ -177,8 +221,16 @@ export default class DoorHistory extends Component {
 				websock.close()
 				this.forceUpdate()
 			}else{
+				let ss = new Date()
+				console.log(ss.toLocaleTimeString())
 				var redata = JSON.parse(e.data)
-				_this.getData(redata)
+				_this.pushData(redata)
+				if(counts==0){
+					intes = setInterval(function () {
+						_this.getData()
+					},2000)
+					counts=counts+1;
+				}
 			}
 		}
 		websock.onclose = this.websocketclosed;
@@ -192,39 +244,32 @@ export default class DoorHistory extends Component {
 	websocketclosed(){
 		console.log("WebSocket连接关闭");
 	}
-	onChange = async (val) => {
+	onChange = () => {
 		this.state.switch = !this.state.switch
+		counts = 0
+		ct = 0
 		this.forceUpdate()
 		if(this.state.switch == true){
 			this.initWebsocket()
 			const device_id = this.state.id
 			getFollowDevices({device_id}).then((res)=>{
-				if(res.code == 0){
-					const op = 'open';
-					const IMEI = res.data.list[0].IMEI;
-					const interval = 500;
-					const threshold = 4;
-					const duration = 30;
-					const device_type = '15';
-					const type = '0';
-					let a=0;
-					const b=5;
-					var intevalT = null;
-					postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {});
-					function posta(){
-						a=a+1;
-						if(a<b){
-							console.log(a)
-							let ss = new Date()
-							console.log(ss.toLocaleTimeString())
-							postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {});
-						}
+				const op = 'open';
+				const IMEI = res.data.list[0].IMEI;
+				const interval = 200;
+				const threshold = 10;
+				const duration = 600;
+				const device_type = '15';
+				const type = '0';
+				let a=0;
+				const b=5;
+				var intevalT = null;
+				postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {
+					if(res.code == 0){
+						alert("请不要离开当前页面，等待数据传输");
+					}else if(res.code == 670){
+						alert("当前设备已被人启动监控")
 					}
-					intevalT=setInterval(posta,30000);
-					alert("请不要离开当前页面，等待数据传输");
-				}else if(res.code == 670){
-					alert("当前设备已被人启动监控")
-				}
+				});
 			})
 		}else{
 			websock.close()
@@ -232,14 +277,14 @@ export default class DoorHistory extends Component {
 		}
 	}
 	buffer2hex = (buffer) => {
-	  const unit16array = [];
-	  buffer.forEach((e) => {
-	    const num = e.toString(16);
-	    unit16array.push(num.length === 1
-	      ? `0${num}`
-	      : num);
-	  });
-	  return unit16array;
+		const unit16array = [];
+		buffer.forEach((e) => {
+			const num = e.toString(16);
+			unit16array.push(num.length === 1
+			  ? `0${num}`
+			  : num);
+		});
+		return unit16array;
 	}
 	getType = () =>{
 		const device_id = this.state.id
@@ -296,64 +341,132 @@ export default class DoorHistory extends Component {
 				this.state.doorWidth =parseInt((hex[14] + hex[15]), 16);
 			});
 		}
+		this.setAnimation();
 		this.forceUpdate();
 	}
-	getData = (val) => {
-		const {show} = this.state
-		let buffer = []
-		buffer = base64url.toBuffer(val.data);	//8位转流
+	getData = () => {
+		const {page,show} = this.state
+		let buffers = this.state.buffer
+		let buffer =  buffers[0]
 		let count= 0
 		const _this = this
-		if((count+8) <= buffer.length){
-			show.openIn = (buffer[count+0]&0x80)>>7							//获取开门输入信号
-			show.closeIn = (buffer[count+0]&0x40)>>6						//获取关门信号
-			show.openTo =	(buffer[count+0]&0x20)>>5						//获取开到位输入信号
-			show.closeTo = (buffer[count+0]&0x10)>>4						//获取关到位输入信号	
-			show.openDecelerate =	(buffer[count+0]&0x08)>>3				//开减速输入信号 
-			show.closeDecelerate = (buffer[count+0]&0x04)>>2				//关减速输入信号
-			show.openToOut = (buffer[count+0]&0x02)>>1						//获取开到位输出信号
-			show.closeToOut = buffer[count+0]&0x01							//获取关到位输出信号			
-			show.door	= (buffer[count+1]&0x80)>>7							//正在门光幕
-			show.open	= (buffer[count+1]&0x40)>>6							//正在开门信号
-			show.close =	(buffer[count+1]&0x20)>>5						//正在关门信号
-			show.openKeep	= (buffer[count+1]&0x10)>>4						//开门到位维持信号
-			show.closeKeep	= (buffer[count+1]&0x08)>>3						//关门到位维持信号
-			show.stop	= (buffer[count+1]&0x04)>>2							//停止输出信号
-			show.inHigh = (buffer[count+1]&0x02)>>1							//输入电压过高
-			show.inLow = 	buffer[count+1]&0x01							//输入电压过低
-			show.outHigh = (buffer[count+2]&0x80)>>7						//输出过流
-			show.motorHigh = (buffer[count+2]&0x40)>>6						//电机过载
-			show.flySafe = (buffer[count+2]&0x20)>>5						//飞车保护
-			show.closeStop = (buffer[count+2]&0x10)>>4						//开关门受阻
-			show.position	= ((buffer[count+2]&0x0f)<<8)+(buffer[count+3]&0xff)		//获取位置信号
-			show.current = (((buffer[count+4]&0xff)<<8)+(buffer[count+5]&0xff))/1000		//获取电流信号
-			show.speed = (((buffer[count+6]&0xff)<<8)+(buffer[count+7]&0xff))/1000
-			if(show.speed>32.767){
-				show.speed = (show.speed-65.535).toFixed(2)
+		if(buffer!=null){
+			for(let i=0;i<10;i++){
+				if((count+8) <= buffer.length){
+					page.openIn = (buffer[count+0]&0x80)>>7							//获取开门输入信号
+					page.closeIn = (buffer[count+0]&0x40)>>6						//获取关门信号
+					page.openTo =	(buffer[count+0]&0x20)>>5						//获取开到位输入信号
+					page.closeTo = (buffer[count+0]&0x10)>>4						//获取关到位输入信号	
+					page.openDecelerate =	(buffer[count+0]&0x08)>>3				//开减速输入信号 
+					page.closeDecelerate = (buffer[count+0]&0x04)>>2				//关减速输入信号
+					page.openToOut = (buffer[count+0]&0x02)>>1						//获取开到位输出信号
+					page.closeToOut = buffer[count+0]&0x01							//获取关到位输出信号			
+					page.door	= (buffer[count+1]&0x80)>>7							//正在门光幕
+					page.open	= (buffer[count+1]&0x40)>>6							//正在开门信号
+					page.close =	(buffer[count+1]&0x20)>>5						//正在关门信号
+					page.openKeep	= (buffer[count+1]&0x10)>>4						//开门到位维持信号
+					page.closeKeep	= (buffer[count+1]&0x08)>>3						//关门到位维持信号
+					page.stop	= (buffer[count+1]&0x04)>>2							//停止输出信号
+					page.inHigh = (buffer[count+1]&0x02)>>1							//输入电压过高
+					page.inLow = 	buffer[count+1]&0x01							//输入电压过低
+					page.outHigh = (buffer[count+2]&0x80)>>7						//输出过流
+					page.motorHigh = (buffer[count+2]&0x40)>>6						//电机过载
+					page.flySafe = (buffer[count+2]&0x20)>>5						//飞车保护
+					page.closeStop = (buffer[count+2]&0x10)>>4						//开关门受阻
+					page.position	= ((buffer[count+2]&0x0f)<<8)+(buffer[count+3]&0xff)		//获取位置信号
+					page.current = (((buffer[count+4]&0xff)<<8)+(buffer[count+5]&0xff))/1000		//获取电流信号
+					page.speed = (((buffer[count+6]&0xff)<<8)+(buffer[count+7]&0xff))/1000
+					if(show.speed>32.767){
+						page.speed = (page.speed-65.535).toFixed(2)
+					}
+					this.state.openInarr.push(page.openIn)
+					this.state.openToarr.push(page.openTo)
+					this.state.openToOutarr.push(page.openToOut)
+					this.state.openDeceleratearr.push(page.openDecelerate)
+					this.state.closeInarr.push(page.closeIn)
+					this.state.closeToarr.push(page.closeTo)
+					this.state.closeToOutarr.push(page.closeToOut)
+					this.state.closeDeceleratearr.push(page.closeDecelerate)
+					this.state.positionarr.push(page.position)
+					this.state.chartPosition.push(page.position)
+					this.state.currentarr.push(page.current)
+					this.state.speedarr.push(page.speed)
+					this.state.doorarr.push(page.door)
+					this.state.openarr.push(page.open)
+					this.state.closearr.push(page.close)
+					this.state.openKeeparr.push(page.openKeep)
+					this.state.closeKeeparr.push(page.closeKeep)
+					this.state.stoparr.push(page.stop)
+					this.state.inHigharr.push(page.inHigh)
+					this.state.inLowarr.push(page.inLow)
+					this.state.outHigharr.push(page.outHigh)
+					this.state.motorHigharr.push(page.motorHigh)
+					this.state.flySafearr.push(page.flySafe)
+					this.state.closeStoparr.push(page.closeStop)
+					count+=8
+				}
 			}
-			_this.state.openInarr.push(show.openIn)
-			_this.state.openToarr.push(show.openTo)
-			_this.state.openToOutarr.push(show.openToOut)
-			_this.state.openDeceleratearr.push(show.openDecelerate)
-			_this.state.closeDeceleratearr.push(show.closeDecelerate)
-			_this.state.closeInarr.push(show.closeIn)
-			_this.state.closeToarr.push(show.closeTo)
-			_this.state.closeToOutarr.push(show.closeToOut)
-			_this.state.positionarr.push(show.position)
-			_this.state.currentarr.push(show.current)
-			_this.state.speedarr.push(show.speed)
-			_this.forceUpdate();
-			count+=8
-			if(_this.state.charts){
-				_this.showChart()
-				_this.forceUpdate();
+			this.state.buffer.shift()
+			if(ct==0){
+				ct = ct+1
+				inte = setInterval(function () {
+					_this.showData()
+					_this.showChart()
+					_this.setAnimation()
+					_this.forceUpdate()
+				},200)
 			}
+		}
+		
+	}
+	pushData = (val) => {
+		let buffer = []
+		buffer = base64url.toBuffer(val.data);	//8位转流
+		this.state.buffer.push(buffer)
+	}
+	showData = () => {
+		const { show } = this.state
+		if(this.state.openInarr[0]!=null){
+			show.openIn = this.state.openInarr[0]
+			show.openTo = this.state.openToarr[0]
+			show.openToOut = this.state.openToOutarr[0]
+			show.openDecelerate = this.state.openDeceleratearr[0]
+			show.closeIn = this.state.closeInarr[0]
+			show.closeTo = this.state.closeToarr[0]
+			show.closeToOut = this.state.closeToOutarr[0]
+			show.closeDecelerate = this.state.closeDeceleratearr[0]
+			show.position = this.state.positionarr[0]
+			show.current = this.state.currentarr[0]
+			show.speed = this.state.speedarr[0]
+			show.door = this.state.doorarr[0]
+			show.open = this.state.openarr[0]
+			show.close = this.state.closearr[0]
+			show.openKeep = this.state.openKeeparr[0]
+			show.closeKeep = this.state.closeKeeparr[0]
+			show.stop = this.state.stoparr[0]
+			show.inHigh = this.state.inHigharr[0]
+			show.inLow = this.state.inLowarr[0]
+			show.outHigh = this.state.outHigharr[0]
+			show.motorHigh = this.state.motorHigharr[0]
+			show.flySafe = this.state.flySafearr[0]
+			show.closeStop = this.state.closeStoparr[0]
+			this.state.doorarr.shift()
+			this.state.openarr.shift()
+			this.state.closearr.shift()
+			this.state.openKeeparr.shift()
+			this.state.closeKeeparr.shift()
+			this.state.stoparr.shift()
+			this.state.inHigharr.shift()
+			this.state.inLowarr.shift()
+			this.state.outHigharr.shift()
+			this.state.positionarr.shift()
+			this.state.motorHigharr.shift()
+			this.state.flySafearr.shift()
+			this.state.closeStoparr.shift()
+			console.log(this.state.positionarr)
 		}
 	}
 	showChart = () =>{
-		const {openInarr, closeInarr, openToarr, closeToarr, positionarr, currentarr, speedarr,
-		openToOutarr, openDeceleratearr, closeDeceleratearr, closeToOutarr
-		} = this.state
 		let OpenIn = echarts.init(document.getElementById('OpenIn'));
 		let OpenTo = echarts.init(document.getElementById('OpenTo'));
 		let Decelerate = echarts.init(document.getElementById('Decelerate'));
@@ -362,15 +475,18 @@ export default class DoorHistory extends Component {
 		let Current = echarts.init(document.getElementById('Current'));
 		let Speed = echarts.init(document.getElementById('Speed'));
 		var _this = this
-		if(openInarr.length > 10){
-			openInarr.shift()
-			closeInarr.shift()
-			openToarr.shift()
-			closeToarr.shift()
-			openToOutarr.shift()
-			currentarr.shift()
-			positionarr.shift()
-			speedarr.shift()
+		if(_this.state.openInarr.length>10){
+			this.state.openInarr.shift()
+			this.state.openToarr.shift()
+			this.state.openToOutarr.shift()
+			this.state.openDeceleratearr.shift()
+			this.state.closeInarr.shift()
+			this.state.closeToarr.shift()
+			this.state.closeToOutarr.shift()
+			this.state.closeDeceleratearr.shift()
+			this.state.chartPosition.shift()
+			this.state.currentarr.shift()
+			this.state.speedarr.shift()
 		}
 		OpenIn.setOption({
 			tooltip: {
@@ -519,8 +635,8 @@ export default class DoorHistory extends Component {
 			series: [{
 				name:'门坐标',
 				type:'line',
-				step: 'start',
-				data:_this.state.positionarr,
+				smooth: true,
+				data:_this.state.chartPosition,
 			}]
 		})
 		Current.setOption({
@@ -546,7 +662,7 @@ export default class DoorHistory extends Component {
 			series: [{
 				name:'电流',
 				type:'line',
-				step: 'start',
+				smooth: true,
 				data:_this.state.currentarr,
 			}]
 		})
@@ -573,7 +689,7 @@ export default class DoorHistory extends Component {
 			series: [{
 				name:'速度',
 				type:'line',
-				step: 'start',
+				smooth: true,
 				data:_this.state.speedarr,
 			}]
 		})
@@ -584,7 +700,6 @@ export default class DoorHistory extends Component {
 		history.push(`/events/door/${item.id}/`);
 	}
 	timeTicket = null;
-
 	goDetail = link => () => {
 		const id = this.state.id;
 		const type = this.props.location.state.type
@@ -604,8 +719,24 @@ export default class DoorHistory extends Component {
 		const id = this.state.id;
 		this.props.history.push(`/company/door/${id}/fault`);
 	}
+	setAnimation = () => {
+		const {doorWidth, show} = this.state;
+		if(show.position!=null){
+			this.setState({
+				leftAnimation: {
+					left: `-${(show.position / doorWidth) * 50}%`,
+					duration: 200,
+				},
+				rightAnimation: {
+					right: `-${(show.position / doorWidth) * 50}%`,
+					duration: 200,
+				},
+			});
+		}
+	}
 	render() {
 		const { device: { events, view, property, updateTime, }} = this.props;
+		const { page } = this.state;
 		const id = this.state.id;
 		const width = parseInt((window.innerWidth - 100) / 2);
 		let type = null
@@ -754,7 +885,7 @@ export default class DoorHistory extends Component {
 									  <TweenOne
 										animation={this.state.leftAnimation}
 										// updateReStart={false}
-										style={{ left: `-${(this.state.show.position / this.state.doorWidth) * 50}%` }}
+										style={{ left: '0%' }}
 										className={styles.doorbox}
 									  />
 										<section className={styles.doorstitle}>
@@ -767,7 +898,7 @@ export default class DoorHistory extends Component {
 										</section>
 										<TweenOne
 											animation={this.state.rightAnimation}
-											style={{ right: `-${(this.state.show.position / this.state.doorWidth) * 50}%` }}
+											style={{ right: '0%' }}
 											className={styles.doorbox}
 										/>
 									</div>
