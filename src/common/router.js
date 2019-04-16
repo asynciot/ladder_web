@@ -83,10 +83,6 @@ export const getRouterData = (app) => {
 			name: '首页',
 			component: dynamicWrapper(app, [], () => import('../routes/Home')),
 		},
-		'/message': {
-			name: '消息',
-			component: dynamicWrapper(app, ['message'], () => import('../routes/Message/Index')),
-		},
 		'/radar/map': {
 			name: '地图列表',
 			component: dynamicWrapper(app, ['device'], () => import('../routes/Radar/Map')),
@@ -122,10 +118,6 @@ export const getRouterData = (app) => {
 		'/door/:id': {
 			name: '运行状态',
 			component: dynamicWrapper(app, ['device'], () => import('../routes/Radar/Detail')),
-		},
-		'/radar/:id/info': {
-			name: '运行状态',
-			component: dynamicWrapper(app, ['device'], () => import('../routes/Radar/Info')),
 		},
 		'/door/:id/realtime': {
 			name: '控制器',
@@ -215,21 +207,9 @@ export const getRouterData = (app) => {
 			name: '技术',
 			component: dynamicWrapper(app, ['tech'], () => import('../routes/Tech/Other')),
 		},
-		'/service': {
-			name: '消息',
-			component: dynamicWrapper(app, [], () => import('../routes/Service/Index')),
-		},
 		'/me': {
 			name: '个人',
 			component: dynamicWrapper(app, ['company', 'login'], () => import('../routes/Company/Index')),
-		},
-		'/company/new': {
-			name: '新建群',
-			component: dynamicWrapper(app, ['company'], () => import('../routes/Company/NewGroup')),
-		},
-		'/company/join': {
-			name: '加入群',
-			component: dynamicWrapper(app, ['company'], () => import('../routes/Company/JoinGroup')),
 		},
 		'/company/profile': {
 			name: '个人信息',
@@ -242,14 +222,6 @@ export const getRouterData = (app) => {
 		'/company/statistics/:id': {
 			name: '数据统计',
 			component: dynamicWrapper(app, ['company'], () => import('../routes/Company/Statistics')),
-		},
-		'/company/statistics/details/:id': {
-			name: '数据统计',
-			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/StatisticsDetail')),
-		},
-		'/company/data/details': {
-			name: '统计详情',
-			component: dynamicWrapper(app, ['company'], () => import('../routes/Company/Details')),
 		},
 		'/company/device': {
 			name: '设备关注',
@@ -294,10 +266,6 @@ export const getRouterData = (app) => {
 		'/company/edit-device/:IMEI/': {
 			name: '编辑设备',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/EditDevice')),
-		},
-		'/company/manage-device': {
-			name: '设备管理',
-			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/ManageDevice')),
 		},
 		'/company/message': {
 			name: '消息处理',
@@ -346,14 +314,6 @@ export const getRouterData = (app) => {
 		'/profile': {
 			name: '个人信息',
 			component: dynamicWrapper(app, ['user'], () => import('../routes/User/Profile')),
-		},
-		'/question': {
-			name: '问题反馈',
-			component: dynamicWrapper(app, [], () => import('../routes/Question/Index')),
-		},
-		'/test': {
-			name: '测试',
-			component: dynamicWrapper(app, [], () => import('../routes/Company/Test')),
 		},
 	};
 	// Get name from ./menu.js or just set it in the router data.

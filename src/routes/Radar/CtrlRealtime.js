@@ -16,7 +16,6 @@ import {
 	getDeviceList, getFloorData, getCtrlData,
 } from '../../services/api';
 
-
 var inte = null;
 var charts = true;
 var websock = '';

@@ -28,34 +28,7 @@ const timeList = [{
 var counts=0;
 var ct=0;
 const alert = Modal.alert;
-const alertName = (show) => {
-  if (show.isLoss) {
-    return '无';
-  }
-  let str = '';
-  if (show.inHigh) {
-    str += ' 输入电压过高 ';
-  }
-  if (show.inLow) {
-    str += ' 输入电压过低 ';
-  }
-  if (show.outHigh) {
-    str += ' 输出过流 ';
-  }
-  if (show.motorHigh) {
-    str += ' 电机过载 ';
-  }
-  if (show.flySafe) {
-    str += ' 飞车保护 ';
-  }
-  if (show.closeStop) {
-    str += ' 开关门受阻 ';
-  }
-  if (str === '') {
-    str = '运行正常';
-  }
-  return str;
-};
+
 var inte =null;
 var intes = null;
 var websock = '';
@@ -69,6 +42,7 @@ const data = [{
 }))
 export default class DoorHistory extends Component {
 	state = {
+		clock:true,
 		active:true,
 		charts:true,
 		leftAnimation: {
@@ -188,10 +162,46 @@ export default class DoorHistory extends Component {
 			speed:'',
 			nowtime:'',
 		},
+		color:false,
 		buffer:[],
 		historyEvents:[],
 		id:0,
 	}
+	alertName = (show) => {
+	  if (show.isLoss) {
+	    return '无';
+	  }
+	  let str = '';
+	  if (show.inHigh) {
+	    str += ' 输入电压过高 ';
+		this.state.color=true
+	  }
+	  if (show.inLow) {
+	    str += ' 输入电压过低 ';
+		this.state.color=true
+	  }
+	  if (show.outHigh) {
+	    str += ' 输出过流 ';
+		this.state.color=true
+	  }
+	  if (show.motorHigh) {
+	    str += ' 电机过载 ';
+		this.state.color=true
+	  }
+	  if (show.flySafe) {
+	    str += ' 飞车保护 ';
+		this.state.color=true
+	  }
+	  if (show.closeStop) {
+	    str += ' 开关门受阻 ';
+		this.state.color=true
+	  }
+	  if (str === '') {
+	    str = '运行正常';
+		this.state.color=false
+	  }
+	  return str;
+	};
 	componentWillMount() {
 		const {location} = this.props;
 		this.state.id = this.props.match.params.id
@@ -231,14 +241,15 @@ export default class DoorHistory extends Component {
 				websock.close()
 				this.forceUpdate()
 			}else{
-				let ss = new Date()
-				console.log(ss.toLocaleTimeString())
 				var redata = JSON.parse(e.data)
 				_this.pushData(redata)
 				if(counts==0){
+					
 					intes = setInterval(function () {
-						_this.getData()
-					},2000)
+						if(_this.state.clock==true){
+							_this.getData()
+						}
+					},100)
 					counts=counts+1;
 				}
 			}
@@ -260,13 +271,17 @@ export default class DoorHistory extends Component {
 		ct = 0
 		this.forceUpdate()
 		if(this.state.switch == true){
+			if(websock!=null){
+				websock.close()
+				websock=null
+			}
 			this.initWebsocket()
 			const device_id = this.state.id
 			getFollowDevices({device_id}).then((res)=>{
 				const op = 'open';
 				const IMEI = res.data.list[0].IMEI;
-				const interval = 200;
-				const threshold = 10;
+				const interval = 10;
+				const threshold = 200;
 				const duration = 600;
 				const device_type = '15';
 				const type = '0';
@@ -329,7 +344,7 @@ export default class DoorHistory extends Component {
 			show.flySafe = (buffer[2]&0x20)>>5						//飞车保护
 			show.closeStop = (buffer[2]&0x10)>>4					//开关门受阻
 			show.position	= ((buffer[2]&0x0f)<<8)+(buffer[3]&0xff)		//获取位置信号
-			show.current = (((buffer[4]&0xff)<<8)+(buffer[5]&0xff))/1000		//获取电流信号
+			show.current = 0		//获取电流信号
 			show.speed = (((buffer[6]&0xff)<<8)+(buffer[7]&0xff))/1000
 			if(show.speed>32.767){
 				show.speed = show.speed-65.535
@@ -360,6 +375,7 @@ export default class DoorHistory extends Component {
 		let count= 0
 		const _this = this
 		if(buffer!=null){
+			this.state.clock=false
 			for(let i=0;i<10;i++){
 				if((count+8) <= buffer.length){
 					page.openIn = (buffer[count+0]&0x80)>>7							//获取开门输入信号
@@ -418,6 +434,7 @@ export default class DoorHistory extends Component {
 				}
 			}
 			this.state.buffer.shift()
+			this.state.clock=true
 			console.log("length:"+this.state.buffer.length)
 			if(ct==0){
 				ct = ct+1
@@ -426,7 +443,7 @@ export default class DoorHistory extends Component {
 					_this.showChart()
 					_this.setAnimation()
 					_this.forceUpdate()
-				},200)
+				},180)
 			}
 		}
 		
@@ -438,7 +455,7 @@ export default class DoorHistory extends Component {
 	}
 	showData = () => {
 		const { show } = this.state
-		if(this.state.openInarr[0]!=null){
+		if(this.state.doorarr[0]!=null){
 			show.openIn = this.state.openInarr[0]
 			show.openTo = this.state.openToarr[0]
 			show.openToOut = this.state.openToOutarr[0]
@@ -845,7 +862,12 @@ export default class DoorHistory extends Component {
 									}}
 									>
 										<i style={{flexShrink: 0,}}>报警 ：</i>
-										<i className={styles.status}>{alertName(this.state.show)}</i>
+										{
+											this.state.color ? 
+											<i className={styles.status} style={{ color:'red'}}>{this.alertName(this.state.show)}</i>
+											:
+											<i className={styles.status}>{this.alertName(this.state.show)}</i>
+										}
 									</p>
 									<p
 										style={{
