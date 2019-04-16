@@ -107,10 +107,6 @@ export const getRouterData = (app) => {
 			name: '雷达',
 			component: dynamicWrapper(app, ['device'], () => import('../routes/Radar/List')),
 		},
-		'/radar/list/bug': {
-			name: '雷达',
-			component: dynamicWrapper(app, ['device'], () => import('../routes/Radar/List')),
-		},
 		'/radar/list/loss': {
 			name: '雷达',
 			component: dynamicWrapper(app, ['device'], () => import('../routes/Radar/List')),
@@ -161,7 +157,7 @@ export const getRouterData = (app) => {
 		},
 		'/company/:id/call': {
 			name: '呼梯',
-			component: dynamicWrapper(app, ['ctrl'], () => import('../routes/Radar/CallLadder')),
+			component: dynamicWrapper(app, ['ctrl'], () => import('../routes/Radar/Call')),
 		},
 		'/ctrl/:id/params': {
 			name: '菜单',
@@ -170,26 +166,6 @@ export const getRouterData = (app) => {
 		'/ctrl/:id/fault': {
 			name: '历史故障',
 			component: dynamicWrapper(app, ['ctrl'], () => import('../routes/Radar/CtrlFault')),
-		},
-		'/ctrl/:id/register': {
-			name: '控制柜',
-			component: dynamicWrapper(app, ['device'], () => import('../routes/Radar/Register')),
-		},
-		'/ctrl/:id/io': {
-			name: '控制柜',
-			component: dynamicWrapper(app, ['device'], () => import('../routes/Radar/IO')),
-		},
-		'/ctrl/:id/version': {
-			name: '控制柜',
-			component: dynamicWrapper(app, ['device'], () => import('../routes/Radar/Version')),
-		},
-		'/ctrl/:id/bug': {
-			name: '控制柜',
-			component: dynamicWrapper(app, ['device'], () => import('../routes/Radar/Bug')),
-		},
-		'/ctrl/:id/driver': {
-			name: '控制柜',
-			component: dynamicWrapper(app, ['device'], () => import('../routes/Radar/Driver')),
 		},
 		'/tech/code': {
 			name: '技术',

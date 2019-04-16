@@ -6,7 +6,7 @@ import { Button, message } from 'antd';
 import base64url from 'base64url';
 import qrcode from 'qrcode.js';
 import pathToRegexp from 'path-to-regexp';
-import styles from './CallLadder.less';
+import styles from './Call.less';
 import { postCall, getFollowDevices, getFloorData } from '../../services/api';
 
 const tabs = [

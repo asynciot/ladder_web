@@ -3,16 +3,12 @@ import pathToRegexp from 'path-to-regexp';
 import { connect } from 'dva';
 import _ from 'lodash';
 import base64url from 'base64url';
-import { Debounce } from 'lodash-decorators/debounce';
 import { Row, Col, Button, Spin, Icon, DatePicker, Switch, } from 'antd';
 import { Picker, List, Tabs, Modal } from 'antd-mobile';
 import classNames from 'classnames';
-import TweenOne from 'rc-tween-one';
-import F2 from '@antv/f2';
 import styles from './CtrlRealtime.less';
 import echarts from 'echarts';
-import {
-	getEvent, postMonitor, getFollowDevices, 
+import {getEvent, postMonitor, getFollowDevices, 
 	getDeviceList, getFloorData, getCtrlData,
 } from '../../services/api';
 
@@ -198,8 +194,6 @@ export default class CtrlRealtime extends Component {
 				websock.close()
 				clearInterval(inte)
 			}else{
-				let ss = new Date()
-				console.log(ss.toLocaleTimeString())
 				var redata = JSON.parse(e.data)
 				_this.getData(redata)
 			}
@@ -222,6 +216,10 @@ export default class CtrlRealtime extends Component {
 			const {location } = this.props;
 			const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
 			const device_id = match[1];
+			if(websock!=null){
+				websock.close()
+				websock=null
+			}
 			this.initWebsocket()
 			getFollowDevices({device_id}).then((res)=>{
 				if(res.code == 0){
@@ -362,7 +360,6 @@ export default class CtrlRealtime extends Component {
 			_this.forceUpdate()
 			count+=33
 		}
-		console.log(this.state.floor[this.state.floor.length-this.state.show.floor])
 		if(_this.state.charts){
 			_this.showChart()
 			_this.forceUpdate()
@@ -394,6 +391,7 @@ export default class CtrlRealtime extends Component {
 				alert("获取楼层高度失败！");
 			}
 		})
+		this.forceUpdate()
 	}
 	showChart = () =>{
 		const {event} = this.props;
