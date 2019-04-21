@@ -161,23 +161,39 @@ export default class CtrlRealtime extends Component {
 		change:false,
 		markList:[],
 	}
-	async componentWillMount() {
-		await this.getBaseData()
+	componentWillMount() {
+		this.getBaseData()
 		this.getfloor()
-		this.initWebsocket()
-		// this.test()
+		// this.initWebsocket()
+		document.addEventListener('visibilitychange', () => {
+			if(document.title == "控制柜"){
+				var isHidden = document.hidden;
+				if (isHidden) {
+					this.state.active =false
+					websock.close()
+					websock=null
+				} else {
+					this.state.active =true
+					if(websock){
+						websock.close()
+						websock=null
+					}
+					this.initWebsocket()
+				}
+			}
+		})
 	}
 	componentWillUnmount() {
 		this.state.charts = false;
 		clearInterval(inte)
-		websock.close()
-	}
-	getLadder(){
-		
+		if(websock){
+			websock.close()
+			websock=null
+		}
 	}
 	initWebsocket = () =>{ //初始化weosocket
-		const {location, currentUser } = this.props;
-		const {pick} = this.state;
+		const { location, currentUser } = this.props;
+		const { pick } = this.state;
 		const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
 		const device_id = match[1];
 		const userId = currentUser.id
@@ -185,17 +201,17 @@ export default class CtrlRealtime extends Component {
 		websock = new WebSocket(wsurl);
 		websock.onopen = this.websocketonopen;
 		websock.onerror = this.websocketonerror;
-		const _this = this;
 		websock.onmessage= (e) =>{
 			if(e.data=="closed"){
 				alert("此次实时数据已结束")
 				this.state.switch = false;
-				_this.state.stop = 1
+				this.state.stop = 1
 				websock.close()
 				clearInterval(inte)
+				this.forceUpdate()
 			}else{
 				var redata = JSON.parse(e.data)
-				_this.getData(redata)
+				this.getData(redata)
 			}
 		}
 		websock.onclose = this.websocketclosed;
@@ -216,7 +232,7 @@ export default class CtrlRealtime extends Component {
 			const {location } = this.props;
 			const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
 			const device_id = match[1];
-			if(websock!=null){
+			if(websock){
 				websock.close()
 				websock=null
 			}
@@ -273,7 +289,6 @@ export default class CtrlRealtime extends Component {
 		let markList = []
 		const show = this.state.show
 		const floor = this.state.floor
-		var _this = this
 		if((count+33) <= buffer.length){
 			show.upCall   = buffer[count+0]&0x01						//上运行方向
 			show.downCall = (buffer[count+0]&0x02)>>1					//下运行方向
@@ -284,11 +299,11 @@ export default class CtrlRealtime extends Component {
 			show.openBtn  = (buffer[count+0]&0x40)>>6					//获取开门按钮信号
 			show.closeBtn = (buffer[count+0]&0x80)>>7					//获取关门按钮信号
 			show.model    = buffer[count+1]&0xff						//获取电梯模式
-			show.status   = buffer[count+2]&0xff						//获取电梯状态				
-			show.floor    = buffer[count+27]&0xff           //获取电梯当前楼层
-			_this.state.run.push(show.run)
-			_this.state.lock.push(show.lock)
-			_this.state.close.push(show.close)
+			show.status   = buffer[count+2]&0xff						//获取电梯状态
+			show.floor    = buffer[count+27]&0xff						//获取电梯当前楼层
+			this.state.run.push(show.run)
+			this.state.lock.push(show.lock)
+			this.state.close.push(show.close)
 			markList[0] = (buffer[count+19]&0x01)
 			markList[1] = (buffer[count+19]&0x02)>>1
 			markList[2] = (buffer[count+19]&0x04)>>2
@@ -354,15 +369,15 @@ export default class CtrlRealtime extends Component {
 			markList[62] = (buffer[count+26]&0x40)>>6
 			markList[63] = (buffer[count+26]&0x80)>>7
 			for(let i=0;i<floor.length;i++){
-				_this.state.markList[i] = markList[i]
+				this.state.markList[i] = markList[i]
 			}
-			_this.state.markList.reverse()
-			_this.forceUpdate()
+			this.state.markList.reverse()
+			this.forceUpdate()
 			count+=33
 		}
-		if(_this.state.charts){
-			_this.showChart()
-			_this.forceUpdate()
+		if(this.state.charts){
+			this.showChart()
+			this.forceUpdate()
 		}
 	}
 	getfloor = (val) => {
@@ -399,7 +414,6 @@ export default class CtrlRealtime extends Component {
 		let Run = echarts.init(document.getElementById('run'))
 		let Lock = echarts.init(document.getElementById('lock'))
 		let Close = echarts.init(document.getElementById('close'))
-		var _this = this
 		if(run.length > 10){
 			run.shift()
 			lock.shift()
@@ -419,7 +433,7 @@ export default class CtrlRealtime extends Component {
 			},
 			xAxis: {
 				type: 'category',
-				data: _this.state.event.nums,
+				data: this.state.event.nums,
 			},
 			yAxis: {
 				data:[0,1]
@@ -428,7 +442,7 @@ export default class CtrlRealtime extends Component {
 				name:'运行信号',
 				type:'line',
 				step: 'start',
-				data:_this.state.run
+				data:this.state.run
 			}]
 		});
 		Lock.setOption({
@@ -438,14 +452,14 @@ export default class CtrlRealtime extends Component {
 			legend: {
 				data:['门锁信号']
 			},
-			grid: {					
+			grid: {
 				left: '3%',
 				right: '4%',
 				containLabel: true
 			},
 			xAxis: {
 				type: 'category',
-				data: _this.state.event.nums,
+				data: this.state.event.nums,
 			},
 			yAxis: {
 				data:[0,1]
@@ -454,7 +468,7 @@ export default class CtrlRealtime extends Component {
 				name:'门锁信号',
 				type:'line',
 				step: 'start',
-				data:_this.state.lock
+				data:this.state.lock
 			}]
 		});
 		Close.setOption({
@@ -464,14 +478,14 @@ export default class CtrlRealtime extends Component {
 			legend: {
 				data:['关门信号']
 			},
-			grid: {					
+			grid: {
 				left: '3%',
 				right: '4%',
 				containLabel: true
 			},
 			xAxis: {
 				type: 'category',
-				data: _this.state.event.nums,
+				data: this.state.event.nums,
 			},
 			yAxis: {
 				data:[0,1]
@@ -480,7 +494,7 @@ export default class CtrlRealtime extends Component {
 				name:'关门信号',
 				type:'line',
 				step: 'start',
-				data:_this.state.close
+				data:this.state.close
 			}]
 		});
 	}
@@ -593,33 +607,6 @@ export default class CtrlRealtime extends Component {
 										最后更新时间 ：
 										<i className={styles.status}>{moment(this.state.show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
 									</p>
-									{/*<p style={{
-											width: '100%',
-											justifyContent: 'flex-start',
-										}}
-									>轿厢登记信号 ：<i className={styles.status}>{markFloor}</i>
-										{
-											markFloor.map((item,index) => (
-												<i className={styles.status} key={`${item}${index}`}>{item}</i>
-											))
-										}
-									</p>
-									<p style={{
-										width: '100%',
-										justifyContent: 'flex-start',
-									}}
-									>
-										电梯外已按向上楼层 ：
-										<i className={styles.status}>-1 1 7</i>
-									</p>
-									<p style={{
-										width: '100%',
-										justifyContent: 'flex-start',
-									}}
-									>
-										电梯外已按向下楼层 ：
-										<i className={styles.status}>-1 1 7</i>
-									</p> */}
 								</section>
 							</Col>
 						</Row>
@@ -632,7 +619,7 @@ export default class CtrlRealtime extends Component {
 										</div>
 									</div>
 								</Col>
-								<Col span={8}>	
+								<Col span={8}>
 									<div className={styles.info}>
 										<p>
 											<Icon className={styles.icon} type={direction[`${this.state.show.downCall}${this.state.show.upCall}`]} />
@@ -661,18 +648,18 @@ export default class CtrlRealtime extends Component {
 						</div>
 					</div>
 					<div className={classNames(styles.tab, view == 1 ?'tab-active' : 'tab-notactive')}>
-						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>	            
+						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
 							<Col xs={{ span: 24 }} md={{ span: 48 }}>
-								<div id = "run" style={{ width: 320 , height: 80 }}></div>              
-							</Col>	            	            
+								<div id = "run" style={{ width: 320 , height: 80 }}></div>
+							</Col>
 						</Row>
 						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
-							<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
+							<Col xs={{ span: 24 }} md={{ span: 48 }}>
 									<div id = "lock" style={{ width: 320 , height: 80 }}></div>
 							</Col>
 						</Row>
 						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
-							<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
+							<Col xs={{ span: 24 }} md={{ span: 48 }}>
 									<div id = "close" style={{ width: 320 , height: 240 }}></div>
 							</Col>
 						</Row>

@@ -309,9 +309,9 @@ export default class extends Component {
 		});
 	}
 	search = () =>{
-		let search_info = this.state.search_info
-		let install_addr = this.state.iddr
-		getFollowDevices({ num: 10, page:1, search_info, install_addr}).then((res) => {
+		const search_info = this.state.search_info
+		const install_addr = this.state.iddr
+		getFollowDevices({ num: 10, page:1, search_info, install_addr, register: 'registered', }).then((res) => {
 			if (res.code === 0) {
 				const now = new Date().getTime();
 				const totalNumber = res.data.totalNumber
