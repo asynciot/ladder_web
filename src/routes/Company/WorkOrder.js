@@ -9,17 +9,17 @@ const Item = List.Item;
 const format = "YYYY-MM-DD HH:mm";
 const alert = Modal.alert;
 const desc = {
-  'untreated': '是否接单',
-  'treated': '是否完成',
+	'untreated': '是否接单',
+	'treated': '是否完成',
 };
 const names = {
-  0: '电话报修',
-  1: '人工报修',
-  2: '自动报修',
+	0: '电话报修',
+	1: '人工报修',
+	2: '自动报修',
 }
 const typeName = {
-	 'door':'控制器',
-	 'ctrl':'控制柜',
+	'door':'控制器',
+	'ctrl':'控制柜',
 }
 const faultCode = {
 	'1': '过流',
@@ -67,19 +67,19 @@ const faultCode = {
 	'178': '输入电压过高',
 }
 const ListButton = ({ className = '', ...restProps }) => (
-  <div className={`${className} ${styles['list-btn']}`}>
-    <span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.edit ? restProps.edit:''}>
-      <Icon className={`${styles.edit} ${styles.icon}`} type="form" />
-      <em>接单</em>
-    </span>
+	<div className={`${className} ${styles['list-btn']}`}>
+		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.edit ? restProps.edit:''}>
+			<Icon className={`${styles.edit} ${styles.icon}`} type="form" />
+			<em>接单</em>
+		</span>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.address ? restProps.address:''}>
 			<Icon className={`${styles.edit} ${styles.icon}`} type="arrow-down" />
 			<em>设备地址</em>
 		</span>
-  </div>
+	</div>
 );
 const Finish = ({ className = '', ...restProps }) => (
-  <div className={`${className} ${styles['list-btn']}`}>
+	<div className={`${className} ${styles['list-btn']}`}>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.remove ? restProps.remove:''}>
 			<Icon className={`${styles.delete} ${styles.icon}`} type="close" />
 			<em>转办</em>
@@ -88,32 +88,31 @@ const Finish = ({ className = '', ...restProps }) => (
 			<Icon className={`${styles.edit} ${styles.icon}`} type="arrow-down" />
 			<em>设备地址</em>
 		</span>
-  </div>
+	</div>
 );
 export default class extends Component {
-  state = {
-    historyEvents: [],
+	state = {
+		historyEvents: [],
 		list:[],
 		nowTime: new Date().getTime(),
-    tab: 0,
-    page: 1,
-    total: 1,
+		tab: 0,
+		page: 1,
+		total: 1,
 		type:'',
 		totalNumber:0,
 		device_name:'',
-  }
+	}
 	tabs = [
-	  { title: '待接单', type: 'untreated', count: 0 },
-	  { title: '急修中', type: 'treated', count: 0 },
-	  // { title: '已完成', type: 2, count: 0 },
+		{ title: '待接单', type: 'untreated', count: 0 },
+		{ title: '急修中', type: 'treated', count: 0 },
+		// { title: '已完成', type: 2, count: 0 },
 	];
-  componentWillMount() {
+	componentWillMount() {
 		this.getFault('untreated')
-		var _this =this
-		inte = setInterval(function () {
-			_this.getFault('untreated');
+		inte = setInterval(() => {
+			this.getFault('untreated');
 		}, 60000);
-  }
+	}
 	componentWillUnmount() {
 		clearInterval(inte)
 	}
@@ -124,15 +123,13 @@ export default class extends Component {
 	}
 	init = (val) => {
 		clearInterval(inte)
-		var _this =this
-		inte = setInterval(function () {
-			_this.getFault(val);
+		inte = setInterval(() => {
+			this.getFault(val);
 		}, 60000);
 	}
-	getFault = async(state) => {
-    let {page, total, historyEvents} = this.state;
+	getFault = (state) => {
+		let {page, total, historyEvents} = this.state;
 		this.state.type = state
-		const _this = this
 		let device_name = []
 		if(state == 'untreated'){
 			getFault({ num: 10, page, state, islast:1 }).then((res) => {
@@ -144,7 +141,7 @@ export default class extends Component {
 					const device_id = item.device_id
 					getFollowDevices({num:1,page:1,device_id}).then((res) => {
 						device_name[index] = res.data.list[0].device_name
-						_this.setState({
+						this.setState({
 							device_name,
 						});
 					})
@@ -164,13 +161,20 @@ export default class extends Component {
 		}else{
 			getDispatch({ num: 10, page, follow:'yes', state:'untreated'}).then((res) => {
 				clearInterval(inte)
-				const list = res.data.list.map((item) => {
+				const list = res.data.list.map((item,index) => {
 					const time = this.state.nowTime - item.create_time
 					item.create_time = moment(parseInt(item.create_time)).format('YYYY-MM-DD HH:mm:ss')
 					item.hour = parseInt((time)/(1000*3600))
 					item.minute = parseInt(time%(1000*3600)/(1000*60))
 					item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
 					this.state.totalNumber=res.data.totalNumber
+					const device_id = item.device_id
+					getFollowDevices({num:1,page:1,device_id}).then((res) => {
+						device_name[index] = res.data.list[0].device_name
+						this.setState({
+							device_name,
+						});
+					})
 					return item;
 				})
 				this.setState({
@@ -179,7 +183,7 @@ export default class extends Component {
 				});
 			}).catch((e => console.info(e)));
 		}	
-  }
+	}
 	goFault = item => () =>{
 		const id = item.id
 		this.props.history.push({
@@ -235,95 +239,97 @@ export default class extends Component {
 					initialPage={0}
 					tabBarActiveTextColor="#1E90FF"
 					tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
-					onChange={(tab, index) => { this.setState({tab: tab.type, page: 1,total:1},()=>{this.getFault(tab.type);this.init(tab.type);} );  }}
+					onChange={(tab, index) => { this.setState({tab: tab.type, page: 1,total:1},()=>{this.getFault(tab.type);this.init(tab.type);});}}
 				  // onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }}
 				>
-			<div>
-				<List>
-					<Row className={styles.page}>
-						<Col span={6}>
-						</Col>
-						<Col span={18} >
-							<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
-						</Col>
-					</Row>
-					{
-						list.map((item, index) => (
-							<List.Item className={styles.item} key={index}  extra={<ListButton address={(event) => { this.address(item); }} edit={(event) => { this.deal(event,item,); }} />}>
-								<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault(item)}>
-									<tbody>
-										<tr>	
-											<td className="tr">设备名称 ：</td>
-											<td className="tl">{device_name[index]}</td>
-										</tr>
-										<tr>
-											<td className="tr">故障名称 ：</td>
-											<td className="tl" style={{ width: '200px' }}>{faultCode[item.code]}</td>
-										</tr>
-										<tr>
-											<td className="tr">故障类型 ：</td>
-											<td className="tl" style={{ width: '80px' }}>{names[item.type]}</td>
-										</tr>
-										<tr>	
-											<td className="tr">设备类型 ：</td>
-											<td className="tl">{typeName[item.device_type] ||''}</td>
-										</tr>
-										<tr>
-											<td className="tr">故障时间 ：</td>
-											<td className="tl">{moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')}</td>
-										</tr>
-										<tr>
-											<td className="tr">故障时长 ：</td>
-											<td className="tl">{item.hour}小时{item.minute}分{item.second}秒</td>					
-										</tr>
-									</tbody>
-								</table>
-							</List.Item>
-						))
-					}
-				</List>
+					<div>
+						<List>
+							<Row className={styles.page}>
+								<Col span={6}>
+								</Col>
+								<Col span={18} >
+									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
+								</Col>
+							</Row>
+							{
+								list.map((item, index) => (
+									<List.Item className={styles.item} key={index}  extra={<ListButton address={(event) => { this.address(item); }} edit={(event) => { this.deal(event,item,); }} />}>
+										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault(item)}>
+											<tbody>
+												<tr>
+													<td className="tr">设备名称 ：</td>
+													<td className="tl">{device_name[index]}</td>
+												</tr>
+												<tr>
+													<td className="tr">故障名称 ：</td>
+													<td className="tl" style={{ width: '200px' }}>{faultCode[item.code]}</td>
+												</tr>
+												<tr>
+													<td className="tr">故障类型 ：</td>
+													<td className="tl" style={{ width: '80px' }}>{names[item.type]}</td>
+												</tr>
+												<tr>
+													<td className="tr">设备类型 ：</td>
+													<td className="tl">{typeName[item.device_type] ||''}</td>
+												</tr>
+												<tr>
+													<td className="tr">故障时间 ：</td>
+													<td className="tl">{moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')}</td>
+												</tr>
+												<tr>
+													<td className="tr">故障时长 ：</td>
+													<td className="tl">{item.hour}小时{item.minute}分{item.second}秒</td>
+												</tr>
+											</tbody>
+										</table>
+									</List.Item>
+								))
+							}
+						</List>
+					</div>
+					<div>
+						<List>
+							<Row className={styles.page}>
+								<Col span={6}>
+								</Col>
+								<Col span={18}>
+									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
+								</Col>
+							</Row>
+							{
+								list.map((item, index) => (
+									<List.Item className={styles.item} key={index}  extra={<Finish address={(event) => { this.address(item) }} remove={(event) => { this.remove(event, item); }} />}>
+										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault1(item)}>
+											<tbody>
+												<tr>
+													<td className="tr">订单编号 ：</td>
+													<td className="tl" style={{ width: '100px' }}>{item.order_id}</td>
+												</tr>
+												<tr>
+													<td className="tr">设备名称 ：</td>
+													<td className="tl">{device_name[index]}</td>
+												</tr>
+												<tr>
+													<td className="tr">故障类型 ：</td>
+													<td className="tl" style={{ width: '100px' }}>{names[item.order_type]}</td>
+												</tr>
+												<tr>
+													<td className="tr">接单时间 ：</td>
+													<td className="tl">{item.create_time}</td>
+												</tr>
+												<tr>
+													<td className="tr">接单时长 ：</td>
+													<td className="tl">{item.hour}小时{item.minute}分{item.second}秒</td>
+												</tr>
+											</tbody>
+										</table>
+									</List.Item>
+								))
+							}
+						</List>
+					</div>
+				</Tabs>
 			</div>
-			<div>
-				<List>
-					<Row className={styles.page}>
-						<Col span={6}>
-						</Col>
-						<Col span={18} >
-							<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
-						</Col>
-					</Row>
-					{
-						list.map((item, index) => (
-							<List.Item className={styles.item} key={index}  extra={<Finish address={(event) => { this.address(item) }} remove={(event) => { this.remove(event, item); }} />}>
-								<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault1(item)}>
-									<tbody>
-										<tr>
-											<td className="tr">订单编号 ：</td>
-											<td className="tl" style={{ width: '100px' }}>{item.order_id}</td>
-											<td className="tl">设备编号 ：</td>
-											<td className="tl">{item.device_id}</td>
-										</tr>
-										<tr>
-											<td className="tr">故障类型 ：</td>
-											<td className="tl" style={{ width: '100px' }}>{names[item.order_type]}</td>
-										</tr>
-										<tr>
-											<td className="tr">接单时间 ：</td>
-											<td className="tl">{item.create_time}</td>
-										</tr>
-										<tr>
-											<td className="tr">接单时长 ：</td>
-											<td className="tl">{item.hour}小时{item.minute}分{item.second}秒</td>					
-										</tr>
-									</tbody>
-								</table>
-							</List.Item>
-						))
-					}
-				</List>
-			</div>
-        </Tabs>
-      </div>
-    );
-  }
+		);
+	}
 }
