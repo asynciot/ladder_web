@@ -60,17 +60,17 @@ var _val = ""
 var dispatch_id = 0
 const { TextArea } = Input;
 const desc = {
-  'untreated': '是否接单',
-  'treated': '是否完成',
+	'untreated': '是否接单',
+	'treated': '是否完成',
 };
 const names = {
-  0: '电话报修',
-  1: '人工报修',
-  2: '自动报修',
+	0: '电话报修',
+	1: '人工报修',
+	2: '自动报修',
 }
 const typeName = {
-	 'door':'控制器',
-	 'ctrl':'控制柜',
+	'door':'控制器',
+	'ctrl':'控制柜',
 }
 const faultCode = {
 	'1': '过流',
@@ -396,12 +396,12 @@ export default class DoorHistory extends Component {
 					))}
 				</List>
 				<Row gutter={40}>
-					<Col span={12} >						
+					<Col span={12} >
 						<img className={styles.icon} id="beforeShow" src={require('../../assets/icon/故障报修1.png')} />
 						<a className={styles.icon1}>维修前图片上传</a>
 						<input accept="image/*" className={styles.input} type="file" id='upload1' onChange={this.upFault}/>
 					</Col>
-					<Col span={12} >						
+					<Col span={12} >
 						<img className={styles.icon} id="afterShow" src={require('../../assets/icon/系统故障.png')} />
 						<a className={styles.icon1}>维修后图片上传</a>
 						<input accept="image/*" className={styles.input} type="file" id='upload2' onChange={this.upFinish}/>

@@ -1,10 +1,6 @@
-import {
-	createElement
-} from 'react';
+import {createElement} from 'react';
 import dynamic from 'dva/dynamic';
-import {
-	getMenuData
-} from './menu';
+import {getMenuData} from './menu';
 
 let routerDataCache;
 
@@ -147,10 +143,6 @@ export const getRouterData = (app) => {
 			name: '控制柜',
 			component: dynamicWrapper(app, ['ctrl'], () => import('../routes/Radar/CtrlRealtime')),
 		},
-		//     '/ctrl/:id/history/:type': {
-		//       name: '控制柜',
-		//       component: dynamicWrapper(app, ['ctrl'], () => import('../routes/Radar/CtrlHistory')),
-		//     },
 		'/company/debug/:id': {
 			name: '内存查看',
 			component: dynamicWrapper(app, ['ctrl'], () => import('../routes/Company/Debug')),
@@ -187,10 +179,6 @@ export const getRouterData = (app) => {
 			name: '个人',
 			component: dynamicWrapper(app, ['company', 'login'], () => import('../routes/Company/Index')),
 		},
-		'/company/profile': {
-			name: '个人信息',
-			component: dynamicWrapper(app, ['company'], () => import('../routes/Company/Profile')),
-		},
 		'/company/revise': {
 			name: '修改信息',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/Revise')),
@@ -206,6 +194,18 @@ export const getRouterData = (app) => {
 		'/company/device': {
 			name: '设备管理',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/Device')),
+		},
+		'/company/ladder/all': {
+			name: '电梯管理',
+			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/Ladder')),
+		},
+		'/company/ladder/online': {
+			name: '电梯管理',
+			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/Ladder')),
+		},
+		'/company/ladder/longoffline': {
+			name: '电梯管理',
+			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/Ladder')),
 		},
 		'/company/followdoor/all/': {
 			name: '门机管理',
@@ -242,6 +242,10 @@ export const getRouterData = (app) => {
 		'/company/edit-device/:IMEI/': {
 			name: '编辑设备',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/EditDevice')),
+		},
+		'/company/edit-ladder/:id/': {
+			name: '编辑设备',
+			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/EditLadder')),
 		},
 		'/company/message': {
 			name: '消息处理',
@@ -282,14 +286,6 @@ export const getRouterData = (app) => {
 		},
 		'/user': {
 			component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
-		},
-		'/user/profile': {
-			name: '个人信息',
-			component: dynamicWrapper(app, ['user'], () => import('../routes/User/Profile')),
-		},
-		'/profile': {
-			name: '个人信息',
-			component: dynamicWrapper(app, ['user'], () => import('../routes/User/Profile')),
 		},
 	};
 	// Get name from ./menu.js or just set it in the router data.

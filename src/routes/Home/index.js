@@ -77,13 +77,13 @@ export default class Home extends Component {
 		devicesStatus: {
 			dooronline:0,
 			dooroffline:0,
-			doorlongoffline:0,			
+			doorlongoffline:0,
 			ctrlonline:0,
 			ctrloffline:0,
-			ctrllongoffline:0,			
+			ctrllongoffline:0,
 		},
 		historyEvents: [],
-			code:'',
+		code:'',
 	}
 	componentWillMount() {
 		this.getdata();

@@ -174,13 +174,13 @@ export default class extends Component {
 					const now = new Date().getTime();
 					const totalNumber = res.data.totalNumber
 					const list = res.data.list.map((item) => {
-					return item;
-				});
-				this.setState({
-					list,
-					page,
-					totalNumber,
-				});
+						return item;
+					});
+					this.setState({
+						list,
+						page,
+						totalNumber,
+					});
 				} else {
 					this.setState({
 						list: [],

@@ -4,48 +4,52 @@ import { Form, Input, Button, Icon, Checkbox, Row, Col, Modal, Alert } from 'ant
 import styles from './Revise.less';
 
 const FormItem = Form.Item;
+
 @connect(({ submit, user, loading }) => ({
-  submit,
-  currentUser: user.currentUser,
-  submitting: loading.effects['user/updateUser'],
+	submit,
+	currentUser: user.currentUser,
+	submitting: loading.effects['user/updateUser'],
 }))
 @Form.create()
-export default class Profile extends Component {	
-  emitEmpty = () => {
-    this.props.form.resetFields('username');
-  }
-  handleSubmit = (e) => {
-    e.preventDefault();
-    this.props.form.validateFields({ force: true },
-      (err, values) => {
-        if (!err) {
-          this.props.dispatch({
-            type: 'user/updateUser',
-            payload: {
-              ...values,
-            },
-          });
-        }
-      }
-    );
-  }
-  
-  renderMessage = (message) => {
-    return (
-      <Alert
-        style={{ marginBottom: 24 }}
-        message={message}
-        type="error"
-        showIcon
-      />
-    );
-  }
 
-  render() {
-    const { form, submitting, currentUser } = this.props;
-    const { getFieldDecorator } = form;
-    return (
-      <div className={styles.main}>
+export default class Profile extends Component {
+
+	emitEmpty = () => {
+		this.props.form.resetFields('username');
+	}
+
+	handleSubmit = (e) => {
+		e.preventDefault();
+		this.props.form.validateFields({ force: true },
+			(err, values) => {
+				if (!err) {
+					this.props.dispatch({
+						type: 'user/updateUser',
+						payload: {
+						  ...values,
+						},
+					});
+				}
+			}
+		);
+	}
+
+	renderMessage = (message) => {
+		return (
+			<Alert
+				style={{ marginBottom: 24 }}
+				message={message}
+				type="error"
+				showIcon
+			/>
+		);
+	}
+
+	render() {
+		const { form, submitting, currentUser } = this.props;
+		const { getFieldDecorator } = form;
+		return (
+			<div className={styles.main}>
 				<Form onSubmit={this.handleSubmit}>
 					<div className={styles.content}>
 						<section className={styles.info}>
@@ -90,14 +94,14 @@ export default class Profile extends Component {
 								}],
 							})}
 						</section>
-            <FormItem className={styles.additional}>
-	            <Button size="large" loading={submitting} className={styles.submit} type="primary" htmlType="submit">
-	                提交修改
-	            </Button>
-            </FormItem>
-          </div>
-        </Form>    
-      </div>	  	
-    )
-  }
+						<FormItem className={styles.additional}>
+							<Button size="large" loading={submitting} className={styles.submit} type="primary" htmlType="submit">
+								提交修改
+							</Button>
+						</FormItem>
+					</div>
+				</Form>    
+			</div>
+		)
+	}
 }

@@ -7,110 +7,106 @@ import { NavLink } from 'dva/router';
 import moment from 'moment'
 import { getMessages, getMessageCount, deleteMessage } from '../../services/api';
 const PlaceHolder = ({ className = '', ...restProps }) => (
-  <div className={`${className} ${styles.placeholder}`} {...restProps}>{restProps.children}</div>
+	<div className={`${className} ${styles.placeholder}`} {...restProps}>{restProps.children}</div>
 ); 
 
 let page = 1
 const format = "YY/MM/DD"
 const alert = Modal.alert;
 const tabs = [
-  { title: '全部', type: '' },
-  { title: '已查看', type: 'done' },
-  { title: '未查看', type: 'unfinished' },
+	{ title: '全部', type: '' },
+	{ title: '已查看', type: 'done' },
+	{ title: '未查看', type: 'unfinished' },
 ];
 const Delete = ({ className = '', ...restProps }) => (
-  <div className={`${className} ${styles['list-btn']}`}>
-    <span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.delete ? restProps.delete:''}>
-      <Icon className={`${styles.delete} ${styles.icon}`} type="close" />
-      <em>删除</em>
-    </span>
+	<div className={`${className} ${styles['list-btn']}`}>
+		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.delete ? restProps.delete:''}>
+			<Icon className={`${styles.delete} ${styles.icon}`} type="close" />
+			<em>删除</em>
+		</span>
 	</div>
 );
 function closest(el, selector) {
-  const matchesSelector = el.matches || el.webkitMatchesSelector || el.mozMatchesSelector || el.msMatchesSelector;
-  while (el) {
-    if (matchesSelector.call(el, selector)) {
-      return el;
-    }
-    el = el.parentElement;
-  }
-  return null;
+	const matchesSelector = el.matches || el.webkitMatchesSelector || el.mozMatchesSelector || el.msMatchesSelector;
+	while (el) {
+		if (matchesSelector.call(el, selector)) {
+			return el;
+		}
+		el = el.parentElement;
+	}
+	return null;
 }
 
 export default class extends Component {
-  state = {
-    messages: [],
-    isLoading: false,
-    modal: false,
-    currMessage: {},
-    all:0,
-    done:0,
-    unread:0,
-    total: 0,
-  }
-
-  componentDidMount() {
-    page = 1
-    this.getMessages(0)
-    this.getMessageCount()
-  }
-  componentWillReceiveProps(nextProps) {
-    const locationChanged = nextProps.location !== this.props.location
-    if (locationChanged) {
-      page = 1
-      this.setState({
-        messages: []
-      })
-      setTimeout(this.getMessages, 100);
-    }
-  }
-
-  showModal = (message) => (e) => {
-    e.preventDefault(); // 修复 Android 上点击穿透
-    message.isSettled = true
-    const { done, unread} = this.state
-    this.setState({
-      modal: true,
-      currMessage: message,
-      done: unread != 0 ? (+done + 1) : done,
-      unread: unread != 0 ? (+unread - 1) : 0,
-    });
-    getMessages({ id: message.id })
-  }
-  onClose =  () => {
-    this.setState({
-      modal: false,
-    });
-  }
-
-  onWrapTouchStart = (e) => {
-    // fix touch to scroll background page on iOS
-    if (!/iPhone|iPod|iPad/i.test(navigator.userAgent)) {
-      return;
-    }
-    const pNode = closest(e.target, '.am-modal-content');
-    if (!pNode) {
-      e.preventDefault();
-    }
-  }
+	state = {
+		messages: [],
+		isLoading: false,
+		modal: false,
+		currMessage: {},
+		all:0,
+		done:0,
+		unread:0,
+		total: 0,
+	}
+	componentDidMount() {
+		page = 1
+		this.getMessages(0)
+		this.getMessageCount()
+	}
+	componentWillReceiveProps(nextProps) {
+		const locationChanged = nextProps.location !== this.props.location
+		if (locationChanged) {
+			page = 1
+			this.setState({
+				messages: []
+			})
+			setTimeout(this.getMessages, 100);
+		}
+	}
+	showModal = (message) => (e) => {
+		e.preventDefault(); // 修复 Android 上点击穿透
+		message.isSettled = true
+		const { done, unread} = this.state
+		this.setState({
+			modal: true,
+			currMessage: message,
+			done: unread != 0 ? (+done + 1) : done,
+			unread: unread != 0 ? (+unread - 1) : 0,
+		});
+		getMessages({ id: message.id })
+	}
+	onClose =  () => {
+		this.setState({
+			modal: false,
+		});
+	}
+	onWrapTouchStart = (e) => {
+		// fix touch to scroll background page on iOS
+		if (!/iPhone|iPod|iPad/i.test(navigator.userAgent)) {
+			return;
+		}
+		const pNode = closest(e.target, '.am-modal-content');
+		if (!pNode) {
+			e.preventDefault();
+		}
+	}
 	pageChange = (val) => {
 		const { device_type,} =this.state
 		this.getDevice(device_type,val,switchIdx)
 		const page = val
 		this.getMessages(val)
 	}
-  getMessages = (val,type) => {
-    let params = {
-      num: 10,
-      page: val,
-    }
-    if (type === 'done') {
-      params.done = true
-    } else if (type === 'unfinished') {
-      params.done = false
-    }
-		console.log(type)
-    getMessages(params).then(res => {
+	getMessages = (val,type) => {
+		let params = {
+			num: 10,
+			page: val,
+		}
+		if (type === 'done') {
+			params.done = true
+		} else if (type === 'unfinished') {
+			params.done = false
+		}
+		getMessages(params).then(res => {
 			const totalNumber = res.data.totalNumber
 			const page = val
 			if(res.data.totalNumber !=0){
@@ -119,23 +115,23 @@ export default class extends Component {
 					page,
 				});
 			}
-      const { messages } = this.state
-      const total = res.data.totalPage
-      this.setState({
-        total,
-        messages: res.data.list,
+			const { messages } = this.state
+			const total = res.data.totalPage
+			this.setState({
+				total,
+				messages: res.data.list,
 				page,
 				totalNumber,
-      });
-    })
-  }
-  getMessageCount = () => {
-    getMessageCount().then(res => {
-      this.setState({
-        ...res.data
-      });
-    })
-  }
+			});
+		})
+	}
+	getMessageCount = () => {
+		getMessageCount().then(res => {
+			this.setState({
+				...res.data
+			});
+		})
+	}
 	delete = (e, detail) => {
 		const id = detail.id
 		console.log(1)
@@ -150,17 +146,17 @@ export default class extends Component {
 			},
 		]);
 	}
-  render() {
-    const { type } = this.props.match.params
-    const { messages, currMessage, all, done, unread, } = this.state
-    const extra = (isSettled = false) => (
-      isSettled ? 
-      <span style={{color: 'green'}}>已查看</span> :
-      <span style={{color: 'red'}}>点击查看</span>
-    )
-    return (
-      <div className="content">
-        <div style={{ backgroundColor: '#fff' }}>
+	render() {
+		const { type } = this.props.match.params
+		const { messages, currMessage, all, done, unread, } = this.state
+		const extra = (isSettled = false) => (
+			isSettled ? 
+			<span style={{color: 'green'}}>已查看</span> :
+			<span style={{color: 'red'}}>点击查看</span>
+		)
+		return (
+			<div className="content">
+				<div style={{ backgroundColor: '#fff' }}>
 					<Tabs
 						tabs={tabs}
 						initialPage={this.state.type}
@@ -209,6 +205,6 @@ export default class extends Component {
 					</div>
 				</Modal>
 			</div>
-    );
-  }
+		);
+	}
 }
