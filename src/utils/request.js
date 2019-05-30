@@ -6,7 +6,7 @@ export const api = process.env.NODE_ENV === 'production'
 	// : 'http://localhost:9001/v1';
 		? 'http://server.asynciot.com'
 		: 'http://server.asynciot.com'
-	// :'http://localhost:9000';
+		// :'http://localhost:9000';
 // 		? 'http://lengxia.natapp1.cc'
 // 		:'http://lengxia.natapp1.cc'
 const codeMessage = {

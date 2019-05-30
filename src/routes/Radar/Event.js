@@ -40,13 +40,13 @@ export default class DoorHistory extends Component {
 		this.getEvent(1)
 	}
 	goHistory = (item) => {
-		const { dispatch, location, match } = this.props;
+		const { match } = this.props;
 		const device_type = match.params.type
 		const device_id = match.params.id
 		this.props.history.push(`/${device_type}/${device_id}/history/${item.id}`);
 	}
 	getEvent = (val) => {
-		const { dispatch, location, match } = this.props;
+		const { match } = this.props;
 		const device_id = match.params.id
 		const starttime = window.localStorage.getItem('starttime')
 		const endtime = window.localStorage.getItem('endtime')

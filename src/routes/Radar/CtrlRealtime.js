@@ -192,10 +192,9 @@ export default class CtrlRealtime extends Component {
 		}
 	}
 	initWebsocket = () =>{ //初始化weosocket
-		const { location, currentUser } = this.props;
-		const { pick } = this.state;
-		const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
-		const device_id = match[1];
+		const { currentUser } = this.props;
+		const { pick } = this.state
+		const device_id = this.props.match.params.id
 		const userId = currentUser.id
 		const wsurl = 'ws://47.96.162.192:9006/device/Monitor/socket?deviceId='+device_id+'&userId='+userId;
 		websock = new WebSocket(wsurl);
@@ -229,9 +228,7 @@ export default class CtrlRealtime extends Component {
 		this.state.switch = !this.state.switch
 		this.forceUpdate()
 		if(this.state.switch == true){
-			const {location } = this.props;
-			const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
-			const device_id = match[1];
+			const device_id = this.props.match.params.id
 			if(websock){
 				websock.close()
 				websock=null
@@ -260,9 +257,7 @@ export default class CtrlRealtime extends Component {
 		}
 	}
 	getBaseData = () => {
-		const { location } = this.props;
-		const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
-		const device_id = match[1];
+		const device_id = this.props.match.params.id
 		const show = this.state.show
 		getCtrlData({device_id}).then((res) => {
 			let buffer = []

@@ -95,6 +95,12 @@ export default class extends Component {
 			}
 		});
 	}
+	goLadder = (item) => {
+		const type = item.device_model
+		this.props.history.push({
+			pathname:`/company/ladder/${item.id}`,
+		});
+	}
 	edit = (e, detail) => {
 		e.stopPropagation();
 		e.preventDefault();
@@ -157,14 +163,14 @@ export default class extends Component {
 					<div style={{ backgroundColor: '#fff' }}>
 						<List className={styles.lis}>
 							<Row className={styles.page}>
-								<Col span={8} style={{margin:'5px',}}>
+								<Col span={8} style={{margin:'5px'}}>
 									<Input
 										placeholder="设备编号或串号"
 										onChange={this.onChange}
 										value={this.state.search_info}
 										maxlength="16"></Input>
 								</Col>
-								<Col span={8} style={{margin:'5px',}}>
+								<Col span={8} style={{margin:'5px'}}>
 									<Input
 										placeholder="安装地址"
 										onChange={this.onChangel}
@@ -181,7 +187,7 @@ export default class extends Component {
 							{
 								list.length ?
 								list.map((item, index) => (
-									<List.Item className={styles.item} key={index} extra={<ListButton edit={(event) => { this.edit(event, item); }} />}>
+									<List.Item className={styles.item} key={index} onClick={()=>this.goLadder(item)} extra={<ListButton edit={(event) => { this.edit(event, item); }} />}>
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 											<tbody>
 												<tr>

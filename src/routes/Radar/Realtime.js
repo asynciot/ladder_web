@@ -182,7 +182,6 @@ export default class DoorHistory extends Component {
 	  return str;
 	};
 	componentWillMount() {
-		const { location } = this.props;
 		this.state.id = this.props.match.params.id
 		this.getBaseData()
 		document.addEventListener('visibilitychange', () => {

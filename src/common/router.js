@@ -207,6 +207,14 @@ export const getRouterData = (app) => {
 			name: '电梯管理',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/Ladder')),
 		},
+		'/company/ladder/:id': {
+			name: '电梯信息',
+			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/LadderInfo')),
+		},
+		'/company/edit-ladder/:id/': {
+			name: '编辑设备',
+			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/EditLadder')),
+		},
 		'/company/followdoor/all/': {
 			name: '门机管理',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/FollowDevice')),
@@ -242,10 +250,6 @@ export const getRouterData = (app) => {
 		'/company/edit-device/:IMEI/': {
 			name: '编辑设备',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/EditDevice')),
-		},
-		'/company/edit-ladder/:id/': {
-			name: '编辑设备',
-			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/EditLadder')),
 		},
 		'/company/message': {
 			name: '消息处理',
