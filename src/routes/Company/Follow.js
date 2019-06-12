@@ -9,7 +9,7 @@ import pathToRegexp from 'path-to-regexp';
 import styles from './Follow.less';
 import camera from '../../assets/camera.png';
 import { postFollowInfo } from '../../services/api';
-
+import { injectIntl, FormattedMessage } from 'react-intl';
 const tabs = [
 	{ title: '输入串号' },
 	// { title: '上传二维码' },
@@ -129,11 +129,11 @@ export default class extends Component {
 								onChange={this.onChange}
 								value={this.state.deviceNo}
 							>
-								串号:
+								<FormattedMessage id="device IMEI"/>:
 							</InputItem>
 							<List.Item>
 								<Button disabled={!this.state.deviceNo} size="large" loading={submitting} style={{ width: '100%' }} type="primary" onClick={() => this.submit()}>
-									关注
+									<FormattedMessage id="follow"/>
 								</Button>
 							</List.Item>
 						</List>

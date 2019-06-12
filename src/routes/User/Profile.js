@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Icon, Row, Col, Avatar} from 'antd';
 import styles from './Profile.less';
+import { injectIntl, FormattedMessage } from 'react-intl';
 
 @connect(({ user }) => ({
   currentUser: user.currentUser,
@@ -16,7 +17,7 @@ export default class Profile extends Component {
             <img src={currentUser.avatar} />
           </section>
           <section className={styles.info}>
-            <p>类型 ：{currentUser.position}</p>
+            <p><FormattedMessage id="type"/> ：{currentUser.position}</p>
           </section>
           <section className={styles.info}>
             <p>姓名 ：{currentUser.name}</p>

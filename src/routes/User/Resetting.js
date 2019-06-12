@@ -115,20 +115,20 @@ export default class Login extends Component {
 								<FormItem>
 									<Row gutter={8}>
 										<Col span={6}>
-											<div>手机号码:</div>
+											<div><FormattedMessage id="phone number"/>:</div>
 										</Col>
 										<Col span={18}>
 											{getFieldDecorator('mobile', {
 													rules: [{
-														required: true, message: '请输入手机号!',
+														required: true, message: <FormattedMessage id="Please input phone number"/>,
 													}, {
-														pattern: /^[1][3,4,5,7,8][0-9]{9}$/, message: '手机号格式错误！',
+														pattern: /^[1][3,4,5,7,8][0-9]{9}$/, message: <FormattedMessage id="illegal phone number"/>,
 													}],
 												})(<Input
 													type="text"
 													size="large"
 													suffix={suffix}
-													placeholder="请输入手机号"
+													// placeholder="请输入手机号"
 												/>)}
 										</Col>
 									</Row>
@@ -136,17 +136,17 @@ export default class Login extends Component {
 								<FormItem>
 									<Row gutter={8}>
 										<Col span={6}>
-											<div>验证码:</div>
+											<div><FormattedMessage id="verification"/>:</div>
 										</Col>
 										<Col span={13}>
 											{getFieldDecorator('verifyCode', {
 												rules: [{
-													required: true, message: '请输入验证码!',
+													required: true, message: <FormattedMessage id="Please input verification code"/>,
 												}],
 											})(<Input
 												type="text"
 												size="large"
-												placeholder="请输入验证码"
+												// placeholder="请输入验证码"
 											/>)}
 										</Col>
 										<Col span={5}>
@@ -156,7 +156,7 @@ export default class Login extends Component {
 												size="large"
 												onClick={() => this.onGetCaptcha()}
 											>
-												{count ? `${count} s` : '获取'}
+												<FormattedMessage id={count ? `${count} s` : 'get code'}/>
 											</Button>
 										</Col>
 									</Row>
@@ -164,11 +164,13 @@ export default class Login extends Component {
 								<FormItem>
 									<Row gutter={8}>
 										<Col span={6}>
-											<div>设置密码:</div>
+											<div><FormattedMessage id="Password"/>:</div>
 										</Col>
 										<Col span={18}>
 											{getFieldDecorator('newpassword', {
-												rules: [{ required: true, message: '请输入密码!' }],
+												rules: [{ required: true, 
+														  message: <FormattedMessage id="Password should not less than 6 characters"/> }],
+														  min:6,
 											})(<Input
 													type="password"
 													size="large"
@@ -180,12 +182,12 @@ export default class Login extends Component {
 								<FormItem>
 									<Row gutter={8}>
 										<Col span={6}>
-											<div>重复密码:</div>
+											<div><FormattedMessage id="Confirm password"/>:</div>
 										</Col>
 										<Col span={18}>
 											{getFieldDecorator('confirm', {
 													rules: [
-														{ required: true, message: '请确认密码!' },
+														{ required: true, message: <FormattedMessage id="Passwords does not match"/> },
 														{
 															validator: this.compareToFirstPassword,
 														},
@@ -210,7 +212,7 @@ export default class Login extends Component {
 												type="primary"
 												htmlType="submit"
 											>
-												修改
+												<FormattedMessage id="reset"/>
 											</Button>
 										</Col>
 										<Col span={12}>
@@ -220,7 +222,7 @@ export default class Login extends Component {
 												className={styles.submit}
 												type="primary"
 											>
-													返回
+												<FormattedMessage id="back"/>
 											</Button>
 										</Col>
 									</Row>
@@ -231,7 +233,7 @@ export default class Login extends Component {
 													valuePropName: 'checked',
 													initialValue: true,
 													})(
-														<Checkbox>同意 <i className={styles.deal} onClick={this.showModal} loading={this.state.loading}>《服务条款》</i></Checkbox>
+														<Checkbox><FormattedMessage id="Agree to "/><i className={styles.deal} onClick={this.showModal} loading={this.state.loading}>《<FormattedMessage id="Terms of Service"/>》</i></Checkbox>
 													)}
 											</Col>
 										</Row>

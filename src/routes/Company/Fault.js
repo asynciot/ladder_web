@@ -9,6 +9,7 @@ import { Picker, List, Tabs,  Card, } from 'antd-mobile';
 import classNames from 'classnames';
 import styles from './Fault.less';
 import {getFault, postFinish, postFault, getDispatch } from '../../services/api';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import c1 from '../../assets/fault/c1.png';
 import c2 from '../../assets/fault/c2.png';
 import c3 from '../../assets/fault/c3.png';
@@ -135,6 +136,7 @@ export default class DoorHistory extends Component {
 		this.getFault()
 	}
 	getFault = () =>{
+		console.log(<FormattedMessage id="Maintenance Report"/>)
 		const { dispatch, location } = this.props;
 		const match = pathToRegexp('/order/:id').exec(location.pathname);
 		let id = match[1];
@@ -343,46 +345,46 @@ export default class DoorHistory extends Component {
 							<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 								<tbody>
 									<tr>
-										<td className="tr">故障名称 ：</td>
-										<td className="tl" style={{ width: '200px' }}>{faultCode[item.code]}</td>
-										<td className="tl" onClick={() => this.info(item)}>详情</td>
+										<td className="tr"><FormattedMessage id="fault"/> ：</td>
+										<td className="tl" style={{ width: '200px' }}><FormattedMessage id={'E'+item.code}/></td>
+										<td className="tl" onClick={() => this.info(item)}><FormattedMessage id="Details"/></td>
 									</tr>
 									<tr>
-										<td className="tr">设备编号 ：</td>
+										<td className="tr"><FormattedMessage id="device ID"/> ：</td>
 										<td className="tl">{item.device_id}</td>
 									</tr>
 									<tr>
-										<td className="tr">故障类型 ：</td>
-										<td className="tl" style={{ width: '100px' }}>{names[item.type]}</td>
+										<td className="tr"><FormattedMessage id="fault"/><FormattedMessage id="type"/> ：</td>
+										<td className="tl" style={{ width: '100px' }}><FormattedMessage id={'O'+item.type}/></td>
 									</tr>
 									<tr>
-										<td className="tr">设备类型 ：</td>
-										<td className="tl">{typeName[item.device_type] ||''}</td>
+										<td className="tr"><FormattedMessage id="device type"/> ：</td>
+										<td className="tl"><FormattedMessage id={item.device_type ||''}/></td>
 									</tr>
 									<tr>
-										<td className="tr">故障时间 ：</td>
+										<td className="tr"><FormattedMessage id="report time"/> ：</td>
 										<td className="tl">{moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')}</td>
 									</tr>
 									<tr>
-										<td className="tr">故障时长 ：</td>
-										<td className="tl">{item.hour}小时{item.minute}分{item.second}秒</td>
+										<td className="tr"><FormattedMessage id="fault duration"/> ：</td>
+										<td className="tl">{item.hour}<FormattedMessage id="H"/>{item.minute}<FormattedMessage id="M"/>{item.second}<FormattedMessage id="S"/></td>
 									</tr>
 									<tr>
-										<td className="tr">下次维保 ：</td>
+										<td className="tr"><FormattedMessage id="next maintenance"/> ：</td>
 										<td className="tl"><DatePicker title="下次维保时间" disabled={this.state.maintenance} size="large" value={this.state.maintenance_nexttime} onChange={this.onStart} /></td>
 									</tr>
 									<tr>
-										<td className="tr">下次年检 ：</td>
+										<td className="tr"><FormattedMessage id="next yearly check"/> ：</td>
 										<td className="tl"><DatePicker title="下次年检时间" disabled={this.state.inspection} size="large" value={this.state.inspection_nexttime} onChange={this.onEnd} /></td>
 									</tr>
 									<tr>
-										<Col span="6">
-											<td className="tr">维修报告 ：</td>
+										<Col span="8">
+											<td className="tr"><FormattedMessage id="Report"/> ：</td>
 										</Col>
-										<Col span="18">
+										<Col span="16">
 											<div className={styles.ls}>
-												<TextArea 
-													placeholder="50字以内" 
+												<TextArea
+													// placeholder="50字以内" 
 													maxlength="50" 
 													value={this.state.remark}
 													onChange={this.onChange}
@@ -398,19 +400,19 @@ export default class DoorHistory extends Component {
 				<Row gutter={40}>
 					<Col span={12} >
 						<img className={styles.icon} id="beforeShow" src={require('../../assets/icon/故障报修1.png')} />
-						<a className={styles.icon1}>维修前图片上传</a>
+						<a className={styles.icon1}><FormattedMessage id="photo before treating"/></a>
 						<input accept="image/*" className={styles.input} type="file" id='upload1' onChange={this.upFault}/>
 					</Col>
 					<Col span={12} >
 						<img className={styles.icon} id="afterShow" src={require('../../assets/icon/系统故障.png')} />
-						<a className={styles.icon1}>维修后图片上传</a>
+						<a className={styles.icon1}><FormattedMessage id="photo after treating"/></a>
 						<input accept="image/*" className={styles.input} type="file" id='upload2' onChange={this.upFinish}/>
 					</Col>
 					<Col xs={{ span: 12 }} sm={{ span: 18 }} md={{ span: 16 }} className={styles.btn1}>
-						<Button disabled={this.state.disable} onClick={() => this.postFault()} type="primary" style={{ width: '100%' }} >接单</Button>
+						<Button disabled={this.state.disable} onClick={() => this.postFault()} type="primary" style={{ width: '100%' }} ><FormattedMessage id="receive"/></Button>
 					</Col>
 					<Col xs={{ span: 12 }} sm={{ span: 18 }} md={{ span: 16 }} className={styles.btn1}>
-						<Button disabled={this.state.disable1} onClick={(event) => {this.uploadPicture(event)}} type="primary" style={{ width: '100%' }} >维修完成</Button>
+						<Button disabled={this.state.disable1} onClick={(event) => {this.uploadPicture(event)}} type="primary" style={{ width: '100%' }} ><FormattedMessage id="complete"/></Button>
 					</Col>
 				</Row>
 			</div>

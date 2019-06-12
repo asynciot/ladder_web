@@ -23,18 +23,18 @@ const tabs2 = [
 	{ title: '离线', state: 'longoffline' },
 ];
 const modelName = {
-	'0':'无',
+	'0':' ',
 	"1":'NSFC01-01B',
 	"2":'NSFC01 -02T',
 }
 const typeName ={
-	'240':'控制柜',
-	'15':'门机',
+	'240':'ctrl',
+	'15':'door',
 }
 const state ={
-	'online':'在线',
-	'offline':'故障',
-	'longoffline':'离线',
+	'online':'online',
+	'offline':'offline',
+	'longoffline':'long offline',
 }
 const faultCode = {
 	'1': '过流',
@@ -371,7 +371,7 @@ export default class extends Component {
 										maxlength="16"></Input>
 								</Col>
 								<Col span={6}>
-									<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} >搜索</Button>
+									<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
 								</Col>
 								<Col span={24} className={styles.center}>
 									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
@@ -384,37 +384,37 @@ export default class extends Component {
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 											<tbody>
 												<tr>
-													<a className={styles.text}>安装地址 ：</a>
+													<a className={styles.text}><FormattedMessage id="install address"/> ：</a>
 													<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
 												</tr>
 												<tr>
 													<Col span={12}>
-														<td className="tr">别名 ：</td>
+														<td className="tr"><FormattedMessage id="device name"/> ：</td>
 														<td className="tl">{item.device_name ? item.device_name : '无'}</td>
 													</Col>
 													<Col span={12}>	
-														<td className="tl">类型：</td>
-														<td className="tl">{typeName[item.device_type] ||''}</td>
+														<td className="tl"><FormattedMessage id="type"/>：</td>
+														<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 													</Col>	
 												</tr>
 												<tr>
 													<Col span={12}>
-														<td className="tr">串号 ：</td>
+														<td className="tr"><FormattedMessage id="device IMEI"/> ：</td>
 														<td className="tl">{item.IMEI}</td>
 													</Col>
 													<Col span={12}>	
-														<td className="tl">信号：</td>
+														<td className="tl"><FormattedMessage id="RSSI"/>：</td>
 														<td className="tl"><Signal width={item.rssi}/></td>
 													</Col>	
 												</tr>
 												<tr>
 													<Col span={12}>
-														<td className="tr">型号 ：</td>
+														<td className="tr"><FormattedMessage id="model"/> ：</td>
 														<td className="tl">{modelName[item.device_model]}</td>
 													</Col>
 													<Col span={12}>
-														<td className="tl">状态 ：</td>
-														<td className="tl">{state[item.state] ||''}</td>
+														<td className="tl"><FormattedMessage id="state"/> ：</td>
+														<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
 													</Col>
 												</tr>
 											</tbody>
@@ -424,7 +424,7 @@ export default class extends Component {
 								<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 									<Col span={24} className={styles.center}>
 										<td></td>
-										<td className="tl" style={{margin:'5px',}}>暂无数据</td>
+										<td className="tl" style={{margin:'5px',}}><FormattedMessage id="No Information"/></td>
 									</Col>
 								</table>
 							}
@@ -448,7 +448,7 @@ export default class extends Component {
 										maxlength="16"></Input>
 								</Col>
 								<Col span={6}>
-									<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} >搜索</Button>
+									<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
 								</Col>
 								<Col span={24} className={styles.center}>
 									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
@@ -461,37 +461,37 @@ export default class extends Component {
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 											<tbody>
 												<tr>
-													<a className={styles.text}>安装地址 ：</a>
+													<a className={styles.text}><FormattedMessage id="install address"/> ：</a>
 													<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
 												</tr>
 												<tr>
 													<Col span={12}>
-														<td className="tr">别名 ：</td>
+														<td className="tr"><FormattedMessage id="device name"/> ：</td>
 														<td className="tl">{item.device_name ? item.device_name : '无'}</td>
 													</Col>
 													<Col span={12}>	
-														<td className="tl">类型：</td>
-														<td className="tl">{typeName[item.device_type] ||''}</td>
+														<td className="tl"><FormattedMessage id="type"/>：</td>
+														<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 													</Col>	
 												</tr>
 												<tr>
 													<Col span={12}>
-														<td className="tr">串号 ：</td>
+														<td className="tr"><FormattedMessage id="device IMEI"/> ：</td>
 														<td className="tl">{item.IMEI}</td>
 													</Col>
 													<Col span={12}>	
-														<td className="tl">信号：</td>
+														<td className="tl"><FormattedMessage id="RSSI"/>：</td>
 														<td className="tl"><Signal width={item.rssi}/></td>
 													</Col>	
 												</tr>
 												<tr>
 													<Col span={12}>
-														<td className="tr">型号 ：</td>
+														<td className="tr"><FormattedMessage id="model"/> ：</td>
 														<td className="tl">{modelName[item.device_model]}</td>
 													</Col>
 													<Col span={12}>
-														<td className="tl">状态 ：</td>
-														<td className="tl">{state[item.state] ||''}</td>
+														<td className="tl"><FormattedMessage id="state"/> ：</td>
+														<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
 													</Col>
 												</tr>
 											</tbody>
@@ -501,7 +501,7 @@ export default class extends Component {
 								<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 									<Col span={24} className={styles.center}>
 										<td></td>
-										<td className="tl" style={{margin:'5px',}}>暂无数据</td>
+										<td className="tl" style={{margin:'5px',}}><FormattedMessage id="No Information"/></td>
 									</Col>
 								</table>
 							}
@@ -525,7 +525,7 @@ export default class extends Component {
 										maxlength="16"></Input>
 								</Col>
 								<Col span={6}>
-									<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} >搜索</Button>
+									<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
 								</Col>
 								<Col span={24} className={styles.center}>
 									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
@@ -538,38 +538,38 @@ export default class extends Component {
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 											<tbody>
 												<tr>
-													<a className={styles.text}>安装地址 ：</a>
+													<a className={styles.text}><FormattedMessage id="install address"/> ：</a>
 													<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
 												</tr>
 												<tr>
 													<Col span={12}>
-														<td className="tr">别名 ：</td>
+														<td className="tr"><FormattedMessage id="device name"/> ：</td>
 														<td className="tl">{item.device_name ? item.device_name : '无'}</td>
 													</Col>
 													<Col span={12}>	
-														<td className="tl">类型：</td>
-														<td className="tl">{typeName[item.device_type] ||''}</td>
+														<td className="tl"><FormattedMessage id="type"/>：</td>
+														<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 													</Col>	
 												</tr>
 												<tr>
 													<Col span={12}>
-														<td className="tr">串号 ：</td>
+														<td className="tr"><FormattedMessage id="type"/> ：</td>
 														<td className="tl">{item.IMEI}</td>
 													</Col>
 													<Col span={12}>	
-														<td className="tl">信号：</td>
+														<td className="tl"><FormattedMessage id="RSSI"/>：</td>
 														<td className="tl"><Signal width={item.rssi}/></td>
 													</Col>	
 												</tr>
 												<tr>
 													<Col span={12}>
-														<td className="tr">型号 ：</td>
+														<td className="tr"><FormattedMessage id="model"/> ：</td>
 														<td className="tl">{modelName[item.device_model]}</td>
 													</Col>
 												</tr>
 												<tr>
 													<Col span={24}>
-														<td className="tl">状态 ：</td>
+														<td className="tl"><FormattedMessage id="state"/> ：</td>
 														<td className="tl">{faultCode[item.code]}</td>
 													</Col>
 												</tr>
@@ -580,7 +580,7 @@ export default class extends Component {
 								<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 									<Col span={24} className={styles.center}>
 										<td></td>
-										<td className="tl" style={{margin:'5px',}}>暂无数据</td>
+										<td className="tl" style={{margin:'5px',}}><FormattedMessage id="No Information"/></td>
 									</Col>
 								</table>
 							}
@@ -604,7 +604,7 @@ export default class extends Component {
 										maxlength="16"></Input>
 								</Col>
 								<Col span={6}>
-									<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} >搜索</Button>
+									<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
 								</Col>
 								<Col span={24} className={styles.center}>
 									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
@@ -617,36 +617,36 @@ export default class extends Component {
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 											<tbody>
 												<tr>
-													<a className={styles.text}>安装地址 ：</a>
+													<a className={styles.text}><FormattedMessage id="install address"/> ：</a>
 													<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
 												</tr>
 												<tr>
 													<Col span={12}>
-														<td className="tr">别名 ：</td>
-														<td className="tl">{item.device_name ? item.device_name : '无'}</td>
+														<td className="tr"><FormattedMessage id="device name"/> ：</td>
+														<td className="tl">{item.device_name ? item.device_name : ' '}</td>
 													</Col>
 													<Col span={12}>	
-														<td className="tl">类型：</td>
-														<td className="tl">{typeName[item.device_type] ||''}</td>
+														<td className="tl"><FormattedMessage id="type"/>：</td>
+														<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 													</Col>	
 												</tr>
 												<tr>
 													<Col span={12}>
-														<td className="tr">串号 ：</td>
+														<td className="tr"><FormattedMessage id="device IMEI"/> ：</td>
 														<td className="tl">{item.IMEI}</td>
 													</Col>
 													<Col span={12}>	
-														<td className="tl">信号：</td>
+														<td className="tl"><FormattedMessage id="RSSI"/>：</td>
 														<td className="tl"><Signal width={item.rssi}/></td>
 													</Col>	
 												</tr>
 												<tr>
 													<Col span={12}>
-														<td className="tr">型号 ：</td>
+														<td className="tr"><FormattedMessage id="model"/> ：</td>
 														<td className="tl">{modelName[item.device_model]}</td>
 													</Col>
 													<Col span={12}>
-														<td className="tl">状态 ：</td>
+														<td className="tl"><FormattedMessage id="state"/> ：</td>
 														<td className="tl">{state[item.state] ||''}</td>
 													</Col>
 												</tr>
@@ -657,7 +657,7 @@ export default class extends Component {
 								<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 									<Col span={24} className={styles.center}>
 										<td></td>
-										<td className="tl" style={{margin:'5px',}}>暂无数据</td>
+										<td className="tl" style={{margin:'5px',}}><FormattedMessage id="No Information"/></td>
 									</Col>
 								</table>
 							}

@@ -8,6 +8,7 @@ import background3 from '../../assets/bg-menu.jpg';
 import background2 from '../../assets/menu-bg1.jpg';
 import background4 from '../../assets/service-img4.jpg';
 import BMap  from 'BMap';
+import { injectIntl, FormattedMessage } from 'react-intl';
 
 const alert = Modal.alert;
 var inte = null;
@@ -67,7 +68,7 @@ const faultCode = {
 	'114': '输入电压过低',
 	'178': '输入电压过高',
 }
-export default class Home extends Component {
+export default injectIntl(class Home extends Component {
 	state = {
 		data: [],
 		imgHeight: 176,
@@ -166,7 +167,8 @@ export default class Home extends Component {
 				console.log('您的位置：'+r.point.lng+','+r.point.lat);
 				const lat = r.point.lat
 				const lon = r.point.lng
-				alert("正在获取当前位置")
+				if (window.localStorage.getItem("language")=='en'){alert("Getting the current location")}
+				if (window.localStorage.getItem("language")=='zh'){alert("正在获取当前位置")}
 				postLocation({ lat, lon,}).then((res) => {
 				})
 			}
@@ -299,7 +301,7 @@ export default class Home extends Component {
 										<div className={styles.gridnum4}>
 											{doornum}
 										</div>
-										门机
+										<FormattedMessage id="door"/>
 									</div>
 								</Card>
 							</Col>
@@ -309,7 +311,7 @@ export default class Home extends Component {
 										<div className={styles.gridnum1}>
 											{devicesStatus.dooronline}
 										</div>
-										在线
+										<FormattedMessage id="online"/>
 									</div>
 								</Card>
 							</Col>
@@ -319,7 +321,7 @@ export default class Home extends Component {
 										<div className={styles.gridnum2}>
 											{this.state.dooroffline}
 										</div>
-										故障
+										<FormattedMessage id="fault"/>
 									</div>
 								</Card>
 							</Col>
@@ -329,7 +331,7 @@ export default class Home extends Component {
 										<div className={styles.gridnum3}>
 											{devicesStatus.doorlongoffline}
 										</div>
-										离线
+										<FormattedMessage id="offline"/>
 									</div>
 								</Card>
 							</Col>
@@ -341,7 +343,7 @@ export default class Home extends Component {
 										<div className={styles.gridnum4}>
 											{ctrlnum}
 										</div>
-										控制柜
+										<FormattedMessage id="ctrl"/>
 									</div>
 								</Card>
 							</Col>
@@ -351,7 +353,7 @@ export default class Home extends Component {
 										<div className={styles.gridnum1}>
 											{devicesStatus.ctrlonline}
 										</div>
-										在线
+										<FormattedMessage id="online"/>
 									</div>
 								</Card>
 							</Col>
@@ -361,7 +363,7 @@ export default class Home extends Component {
 										<div className={styles.gridnum2}>
 											{this.state.ctrloffline}
 										</div>
-										故障
+										<FormattedMessage id="fault"/>
 									</div>
 								</Card>
 							</Col>
@@ -371,7 +373,7 @@ export default class Home extends Component {
 										<div className={styles.gridnum3}>
 											{devicesStatus.ctrllongoffline}
 										</div>
-										离线
+										<FormattedMessage id="offline"/>
 									</div>
 								</Card>
 							</Col>
@@ -383,8 +385,8 @@ export default class Home extends Component {
 						>
 							{
 								this.state.messages[0] && this.state.messages[0].content ?
-									<span>最新消息 <Brief>{this.state.messages[0].content}</Brief></span> :
-									<span>没有消息</span>
+									<span><FormattedMessage id="Hot News"/> <Brief>{this.state.messages[0].content}</Brief></span> :
+									<span><FormattedMessage id="No News"/></span>
 							}
 						</Item>
 						<Item
@@ -396,29 +398,29 @@ export default class Home extends Component {
 								len ?
 								notClosedEvents.map(item => (
 									<span className={styles.msg} key={item.id}>
-										工单状态
-										<Brief>待处理:<span>{len}</span></Brief>
-										<Brief>最新工单</Brief>
+										<FormattedMessage id="Order State"/>
+										<Brief><FormattedMessage id="To be treated"/>:<span>{len}</span></Brief>
+										<Brief><FormattedMessage id="Latest Order"/></Brief>
 										<Brief>
 											<Flex>
-												<Flex.Item>名称:<span className={styles.tips}>{names[item.type]}</span></Flex.Item>
-												<Flex.Item>型号:<span className={styles.tips}>{typeName[item.device_type] ||''}</span></Flex.Item>
+												<Flex.Item><FormattedMessage id="type"/>:<span className={styles.tips}><FormattedMessage id={'O'+item.type}/></span></Flex.Item>
+												<Flex.Item><FormattedMessage id="model"/>:<span className={styles.tips}><FormattedMessage id={item.device_type}/></span></Flex.Item>
 											</Flex>
 										</Brief>
-										<Brief>故障名称:<span className={styles.tips}>{faultCode[this.state.code]}</span></Brief>
+										<Brief><FormattedMessage id="fault"/>:<span className={styles.tips}><FormattedMessage id={'E'+this.state.code}/></span></Brief>
 									</span>
 								)) : (
 									<span>
-										工单状态
-										<Brief>暂无工单</Brief>
+										<FormattedMessage id="Order State"/>
+										<Brief><FormattedMessage id="No Order"/></Brief>
 									</span>
 								)
 							}
 						</Item>
 					</List>
-					<Button onClick={this.onpress} type="primary" style={{ width: '100%' }}>定位打卡</Button>
+					<Button onClick={this.onpress} type="primary" style={{ width: '100%' }}><FormattedMessage id="Location clock"/></Button>
 				</div>
 			</div>
 		);
 	}
-}
+})

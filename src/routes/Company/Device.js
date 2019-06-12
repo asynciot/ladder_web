@@ -3,7 +3,7 @@ import { Icon } from 'antd';
 import { Tabs, Flex, Badge, List, Modal } from 'antd-mobile';
 import classNames from 'classnames';
 import base64url from 'base64url';
-
+import { injectIntl, FormattedMessage } from 'react-intl';
 import MobileNav from '../../components/MobileNav';
 import styles from './Device.less';
 import singalImg from '../../assets/signal.png';
@@ -15,13 +15,13 @@ const tabs = [
 	{ title: '控制柜', device_type: '240' },
 ];
 const typeName ={
-	'240':'控制柜',
-	'15':'控制器',
+	'240':'ctrl',
+	'15':'door',
 }
 const state ={
-	'online':'在线',
-	'offline':'离线',
-	'longoffline':'长期离线',
+	'online':'online',
+	'offline':'offline',
+	'longoffline':'long offline',
 }
 const alertName = (event) => {
 	if (event.isLoss) {
@@ -421,10 +421,10 @@ export default class extends Component {
 				>
 					<div style={{ backgroundColor: '#fff' }}>
 						<Flex>
-							<Flex.Item onClick={() => this.switchList(0)}><PlaceHolder className={switchIdx === 0 ? styles.active : ''}>全部 {navs.all}</PlaceHolder></Flex.Item>
-							<Flex.Item onClick={() => this.switchList(1)}><PlaceHolder className={switchIdx === 1 ? styles.active : ''}>在线 {navs.ok}</PlaceHolder></Flex.Item>
-							<Flex.Item onClick={() => this.switchList(2)}><PlaceHolder className={switchIdx === 2 ? styles.active : ''}>离线 {navs.fault}</PlaceHolder></Flex.Item>
-							<Flex.Item onClick={() => this.switchList(3)}><PlaceHolder className={switchIdx === 3 ? styles.active : ''}>长期离线 {navs.missing}</PlaceHolder></Flex.Item>
+							<Flex.Item onClick={() => this.switchList(0)}><PlaceHolder className={switchIdx === 0 ? styles.active : ''}><FormattedMessage id="all"/> {navs.all}</PlaceHolder></Flex.Item>
+							<Flex.Item onClick={() => this.switchList(1)}><PlaceHolder className={switchIdx === 1 ? styles.active : ''}><FormattedMessage id="online"/> {navs.ok}</PlaceHolder></Flex.Item>
+							<Flex.Item onClick={() => this.switchList(2)}><PlaceHolder className={switchIdx === 2 ? styles.active : ''}><FormattedMessage id="offline"/> {navs.fault}</PlaceHolder></Flex.Item>
+							<Flex.Item onClick={() => this.switchList(3)}><PlaceHolder className={switchIdx === 3 ? styles.active : ''}><FormattedMessage id="long offline"/> {navs.missing}</PlaceHolder></Flex.Item>
 						</Flex>
 						<List>
 							{
@@ -433,26 +433,26 @@ export default class extends Component {
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 											<tbody>
 												<tr>
-													<td className="tr">地点 ：</td>
+													<td className="tr"><FormattedMessage id="base station"/> ：</td>
 													<td className="tl" style={{ width: '260px' }}>{item.cell_address}</td>
 												</tr>
 												<tr>
-													<td className="tr">别名 ：</td>
-													<td className="tl">{item.device_name ? item.device_name : '无'}</td>
-													<td className="tl">类型 ：</td>
-													<td className="tl">{typeName[item.device_type] ||''}</td>
+													<td className="tr"><FormattedMessage id="device name"/> ：</td>
+													<td className="tl">{item.device_name ? item.device_name : ' '}</td>
+													<td className="tl"><FormattedMessage id="type"/> ：</td>
+													<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 												</tr>
 												<tr>
-													<td className="tr">编号 ：</td>
+													<td className="tr"><FormattedMessage id="device IMEI"/> ：</td>
 													<td className="tl">{item.IMEI}</td>
-													<td className="tl">信号 ：</td>
+													<td className="tl"><FormattedMessage id="RSSI"/> ：</td>
 													<td className="tl"><Signal width={item.RSSI}/></td>
 												</tr>
 												<tr>
-													<td className="tr">型号 ：</td>
-													<td className="tl">{item.device_model ? item.device_model : '无'}</td>
-													<td className="tr">状态 ：</td>
-													<td className="tl">{state[item.state] ||''}</td>
+													<td className="tr"><FormattedMessage id="model"/> ：</td>
+													<td className="tl">{item.device_model ? item.device_model : ' '}</td>
+													<td className="tr"><FormattedMessage id="state"/> ：</td>
+													<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
 												</tr>
 											</tbody>
 										</table>
@@ -463,10 +463,10 @@ export default class extends Component {
 					</div>
 					<div style={{ backgroundColor: '#fff' }}>
 						<Flex>
-							<Flex.Item onClick={() => this.switchList(0)}><PlaceHolder className={switchIdx === 0 ? styles.active : ''}>全部 {navs.all}</PlaceHolder></Flex.Item>
-							<Flex.Item onClick={() => this.switchList(1)}><PlaceHolder className={switchIdx === 1 ? styles.active : ''}>在线 {navs.ok}</PlaceHolder></Flex.Item>
-							<Flex.Item onClick={() => this.switchList(2)}><PlaceHolder className={switchIdx === 2 ? styles.active : ''}>离线 {navs.fault}</PlaceHolder></Flex.Item>
-							<Flex.Item onClick={() => this.switchList(3)}><PlaceHolder className={switchIdx === 3 ? styles.active : ''}>长期离线 {navs.missing}</PlaceHolder></Flex.Item>
+							<Flex.Item onClick={() => this.switchList(0)}><PlaceHolder className={switchIdx === 0 ? styles.active : ''}><FormattedMessage id="all"/> {navs.all}</PlaceHolder></Flex.Item>
+							<Flex.Item onClick={() => this.switchList(1)}><PlaceHolder className={switchIdx === 1 ? styles.active : ''}><FormattedMessage id="online"/> {navs.ok}</PlaceHolder></Flex.Item>
+							<Flex.Item onClick={() => this.switchList(2)}><PlaceHolder className={switchIdx === 2 ? styles.active : ''}><FormattedMessage id="offline"/> {navs.fault}</PlaceHolder></Flex.Item>
+							<Flex.Item onClick={() => this.switchList(3)}><PlaceHolder className={switchIdx === 3 ? styles.active : ''}><FormattedMessage id="long offline"/> {navs.missing}</PlaceHolder></Flex.Item>
 						</Flex>
 						<List>
 							{
@@ -475,26 +475,26 @@ export default class extends Component {
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 											<tbody>
 												<tr>
-														<td className="tr">地点 ：</td>
+														<td className="tr"><FormattedMessage id="base station"/> ：</td>
 														<td className="tl" style={{ width: '260px' }}>{item.cell_address}</td>
 												</tr>
 												<tr>
-													<td className="tr">别名 ：</td>
-													<td className="tl">{item.device_name ? item.device_name : '无'}</td>
-													<td className="tl">类型 ：</td>
-													<td className="tl">{typeName[item.device_type] ||''}</td>
+													<td className="tr"><FormattedMessage id="device name"/> ：</td>
+													<td className="tl">{item.device_name ? item.device_name : ' '}</td>
+													<td className="tl"><FormattedMessage id="device type"/> ：</td>
+													<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 												</tr>
 												<tr>
-													<td className="tr">编号 ：</td>
+													<td className="tr"><FormattedMessage id="device IMEI"/> ：</td>
 													<td className="tl">{item.IMEI}</td>
-													<td className="tl">信号 ：</td>
+													<td className="tl"><FormattedMessage id="RSSI"/> ：</td>
 													<td className="tl"><Signal width={item.RSSI}/></td>
 												</tr>
 												<tr>
-													<td className="tr">型号 ：</td>
-													<td className="tl">{item.device_model ? item.device_model : '无'}</td>
-													<td className="tr">状态 ：</td>
-													<td className="tl">{state[item.state] ||''}</td>
+													<td className="tr"><FormattedMessage id="model"/> ：</td>
+													<td className="tl">{item.device_model ? item.device_model : ' '}</td>
+													<td className="tr"><FormattedMessage id="state"/> ：</td>
+													<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
 												</tr>
 											</tbody>
 										</table>
@@ -505,10 +505,10 @@ export default class extends Component {
 					</div>
 					<div style={{ backgroundColor: '#fff' }}>
 						<Flex>
-							<Flex.Item onClick={() => this.switchList(0)}><PlaceHolder className={switchIdx === 0 ? styles.active : ''}>全部 {navs.all}</PlaceHolder></Flex.Item>
-							<Flex.Item onClick={() => this.switchList(1)}><PlaceHolder className={switchIdx === 1 ? styles.active : ''}>在线 {navs.ok}</PlaceHolder></Flex.Item>
-							<Flex.Item onClick={() => this.switchList(2)}><PlaceHolder className={switchIdx === 2 ? styles.active : ''}>离线 {navs.fault}</PlaceHolder></Flex.Item>
-							<Flex.Item onClick={() => this.switchList(3)}><PlaceHolder className={switchIdx === 3 ? styles.active : ''}>长期离线 {navs.missing}</PlaceHolder></Flex.Item>
+							<Flex.Item onClick={() => this.switchList(0)}><PlaceHolder className={switchIdx === 0 ? styles.active : ''}><FormattedMessage id="all"/> {navs.all}</PlaceHolder></Flex.Item>
+							<Flex.Item onClick={() => this.switchList(1)}><PlaceHolder className={switchIdx === 1 ? styles.active : ''}><FormattedMessage id="online"/> {navs.ok}</PlaceHolder></Flex.Item>
+							<Flex.Item onClick={() => this.switchList(2)}><PlaceHolder className={switchIdx === 2 ? styles.active : ''}><FormattedMessage id="offline"/> {navs.fault}</PlaceHolder></Flex.Item>
+							<Flex.Item onClick={() => this.switchList(3)}><PlaceHolder className={switchIdx === 3 ? styles.active : ''}><FormattedMessage id="long offline"/> {navs.missing}</PlaceHolder></Flex.Item>
 						</Flex>
 						<List>
 							{
@@ -517,26 +517,26 @@ export default class extends Component {
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 											<tbody>
 												<tr>
-													<td className="tr">地点 ：</td>
+													<td className="tr"><FormattedMessage id="base station "/> ：</td>
 													<td className="tl" style={{ width: '260px' }}>{item.cell_address}</td>
 												</tr>
 												<tr>
-													<td className="tr">别名 ：</td>
+													<td className="tr"><FormattedMessage id="device name"/> ：</td>
 													<td className="tl">{item.device_name ? item.device_name : '无'}</td>
-													<td className="tl">类型 ：</td>
-													<td className="tl">{typeName[item.device_type] ||''}</td>
+													<td className="tl"><FormattedMessage id="type"/> ：</td>
+													<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 												</tr>
 												<tr>
-													<td className="tr">编号 ：</td>
+													<td className="tr"><FormattedMessage id="device IMEI"/> ：</td>
 													<td className="tl">{item.IMEI}</td>
-													<td className="tl">信号 ：</td>
+													<td className="tl"><FormattedMessage id="RSSI"/> ：</td>
 													<td className="tl"><Signal width={item.RSSI}/></td>
 												</tr>
 												<tr>
-													<td className="tr">型号 ：</td>
+													<td className="tr"><FormattedMessage id="model"/> ：</td>
 													<td className="tl">{item.device_model ? item.device_model : '无'}</td>
-													<td className="tr">状态 ：</td>
-													<td className="tl">{state[item.state] ||''}</td>
+													<td className="tr"><FormattedMessage id="state"/> ：</td>
+													<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
 												</tr>
 											</tbody>
 										</table>

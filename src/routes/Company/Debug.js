@@ -8,6 +8,7 @@ import base64url from 'base64url';
 import classNames from 'classnames';
 import StringMask from 'string-mask';
 import styles from './Debug.less';
+import { injectIntl, FormattedMessage } from 'react-intl';
 
 const Item = List.Item;
 const pattern =  /^[0-9a-fA-f]+$/
@@ -357,7 +358,7 @@ export default class Debug extends Component {
 				<div className={styles.content}>
 					<List>
 						<Item>
-							段地址：
+							<FormattedMessage id="Segment Address"/>:
 							<ul className={classNames(styles.ul, styles.addr)}>
 								<li>
 									<input maxLength="2"  disabled={this.state.switch} className={styles.input} type="text" value={base[0]} onChange={(e) =>this.inputChange(e, 'base', 0)}/>
@@ -385,11 +386,11 @@ export default class Debug extends Component {
 							value={this.state.pick}
 							onOk={v => this.onTimeChange(v)}
 						>
-							<List.Item arrow="horizontal">调试时长</List.Item>
+							<List.Item arrow="horizontal"><FormattedMessage id="Debug Duration"/></List.Item>
 						</Picker>
 						<Item>
 							<label htmlFor="check" className={styles.check}>
-								<Checkbox id="check" disabled={this.state.switch} onChange={this.onChange} className={styles.pas}>连续</Checkbox>
+								<Checkbox id="check" disabled={this.state.switch} onChange={this.onChange} className={styles.pas}><FormattedMessage id="continuous"/></Checkbox>
 							</label>
 							<span className={styles.switch}>
 								<Switch

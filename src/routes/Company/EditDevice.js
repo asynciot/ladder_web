@@ -5,6 +5,7 @@ import { List, InputItem, DatePicker, Modal} from 'antd-mobile';
 import styles from './EditDevice.less';
 import { putFollowInfo, getDevices, deleteFollowInfo } from '../../services/api';
 import pathToRegexp from 'path-to-regexp';
+import { injectIntl, FormattedMessage } from 'react-intl';
 var _val1 = '';
 var _val2 = '';
 
@@ -120,71 +121,77 @@ export default class extends Component {
 		const list = this.state.list
 		return (
 			<div >
-				<Form labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
+				<Form labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
 					<InputItem
 						onChange={value => this.onAddr(value)}
 						value={this.state.list.install_addr}
+						labelNumber={7}
 					>
-						地点
+						<FormattedMessage id="install address"/>
 					</InputItem>
 					<InputItem
 						onChange={value => this.onName(value)}
 						value={this.state.list.device_name}
 						className={styles.center}
+						labelNumber={7}
 					>
-						别名
+						<FormattedMessage id="device name"/>
 					</InputItem>
 					<DatePicker
 						value={this.state.maintenance_nexttime}
 						onChange={this.onStart}
 					>
-						<List.Item arrow="horizontal">下次维保时间</List.Item>
+						<List.Item arrow="horizontal"><FormattedMessage id="next maintenance"/></List.Item>
 					</DatePicker>
 					<InputItem
 						id='1'
 						onChange={value => this.remind()}
+						labelNumber={7}
 						value={this.state.maintenance_remind}
 					>
-						提前提醒维保
+						<FormattedMessage className={styles.fontsize} id="early remind (Days)"/>
 					</InputItem>
 					<InputItem
 						disabled={true}
 						onChange={value => this.onChange(value, 'maintenance_lasttime')}
 						className={styles.center}
-						value={list.maintenance_lasttime ? moment(parseInt(list.maintenance_lasttime)).format('YYYY-MM-DD HH:mm:ss') : '无'}
+						labelNumber={7}
+						value={list.maintenance_lasttime ? moment(parseInt(list.maintenance_lasttime)).format('YYYY-MM-DD HH:mm:ss') : ' '}
 					>
-						上次维保时间
+						<FormattedMessage id="last maintenance"/>
 					</InputItem>
 					<DatePicker
 						value={this.state.inspection_nexttime}
 						onChange={this.onEnd}
 					>
-						<List.Item arrow="horizontal">下次年检时间</List.Item>
+						<List.Item arrow="horizontal"><FormattedMessage id="next yearly check"/></List.Item>
 					</DatePicker>
 					<InputItem
 						id='2'
 						onChange={value => this.remind()}
 						value={this.state.inspection_remind}
+						labelNumber={7}
 					>
-						提前提醒年检
+						<FormattedMessage id="early remind (Days)"/>
 					</InputItem>
 					<InputItem
 						disabled={true}
 						onChange={value => this.onChange(value, 'inspection_lasttime')}
 						className={styles.center}
-						value={list.inspection_lasttime ? moment(parseInt(list.inspection_lasttime)).format('YYYY-MM-DD HH:mm:ss') : '无'}
+						labelNumber={7}
+						value={list.inspection_lasttime ? moment(parseInt(list.inspection_lasttime)).format('YYYY-MM-DD HH:mm:ss') : ' '}
 					>
-						上次年检时间
+						<FormattedMessage id="last yearly check"/>
 					</InputItem>
 					<Row gutter={5}>	
 						<Col span={12}>
 							<Button size="large" loading={submitting} style={{ width: '100%' }} type="primary" onClick={() => this.submit()}>
-								修改
+								<FormattedMessage id="modify"/>
 							</Button>
 						</Col>
 						<Col span={12}>
 							<Button size="large" loading={submitting} style={{ width: '100%' }} type="danger" onClick={() => this.remove()}>
-								取消关注
+								<FormattedMessage id="remove follow"/>
 							</Button>
 						</Col>
 					</Row>
