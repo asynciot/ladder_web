@@ -3,7 +3,7 @@ import { Icon, Button, Row, Col, Pagination, } from 'antd';
 import { Tabs, Flex, Modal, List,PullToRefresh } from 'antd-mobile';
 import styles from './WorkOrder.less';
 import { getFault, postFault, postFinish, deleteFault, getDispatch, getFollowDevices} from '../../services/api';
-
+import { injectIntl, FormattedMessage } from 'react-intl';
 var inte = null;
 const Item = List.Item;
 const format = "YYYY-MM-DD HH:mm";
@@ -18,8 +18,8 @@ const names = {
 	2: '自动报修',
 }
 const typeName = {
-	'door':'控制器',
-	'ctrl':'控制柜',
+	'door':'door',
+	'ctrl':'ctrl',
 }
 const faultCode = {
 	'1': '过流',
@@ -70,11 +70,11 @@ const ListButton = ({ className = '', ...restProps }) => (
 	<div className={`${className} ${styles['list-btn']}`}>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.edit ? restProps.edit:''}>
 			<Icon className={`${styles.edit} ${styles.icon}`} type="form" />
-			<em>接单</em>
+			<em><FormattedMessage id="order"/></em>
 		</span>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.address ? restProps.address:''}>
 			<Icon className={`${styles.edit} ${styles.icon}`} type="arrow-down" />
-			<em>设备地址</em>
+			<em><FormattedMessage id="install address"/></em>
 		</span>
 	</div>
 );
@@ -82,11 +82,11 @@ const Finish = ({ className = '', ...restProps }) => (
 	<div className={`${className} ${styles['list-btn']}`}>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.remove ? restProps.remove:''}>
 			<Icon className={`${styles.delete} ${styles.icon}`} type="close" />
-			<em>转办</em>
+			<em><FormattedMessage id="transfer"/></em>
 		</span>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.address ? restProps.address:''}>
 			<Icon className={`${styles.edit} ${styles.icon}`} type="arrow-down" />
-			<em>设备地址</em>
+			<em><FormattedMessage id="install address"/></em>
 		</span>
 	</div>
 );
@@ -146,9 +146,9 @@ export default class extends Component {
 						});
 					})
 					if(item.device_type=='ctrl'){
-						item.code = res.data.list[index].code.toString(16)
+						item.code = 'E'+res.data.list[index].code.toString(16)
 					}else{
-						item.code = (item.code+50)
+						item.code = 'dE'+res.data.list[index].code.toString(16)
 					}
 					this.state.totalNumber=res.data.totalNumber
 					return item;
@@ -257,28 +257,28 @@ export default class extends Component {
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault(item)}>
 											<tbody>
 												<tr>
-													<td className="tr">设备名称 ：</td>
+													<td className="tr"><FormattedMessage id="device name"/> ：</td>
 													<td className="tl">{device_name[index]}</td>
 												</tr>
 												<tr>
-													<td className="tr">故障名称 ：</td>
-													<td className="tl" style={{ width: '200px' }}>{faultCode[item.code]}</td>
+													<td className="tr"><FormattedMessage id="fault code"/> ：</td>
+													<td className="tl" style={{ width: '200px' }}><FormattedMessage id={'E'+item.code}/>{faultCode[item.code]}</td>
 												</tr>
 												<tr>
-													<td className="tr">故障类型 ：</td>
-													<td className="tl" style={{ width: '80px' }}>{names[item.type]}</td>
+													<td className="tr"><FormattedMessage id="fault"/><FormattedMessage id="type"/> ：</td>
+													<td className="tl" style={{ width: '80px' }}><FormattedMessage id={'O'+item.type}/></td>
 												</tr>
 												<tr>
-													<td className="tr">设备类型 ：</td>
-													<td className="tl">{typeName[item.device_type] ||''}</td>
+													<td className="tr"><FormattedMessage id="device type"/> ：</td>
+													<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 												</tr>
 												<tr>
-													<td className="tr">故障时间 ：</td>
+													<td className="tr"><FormattedMessage id="report time"/> ：</td>
 													<td className="tl">{moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')}</td>
 												</tr>
 												<tr>
-													<td className="tr">故障时长 ：</td>
-													<td className="tl">{item.hour}小时{item.minute}分{item.second}秒</td>
+													<td className="tr"><FormattedMessage id="fault duration"/> ：</td>
+													<td className="tl">{item.hour}<FormattedMessage id="H"/>{item.minute}<FormattedMessage id="M"/>{item.second}<FormattedMessage id="S"/></td>
 												</tr>
 											</tbody>
 										</table>
@@ -302,24 +302,24 @@ export default class extends Component {
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault1(item)}>
 											<tbody>
 												<tr>
-													<td className="tr">订单编号 ：</td>
+													<td className="tr"><FormattedMessage id="order ID"/> ：</td>
 													<td className="tl" style={{ width: '100px' }}>{item.order_id}</td>
 												</tr>
 												<tr>
-													<td className="tr">设备名称 ：</td>
+													<td className="tr"><FormattedMessage id="device name"/> ：</td>
 													<td className="tl">{device_name[index]}</td>
 												</tr>
 												<tr>
-													<td className="tr">故障类型 ：</td>
+													<td className="tr"><FormattedMessage id="maintenance type"/> ：</td>
 													<td className="tl" style={{ width: '100px' }}>{names[item.order_type]}</td>
 												</tr>
 												<tr>
-													<td className="tr">接单时间 ：</td>
+													<td className="tr"><FormattedMessage id="accept time"/> ：</td>
 													<td className="tl">{item.create_time}</td>
 												</tr>
 												<tr>
-													<td className="tr">接单时长 ：</td>
-													<td className="tl">{item.hour}小时{item.minute}分{item.second}秒</td>
+													<td className="tr"><FormattedMessage id="order duration"/> ：</td>
+													<td className="tl">{item.hour}<FormattedMessage id="H"/>{item.minute}<FormattedMessage id="M"/>{item.second}<FormattedMessage id="S"/></td>
 												</tr>
 											</tbody>
 										</table>

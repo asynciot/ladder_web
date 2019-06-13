@@ -6,6 +6,7 @@ import styles from './Message.less';
 import { NavLink } from 'dva/router';
 import moment from 'moment'
 import { getMessages, getMessageCount, deleteMessage } from '../../services/api';
+import { injectIntl, FormattedMessage } from 'react-intl';
 const PlaceHolder = ({ className = '', ...restProps }) => (
 	<div className={`${className} ${styles.placeholder}`} {...restProps}>{restProps.children}</div>
 ); 
@@ -22,7 +23,7 @@ const Delete = ({ className = '', ...restProps }) => (
 	<div className={`${className} ${styles['list-btn']}`}>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.delete ? restProps.delete:''}>
 			<Icon className={`${styles.delete} ${styles.icon}`} type="close" />
-			<em>删除</em>
+			<em><FormattedMessage id="edit"/></em>
 		</span>
 	</div>
 );
@@ -151,8 +152,8 @@ export default class extends Component {
 		const { messages, currMessage, all, done, unread, } = this.state
 		const extra = (isSettled = false) => (
 			isSettled ? 
-			<span style={{color: 'green'}}>已查看</span> :
-			<span style={{color: 'red'}}>点击查看</span>
+			<span style={{color: 'green'}}><FormattedMessage id="have read"/></span> :
+			<span style={{color: 'red'}}><FormattedMessage id="to read"/></span>
 		)
 		return (
 			<div className="content">
@@ -179,9 +180,9 @@ export default class extends Component {
 										extra={<Delete delete={(event) => { this.delete(event,message); }} />}
 									>
 										<div onClick={this.showModal(message)} >
-											<div>时间: {moment(message.createTime).format(format)}</div>
-											<div>名称: {message.title}</div>
-											<div>内容: {message.content}</div>
+											<div><FormattedMessage id="create time"/>: {moment(message.createTime).format(format)}</div>
+											<div><FormattedMessage id="title"/>: {message.title}</div>
+											<div><FormattedMessage id="content"/>: {message.content}</div>
 										</div>
 									</List.Item>
 								))
@@ -199,9 +200,9 @@ export default class extends Component {
 					footer={[{ text: '确定', onPress: () => { this.onClose(); } }]}
 				>
 					<div style={{ height: 100, overflow: 'scroll' }}>
-						<div>时间: {moment(currMessage.createTime).format(format)}</div>
-						<div>名称: {currMessage.title}</div>
-						<div>内容: {currMessage.content}</div>
+						<div><FormattedMessage id="create time"/>: {moment(currMessage.createTime).format(format)}</div>
+						<div><FormattedMessage id="title"/>: {currMessage.title}</div>
+						<div><FormattedMessage id="content"/>: {currMessage.content}</div>
 					</div>
 				</Modal>
 			</div>

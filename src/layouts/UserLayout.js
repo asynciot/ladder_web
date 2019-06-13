@@ -63,6 +63,7 @@ class UserLayout extends React.PureComponent {
       if (match && match[1]) {
         if (routerData[`/${match[1]}/`]) {
           title = routerData[`/${match[1]}/`].name;
+					if (window.localStorage.getItem("language") == 'en') {title = routerData[`/${match[1]}/`].name2;}
         }
       }
     }

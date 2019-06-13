@@ -18,7 +18,7 @@ import MobileHeader from '../components/MobileHeader';
 import MobileFooter from '../components/MobileFooter';
 import styles from './BasicLayout.less';
 import logo from '../assets/logo-menu.png';
-
+import { injectIntl, FormattedMessage } from 'react-intl';
 const { Content } = Layout;
 const { AuthorizedRoute } = Authorized;
 
@@ -148,6 +148,7 @@ class BasicLayout extends React.PureComponent {
 				}
         if (routerData[path]) {
           title = routerData[path].name;
+					if (window.localStorage.getItem("language") == 'en') {title = routerData[path].name2;}
         }
       }
     }
@@ -211,7 +212,7 @@ class BasicLayout extends React.PureComponent {
                 onMenuClick={this.handleMenuClick}
                 {...this.props}
                 title={this.getPageTitle()}
-              />
+              ></MobileHeader>
               )
             : (
               <GlobalHeader

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Form, Input, Button, Icon, Checkbox, Row, Col, Modal, Alert } from 'antd';
 import styles from './Revise.less';
-
+import { injectIntl, FormattedMessage } from 'react-intl';
 const FormItem = Form.Item;
 
 @connect(({ submit, user, loading }) => ({
@@ -56,7 +56,7 @@ export default class Profile extends Component {
 							<FormItem>
 								<Row gutter={8}>
 									<Col span={6}>
-										<div>昵称:</div>
+										<div><FormattedMessage id="nickname"/>:</div>
 									</Col>
 									<Col span={18}>
 										{getFieldDecorator('nickname', {
@@ -74,13 +74,13 @@ export default class Profile extends Component {
 							<FormItem>
 								<Row gutter={8}>
 									<Col span={6}>
-										<div>手机号码:</div>
+										<div><FormattedMessage id="phone number"/>:</div>
 									</Col>
 									<Col span={18}>
 										{getFieldDecorator('mobile', {
 											initialValue:currentUser.mobile || '',
 											rules: [{
-												required: true,class:'explain', message: '请输入手机号码',
+												required: true,class:'explain', message: <FormattedMessage id="Please input phone number"/>,
 											}],
 										})(<Input placeholder="手机号码"></Input>)}
 									</Col>
@@ -96,7 +96,7 @@ export default class Profile extends Component {
 						</section>
 						<FormItem className={styles.additional}>
 							<Button size="large" loading={submitting} className={styles.submit} type="primary" htmlType="submit">
-								提交修改
+								<FormattedMessage id="submit"/>
 							</Button>
 						</FormItem>
 					</div>

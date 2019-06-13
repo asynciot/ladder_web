@@ -8,7 +8,7 @@ import ReactEcharts from 'echarts-for-react';
 import styles from './Statistics.less';
 import MobileNav from '../../components/MobileNav';
 import { getStatistic } from '../../services/api';
-
+import { injectIntl, FormattedMessage } from 'react-intl';
 const FormItem = Form.Item;
 const randomHexColor = () => { // 随机生成十六进制颜色
   let hex = Math.floor(Math.random() * 11777216).toString(16); // 生成ffffff以内16进制数
@@ -292,12 +292,12 @@ export default class History extends Component {
                     value={this.state.pick}
                     onOk={v => this.onChange(v)}
                   >
-                    <List.Item arrow="horizontal">时长</List.Item>
+                    <List.Item arrow="horizontal"><FormattedMessage id="Duration"/></List.Item>
                   </Picker>
                 </List>
                 <Row type="flex" justify="space-around" align="middle" style={{ margin: '10px 0' }}>
                   <Col xs={{ span: 22 }} sm={{ span: 18 }} md={{ span: 16 }}>
-                    <Button onClick={this.handleSubmit} type="primary" style={{ width: '100%' }} >查询</Button>
+                    <Button onClick={this.handleSubmit} type="primary" style={{ width: '100%' }} ><FormattedMessage id="query"/></Button>
                   </Col>
                 </Row>
               </div>
@@ -332,7 +332,7 @@ export default class History extends Component {
                     </Col>
                     <Col xs={{ span: 20 }} sm={{ span: 18 }} md={{ span: 16 }}>
                       <FormItem className="tc">
-                        <Button type="primary" htmlType="submit" >查询</Button>
+                        <Button type="primary" htmlType="submit" ><FormattedMessage id="query"/></Button>
                       </FormItem>
                     </Col>
                   </Row>
@@ -349,18 +349,18 @@ export default class History extends Component {
             >
               <Col xs={{span: 24,}} className={styles.door} md={{span: 18,}}>
                 <section>
-                  <p >故障数量 ：{statistics.error}</p>
-                  <p className={styles.new}>报警数量 ：{statistics.alert}</p>
+                  <p ><FormattedMessage id="Fault amount"/> ：{statistics.error}</p>
+                  <p className={styles.new}><FormattedMessage id="Alert amount"/> ：{statistics.alert}</p>
                 </section>
                 <section>
                   {
                     (type === 'all' || type === 'door') && (
-                      <p >控制器 ：{statistics.door}</p>
+                      <p ><FormattedMessage id="door"/> ：{statistics.door}</p>
                     )
                   }
                   {
                   (type === 'all' || type === 'ctrl') && (
-                    <p className={styles.new}>控制柜 ：{statistics.ctrl}</p>
+                    <p className={styles.new}><FormattedMessage id="ctrl"/> ：{statistics.ctrl}</p>
                   )
                 }
                 </section>

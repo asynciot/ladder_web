@@ -5,12 +5,13 @@ import { connect } from 'dva';
 import { Modal, Accordion, List, Badge, Grid } from 'antd-mobile';
 import styles from './Index.less';
 import { uploadPicture, getFile, } from '../../services/api';
+import { injectIntl, FormattedMessage } from 'react-intl';
 
 var avatar = '';
 const { alert } = Modal;
 const typeName ={
-	'ctrl':'控制柜',
-	'door':'控制器',
+	'ctrl':'ctrl',
+	'door':'door',
 }
 @connect(({ user, company }) => ({
 	currentUser: user.currentUser,
@@ -93,28 +94,28 @@ export default class Company extends Component {
 					<Row>
 						<Col span={6} onClick={() => this.toFollow()}>
 							<img className={styles.icon}  src={require('../../assets/icon/电梯.png')} />
-							<a className={styles.icon}>电梯管理</a>
+							<a className={styles.icon}><FormattedMessage id="Manage Elevator"/></a>
 						</Col>
 						<Col span={6} onClick={() => this.goDetail('message')}>
 							<img className={styles.icon}  src={require('../../assets/icon/信息.png')} />
-							<a className={styles.icon}>消息处理</a>
+							<a className={styles.icon}><FormattedMessage id="Read Notice"/></a>
 						</Col>
 						<Col span={6} onClick={() => this.goDetail('work-order')}>
 							<img className={styles.icon}  src={require('../../assets/icon/工单.png')} />
-							<a className={styles.icon}>工单处理</a>
+							<a className={styles.icon}><FormattedMessage id="Treat Order"/></a>
 						</Col>
 						<Col span={6} onClick={() => this.goDetail('follow/new')}>
 							<img className={styles.icon}  src={require('../../assets/icon/关注.png')} />
-							<a className={styles.icon}>关注设备</a>
+							<a className={styles.icon}><FormattedMessage id="Follow Device"/></a>
 						</Col>
 						<Col span={6} onClick={() => this.goDetail('/tech/manual')}>
 							<img className={styles.icon}  src={require('../../assets/icon/文档.png')} />
-							<a className={styles.icon}>技术文档</a>
+							<a className={styles.icon}><FormattedMessage id="Instructions"/></a>
 						</Col>
 					</Row>
 				</div>
 				<Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} className={styles.btn1}>
-					<Button onClick={this.logout} type="primary" style={{ width: '100%' }} >登出</Button>
+					<Button onClick={this.logout} type="primary" style={{ width: '100%' }} ><FormattedMessage id="Logout"/></Button>
 				</Col>
 			</div>
 		);

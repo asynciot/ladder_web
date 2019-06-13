@@ -8,7 +8,7 @@ import MobileNav from '../../components/MobileNav';
 import styles from './FollowDevice.less';
 import singalImg from '../../assets/signal.png';
 import { getLadder,} from '../../services/api';
-
+import { injectIntl, FormattedMessage } from 'react-intl';
 var switchIdx = 0;
 const alert = Modal.alert;
 const tabs2 = [
@@ -17,9 +17,9 @@ const tabs2 = [
 	{ title: '离线', state: 'longoffline' },
 ];
 const state ={
-	'online':'在线',
-	'offline':'故障',
-	'longoffline':'离线',
+	'online':'online',
+	'offline':'offline',
+	'longoffline':'long offline',
 }
 const Signal = ({ className = '', ...restProps }) => {
 	let width = 1;
@@ -42,7 +42,7 @@ const ListButton = ({ className = '', ...restProps }) => (
 	<div className={`${className} ${styles['list-btn']}`}>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.edit ? restProps.edit:''}>
 			<Icon className={`${styles.edit} ${styles.icon}`} type="form" />
-			<em>编辑</em>
+			<em><FormattedMessage id="edit"/></em>
 		</span>
 	</div>
 );
@@ -178,7 +178,7 @@ export default class extends Component {
 										maxlength="16"></Input>
 								</Col>
 								<Col span={6}>
-									<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} >搜索</Button>
+									<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
 								</Col>
 								<Col span={24} className={styles.center}>
 									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
@@ -192,37 +192,37 @@ export default class extends Component {
 											<tbody>
 												<tr>
 													<Col span={12}>
-														<td className="tr">别名 ：</td>
+														<td className="tr"><FormattedMessage id="device name"/> ：</td>
 														<td className="tl">{item.name ? item.name : '无'}</td>
 													</Col>
 												</tr>
 												<tr>
-													<a className={styles.text}>安装地址 ：</a>
+													<a className={styles.text}><FormattedMessage id="install address"/> ：</a>
 													<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
 												</tr>
 												<tr>
 													<Col span={12}>	
-														<a className={styles.text}>控制柜 ：</a>
+														<a className={styles.text}><FormattedMessage id="door"/> ：</a>
 														<td className="tl">{item.ctrl ||''}</td>
 													</Col>
 												</tr>
 												<tr>
 													<Col span={12}>
-														<td className="tr">门机 ：</td>
+														<td className="tr"><FormattedMessage id="door"/> ：</td>
 														<td className="tl">{item.door1}</td>
 													</Col>
 													<Col span={12}>	
-														<td className="tl">信号：</td>
+														<td className="tl"><FormattedMessage id="RSSI"/>：</td>
 														<td className="tl"><Signal width={item.rssi}/></td>
 													</Col>
 												</tr>
 												<tr>
 													<Col span={12}>
-														<td className="tr">门机 ：</td>
+														<td className="tr"><FormattedMessage id="door"/> ：</td>
 														<td className="tl">{item.door2}</td>
 													</Col>
 													<Col span={12}>
-														<td className="tl">状态 ：</td>
+														<td className="tl"><FormattedMessage id="state"/> ：</td>
 														<td className="tl">{state[item.state] ||''}</td>
 													</Col>
 												</tr>
@@ -233,7 +233,7 @@ export default class extends Component {
 								<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 									<Col span={24} className={styles.center}>
 										<td></td>
-										<td className="tl" style={{margin:'5px',}}>暂无数据</td>
+										<td className="tl" style={{margin:'5px',}}><FormattedMessage id="No Information"/></td>
 									</Col>
 								</table>
 							}

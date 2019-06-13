@@ -8,7 +8,7 @@ import MobileNav from '../../components/MobileNav';
 import styles from './FollowDevice.less';
 import singalImg from '../../assets/signal.png';
 import { getFollowDevices, getDevicesStatus, getFault } from '../../services/api';
-
+import { injectIntl, FormattedMessage } from 'react-intl';
 var switchIdx = 0;
 const alert = Modal.alert;
 const tabs = [
@@ -107,7 +107,7 @@ const ListButton = ({ className = '', ...restProps }) => (
 	<div className={`${className} ${styles['list-btn']}`}>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.edit ? restProps.edit:''}>
 			<Icon className={`${styles.edit} ${styles.icon}`} type="form" />
-			<em>编辑</em>
+			<em><FormattedMessage id="edit"/></em>
 		</span>
 	</div>
 );

@@ -5,14 +5,15 @@ import { List, InputItem, DatePicker, Modal} from 'antd-mobile';
 import styles from './EditDevice.less';
 import { getLadder, getFollowDevices } from '../../services/api';
 import pathToRegexp from 'path-to-regexp';
+import { injectIntl, FormattedMessage } from 'react-intl';
 var _val1 = '';
 var _val2 = '';
 
 const alert = Modal.alert;
 const state ={
-	'online':'在线',
-	'offline':'故障',
-	'longoffline':'离线',
+	'online':'online',
+	'offline':'offline',
+	'longoffline':'long offline',
 }
 export default class extends Component {
 	state = {
@@ -58,13 +59,13 @@ export default class extends Component {
 						value={list.name}
 						disabled="true"
 					>
-						别名
+						<FormattedMessage id="device name"/>
 					</InputItem>
 					<InputItem
 						value={list.install_addr}
 						disabled="true"
 					>
-						安装地址
+						<FormattedMessage id="install address"/>
 					</InputItem>
 					<div onClick={()=>this.goDevice(0,list.ctrl_id)}>
 						<InputItem
@@ -72,7 +73,7 @@ export default class extends Component {
 							disabled="true"
 							style={{color:'red'}}
 						>
-							控制柜
+							<FormattedMessage id="ctrl"/>
 						</InputItem>
 					</div>
 					<div onClick={()=>this.goDevice(1,list.door1)}>
@@ -81,7 +82,7 @@ export default class extends Component {
 							disabled="true"
 							style={{color:'red'}}
 						>
-							门机
+							<FormattedMessage id="door"/>
 						</InputItem>
 					</div>
 					<div onClick={()=>this.goDevice(1,list.door2)}>
@@ -90,14 +91,14 @@ export default class extends Component {
 							disabled="true"
 							style={{color:'red'}}
 						>
-							门机
+							<FormattedMessage id="door"/>
 						</InputItem>
 					</div>
 					<InputItem
 						value={state[list.state]}
 						disabled="true"
 					>
-						状态
+						<FormattedMessage id="state"/>
 					</InputItem>
 				</Form>
 			</div>
