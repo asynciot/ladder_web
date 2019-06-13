@@ -8,6 +8,7 @@ import MobileNav from '../../components/MobileNav';
 import styles from './FollowDevice.less';
 import singalImg from '../../assets/signal.png';
 import { getFollowDevices, getDevicesStatus, getFault } from '../../services/api';
+import { injectIntl, FormattedMessage } from 'react-intl';
 
 var switchIdx = 0;
 const alert = Modal.alert;

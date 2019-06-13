@@ -116,7 +116,6 @@ export default class CtrlRealtime extends Component {
 			duration: 100,
 		},
 		switch:false,
-		switch1:false,
 		pick: '',
 		modal: false,
 		src: '',
@@ -147,11 +146,11 @@ export default class CtrlRealtime extends Component {
 			floor:'',
 			nowtime:'',
 			updateTime:'',
-			speed:'',
 		},
 		doorWidth: 4096,
 		historyEvents:[],
 		sliderMax: 0,
+		wave: [],
 		startTime: 0,
 		stop: true,
 		interval:1000,
@@ -161,15 +160,11 @@ export default class CtrlRealtime extends Component {
 		markFloor:'',
 		change:false,
 		markList:[],
-		isIo:true,
-		isIo1:true,
-		isCar:true,
-		IoInfo1:'Io板输入口监控:',
-		IoInfo:'轿顶板输入口监控:',
 	}
 	componentWillMount() {
 		this.getBaseData()
 		this.getfloor()
+		// this.initWebsocket()
 		document.addEventListener('visibilitychange', () => {
 			if(document.title == "控制柜"){
 				var isHidden = document.hidden;
@@ -282,7 +277,6 @@ export default class CtrlRealtime extends Component {
 			show.floor    = buffer[9]&0xff           			//获取电梯当前楼层
 			show.updateTime = res.data.list[0].t_update
 		});
-		this.forceUpdate()
 	}
 	getData = (val) => {
 		const {run,lock,close,} = this.state;
@@ -304,7 +298,6 @@ export default class CtrlRealtime extends Component {
 			show.model    = buffer[count+1]&0xff						//获取电梯模式
 			show.status   = buffer[count+2]&0xff						//获取电梯状态
 			show.floor    = buffer[count+27]&0xff						//获取电梯当前楼层
-			show.speed    = (buffer[count+31]&0xff)<<8+(buffer[count+32]&0xff)	//获取电梯当前速度
 			this.state.run.push(show.run)
 			this.state.lock.push(show.lock)
 			this.state.close.push(show.close)
@@ -385,7 +378,7 @@ export default class CtrlRealtime extends Component {
 		}
 	}
 	getfloor = (val) => {
-		const { show, } = this.state
+		const {show, } = this.state
 		const {location } = this.props;
 		const {pick} = this.state;
 		const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
@@ -534,31 +527,9 @@ export default class CtrlRealtime extends Component {
 		const id = this.props.match.params.id;
 		this.props.history.push(`/company/${id}/call`);
 	}
-	changeIo = () => {
-		this.state.isIo = !this.state.isIo
-		if(this.state.isIo==true){
-			this.state.IoInfo="轿顶板输入口监控:"
-		}else{
-			this.state.IoInfo="轿顶板输出口监控:"
-		}
-		this.forceUpdate()
-	}
-	changeIo1 = () => {
-		this.state.isIo1 = !this.state.isIo1
-		if(this.state.isIo1==true){
-			this.state.IoInfo1="Io板输入口监控:"
-		}else{
-			this.state.IoInfo1="Io板输出口监控:"
-		}
-		this.forceUpdate()
-	}
-	onChange1 = () => {
-		this.state.switch1 = !this.state.switch1
-		this.forceUpdate()
-	}
 	render() {
 		let { ctrl: { event, view, device, floors, property, } } = this.props;
-		const { floor, markFloor, markList, show} = this.state;
+		const { floor, markFloor, markList} = this.state;
 		const id = this.props.match.params.id;
 		return (
 			<div className="content tab-hide">
@@ -602,463 +573,67 @@ export default class CtrlRealtime extends Component {
 								className={classNames(styles.door)}
 							>
 								<section>
-									<p>运行状态 ：<i className={styles.status}>{show.run ? '运行':'停车'}</i>
+									<p>运行状态 ：<i className={styles.status}>{this.state.show.run ? '运行':'停车'}</i>
 									</p>
-									<p>开门到位信号 ：<i className={styles.status}>{show.open ? '动作':'不动作'}</i>
+									{/* <p>速度 ：<i className={styles.status}>0.5m/s</i>
+									</p> */}
+									<p>门锁回路 ：<i className={styles.status}>{this.state.show.lock ? '通':'断'}</i>
 									</p>
-									<p>电梯模式 ：<i className={styles.status}>{parseModel(show.model)}</i>
+									<p>开门到位信号 ：<i className={styles.status}>{this.state.show.open ? '动作':'不动作'}</i>
 									</p>
-									<p>关门到位信号 ：<i className={styles.status}>{show.close ? '动作':'不动作'}</i>
+									<p>关门到位信号 ：<i className={styles.status}>{this.state.show.close ? '动作':'不动作'}</i>
 									</p>
-									<p>门锁回路 ：<i className={styles.status}>{show.lock ? '通':'断'}</i>
+									{/* <p>开门按钮信号 ：<i className={styles.status}>{this.state.show.openBtn ? '有':'无'}</i>
 									</p>
-									<p>电梯运行速度 ：<i className={styles.status}>{show.speed ? show.speed:0}m/s</i>
+									<p>关门按钮信号 ：<i className={styles.status}>{this.state.show.closeBtn ? '有':'无'}</i>
+									</p>*/}
+									<p>电梯模式 ：<i className={styles.status}>{parseModel(this.state.show.model)}</i>
 									</p>
-									
 									<p style={{
 											width: '100%',
 											justifyContent: 'flex-start',
 										}}
-									>电梯状态 ：<i className={styles.status}>{parseStatus(show.status)}</i>
+									>状态 ：<i className={styles.status}>{parseStatus(this.state.show.status)}</i>
 									</p>
 									<p
 										style={{
-											width: '80%',
+											width: '100%',
 											justifyContent: 'flex-start',
 										}}
 									>
 										最后更新时间 ：
-										<i className={styles.status}>{moment(show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
-									</p>
-									<p
-										style={{
-											width: '20%',
-											justifyContent: 'flex-start',
-										}}
-									>
-										<Switch
-										  checkedChildren="IO"
-										  unCheckedChildren="轿顶"
-										  onChange={this.onChange1}
-										  checked={this.state.switch1}
-										  defaultChecked={this.state.switch1}
-										/>
+										<i className={styles.status}>{moment(this.state.show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
 									</p>
 								</section>
 							</Col>
 						</Row>
 						<div>
-							<Col span={18}>
-								<Row>
-									{
-										this.state.switch1 ?
-										<Col
-											span={24}
-											className={styles.door}
-										>
-											<p className={styles.pd} >{this.state.IoInfo1}
-												<section style={{color:"blue"}} onClick={()=>{this.changeIo1()}}>切换</section>
-											</p>
+								<Col span={16}>
+									<div className={styles.outer}>
+										<div className={styles.inner}>
+												<section></section>
+												<section></section>
+										</div>
+									</div>
+								</Col>
+								<Col span={8}>
+									<div className={styles.info}>
+										<p>
+											<Icon className={styles.icon} type={direction[`${this.state.show.downCall}${this.state.show.upCall}`]} />
+											<i>{this.state.floor[this.state.floor.length-this.state.show.floor]}</i>
+										</p>
+										<ul>
 											{
-												this.state.isIo1 ?
-												<section>
-													<p style={{width:'25%'}}>X1
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X2
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X3
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X4
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X5
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X6
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X7
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X8
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X9
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X10
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X11
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X12
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X13
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X14
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X15
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X16
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X17
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X18
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X19
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X20
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X21
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X22
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X23
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X24
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X25
-														<i
-															className={styles.signal}
-														/>
-													</p>
-												</section> : 
-												<section>
-													<p >主接触器
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >再平层
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >封星
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >前门开门
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >抱闸
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >前门关门
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >前门开门指令
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >抱闸维持
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >后门开门
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >消防照明
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >后门关门
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >救援蜂鸣器
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p className={styles.pd1}>紧急电动运行完成
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p className={styles.pd1}>消防联动到基站
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													
-												</section>
+												floor.map((item,index) => (
+													markList[index] ?
+													<li style={{ width: 35, color:'red'}} key={`${index}`} id={`${index}`}>{item}</li>
+													:
+													<li style={{ width: 35}} key={`${index}`} id={`${index}`}>{item}</li>
+												))
 											}
-										</Col> : 
-										<Col
-											span={24}
-											className={styles.door}
-										>
-											<p className={styles.pd} >{this.state.IoInfo}
-												<section style={{color:"blue"}} onClick={()=>{this.changeIo()}}>切换</section>
-											</p>
-											{
-												this.state.isIo ?
-												<section>
-													<p >前门光幕
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >前门开门到位
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >后门光幕
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >后门开门到位
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >前门安全触板
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >前门关门到位
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >后门安全触板
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >后门关门到位
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >满载
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >直驶
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >超载
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >司机
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >开门
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >消防员开关
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >关门
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >独立
-														<i
-															className={styles.signal}
-														/>
-													</p>
-												</section> : 
-												<section>
-													<p >上行到站钟
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >满载
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >下行到站钟
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >超载
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >照明指令
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >满载通过信号
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >前门开门指令
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >蜂鸣器信号
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >前门关门指令
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >开门灯
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >后门开门指令
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >关门灯
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >后门关门指令
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p >消防灯
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p className={styles.pd1}>上下行到站钟合并输出
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p>检修
-														<i
-															className={styles.signal}
-														/>
-													</p>
-												</section>
-											}
-										</Col>
-									}
-								</Row>
-							</Col>
-							<Col span={6}>
-								<div className={styles.info}>
-									<p>
-										<Icon className={styles.icon} type={direction[`${show.downCall}${show.upCall}`]} />
-										<i>{this.state.floor[this.state.floor.length-show.floor]}</i>
-									</p>
-									<ul>
-										{
-											floor.map((item,index) => (
-												markList[index] ?
-												<li style={{ width: 30, color:'red'}} key={`${index}`} id={`${index}`}>{item}</li>
-												:
-												<li style={{ width: 30}} key={`${index}`} id={`${index}`}>{item}</li>
-											))
-										}
-									</ul>
-								</div>
-							</Col>
+										</ul>
+									</div>
+								</Col>	
 						</div>
 						<div className={styles.btns}>
 							{/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}

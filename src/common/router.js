@@ -211,10 +211,6 @@ export const getRouterData = (app) => {
 			name: '电梯信息',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/LadderInfo')),
 		},
-		'/company/edit-ladder/:id/': {
-			name: '编辑设备',
-			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/EditLadder')),
-		},
 		'/company/followdoor/all/': {
 			name: '门机管理',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/FollowDevice')),
