@@ -75,6 +75,8 @@ export default injectIntl(class Home extends Component {
 		messages: [],
 		doornum:0,
 		ctrlnum:0,
+		dooroffline:0,
+		ctrloffline:0,
 		devicesStatus: {
 			dooronline:0,
 			dooroffline:0,
