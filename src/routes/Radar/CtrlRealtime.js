@@ -154,7 +154,6 @@ export default class CtrlRealtime extends Component {
 		sliderMax: 0,
 		startTime: 0,
 		stop: true,
-		interval:1000,
 		run:[],
 		lock:[],
 		close:[],
@@ -507,7 +506,6 @@ export default class CtrlRealtime extends Component {
 		const id = this.props.match.params.id;
 		history.push(`/events/ctrl/${item.id}/`);
 	}
-	timeTicket = null;
 	goDetail = link => () => {
 		const id = this.props.match.params.id;
 		this.props.history.push(`/ctrl/${id}/${link}`);
