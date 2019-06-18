@@ -11,7 +11,7 @@ import echarts from 'echarts';
 import {getEvent, postMonitor, getFollowDevices, 
 	getDeviceList, getFloorData, getCtrlData,
 } from '../../services/api';
-
+import { injectIntl, FormattedMessage } from 'react-intl';
 var inte = null;
 var charts = true;
 var websock = '';
@@ -578,7 +578,7 @@ export default class CtrlRealtime extends Component {
 					</Modal>
 					<Row type="flex" justify="center" align="middle">
 						<Col span={18}>
-							<p className={styles.shishi}>实时监控:</p>
+							<p className={styles.shishi}><FormattedMessage id="Realtime"/>:</p>
 						</Col>
 						<Col span={6}>
 							<Switch
@@ -602,24 +602,24 @@ export default class CtrlRealtime extends Component {
 								className={classNames(styles.door)}
 							>
 								<section>
-									<p>运行状态 ：<i className={styles.status}>{show.run ? '运行':'停车'}</i>
+									<p><FormattedMessage id="Realtime"/> ：<i className={styles.status}>{show.run ? '运行':'停车'}</i>
 									</p>
-									<p>开门到位信号 ：<i className={styles.status}>{show.open ? '动作':'不动作'}</i>
+									<p><FormattedMessage id="Opening arrival signal"/> ：<i className={styles.status}>{show.open ? '动作':'不动作'}</i>
 									</p>
-									<p>电梯模式 ：<i className={styles.status}>{parseModel(show.model)}</i>
+									<p><FormattedMessage id="Elevator mode"/> ：<i className={styles.status}>{parseModel(show.model)}</i>
 									</p>
-									<p>关门到位信号 ：<i className={styles.status}>{show.close ? '动作':'不动作'}</i>
+									<p><FormattedMessage id="Closing arrival signal"/> ：<i className={styles.status}>{show.close ? '动作':'不动作'}</i>
 									</p>
-									<p>门锁回路 ：<i className={styles.status}>{show.lock ? '通':'断'}</i>
+									<p><FormattedMessage id="Door lock circuit"/> ：<i className={styles.status}>{show.lock ? '通':'断'}</i>
 									</p>
-									<p>电梯运行速度 ：<i className={styles.status}>{show.speed ? show.speed:0}m/s</i>
+									<p><FormattedMessage id="Elevator run speed"/>                                                                                  ：<i className={styles.status}>{show.speed ? show.speed:0}m/s</i>
 									</p>
 									
 									<p style={{
 											width: '100%',
 											justifyContent: 'flex-start',
 										}}
-									>电梯状态 ：<i className={styles.status}>{parseStatus(show.status)}</i>
+									><FormattedMessage id="Devices State"/> ：<i className={styles.status}>{parseStatus(show.status)}</i>
 									</p>
 									<p
 										style={{
@@ -627,7 +627,7 @@ export default class CtrlRealtime extends Component {
 											justifyContent: 'flex-start',
 										}}
 									>
-										最后更新时间 ：
+										<FormattedMessage id="Last update time"/> ：
 										<i className={styles.status}>{moment(show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
 									</p>
 									<p
@@ -657,7 +657,7 @@ export default class CtrlRealtime extends Component {
 											className={styles.door}
 										>
 											<p className={styles.pd} >{this.state.IoInfo1}
-												<section style={{color:"blue"}} onClick={()=>{this.changeIo1()}}>切换</section>
+												<section style={{color:"blue"}} onClick={()=>{this.changeIo1()}}><FormattedMessage id="switch"/></section>
 											</p>
 											{
 												this.state.isIo1 ?
@@ -789,47 +789,47 @@ export default class CtrlRealtime extends Component {
 													</p>
 												</section> : 
 												<section>
-													<p >主接触器
+													<p ><FormattedMessage id="Main contactor"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >再平层
+													<p ><FormattedMessage id="Re-leveling"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >封星
+													<p ><FormattedMessage id="Sealing star"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >前门开门
+													<p ><FormattedMessage id="Front door opening"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >抱闸
+													<p ><FormattedMessage id="Brake"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >前门关门
+													<p ><FormattedMessage id="Brake"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >前门开门指令
+													<p ><FormattedMessage id="Front door opening command"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >抱闸维持
+													<p ><FormattedMessage id="Brake keeping"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >后门开门
+													<p ><FormattedMessage id="Back door opening"/>
 														<i
 															className={styles.signal}
 														/>

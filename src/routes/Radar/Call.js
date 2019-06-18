@@ -8,7 +8,7 @@ import qrcode from 'qrcode.js';
 import pathToRegexp from 'path-to-regexp';
 import styles from './Call.less';
 import { postCall, getFollowDevices, getFloorData } from '../../services/api';
-
+import { injectIntl, FormattedMessage } from 'react-intl';
 const tabs = [
 	{ title: '呼叫电梯' },
 ];
@@ -116,7 +116,7 @@ export default class extends Component {
 								value={this.state.from}
 								onOk={v => this.onChange(v)}
 							>
-								<List.Item arrow="horizontal">当前楼层</List.Item>
+								<List.Item arrow="horizontal"><FormattedMessage id="Current Floor"/></List.Item>
 							</Picker>
 							<Picker
 								title="选择目的楼层"
@@ -126,11 +126,11 @@ export default class extends Component {
 								value={this.state.to}
 								onOk={v => this.onChangel(v)}
 							>
-								<List.Item arrow="horizontal">目的楼层</List.Item>
+								<List.Item arrow="horizontal"><FormattedMessage id="Destination Floor"/></List.Item>
 							</Picker>
 							<List.Item>
 								<Button disabled={!this.state.from} size="large" loading={submitting} style={{ width: '100%' }} type="primary" onClick={() => this.submit()}>
-									呼叫
+									<FormattedMessage id="Destination Floor"/>
 								</Button>
 							</List.Item>
 						</List>

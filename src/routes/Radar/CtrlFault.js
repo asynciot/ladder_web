@@ -11,6 +11,7 @@ import F2 from '@antv/f2';
 import styles from './CtrlFault.less';
 import ReactEcharts from 'echarts-for-react';
 import {getEvent, getFault} from '../../services/api';
+import { injectIntl, FormattedMessage } from 'react-intl';
 
 var device_id = 0;
 const faultCode = {
@@ -163,17 +164,17 @@ export default class DoorHistory extends Component {
 											<tr>
 												<td className="tr">id ：</td>
 												<td className="tl" style={{ width: '100px' }}>{item.id}</td>
-												<td className="tl">状态 ：</td>
+												<td className="tl"><FormattedMessage id="state"/> ：</td>
 												<td className="tl" style={{ width: '260px' }}>{state[item.state]}</td>
 											</tr>
 											<tr>
-												<td className="tr">故障名称 ：</td>
+												<td className="tr"><FormattedMessage id="fault code"/> ：</td>
 												<td className="tl" style={{ width: '100px' }}>{faultCode[item.code]?faultCode[item.code]: ('E'+item.code) }</td>
-												<td className="tl">发起人 ：</td>
+												<td className="tl"><FormattedMessage id="creator"/> ：</td>
 												<td className="tl" style={{ width: '260px' }}>{item.producer}</td>
 											</tr>
 											<tr>
-												<td className="tr">开始时间 ：</td>
+												<td className="tr"><FormattedMessage id="start time"/> ：</td>
 												<td className="tl">{moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')}</td>
 											</tr>
 										</tbody>
@@ -181,7 +182,7 @@ export default class DoorHistory extends Component {
 								</List.Item>
 								:
 								<List.Item className={styles.item} key={index}>
-									<p>暂无</p>
+									<p><FormattedMessage id="No Information"/></p>
 								</List.Item>
 							))
 						}

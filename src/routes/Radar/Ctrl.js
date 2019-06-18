@@ -7,6 +7,7 @@ import pathToRegexp from 'path-to-regexp';
 import styles from './Device.less';
 import { getRoutes } from '../../utils/utils';
 import LadderLayout from '../../layouts/LadderLayout';
+import { injectIntl, FormattedMessage } from 'react-intl';
 
 const TabPane = Tabs.TabPane;
 let menu = menu = [{

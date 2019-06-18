@@ -389,32 +389,32 @@ export default class extends Component {
 													<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
 												</tr>
 												<tr>
-													<Col span={12}>
-														<td className="tr"><FormattedMessage id="device name"/> ：</td>
+													<Col span={13}>
+														<a className={styles.text}><FormattedMessage id="device name"/> ：</a>
 														<td className="tl">{item.device_name ? item.device_name : '无'}</td>
 													</Col>
-													<Col span={12}>	
-														<td className="tl"><FormattedMessage id="type"/>：</td>
+													<Col span={11}>	
+														<a className={styles.text}><FormattedMessage id="type"/>：</a>
 														<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 													</Col>	
 												</tr>
 												<tr>
-													<Col span={12}>
-														<td className="tr"><FormattedMessage id="device IMEI"/> ：</td>
+													<Col span={13}>
+														<a className={styles.text}><FormattedMessage id="device IMEI"/> ：</a>
 														<td className="tl">{item.IMEI}</td>
 													</Col>
-													<Col span={12}>	
-														<td className="tl"><FormattedMessage id="RSSI"/>：</td>
+													<Col span={11}>	
+														<a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
 														<td className="tl"><Signal width={item.rssi}/></td>
 													</Col>	
 												</tr>
 												<tr>
-													<Col span={12}>
-														<td className="tr"><FormattedMessage id="model"/> ：</td>
+													<Col span={13}>
+														<a className={styles.text}><FormattedMessage id="model"/> ：</a>
 														<td className="tl">{modelName[item.device_model]}</td>
 													</Col>
-													<Col span={12}>
-														<td className="tl"><FormattedMessage id="state"/> ：</td>
+													<Col span={11}>
+														<a className={styles.text}><FormattedMessage id="state"/> ：</a>
 														<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
 													</Col>
 												</tr>
@@ -466,32 +466,32 @@ export default class extends Component {
 													<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
 												</tr>
 												<tr>
-													<Col span={12}>
-														<td className="tr"><FormattedMessage id="device name"/> ：</td>
+													<Col span={13}>
+														<a className={styles.text}><FormattedMessage id="device name"/> ：</a>
 														<td className="tl">{item.device_name ? item.device_name : '无'}</td>
 													</Col>
-													<Col span={12}>	
-														<td className="tl"><FormattedMessage id="type"/>：</td>
+													<Col span={11}>	
+														<a className={styles.text}><FormattedMessage id="type"/>：</a>
 														<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 													</Col>	
 												</tr>
 												<tr>
-													<Col span={12}>
-														<td className="tr"><FormattedMessage id="device IMEI"/> ：</td>
+													<Col span={13}>
+														<a className={styles.text}><FormattedMessage id="device IMEI"/> ：</a>
 														<td className="tl">{item.IMEI}</td>
 													</Col>
-													<Col span={12}>	
-														<td className="tl"><FormattedMessage id="RSSI"/>：</td>
+													<Col span={11}>	
+														<a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
 														<td className="tl"><Signal width={item.rssi}/></td>
 													</Col>	
 												</tr>
 												<tr>
-													<Col span={12}>
-														<td className="tr"><FormattedMessage id="model"/> ：</td>
+													<Col span={13}>
+														<a className={styles.text}><FormattedMessage id="model"/> ：</a>
 														<td className="tl">{modelName[item.device_model]}</td>
 													</Col>
-													<Col span={12}>
-														<td className="tl"><FormattedMessage id="state"/> ：</td>
+													<Col span={11}>
+														<a className={styles.text}><FormattedMessage id="state"/> ：</a>
 														<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
 													</Col>
 												</tr>
@@ -543,34 +543,34 @@ export default class extends Component {
 													<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
 												</tr>
 												<tr>
-													<Col span={12}>
-														<td className="tr"><FormattedMessage id="device name"/> ：</td>
+													<Col span={13}>
+														<a className={styles.text}><FormattedMessage id="device name"/> ：</a>
 														<td className="tl">{item.device_name ? item.device_name : '无'}</td>
 													</Col>
-													<Col span={12}>	
-														<td className="tl"><FormattedMessage id="type"/>：</td>
+													<Col span={11}>	
+														<a className={styles.text}><FormattedMessage id="type"/>：</a>
 														<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 													</Col>	
 												</tr>
 												<tr>
-													<Col span={12}>
-														<td className="tr"><FormattedMessage id="type"/> ：</td>
+													<Col span={13}>
+														<a className={styles.text}><FormattedMessage id="type"/> ：</a>
 														<td className="tl">{item.IMEI}</td>
 													</Col>
-													<Col span={12}>	
-														<td className="tl"><FormattedMessage id="RSSI"/>：</td>
+													<Col span={11}>	
+														<a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
 														<td className="tl"><Signal width={item.rssi}/></td>
 													</Col>	
 												</tr>
 												<tr>
-													<Col span={12}>
-														<td className="tr"><FormattedMessage id="model"/> ：</td>
+													<Col span={13}>
+														<a className={styles.text}><FormattedMessage id="model"/> ：</a>
 														<td className="tl">{modelName[item.device_model]}</td>
 													</Col>
 												</tr>
 												<tr>
 													<Col span={24}>
-														<td className="tl"><FormattedMessage id="state"/> ：</td>
+														<a className={styles.text}><FormattedMessage id="state"/> ：</a>
 														<td className="tl">{faultCode[item.code]}</td>
 													</Col>
 												</tr>
@@ -622,32 +622,32 @@ export default class extends Component {
 													<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
 												</tr>
 												<tr>
-													<Col span={12}>
-														<td className="tr"><FormattedMessage id="device name"/> ：</td>
+													<Col span={13}>
+														<a className={styles.text}><FormattedMessage id="device name"/> ：</a>
 														<td className="tl">{item.device_name ? item.device_name : ' '}</td>
 													</Col>
-													<Col span={12}>	
-														<td className="tl"><FormattedMessage id="type"/>：</td>
+													<Col span={11}>	
+														<a className={styles.text}><FormattedMessage id="type"/>：</a>
 														<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 													</Col>	
 												</tr>
 												<tr>
-													<Col span={12}>
-														<td className="tr"><FormattedMessage id="device IMEI"/> ：</td>
+													<Col span={13}>
+														<a className={styles.text}><FormattedMessage id="device IMEI"/> ：</a>
 														<td className="tl">{item.IMEI}</td>
 													</Col>
-													<Col span={12}>	
-														<td className="tl"><FormattedMessage id="RSSI"/>：</td>
+													<Col span={11}>	
+														<a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
 														<td className="tl"><Signal width={item.rssi}/></td>
 													</Col>	
 												</tr>
 												<tr>
-													<Col span={12}>
-														<td className="tr"><FormattedMessage id="model"/> ：</td>
+													<Col span={13}>
+														<a className={styles.text}><FormattedMessage id="model"/> ：</a>
 														<td className="tl">{modelName[item.device_model]}</td>
 													</Col>
-													<Col span={12}>
-														<td className="tl"><FormattedMessage id="state"/> ：</td>
+													<Col span={11}>
+														<a className={styles.text}><FormattedMessage id="state"/> ：</a>
 														<td className="tl">{state[item.state] ||''}</td>
 													</Col>
 												</tr>

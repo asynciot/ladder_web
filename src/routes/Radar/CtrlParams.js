@@ -4,6 +4,7 @@ import { connect } from 'dva';
 import { Row, Col, Collapse } from 'antd';
 import { List, Accordion } from 'antd-mobile';
 import styles from './Params.less';
+import { injectIntl, FormattedMessage } from 'react-intl';
 const Panel = Collapse.Panel;
 @connect(({ ctrl, global }) => ({
 	ctrl, global,

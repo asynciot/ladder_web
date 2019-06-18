@@ -245,11 +245,6 @@ export const getRouterData = (app) => {
 			name2: 'Elevator Information',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/LadderInfo')),
 		},
-		'/company/edit-ladder/:id/': {
-			name: '编辑设备',
-			name2: 'Edit Device',
-			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/EditLadder')),
-		},
 		'/company/followdoor/all/': {
 			name: '门机管理',
 			name2: 'Manage Door',
