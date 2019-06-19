@@ -686,6 +686,12 @@
 	"Closing arrival signal":"关门到位保持力矩",
 	"Elevator mode":"电梯模式",
 	"Door lock circuit":"门锁回路",
+	"Elevator run speed":"电梯运行速度",
+	"M":"分",
+	"M":"分",
+	"M":"分",
+	"M":"分",
+	"M":"分",
 	"M":"分",
     "refresh" : "刷新",
     "array": [
