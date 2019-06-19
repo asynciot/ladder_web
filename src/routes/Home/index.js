@@ -68,7 +68,7 @@ const faultCode = {
 	'114': '输入电压过低',
 	'178': '输入电压过高',
 }
-export default injectIntl(class Home extends Component {
+export default class Home extends Component {
 	state = {
 		data: [],
 		imgHeight: 176,
@@ -281,10 +281,10 @@ export default injectIntl(class Home extends Component {
 		return (
 			<div className="content">
 				<Carousel
-				  autoplay={false}
-				  infinite
-				  beforeChange={(from, to) => console.log(`slide from ${from} to ${to}`)}
-				  afterChange={index => console.log('slide to', index)}
+					autoplay={false}
+					infinite
+					beforeChange={(from, to) => console.log(`slide from ${from} to ${to}`)}
+					afterChange={index => console.log('slide to', index)}
 				>
 					{imgList.map((item, index) => {
 						return (
@@ -425,4 +425,4 @@ export default injectIntl(class Home extends Component {
 			</div>
 		);
 	}
-})
+}
