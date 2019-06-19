@@ -129,6 +129,9 @@ class BasicLayout extends React.PureComponent {
 				if (match[2] === "follow") {
 					path = `/${match[1]}/${match[2]}/:IMEI`
 				}
+				if (match[2] === "add") {
+					path = `/company/add`
+				}
 				if (match[2] === "followdoor") {
 					path = `/company/followdoor/all/`
 				}

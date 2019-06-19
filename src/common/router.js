@@ -310,6 +310,11 @@ export const getRouterData = (app) => {
 			name2: 'Follow',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/Follow')),
 		},
+		'/company/add': {
+			name: '加入群组',
+			name2: 'Add Group',
+			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/Organize')),
+		},
 		'/exception/403': {
 			component: dynamicWrapper(app, [], () => import('../routes/Exception/403')),
 		},

@@ -68,7 +68,6 @@ export default class MobileFooter extends PureComponent {
             key={item.label}
           >
             <Icon className={styles.icon} type={item.icon} />
-            {/* <img src={item.icon} alt={item.label} /> */}
             <p>{item.label}</p>
           </a>
         );
@@ -80,7 +79,6 @@ export default class MobileFooter extends PureComponent {
           key={item.label}
         >
           <Icon className={styles.icon} type={item.icon} />
-          {/* <img src={item.icon} alt={item.label} /> */}
           <p>{item.label}</p>
         </Link>
       );

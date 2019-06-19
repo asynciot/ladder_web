@@ -112,6 +112,10 @@ export default class Company extends Component {
 							<img className={styles.icon}  src={require('../../assets/icon/文档.png')} />
 							<a className={styles.icon}><FormattedMessage id="Instructions"/></a>
 						</Col>
+						<Col span={6} onClick={() => this.goDetail('/company/add')}>
+							<img className={styles.icon}  src={require('../../assets/icon/群组.png')} />
+							<a className={styles.icon}><FormattedMessage id="Add Group"/></a>
+						</Col>
 					</Row>
 				</div>
 				<Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} className={styles.btn1}>
