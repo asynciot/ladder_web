@@ -812,7 +812,7 @@ export default class CtrlRealtime extends Component {
 															className={styles.signal}
 														/>
 													</p>
-													<p ><FormattedMessage id="Brake"/>
+													<p ><FormattedMessage id="Front door closing"/>
 														<i
 															className={styles.signal}
 														/>
@@ -837,22 +837,22 @@ export default class CtrlRealtime extends Component {
 															className={styles.signal}
 														/>
 													</p>
-													<p >后门关门
+													<p ><FormattedMessage id="Back door closing"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >救援蜂鸣器
+													<p ><FormattedMessage id="Rescue buzzer"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p className={styles.pd1}>紧急电动运行完成
+													<p className={styles.pd1}><FormattedMessage id="Emergency electric operation"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p className={styles.pd1}>消防联动到基站
+													<p className={styles.pd1}><FormattedMessage id="Firelink to base station"/>
 														<i
 															className={styles.signal}
 														/>
@@ -866,47 +866,47 @@ export default class CtrlRealtime extends Component {
 											className={styles.door}
 										>
 											<p className={styles.pd} >{this.state.IoInfo}
-												<section style={{color:"blue"}} onClick={()=>{this.changeIo()}}>切换</section>
+												<section style={{color:"blue"}} onClick={()=>{this.changeIo()}}><FormattedMessage id="switch"/></section>
 											</p>
 											{
 												this.state.isIo ?
 												<section>
-													<p >前门光幕
+													<p ><FormattedMessage id="Front door light curtain"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >前门开门到位
+													<p ><FormattedMessage id="Front door opening arrival"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >后门光幕
+													<p ><FormattedMessage id="Back door light curtain"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >后门开门到位
+													<p ><FormattedMessage id="Back door opening arrival"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >前门安全触板
+													<p ><FormattedMessage id="Front door safety touch pad"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >前门关门到位
+													<p ><FormattedMessage id="Front door opening arrival"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >后门安全触板
+													<p ><FormattedMessage id="Back door safety touch pad"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >后门关门到位
+													<p ><FormattedMessage id="Back door closing arrival"/>
 														<i
 															className={styles.signal}
 														/>
