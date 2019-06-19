@@ -832,7 +832,7 @@ export default class CtrlRealtime extends Component {
 															className={styles.signal}
 														/>
 													</p>
-													<p >消防照明
+													<p ><FormattedMessage id="Fire-fighting light"/>
 														<i
 															className={styles.signal}
 														/>
