@@ -13,15 +13,15 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 var switchIdx = 0;
 const alert = Modal.alert;
 const tabs = [
-	{ title: '全部', device_type: '' },
-	{ title: '门机', device_type: '15' },
-	{ title: '控制柜', device_type: '240' },
+	{ title: (window.localStorage.getItem("language")=='en') ? 'All' : '全部', device_type: '' },
+	{ title: (window.localStorage.getItem("language")=='en') ? 'Door' : '门机', device_type: '15' },
+	{ title: (window.localStorage.getItem("language")=='en') ? 'Ctrl' : '控制柜', device_type: '240' },
 ];
 const tabs2 = [
-	{ title: '全部', state: '' },
-	{ title: '在线', state: 'online' },
-	{ title: '故障', state: 'offline' },
-	{ title: '离线', state: 'longoffline' },
+	{ title: (window.localStorage.getItem("language")=='en') ? 'All' : '全部', state: '' },
+	{ title: (window.localStorage.getItem("language")=='en') ? 'Online' : '在线', state: 'online' },
+	{ title: (window.localStorage.getItem("language")=='en') ? 'Fault' : '故障', state: 'offline' },
+	{ title: (window.localStorage.getItem("language")=='en') ? 'Offline' : '离线', state: 'longoffline' },
 ];
 const modelName = {
 	'0':' ',

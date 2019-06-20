@@ -41,7 +41,7 @@ export default class MobileFooter extends PureComponent {
       //   link: '/company/group',
       // },
       {
-        label: '首页',
+        label: (window.localStorage.getItem("language")=='en') ? 'Home' : '首页',
         icon: 'home',
         link: '/home',
       },
@@ -51,7 +51,7 @@ export default class MobileFooter extends PureComponent {
       //   link: 'https://h5.youzan.com/v2/feature/fEh4xJSkS7',
       // },
       {
-        label: '个人',
+        label: (window.localStorage.getItem("language")=='en') ? 'Person' : '个人',
         icon: 'user',
         link: '/me',
       },
