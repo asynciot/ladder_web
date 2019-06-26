@@ -13,6 +13,7 @@ const alert = Modal.alert;
 export default class extends Component {
 	state = {
 		device_name: '',
+		install_addr:'',
 		submitting: false,
 		list:[],
 	}
@@ -22,7 +23,7 @@ export default class extends Component {
 	getInfo() {
 		const { dispatch, location } = this.props;
 		const match = pathToRegexp('/company/edit-device/:id').exec(location.pathname);
-		const device_id =match[1]
+		const device_id = this.state.device_id = match[1]
 		getDevices({device_id}).then(res=> {
 			if (res.code == 0) {
 				var list = res.data.list[0]
@@ -54,29 +55,24 @@ export default class extends Component {
 			inspection_remind: _val2,
 		});
 	}
-	onAddr = async(val) => {
-		await this.setState({
+	onAddr = (val) => {
+		this.setState({
 			install_addr: val,
 		});
 	}
-	onName = async(val) => {
-		await this.setState({
+	onName = (val) => {
+		this.setState({
 			device_name: val,
 		});
 	}
 	submit = () => {
 		const time1 = this.state.maintenance_remind*24*3600*1000
 		const time2 = this.state.inspection_remind*24*3600*1000
-		if(this.state.device_name == ''){
-			this.state.device_name = this.state.list.device_name
-		}
-		if(this.state.install_addr == ''){
-			this.state.install_addr = this.state.list.install_addr
-		}
+		
 		this.state.maintenance_nexttime = new Date(this.state.maintenance_nexttime).getTime();
 		this.state.inspection_nexttime = new Date(this.state.inspection_nexttime).getTime();
 		putFollowInfo({
-			device_id: this.state.list.device_id,
+			device_id: this.state.device_id,
 			device_name: this.state.device_name,
 			install_addr: this.state.install_addr,
 			maintenance_nexttime: this.state.maintenance_nexttime,
@@ -119,19 +115,21 @@ export default class extends Component {
 	render() {
 		const { submitting } = this.state;
 		const list = this.state.list
+		this.state.install_addr = list.install_addr
+		this.state.device_name = list.device_name
 		return (
 			<div >
 				<Form labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
 					<InputItem
 						onChange={value => this.onAddr(value)}
-						value={this.state.list.install_addr}
+						value={this.state.install_addr}
 						labelNumber={7}
 					>
 						<FormattedMessage id="install address"/>
 					</InputItem>
 					<InputItem
 						onChange={value => this.onName(value)}
-						value={this.state.list.device_name}
+						value={this.state.device_name}
 						className={styles.center}
 						labelNumber={7}
 					>
