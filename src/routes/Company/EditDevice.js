@@ -27,6 +27,8 @@ export default class extends Component {
 		getDevices({device_id}).then(res=> {
 			if (res.code == 0) {
 				var list = res.data.list[0]
+				this.state.install_addr = res.data.list[0].install_addr
+				this.state.device_name = res.data.list[0].device_name
 				this.setState({
 					list,
 				})
@@ -56,6 +58,7 @@ export default class extends Component {
 		});
 	}
 	onAddr = (val) => {
+		console.log(val)
 		this.setState({
 			install_addr: val,
 		});
@@ -115,8 +118,6 @@ export default class extends Component {
 	render() {
 		const { submitting } = this.state;
 		const list = this.state.list
-		this.state.install_addr = list.install_addr
-		this.state.device_name = list.device_name
 		return (
 			<div >
 				<Form labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
