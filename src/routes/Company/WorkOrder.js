@@ -94,6 +94,7 @@ export default class extends Component {
 	state = {
 		historyEvents: [],
 		list:[],
+		list1:[],
 		nowTime: new Date().getTime(),
 		tab: 0,
 		page: 1,
@@ -139,8 +140,8 @@ export default class extends Component {
 					item.minute = parseInt(time%(1000*3600)/(1000*60))
 					item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
 					const device_id = item.device_id
-					getFollowDevices({num:1,page:1,device_id}).then((res) => {
-						device_name[index] = res.data.list[0].device_name
+					getFollowDevices({num:1,page:1,device_id}).then((ind) => {
+						device_name[index] = ind.data.list[0].device_name
 						this.setState({
 							device_name,
 						});
@@ -150,37 +151,41 @@ export default class extends Component {
 					}else{
 						item.code = 'dE'+res.data.list[index].code.toString(16)
 					}
-					this.state.totalNumber=res.data.totalNumber
-					return item;
-				})
-				this.setState({
-					list,
-					total: res.data.totalPage
-				});
-			}).catch((e => console.info(e)));
-		}else{
-			getDispatch({ num: 10, page, follow:'yes', state:'untreated'}).then((res) => {
-				clearInterval(inte)
-				const list = res.data.list.map((item,index) => {
-					const time = this.state.nowTime - item.create_time
-					item.create_time = moment(parseInt(item.create_time)).format('YYYY-MM-DD HH:mm:ss')
-					item.hour = parseInt((time)/(1000*3600))
-					item.minute = parseInt(time%(1000*3600)/(1000*60))
-					item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
-					this.state.totalNumber=res.data.totalNumber
-					const device_id = item.device_id
-					getFollowDevices({num:1,page:1,device_id}).then((res) => {
-						device_name[index] = res.data.list[0].device_name
-						this.setState({
-							device_name,
-						});
+					this.setState({
+						totalNumber:res.data.totalNumber,
 					})
 					return item;
 				})
 				this.setState({
 					list,
-					total: res.data.totalPage,
-				});
+					total: res.data.totalPage
+				})
+			}).catch((e => console.info(e)));
+		}else{
+			getDispatch({ num: 10, page, follow:'yes', state:'untreated'}).then((res) => {
+				clearInterval(inte)
+				const list1 = res.data.list.map((item,index) => {
+					const time = this.state.nowTime - item.create_time
+					item.create_time = moment(parseInt(item.create_time)).format('YYYY-MM-DD HH:mm:ss')
+					item.hour = parseInt((time)/(1000*3600))
+					item.minute = parseInt(time%(1000*3600)/(1000*60))
+					item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
+					this.setState({
+						totalNumber:res.data.totalNumber,
+					})
+					const device_id = item.device_id
+					getFollowDevices({num:1,page:1,device_id}).then((ind) => {
+						device_name[index] = ind.data.list[0].device_name
+						this.setState({
+							device_name,
+						})
+					})
+					return item;
+				})
+				this.setState({
+					list1,
+					total:res.data.totalPage,
+				})
 			}).catch((e => console.info(e)));
 		}	
 	}
@@ -231,7 +236,7 @@ export default class extends Component {
 		]);
 	}
 	render() {
-		const { historyEvents, list, device_name} = this.state;
+		const { historyEvents, list, list1, device_name} = this.state;
 		return (
 			<div className="content">
 				<Tabs
@@ -262,7 +267,7 @@ export default class extends Component {
 												</tr>
 												<tr>
 													<td className="tr"><FormattedMessage id="fault code"/> ：</td>
-													<td className="tl" style={{ width: '200px' }}><FormattedMessage id={'E'+item.code}/>{faultCode[item.code]}</td>
+													<td className="tl" style={{ width: '200px' }}><FormattedMessage id={item.code}/>{faultCode[item.code]}</td>
 												</tr>
 												<tr>
 													<td className="tr"><FormattedMessage id="fault"/><FormattedMessage id="type"/> ：</td>
@@ -297,7 +302,7 @@ export default class extends Component {
 								</Col>
 							</Row>
 							{
-								list.map((item, index) => (
+								list1.map((item, index) => (
 									<List.Item className={styles.item} key={index}  extra={<Finish address={(event) => { this.address(item) }} remove={(event) => { this.remove(event, item); }} />}>
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault1(item)}>
 											<tbody>
