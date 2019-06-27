@@ -410,7 +410,6 @@
   "Closing Auto Detection Stop Position Setting": "关门自动检测停止位置设置",
   "Light Curtain connection selection": "光幕连接选择",
   
-  
   "Operation enable setting":"操作使能设置",
 	"Low speed torque lifting":"低速力矩提升",
 	"High speed torque lifting":"高速力矩提升",
@@ -747,7 +746,8 @@
 	"Alert":"报警",
 	"Opening arrival input":"开门到位输入",
 	"Closing arrival input":"关门到位输入",
-	"Door state":"门状态",
+	"Light curtain signal": "光幕信号",
+	"fault duration":"故障时长",
 	"Door state":"门状态",
 	"Door state":"门状态",
 	"Door state":"门状态",
