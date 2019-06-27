@@ -11,7 +11,7 @@ import styles from './Realtime.less';
 import echarts from 'echarts';
 import ReactEcharts from 'echarts-for-react';
 import {getEvent, postMonitor, getFollowDevices, getDeviceList, getDoorData} from '../../services/api';
-
+import { injectIntl, FormattedMessage } from 'react-intl';
 
 var counts=0;
 var ct=0;
@@ -866,37 +866,37 @@ export default class DoorHistory extends Component {
 								className={classNames(styles.door)}
 							>
 								<section>
-									<p>门坐标 ：<i className={styles.status}>{show.position || show.position === 0 ? show.position : '0'}</i>
+									<p><FormattedMessage id="Door coordinate"/> ：<i className={styles.status}>{show.position || show.position === 0 ? show.position : '0'}</i>
 									</p>
-									<p>门电流 ：<i className={styles.status}>{show.current} A</i>
+									<p><FormattedMessage id="Door current"/> ：<i className={styles.status}>{show.current} A</i>
 									</p>
 									{/*<p>开门次数 ：<i className={styles.status}>{show.times || '无'}</i>
 									</p>*/}
-									<p>开门信号 ：<i className={styles.status}>{show.openIn ? '开' : '关'}</i>
+									<p><FormattedMessage id="Opening signal"/> ：<i className={styles.status}>{show.openIn ? '开' : '关'}</i>
 									</p>
-									<p>关门信号 ：<i className={styles.status}>{show.closeIn ? '开' : '关'}</i>
-									</p>
-									<p style={{
-										width: '100%',
-										justifyContent: 'flex-start',
-									}}>门状态 ：<i className={styles.status}>{statusName || '无'}</i>
+									<p><FormattedMessage id="Closing signal"/> ：<i className={styles.status}>{show.closeIn ? '开' : '关'}</i>
 									</p>
 									<p style={{
 										width: '100%',
 										justifyContent: 'flex-start',
-									}}>开到位输出信号 ：<i className={styles.status}>{show.openToOut ? '开' : '关'}</i>
+									}}><FormattedMessage id="Door state"/> ：<i className={styles.status}>{statusName || '无'}</i>
 									</p>
 									<p style={{
 										width: '100%',
 										justifyContent: 'flex-start',
-									}}>关到位输出信号 ：<i className={styles.status}>{show.closeToOut ? '开' : '关'}</i>
+									}}><FormattedMessage id="Opening arrival signal"/> ：<i className={styles.status}>{show.openToOut ? '开' : '关'}</i>
+									</p>
+									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}><FormattedMessage id="Closing arrival signal"/> ：<i className={styles.status}>{show.closeToOut ? '开' : '关'}</i>
 									</p>
 									<p style={{
 										width: '100%',
 										justifyContent: 'flex-start',
 									}}
 									>
-										<i style={{flexShrink: 0,}}>报警 ：</i>
+										<i style={{flexShrink: 0,}}><FormattedMessage id="Alert"/> ：</i>
 										{
 											this.state.color ? 
 											<i className={styles.status} style={{ color:'red'}}>{this.alertName(show)}</i>
@@ -910,7 +910,7 @@ export default class DoorHistory extends Component {
 										  justifyContent: 'flex-start',
 										}}
 									>
-										最后更新时间 ：
+										<FormattedMessage id="Last update time"/> ：
 										<i className={styles.status}>{moment(show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
 									</p>
 								</section>
@@ -933,7 +933,7 @@ export default class DoorHistory extends Component {
 										<div />
 									</section>
 									<div className={styles.shaftinfo}>
-										<p>关到位输入
+										<p><FormattedMessage id="Closing arrival input"/>
 										{
 											show.closeTo ?
 											<i
@@ -945,7 +945,7 @@ export default class DoorHistory extends Component {
 											/>
 										}
 										</p>
-										<p>开到位输入
+										<p><FormattedMessage id="Opening arrival input"/>
 										{
 											show.openTo ?
 											<i
@@ -971,7 +971,7 @@ export default class DoorHistory extends Component {
 											? styles.screen
 											: ''}
 										/>
-										<p>光幕信号</p>
+										<p><FormattedMessage id="Light curtain signal"/></p>
 									</section>
 									<TweenOne
 										animation={this.state.rightAnimation}
@@ -1021,9 +1021,9 @@ export default class DoorHistory extends Component {
 					</div>
 					<div className={styles.btns}>
 						{/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}
-						<section onClick={this.goDetail(type == 2 ? 'params/2': 'params/1')}>菜单</section>
-						<section onClick={this.goQrcode}>二维码</section>
-						<section onClick={this.gohistory}>历史故障</section>
+						<section onClick={this.goDetail(type == 2 ? 'params/2': 'params/1')}><FormattedMessage id="Menu"/></section>
+						<section onClick={this.goQrcode}><FormattedMessage id="QR Code"/></section>
+						<section onClick={this.gohistory}><FormattedMessage id="History fault"/></section>
 					</div>
 				</div>
 			</div>

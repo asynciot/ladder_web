@@ -5,7 +5,7 @@ import { Cascader, Form, Input, Button } from 'antd';
 import pathToRegexp from 'path-to-regexp';
 import styles from './Map.less';
 import { getFollowDevices, } from '../../services/api';
-
+import { injectIntl, FormattedMessage } from 'react-intl';
 var cell_lat=0;
 var cell_lon=0;
 export default class Map extends Component {

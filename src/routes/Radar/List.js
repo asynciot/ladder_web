@@ -8,7 +8,7 @@ import pathToRegexp from 'path-to-regexp';
 import MobileNav from '../../components/MobileNav';
 import FloatBar from '../../components/FloatBar';
 import styles from './List.less';
-
+import { injectIntl, FormattedMessage } from 'react-intl';
 const TabPane = Tabs.TabPane;
 
 const status = ['输入电压过高', '输入电压过低', '输出过流', '电机过载', '飞车保护', '开关门受阻'];
@@ -187,23 +187,23 @@ export default class LadderList extends Component {
               <table>
                 <tbody>
                   <tr>
-                    <td>型号：</td>
+                    <td><FormattedMessage id="model"/>：</td>
                     <td>{this.state.device.deviceId}</td>
                   </tr>
                   <tr>
-                    <td>地点：</td>
+                    <td><FormattedMessage id="install address"/>：</td>
                     <td>{this.state.device.Address}</td>
                   </tr>
                   <tr>
-                    <td>编号：</td>
+                    <td><FormattedMessage id="device ID"/>：</td>
                     <td>{this.state.device.deviceId}</td>
                   </tr>
                   <tr>
-                    <td>信号：</td>
+                    <td><FormattedMessage id="RSSI"/>：</td>
                     <td>{this.state.device.RSSI}</td>
                   </tr>
                   <tr>
-                    <td>状态：</td>
+                    <td><FormattedMessage id="state"/>：</td>
                     <td>{statusName(this.state.device)}</td>
                   </tr>
                 </tbody>
@@ -221,19 +221,19 @@ export default class LadderList extends Component {
                     <table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
                       <tbody>
                         <tr>
-                          <td className="tr">地点 ：</td>
+                          <td className="tr"><FormattedMessage id="install address"/> ：</td>
                           <td className="tl" style={{ width: '260px' }}>{item.Address}</td>
                         </tr>
                         <tr>
-                          <td className="tr">编号 ：</td>
+                          <td className="tr"><FormattedMessage id="device ID"/> ：</td>
                           <td className="tl">{item.deviceId}</td>
-                          <td className="tl">信号 ：</td>
+                          <td className="tl"><FormattedMessage id="RSSI"/> ：</td>
                           <td className="tl">{item.RSSI}</td>
                         </tr>
                         <tr>
-                          <td className="tr">型号 ：</td>
-                          <td className="tl">{item.Model?item.Model:'无'}</td>                       
-                          <td className="tr">状态 ：</td>
+                          <td className="tr"><FormattedMessage id="model"/> ：</td>
+                          <td className="tl">{item.Model?item.Model:' '}</td>                       
+                          <td className="tr"><FormattedMessage id="state"/> ：</td>
                           <td className={classNames('tl', styles.status, item.Alert == '0' && !item.isLoss ? styles.pass : '')}>{statusName(item)}</td>                         
                         </tr>
                       </tbody>

@@ -12,7 +12,7 @@ import g from '../../assets/green.png';
 import error from '../../assets/error.gif';
 import lost from '../../assets/lost.gif';
 import open from '../../assets/open.gif';
-
+import { injectIntl, FormattedMessage } from 'react-intl';
 import region from '../../region.json';
 
 const FormItem = Form.Item;

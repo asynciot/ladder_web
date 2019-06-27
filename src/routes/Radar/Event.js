@@ -11,7 +11,7 @@ import F2 from '@antv/f2';
 import styles from './Event.less';
 import ReactEcharts from 'echarts-for-react';
 import {getEvent} from '../../services/api';
-
+import { injectIntl, FormattedMessage } from 'react-intl';
 export default class DoorHistory extends Component {
 	state = {
 		totalList: [],
@@ -102,11 +102,11 @@ export default class DoorHistory extends Component {
 												<td className="tl" style={{ width: '260px' }}>{item.id}</td>
 											</tr>
 											<tr>
-												<td className="tr">开始时间 ：</td>
+												<td className="tr"><FormattedMessage id="start time"/> ：</td>
 												<td className="tl">{moment(item.time).format('YYYY-MM-DD HH:mm:ss') }</td>
 											</tr>
 											<tr>
-												<td className="tr">结束时间 ：</td>
+												<td className="tr"><FormattedMessage id="end time"/> ：</td>
 												<td className="tl">{moment(item.time+item.interval*item["length"]).format('YYYY-MM-DD HH:mm:ss')}</td>					
 											</tr>
 										</tbody>
