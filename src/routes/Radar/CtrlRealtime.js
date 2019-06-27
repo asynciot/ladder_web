@@ -911,124 +911,124 @@ export default class CtrlRealtime extends Component {
 															className={styles.signal}
 														/>
 													</p>
-													<p >满载
+													<p ><FormattedMessage id="Full load"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >直驶
+													<p ><FormattedMessage id="Direct drive"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >超载
+													<p ><FormattedMessage id="Overload"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >司机
+													<p ><FormattedMessage id="Driver"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >开门
+													<p ><FormattedMessage id="Open door"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >消防员开关
+													<p ><FormattedMessage id="Fireman switch"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >关门
+													<p ><FormattedMessage id="close door"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >独立
+													<p ><FormattedMessage id="Independent"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
 												</section> : 
 												<section>
-													<p >上行到站钟
+													<p ><FormattedMessage id="Up to the station clock"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >满载
+													<p ><FormattedMessage id="Full load"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >下行到站钟
+													<p ><FormattedMessage id="Down to the station clock"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >超载
+													<p ><FormattedMessage id="Overload"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >照明指令
+													<p ><FormattedMessage id="Lighting command"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >满载通过信号
+													<p ><FormattedMessage id="Full load passing signal"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >前门开门指令
+													<p ><FormattedMessage id="Front door opening command"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >蜂鸣器信号
+													<p ><FormattedMessage id="Full load passing signal"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >前门关门指令
+													<p ><FormattedMessage id="Front door closing command"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >开门灯
+													<p ><FormattedMessage id="Open door lamp"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >后门开门指令
+													<p ><FormattedMessage id="Back door opening command"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >关门灯
+													<p ><FormattedMessage id="Close door lamp"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >后门关门指令
+													<p ><FormattedMessage id="Back door closing command"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p >消防灯
+													<p ><FormattedMessage id="Fire-fighting lamp"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p className={styles.pd1}>上下行到站钟合并输出
+													<p className={styles.pd1}><FormattedMessage id="Up and down arrival clock output"/>
 														<i
 															className={styles.signal}
 														/>
 													</p>
-													<p>检修
+													<p><FormattedMessage id="Overhaul"/>
 														<i
 															className={styles.signal}
 														/>
@@ -1060,8 +1060,8 @@ export default class CtrlRealtime extends Component {
 						</div>
 						<div className={styles.btns}>
 							{/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}
-							<section onClick={this.goDetail('params')}>菜单</section>
-							<section onClick={this.goQrcode}>二维码</section>
+							<section onClick={this.goDetail('params')}><FormattedMessage id="Menu"/></section>
+							<section onClick={this.goQrcode}><FormattedMessage id="QR Code"/></section>
 							<section onClick={this.goDebug}>查看</section>
 							<section onClick={this.gohistory}>历史故障</section>
 							<section onClick={this.gocall}>呼梯</section>

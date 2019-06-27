@@ -8,6 +8,7 @@ import { Picker, List, Tabs, Modal } from 'antd-mobile';
 import classNames from 'classnames';
 import styles from './CtrlRealtime.less';
 import echarts from 'echarts';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import {getEvent, postMonitor, getFollowDevices, 
 	getDeviceList, getFloorData, getCtrlData,
 } from '../../services/api';
@@ -549,7 +550,7 @@ export default class CtrlRealtime extends Component {
 					</Modal>
 					<Row type="flex" justify="center" align="middle">
 						<Col span={18}>
-							<p className={styles.shishi}>实时监控:</p>
+							<p className={styles.shishi}><FormattedMessage id="Realtime"/>:</p>
 						</Col>
 						<Col span={6}>
 							<Switch
@@ -573,27 +574,27 @@ export default class CtrlRealtime extends Component {
 								className={classNames(styles.door)}
 							>
 								<section>
-									<p>运行状态 ：<i className={styles.status}>{this.state.show.run ? '运行':'停车'}</i>
+									<p><FormattedMessage id="Operation State"/> ：<i className={styles.status}>{this.state.show.run ? '运行':'停车'}</i>
 									</p>
 									{/* <p>速度 ：<i className={styles.status}>0.5m/s</i>
 									</p> */}
-									<p>门锁回路 ：<i className={styles.status}>{this.state.show.lock ? '通':'断'}</i>
+									<p><FormattedMessage id="Door lock circuit"/> ：<i className={styles.status}>{this.state.show.lock ? '通':'断'}</i>
 									</p>
-									<p>开门到位信号 ：<i className={styles.status}>{this.state.show.open ? '动作':'不动作'}</i>
+									<p><FormattedMessage id="Opening arrival signal"/> ：<i className={styles.status}>{this.state.show.open ? '动作':'不动作'}</i>
 									</p>
-									<p>关门到位信号 ：<i className={styles.status}>{this.state.show.close ? '动作':'不动作'}</i>
+									<p><FormattedMessage id="Closing arrival signal"/> ：<i className={styles.status}>{this.state.show.close ? '动作':'不动作'}</i>
 									</p>
 									{/* <p>开门按钮信号 ：<i className={styles.status}>{this.state.show.openBtn ? '有':'无'}</i>
 									</p>
 									<p>关门按钮信号 ：<i className={styles.status}>{this.state.show.closeBtn ? '有':'无'}</i>
 									</p>*/}
-									<p>电梯模式 ：<i className={styles.status}>{parseModel(this.state.show.model)}</i>
+									<p><FormattedMessage id="Elevator mode"/> ：<i className={styles.status}>{parseModel(this.state.show.model)}</i>
 									</p>
 									<p style={{
 											width: '100%',
 											justifyContent: 'flex-start',
 										}}
-									>状态 ：<i className={styles.status}>{parseStatus(this.state.show.status)}</i>
+									><FormattedMessage id="State"/> ：<i className={styles.status}>{parseStatus(this.state.show.status)}</i>
 									</p>
 									<p
 										style={{
@@ -601,7 +602,7 @@ export default class CtrlRealtime extends Component {
 											justifyContent: 'flex-start',
 										}}
 									>
-										最后更新时间 ：
+										<FormattedMessage id="Last update time"/> ：
 										<i className={styles.status}>{moment(this.state.show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
 									</p>
 								</section>
@@ -637,11 +638,11 @@ export default class CtrlRealtime extends Component {
 						</div>
 						<div className={styles.btns}>
 							{/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}
-							<section onClick={this.goDetail('params')}>菜单</section>
-							<section onClick={this.goQrcode}>二维码</section>
-							<section onClick={this.goDebug}>查看</section>
-							<section onClick={this.gohistory}>历史故障</section>
-							<section onClick={this.gocall}>呼梯</section>
+							<section onClick={this.goDetail('params')}><FormattedMessage id="Menu"/></section>
+							<section onClick={this.goQrcode}><FormattedMessage id="QR Code"/></section>
+							<section onClick={this.goDebug}><FormattedMessage id="View"/></section>
+							<section onClick={this.gohistory}><FormattedMessage id="History fault"/></section>
+							<section onClick={this.gocall}><FormattedMessage id="Call"/></section>
 						</div>
 					</div>
 					<div className={classNames(styles.tab, view == 1 ?'tab-active' : 'tab-notactive')}>

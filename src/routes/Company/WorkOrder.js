@@ -267,7 +267,7 @@ export default class extends Component {
 												</tr>
 												<tr>
 													<td className="tr"><FormattedMessage id="fault code"/> ：</td>
-													<td className="tl" style={{ width: '200px' }}><FormattedMessage id={item.code}/>{faultCode[item.code]}</td>
+													<td className="tl" style={{ width: '200px' }}>{item.code}    <FormattedMessage id={item.code}/></td>
 												</tr>
 												<tr>
 													<td className="tr"><FormattedMessage id="fault"/><FormattedMessage id="type"/> ：</td>

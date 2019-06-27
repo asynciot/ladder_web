@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import { Row, Col, Collapse, Modal } from 'antd';
 import { List, Accordion, } from 'antd-mobile';
 import styles from './Params.less';
-
+import { injectIntl, FormattedMessage } from 'react-intl';
 const columns = [
 	{
 		title: '属性',
