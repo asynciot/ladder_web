@@ -12,12 +12,17 @@ import {getEvent, postMonitor, getFollowDevices,
 	getDeviceList, getFloorData, getCtrlData,
 } from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
+
+var counts=0;
+var ct=0;
+var showc =null;
 var inte = null;
+var intes = null;
 var charts = true;
 var websock = '';
 const alert = Modal.alert
 const tabs = [
-	{ title: '门' 	},
+	{ title: '门' },
 	{ title: '分屏' },
 	{ title: '滤波' },
 ];
@@ -30,7 +35,7 @@ const timeList = [{
 }, {
 	label: '30s',
 	value: '30',
-},];
+}];
 const direction = {
 	'01': 'arrow-up',
 	'10': 'arrow-down',
@@ -105,8 +110,12 @@ const data = [{
 
 export default class CtrlRealtime extends Component {
 	state = {
+		pclock:true,
+		clock:true,
+		active:true,
 		charts:true,
 		floor:[],
+		buffer:[],
 		leftAnimation: {
 			left: '0%',
 			duration: 100,
@@ -148,6 +157,36 @@ export default class CtrlRealtime extends Component {
 			nowtime:'',
 			updateTime:'',
 			speed:'',
+		},
+		page:{
+			run:'',
+			lock:'',
+			close:'',
+			model:'',
+			status:'',
+			upCall:'',
+			downCall:'',
+			openBtn:'',
+			closeBtn:'',
+			floor:'',
+			nowtime:'',
+			updateTime:'',
+			speed:'',
+		},
+		arr:{
+			run:[],
+			lock:[],
+			close:[],
+			model:[],
+			status:[],
+			upCall:[],
+			downCall:[],
+			openBtn:[],
+			closeBtn:[],
+			floor:[],
+			nowtime:[],
+			updateTime:[],
+			speed:[],
 		},
 		doorWidth: 4096,
 		historyEvents:[],
@@ -191,7 +230,10 @@ export default class CtrlRealtime extends Component {
 	}
 	componentWillUnmount() {
 		this.state.charts = false;
+		this.state.pclock = false;
+		clearInterval(showc)
 		clearInterval(inte)
+		clearInterval(intes)
 		if(websock){
 			websock.close()
 			websock=null
@@ -216,7 +258,15 @@ export default class CtrlRealtime extends Component {
 				this.forceUpdate()
 			}else{
 				var redata = JSON.parse(e.data)
-				this.getData(redata)
+				this.pushData(redata)
+				if(counts==0){
+					intes = setInterval( () => {
+						if(this.state.clock==true){
+							this.getData()
+						}
+					},500)
+					counts=counts+1;
+				}
 			}
 		}
 		websock.onclose = this.websocketclosed;
@@ -230,9 +280,12 @@ export default class CtrlRealtime extends Component {
 	websocketclosed(){
 		console.log("WebSocket已关闭")
 	}
-	onChange = async (val) => {
+	onChange = (val) => {
 		this.state.switch = !this.state.switch
 		this.forceUpdate()
+		this.clears()
+		counts = 0
+		ct = 0
 		if(this.state.switch == true){
 			const device_id = this.props.match.params.id
 			if(websock){
@@ -283,103 +336,171 @@ export default class CtrlRealtime extends Component {
 		});
 		this.forceUpdate()
 	}
-	getData = (val) => {
-		const {run,lock,close,} = this.state;
+	pushData = (val) => {
 		let buffer = []
 		buffer = base64url.toBuffer(val.data);	//8位转流
+		this.state.buffer.push(buffer)
+	}
+	getData = (val) => {
+		const { run, lock, close, page, arr } = this.state;
+		let buffer = this.state.buffer[0]
 		let count= 0
+		const x=2
 		let markList = []
-		const show = this.state.show
 		const floor = this.state.floor
-		if((count+33) <= buffer.length){
-			show.upCall   = buffer[count+0]&0x01						//上运行方向
-			show.downCall = (buffer[count+0]&0x02)>>1					//下运行方向
-			show.run      = (buffer[count+0]&0x04)>>2					//获取运行信号
-			show.lock     = (buffer[count+0]&0x08)>>3					//获取门锁信号
-			show.open     = (buffer[count+0]&0x10)>>4					//获取关门信号
-			show.close    = (buffer[count+0]&0x20)>>5					//获取关门信号
-			show.openBtn  = (buffer[count+0]&0x40)>>6					//获取开门按钮信号
-			show.closeBtn = (buffer[count+0]&0x80)>>7					//获取关门按钮信号
-			show.model    = buffer[count+1]&0xff						//获取电梯模式
-			show.status   = buffer[count+2]&0xff						//获取电梯状态
-			show.floor    = buffer[count+27]&0xff						//获取电梯当前楼层
-			show.speed    = (buffer[count+31]&0xff)<<8+(buffer[count+32]&0xff)	//获取电梯当前速度
-			this.state.run.push(show.run)
-			this.state.lock.push(show.lock)
-			this.state.close.push(show.close)
-			markList[0] = (buffer[count+19]&0x01)
-			markList[1] = (buffer[count+19]&0x02)>>1
-			markList[2] = (buffer[count+19]&0x04)>>2
-			markList[3] = (buffer[count+19]&0x08)>>3
-			markList[4] = (buffer[count+19]&0x10)>>4
-			markList[5] = (buffer[count+19]&0x20)>>5
-			markList[6] = (buffer[count+19]&0x40)>>6
-			markList[7] = (buffer[count+19]&0x80)>>7
-			markList[8] = (buffer[count+20]&0x01)
-			markList[9] = (buffer[count+20]&0x02)>>1
-			markList[10] = (buffer[count+20]&0x04)>>2
-			markList[11] = (buffer[count+20]&0x08)>>3
-			markList[12] = (buffer[count+20]&0x10)>>4
-			markList[13] = (buffer[count+20]&0x20)>>5
-			markList[14] = (buffer[count+20]&0x40)>>6
-			markList[15] = (buffer[count+20]&0x80)>>7
-			markList[16] = (buffer[count+21]&0x01)
-			markList[17] = (buffer[count+21]&0x02)>>1
-			markList[18] = (buffer[count+21]&0x04)>>2
-			markList[19] = (buffer[count+21]&0x08)>>3
-			markList[20] = (buffer[count+21]&0x10)>>4
-			markList[21] = (buffer[count+21]&0x20)>>5
-			markList[22] = (buffer[count+21]&0x40)>>6
-			markList[23] = (buffer[count+21]&0x80)>>7
-			markList[24] = (buffer[count+22]&0x01)
-			markList[25] = (buffer[count+22]&0x02)>>1
-			markList[26] = (buffer[count+22]&0x04)>>2
-			markList[27] = (buffer[count+22]&0x08)>>3
-			markList[28] = (buffer[count+22]&0x10)>>4
-			markList[29] = (buffer[count+22]&0x20)>>5
-			markList[30] = (buffer[count+22]&0x40)>>6
-			markList[31] = (buffer[count+22]&0x80)>>7
-			markList[32] = (buffer[count+23]&0x01)
-			markList[33] = (buffer[count+23]&0x02)>>1
-			markList[34] = (buffer[count+23]&0x04)>>2
-			markList[35] = (buffer[count+23]&0x08)>>3
-			markList[36] = (buffer[count+23]&0x10)>>4
-			markList[37] = (buffer[count+23]&0x20)>>5
-			markList[38] = (buffer[count+23]&0x40)>>6
-			markList[39] = (buffer[count+23]&0x80)>>7
-			markList[40] = (buffer[count+24]&0x01)
-			markList[41] = (buffer[count+24]&0x02)>>1
-			markList[42] = (buffer[count+24]&0x04)>>2
-			markList[43] = (buffer[count+24]&0x08)>>3
-			markList[44] = (buffer[count+24]&0x10)>>4
-			markList[45] = (buffer[count+24]&0x20)>>5
-			markList[46] = (buffer[count+24]&0x40)>>6
-			markList[47] = (buffer[count+24]&0x80)>>7
-			markList[48] = (buffer[count+25]&0x01)
-			markList[49] = (buffer[count+25]&0x02)>>1
-			markList[50] = (buffer[count+25]&0x04)>>2
-			markList[51] = (buffer[count+25]&0x08)>>3
-			markList[52] = (buffer[count+25]&0x10)>>4
-			markList[53] = (buffer[count+25]&0x20)>>5
-			markList[54] = (buffer[count+25]&0x40)>>6
-			markList[55] = (buffer[count+25]&0x80)>>7
-			markList[56] = (buffer[count+26]&0x01)
-			markList[57] = (buffer[count+26]&0x02)>>1
-			markList[58] = (buffer[count+26]&0x04)>>2
-			markList[59] = (buffer[count+26]&0x08)>>3
-			markList[60] = (buffer[count+26]&0x10)>>4
-			markList[61] = (buffer[count+26]&0x20)>>5
-			markList[62] = (buffer[count+26]&0x40)>>6
-			markList[63] = (buffer[count+26]&0x80)>>7
-			for(let i=0;i<floor.length;i++){
-				this.state.markList[i] = markList[i]
+		if(buffer!=null){
+			this.state.clock=false
+			if(this.state.active==true){
+				if((count+33) <= buffer.length){
+					page.upCall   = buffer[count+0]&0x01						//上运行方向
+					page.downCall = (buffer[count+0]&0x02)>>1					//下运行方向
+					page.run      = (buffer[count+0]&0x04)>>2					//获取运行信号
+					page.lock     = (buffer[count+0]&0x08)>>3					//获取门锁信号
+					page.open     = (buffer[count+0]&0x10)>>4					//获取关门信号
+					page.close    = (buffer[count+0]&0x20)>>5					//获取关门信号
+					page.openBtn  = (buffer[count+0]&0x40)>>6					//获取开门按钮信号
+					page.closeBtn = (buffer[count+0]&0x80)>>7					//获取关门按钮信号
+					page.model    = buffer[count+1]&0xff						//获取电梯模式
+					page.status   = buffer[count+2]&0xff						//获取电梯状态
+					page.floor    = buffer[count+27]&0xff						//获取电梯当前楼层
+					page.speed    = ((buffer[count+31]&0xff)<<8)+(buffer[count+32]&0xff)	//获取电梯当前速度
+				
+					arr.upCall.push(page.upCall)
+					arr.downCall.push(page.downCall)
+					arr.run.push(page.run)
+					arr.lock.push(page.lock)
+					arr.open.push(page.open)
+					arr.close.push(page.close)
+					arr.openBtn.push(page.openBtn)
+					arr.closeBtn.push(page.closeBtn)
+					arr.model.push(page.model)
+					arr.status.push(page.status)
+					arr.floor.push(page.floor)
+					arr.speed.push(page.speed)
+					run.push(page.run)
+					lock.push(page.lock)
+					close.push(page.close)
+					markList[0] = (buffer[count+19]&0x01)
+					markList[1] = (buffer[count+19]&0x02)>>1
+					markList[2] = (buffer[count+19]&0x04)>>2
+					markList[3] = (buffer[count+19]&0x08)>>3
+					markList[4] = (buffer[count+19]&0x10)>>4
+					markList[5] = (buffer[count+19]&0x20)>>5
+					markList[6] = (buffer[count+19]&0x40)>>6
+					markList[7] = (buffer[count+19]&0x80)>>7
+					markList[8] = (buffer[count+20]&0x01)
+					markList[9] = (buffer[count+20]&0x02)>>1
+					markList[10] = (buffer[count+20]&0x04)>>2
+					markList[11] = (buffer[count+20]&0x08)>>3
+					markList[12] = (buffer[count+20]&0x10)>>4
+					markList[13] = (buffer[count+20]&0x20)>>5
+					markList[14] = (buffer[count+20]&0x40)>>6
+					markList[15] = (buffer[count+20]&0x80)>>7
+					markList[16] = (buffer[count+21]&0x01)
+					markList[17] = (buffer[count+21]&0x02)>>1
+					markList[18] = (buffer[count+21]&0x04)>>2
+					markList[19] = (buffer[count+21]&0x08)>>3
+					markList[20] = (buffer[count+21]&0x10)>>4
+					markList[21] = (buffer[count+21]&0x20)>>5
+					markList[22] = (buffer[count+21]&0x40)>>6
+					markList[23] = (buffer[count+21]&0x80)>>7
+					markList[24] = (buffer[count+22]&0x01)
+					markList[25] = (buffer[count+22]&0x02)>>1
+					markList[26] = (buffer[count+22]&0x04)>>2
+					markList[27] = (buffer[count+22]&0x08)>>3
+					markList[28] = (buffer[count+22]&0x10)>>4
+					markList[29] = (buffer[count+22]&0x20)>>5
+					markList[30] = (buffer[count+22]&0x40)>>6
+					markList[31] = (buffer[count+22]&0x80)>>7
+					markList[32] = (buffer[count+23]&0x01)
+					markList[33] = (buffer[count+23]&0x02)>>1
+					markList[34] = (buffer[count+23]&0x04)>>2
+					markList[35] = (buffer[count+23]&0x08)>>3
+					markList[36] = (buffer[count+23]&0x10)>>4
+					markList[37] = (buffer[count+23]&0x20)>>5
+					markList[38] = (buffer[count+23]&0x40)>>6
+					markList[39] = (buffer[count+23]&0x80)>>7
+					markList[40] = (buffer[count+24]&0x01)
+					markList[41] = (buffer[count+24]&0x02)>>1
+					markList[42] = (buffer[count+24]&0x04)>>2
+					markList[43] = (buffer[count+24]&0x08)>>3
+					markList[44] = (buffer[count+24]&0x10)>>4
+					markList[45] = (buffer[count+24]&0x20)>>5
+					markList[46] = (buffer[count+24]&0x40)>>6
+					markList[47] = (buffer[count+24]&0x80)>>7
+					markList[48] = (buffer[count+25]&0x01)
+					markList[49] = (buffer[count+25]&0x02)>>1
+					markList[50] = (buffer[count+25]&0x04)>>2
+					markList[51] = (buffer[count+25]&0x08)>>3
+					markList[52] = (buffer[count+25]&0x10)>>4
+					markList[53] = (buffer[count+25]&0x20)>>5
+					markList[54] = (buffer[count+25]&0x40)>>6
+					markList[55] = (buffer[count+25]&0x80)>>7
+					markList[56] = (buffer[count+26]&0x01)
+					markList[57] = (buffer[count+26]&0x02)>>1
+					markList[58] = (buffer[count+26]&0x04)>>2
+					markList[59] = (buffer[count+26]&0x08)>>3
+					markList[60] = (buffer[count+26]&0x10)>>4
+					markList[61] = (buffer[count+26]&0x20)>>5
+					markList[62] = (buffer[count+26]&0x40)>>6
+					markList[63] = (buffer[count+26]&0x80)>>7
+					for(let i=0;i<floor.length;i++){
+						this.state.markList[i] = markList[i]
+					}
+					this.state.markList.reverse()
+					this.forceUpdate()
+					count+=33
+				}
 			}
-			this.state.markList.reverse()
-			this.forceUpdate()
-			count+=33
+			this.state.buffer.shift()
+			this.state.clock=true
+			if(ct==0){
+				ct = ct+1
+				inte = setInterval(() => {
+					if(this.state.pclock==true){
+						this.showData()
+					}
+				},500)
+			}
 		}
-		if(this.state.charts){
-			this.showChart()
+	}
+	clears = () => {
+		let { arr, } = this.state
+		this.state.buffer = []
+		arr.upCall = []
+		arr.downCall = []
+		arr.run = []
+		arr.open = []
+		arr.lock = []
+		arr.close = []
+		arr.openBtn = []
+		arr.closeBtn = []
+		arr.model = []
+		arr.status = []
+		arr.floor = []
+		arr.speed = []
+		this.state.run = []
+		this.state.lock = []
+		this.state.close = []
+	}
+	showData = () => {
+		const { show, arr } = this.state
+		if(arr.upCall[0]!=null){
+			show.upCall = arr.upCall[0]
+			show.downCall = arr.downCall[0]
+			show.run = arr.run[0]
+			show.lock = arr.lock[0]
+			show.open = arr.open[0]
+			show.close = arr.close[0]
+			show.openBtn = arr.openBtn[0]
+			show.closeBtn = arr.closeBtn[0]
+			show.model = arr.model[0]
+			show.status = arr.status[0]
+			show.floor = arr.floor[0]
+			show.speed = arr.speed[0]
+			Object.values(arr).forEach(item => {
+				item.shift()
+			});
 			this.forceUpdate()
 		}
 	}
@@ -555,9 +676,22 @@ export default class CtrlRealtime extends Component {
 		this.forceUpdate()
 	}
 	render() {
-		let { ctrl: { event, view, device, floors, property, } } = this.props;
-		const { floor, markFloor, markList, show} = this.state;
-		const id = this.props.match.params.id;
+		let { ctrl: { event, view, device, floors, property, } } = this.props
+		const { floor, markFloor, markList, show} = this.state
+		const id = this.props.match.params.id
+		if(view == 1 && counts == 1){
+			showc = setInterval(() => {
+				if(this.state.pclock==true){
+					this.showChart()
+					this.forceUpdate()
+				}
+			},450)
+			counts = 2
+		}
+		if(view == 0 && counts == 2){
+			clearInterval(showc)
+			counts = 1
+		}
 		return (
 			<div className="content tab-hide">
 				<div className={styles.content}>
@@ -606,13 +740,12 @@ export default class CtrlRealtime extends Component {
 									</p>
 									<p><FormattedMessage id="Elevator mode"/> ：<i className={styles.status}>{parseModel(show.model)}</i>
 									</p>
-									<p><FormattedMessage id="Closing arrival signal"/> ：<i className={styles.status}>{show.close ? '动作':'不动作'}</i>
+									<p><FormattedMessage id="Closing arrival signal"/>：<i className={styles.status}>{show.close ? '动作':'不动作'}</i>
 									</p>
-									<p><FormattedMessage id="Door lock circuit"/> ：<i className={styles.status}>{show.lock ? '通':'断'}</i>
+									<p><FormattedMessage id="Door lock circuit"/>：<i className={styles.status}>{show.lock ? '通':'断'}</i>
 									</p>
-									<p><FormattedMessage id="Elevator run speed"/>                                                                                  ：<i className={styles.status}>{show.speed ? show.speed:0}m/s</i>
+									<p><FormattedMessage id="Elevator run speed"/>：<i className={styles.status}>{show.speed ? (show.speed/1000):0}m/s</i>
 									</p>
-									
 									<p style={{
 											width: '100%',
 											justifyContent: 'flex-start',
