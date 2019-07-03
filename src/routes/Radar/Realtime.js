@@ -256,7 +256,7 @@ export default class DoorHistory extends Component {
 	}
 	
 	clears = () => {
-		const { chart, arr, } = this.state
+		let { chart, arr, } = this.state
 		this.state.buffer = []
 		arr.openIn = []
 		arr.openTo = []
@@ -430,9 +430,6 @@ export default class DoorHistory extends Component {
 						}
 						count=8*i*x
 					}
-					Object.values(arr).forEach(item => {
-					  console.log()
-					});
 					arr.openIn.push(page.openIn)
 					arr.openTo.push(page.openTo)
 					arr.openToOut.push(page.openToOut)
@@ -471,7 +468,6 @@ export default class DoorHistory extends Component {
 					}
 				}
 			}
-			console.log("length:"+this.state.buffer.length)
 			this.state.buffer.shift()
 			this.state.clock=true
 			if(ct==0){
