@@ -53,7 +53,7 @@ export default class Params extends Component {
 														{
 															data.children.filter(item=>item.visible).map((item, index) =>(
 																<List.Item key={`${item.label}${index}`} extra={item.value}>
-																	{`${+index+1}`.length == 2?`${+index+1}`:`0${+index+1}`}. {item.label}
+																	{`${+index+1}`.length == 2?`${+index+1}`:`0${+index+1}`}. <FormattedMessage id={item.label}/>
 																</List.Item>
 															))
 														}
@@ -74,7 +74,7 @@ export default class Params extends Component {
 													<List key={data.label}>
 														{
 															data.children.map((item, index) =>
-																<List.Item key={`${item.label}${index}`} extra={item.value}>{item.label}</List.Item>
+																<List.Item key={`${item.label}${index}`} extra={item.value}><FormattedMessage id={item.label}/></List.Item>
 															)
 														}
 													</List>

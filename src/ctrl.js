@@ -1,648 +1,152 @@
-export const ctrlMenu = [
-  {
-    label: '4.01 菜单',
-    children: [
-      {
-        label: '电机额定功率',
-        value: '',
-        visible: true,
-        num: 10,
-      },
-      {
-        label: '电机额定电压',
-        value: '',
-        visible: true,
-        num: 1,
-      },
-      {
-        label: '电机额定电流',
-        value: '',
-        visible: true,
-        num: 1,
-      },
-      {
-        label: '电机额定力矩',
-        value: '',
-        visible: true,
-        num: 1,
-      },
-      {
-        label: '电机额定转速',
-        value: '',
-        visible: true,
-        num: 10,
-      },
-      {
-        label: '电机极对数',
-        value: '',
-        visible: true,
-        num: 1,
-      },
-      {
-        label: '电机额定反电动势',
-        value: '',
-        visible: true,
-        num: 1,
-      },
-      {
-        label: '电机相序',
-        value: '',
-        visible: true,
-        num: 1,
-      },
-      {
-        label: '编码器反馈方向',
-        value: '',
-        visible: true,
-        num: 1,
-      },
-      {
-        label: '上电初始电角度',
-        value: '',
-        visible: true,
-        num: 1,
-      },
-      {
-        label: '零点偏移电角度',
-        value: '',
-        visible: true,
-        num: 1,
-      },
-    ]
-  },
-  {
-    label: '4.02 菜单',
-    children: [
-      {
-        label: '速度环超前放大倍数',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '速度环滞后放大倍数',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '速度环积分增益系数',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '速度环阻尼增益系数',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '速度环微分增益系数',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '电流环比例增益',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '电流环积分增益',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '输出电流限制',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '载波频率',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '死区时间设置',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '励磁电流设置',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '启动制动力矩积分系数/模拟量称重增益系数',
-        value: '',
-        visible: true,
-      },
-    ]
-  },
-  {
-    label: '7.01 菜单',
-    children: [
-      {
-        label: 'X1 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X2 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X3 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X4 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X5 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X6 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X7 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X8 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X9 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X10 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X11 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X12 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X13 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X14 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X15 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X16 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X17 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X18 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X19 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X20 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X21 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X22 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X23 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X24 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'X25 功能选择',
-        value: '',
-        visible: true,
-      },
-    ]
-  },
-  {
-    label: '7.02 菜单',
-    children: [
-      {
-        label: '门 1 光幕开关极性选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '门 2 光幕开关极性选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '门 1 安全触板开关极性选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '门 2 安全触板开关极性选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '门 1 开门到位开关极性选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '门 2 开门到位开关极性选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '门 1 关门到位开关极性选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '门 2 关门到位开关极性选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '满载输入选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '超载输入选择',
-        value: '',
-        visible: true,
-      },
-    ]
-  },
-  {
-    label: '7.03 菜单',
-    children: [
-      {
-        label: 'PB1 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'PB2 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'PB3 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'PB4 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'PB5 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'PB6 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'PB7 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'PB8 功能选择',
-        value: '',
-        visible: true,
-      },
-    ]
-  },
-  {
-    label: '7.04 菜单',
-    children: [
-      {
-        label: 'Y1 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'Y2 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'Y3 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'Y4 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'Y5 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'Y6 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'Y7 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'Y8 功能选择',
-        value: '',
-        visible: true,
-      },
-    ],
-  },
-  {
-    label: '7.05 菜单',
-    children: [
-      {
-        label: 'CP3‐Y1 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'CP3‐Y2 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'CP3‐Y3 功能选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'CP8',
-        value: '',
-        visible: true,
-      },
-    ]
-  },
-  {
-    label: '9.01 菜单',
-    children: [
-      {
-        label: '并联/群控选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '并联主梯/副梯',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '层站召唤粘连去除',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '轿内错误指令删除',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '操纵箱配置',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '层站召唤配置',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '模拟量称重选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '防捣乱选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '到站钟输出选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '到站钟输出延时',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'VIP 贵宾层服务',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '夜间保安层服务',
-        value: '',
-        visible: true,
-      },
-    ]
-  },
-  {
-    label: '9.02 菜单',
-    children: [
-      {
-        label: '消防电梯开关输入选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '消防开关配置选择',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '消防模式',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '抱闸行程开关检测',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '启动运行检测关门到位',
-        value: '',
-        visible: true,
-      },
-    ]
-  },
-  {
-    label: '9.03 菜单',
-    children: [
-      {
-        label: '再平层',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '停电应急救援',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '后备电源运行',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '地震管制',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '语音报站',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '强迫关门',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '远程监控',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '小区监控',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '层站到站',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '层站预报',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'IC卡服务',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'IC 卡服务楼层 1',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'IC 卡服务楼层 2',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'IC 卡服务楼层 3',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'IC 卡服务楼层 4',
-        value: '',
-        visible: true,
-      },
-      {
-        label: 'IC 卡服层站召 00‐FF 唤选择',
-        value: '',
-        visible: true,
-      },
-    ]
-  },
-  {
-    label: '软件版本号',
-    children: [
-      {
-        label: '电梯控制软件版本号',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '电机控制软件版本号',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '串行通讯软件版本号',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '轿顶控制软件版本号 ',
-        value: '',
-        visible: true,
-      },
-      {
-        label: '并联通讯软件版本号',
-        value: '',
-        visible: true,
-      },
-    ]
-  }
-]
+
+export const ctrlMenu = [{
+				num: 1,label:'4.01',
+				children:[
+				{num: 10,label:'Motor rated power',value:'',visible: true},
+				{num: 1,label:'Motor rated voltage',value:'',visible: true},
+				{num: 1,label:'Motor rated current',value:'',visible: true},
+				{num: 1,label:'Motor rated torque',value:'',visible: true},
+				{num: 10,label:'Motor rated rev',value:'',visible: true},
+				{num: 1,label:'Motor pole logarithm',value:'',visible: true},
+				{num: 1,label:'Motor rated BEMF',value:'',visible: true},
+				{num: 1,label:'Motor phase sequence',value:'',visible: true},
+				{num: 1,label:'Encoder feedback direction',value:'',visible: true},
+				{num: 1,label:'Electrical angle at initial power-on',value:'',visible: true},
+				{num: 1,label:'Offset electrical angle at zero',value:'',visible: true}]
+				},{
+				num: 1,label:'4.02',
+				children:[
+				{num: 1,label:'Speed loop lead amp-lification factor f',value:'',visible: true},
+				{num: 1,label:'Speed loop lag ampli-fication factor b',value:'',visible: true},
+				{num: 1,label:'Integral gain coeffici-ent of speed loop',value:'',visible: true},
+				{num: 1,label:'Damping gain coeffi-cient of speed loop',value:'',visible: true},
+				{num: 1,label:'Differential gain coefficient of speed loop',value:'',visible: true},
+				{num: 1,label:'Proportional gain of current loop',value:'',visible: true},
+				{num: 1,label:'Integral gain of current loop',value:'',visible: true},
+				{num: 1,label:'Output current limit',value:'',visible: true},
+				{num: 1,label:'Carrier frequency',value:'',visible: true},
+				{num: 1,label:'Dead zone time setting',value:'',visible: true},
+				{num: 1,label:'Exciting current setting',value:'',visible: true},
+				{num: 1,label:'Integral coefficient of starting brake distance',value:'',visible: true}],
+				},{
+				num: 1,label:'7.01',
+				children:[
+				{num: 1,label:'X1 Function selection',value:'',visible: true},
+				{num: 1,label:'X2 Function selection',value:'',visible: true},
+				{num: 1,label:'X3 Function selection',value:'',visible: true},
+				{num: 1,label:'X4 Function selection',value:'',visible: true},
+				{num: 1,label:'X5 Function selection',value:'',visible: true},
+				{num: 1,label:'X6 Function selection',value:'',visible: true},
+				{num: 1,label:'X7 Function selection',value:'',visible: true},
+				{num: 1,label:'X8 Function selection',value:'',visible: true},
+				{num: 1,label:'X9 Function selection',value:'',visible: true},
+				{num: 1,label:'X10 Function selection',value:'',visible: true},
+				{num: 1,label:'X11 Function selection',value:'',visible: true},
+				{num: 1,label:'X12 Function selection',value:'',visible: true},
+				{num: 1,label:'X13 Function selection',value:'',visible: true},
+				{num: 1,label:'X14 Function selection',value:'',visible: true},
+				{num: 1,label:'X15 Function selection',value:'',visible: true},
+				{num: 1,label:'X16 Function selection',value:'',visible: true},
+				{num: 1,label:'X17 Function selection',value:'',visible: true},
+				{num: 1,label:'X18 Function selection',value:'',visible: true},
+				{num: 1,label:'X19 Function selection',value:'',visible: true},
+				{num: 1,label:'X20 Function selection',value:'',visible: true},
+				{num: 1,label:'X21 Function selection',value:'',visible: true},
+				{num: 1,label:'X22 Function selection',value:'',visible: true},
+				{num: 1,label:'X23 Function selection',value:'',visible: true},
+				{num: 1,label:'X24 Function selection',value:'',visible: true},
+				{num: 1,label:'X25 Function selection',value:'',visible: true}],
+				},{
+				num: 1,label:'7.02',
+				children:[
+				{num: 1,label:'Polarity selection of front light curtain switch',value:'',visible: true},
+				{num: 1,label:'Polarity selection of back light curtain switch',value:'',visible: true},
+				{num: 1,label:'Polarity selection of front door safety edge switch',value:'',visible: true},
+				{num: 1,label:'Polarity selection of back door safety edge switch',value:'',visible: true},
+				{num: 1,label:"Polarity selection of 'front door open in place' switch",value:'',visible: true},
+				{num: 1,label:"Polarity selection of 'bear door open in place' switch",value:'',visible: true},
+				{num: 1,label:"Polarity selection of 'front door close in place' switch",value:'',visible: true},
+				{num: 1,label:"Polarity selection of 'back door close in place' switch",value:'',visible: true},
+				{num: 1,label:'Full load input selection',value:'',visible: true},
+				{num: 1,label:'Overload input selection',value:'',visible: true}],
+				},{
+				num: 1,label:'7.03',
+				children:[
+				{num: 1,label:'PB1 Function selection',value:'',visible: true},
+				{num: 1,label:'PB2 Function selection',value:'',visible: true},
+				{num: 1,label:'PB3 Function selection',value:'',visible: true},
+				{num: 1,label:'PB4 Function selection',value:'',visible: true},
+				{num: 1,label:'PB5 Function selection',value:'',visible: true},
+				{num: 1,label:'PB6 Function selection',value:'',visible: true},
+				{num: 1,label:'PB7 Function selection',value:'',visible: true},
+				{num: 1,label:'PB8 Function selection',value:'',visible: true}],
+				},{
+				num: 1,label:'7.04',
+				children:[
+				{num: 1,label:'Y1 Function selection',value:'',visible: true},
+				{num: 1,label:'Y2 Function selection',value:'',visible: true},
+				{num: 1,label:'Y3 Function selection',value:'',visible: true},
+				{num: 1,label:'Y4 Function selection',value:'',visible: true},
+				{num: 1,label:'Y5 Function selection',value:'',visible: true},
+				{num: 1,label:'Y6 Function selection',value:'',visible: true},
+				{num: 1,label:'Y7 Function selection',value:'',visible: true},
+				{num: 1,label:'Y8 Function selection',value:'',visible: true}],
+				},{
+				num: 1,label:'7.05',
+				children:[
+				{num: 1,label:'CP3‐Y1 Function selection',value:'',visible: true},
+				{num: 1,label:'CP3‐Y2 Function selection',value:'',visible: true},
+				{num: 1,label:'CP3‐Y3 Function selection',value:'',visible: true},
+				{num: 1,label:'CP8',value:'',visible: true}],
+				},{
+				num: 1,label:'9.01',
+				children:[
+				{num: 1,label:'Parallel/group control selection',value:'',visible: true},
+				{num: 1,label:'Parallel main/auxiliary elevators',value:'',visible: true},
+				{num: 1,label:'Removal of landing call adhesion',value:'',visible: true},
+				{num: 1,label:'Deletion of mistaken car command',value:'',visible: true},
+				{num: 1,label:'Control box configuration',value:'',visible: true},
+				{num: 1,label:'Landing call configuration',value:'',visible: true},
+				{num: 1,label:'Selection of analog weighing channels',value:'',visible: true},
+				{num: 1,label:'Anti-nuisance function selection',value:'',visible: true},
+				{num: 1,label:'Selection of arrival gong output',value:'',visible: true},
+				{num: 1,label:'Delay of arrival gong output',value:'',visible: true},
+				{num: 1,label:'VIP service',value:'',visible: true},
+				{num: 1,label:'Security floor service at night',value:'',visible: true}],
+				},{
+				num: 1,label:'9.02',
+				children:[
+				{num: 1,label:'Input options of fire elevator switch',value:'',visible: true},
+				{num: 1,label:'Options of fire switch configuration',value:'',visible: true},
+				{num: 1,label:'Firefighting mode',value:'',visible: true},
+				{num: 1,label:'Brake switch detection',value:'',visible: true},
+				{num: 1,label:'Start running with door closed limit detected',value:'',visible: true}],
+				},{
+				num: 1,label:'9.03',
+				children:[
+				{num: 1,label:'Re-leveling',value:'',visible: true},
+				{num: 1,label:'Blackout emergency rescue',value:'',visible: true},
+				{num: 1,label:'Backup power running',value:'',visible: true},
+				{num: 1,label:'Earthquake control',value:'',visible: true},
+				{num: 1,label:'Voice station report',value:'',visible: true},
+				{num: 1,label:'Forced closing',value:'',visible: true},
+				{num: 1,label:'Remote monitor',value:'',visible: true},
+				{num: 1,label:'Cell monitorg',value:'',visible: true},
+				{num: 1,label:'Landing arrival gong',value:'',visible: true},
+				{num: 1,label:'Landing forecasting lamp',value:'',visible: true},
+				{num: 1,label:'IC card service',value:'',visible: true},
+				{num: 1,label:'IC card service floor 1',value:'',visible: true},
+				{num: 1,label:'IC card service floor 2',value:'',visible: true},
+				{num: 1,label:'IC card service floor 3',value:'',visible: true},
+				{num: 1,label:'IC card service floor 4',value:'',visible: true},
+				{num: 1,label:'IC card service floor 00‐FF call switch',value:'',visible: true}],
+				},{
+				num: 1,label:'Software version',
+				children:[
+				{num: 1,label:'Elevator control software version',value:'',visible: true},
+				{num: 1,label:'Motor control software version',value:'',visible: true},
+				{num: 1,label:'Serial communication software version',value:'',visible: true},
+				{num: 1,label:'Car control software version',value:'',visible: true},
+				{num: 1,label:'Parallel communication software version',value:'',visible: true}],
+				}
+				]

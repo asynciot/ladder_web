@@ -104,14 +104,14 @@ export default class Login extends Component {
   showModal = (e) => {
     e.preventDefault();
     Modal.info({
-      title: '这个是协议条款',
+      title: (window.localStorage.getItem("language")=='en') ? 'This is the agreement clause':'这个是协议条款',
       content: (
         <div>
           <p>这个是协议条款</p>
           <p>这个是协议条款</p>
         </div>
       ),
-      okText: '确定',
+      okText: (window.localStorage.getItem("language")=='en') ? 'OK':'确定',
       onOk() {},
     });
   }
@@ -169,7 +169,7 @@ export default class Login extends Component {
 						{
 							login.status === 'error' &&
 							login.submitting === false &&
-							this.renderMessage('密码错误')
+							this.renderMessage((window.localStorage.getItem("language")=='en') ? 'Password error':'密码错误')
 						}
 						<Row className={styles.panel} gutter={8}>
 							<Col span={22} offset={1}>
