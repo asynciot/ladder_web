@@ -162,7 +162,7 @@ export default class extends Component {
 				})
 			}).catch((e => console.info(e)));
 		}else{
-			getDispatch({ num: 10, page, follow:'yes', state:'untreated'}).then((res) => {
+			getDispatch({ num: 10, page, follow:'yes', state:'untreated', isreg:"True"}).then((res) => {
 				clearInterval(inte)
 				const list1 = res.data.list.map((item,index) => {
 					const time = this.state.nowTime - item.create_time
