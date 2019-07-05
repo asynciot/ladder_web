@@ -70,7 +70,7 @@ const ListButton = ({ className = '', ...restProps }) => (
 	<div className={`${className} ${styles['list-btn']}`}>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.edit ? restProps.edit:''}>
 			<Icon className={`${styles.edit} ${styles.icon}`} type="form" />
-			<em><FormattedMessage id="order"/></em>
+			<em><FormattedMessage id="receive"/></em>
 		</span>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.address ? restProps.address:''}>
 			<Icon className={`${styles.edit} ${styles.icon}`} type="arrow-down" />

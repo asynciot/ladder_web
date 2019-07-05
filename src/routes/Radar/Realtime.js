@@ -838,7 +838,7 @@ export default class DoorHistory extends Component {
 					</Modal>
 					<Row type="flex" justify="center" align="middle">
 						<Col span={18}>
-							<p className={styles.shishi}>实时监控:</p>
+							<p className={styles.shishi}><FormattedMessage id="Realtime"/>:</p>
 						</Col>
 						<Col span={6}>
 							<Switch
@@ -862,15 +862,15 @@ export default class DoorHistory extends Component {
 								className={classNames(styles.door)}
 							>
 								<section>
-									<p><FormattedMessage id="Door coordinate"/> ：<i className={styles.status}>{show.position || show.position === 0 ? show.position : '0'}</i>
+									<p><FormattedMessage id="Door coordinate："/> <i className={styles.status}>{show.position || show.position === 0 ? show.position : '0'}</i>
 									</p>
-									<p><FormattedMessage id="Door current"/> ：<i className={styles.status}>{show.current} A</i>
+									<p><FormattedMessage id="Door current："/> <i className={styles.status}>{show.current} A</i>
 									</p>
 									{/*<p>开门次数 ：<i className={styles.status}>{show.times || '无'}</i>
 									</p>*/}
-									<p><FormattedMessage id="Opening signal"/> ：<i className={styles.status}>{show.openIn ? '开' : '关'}</i>
+									<p><FormattedMessage id="Opening signal："/> <i className={styles.status}>{show.openIn ? '开' : '关'}</i>
 									</p>
-									<p><FormattedMessage id="Closing signal"/> ：<i className={styles.status}>{show.closeIn ? '开' : '关'}</i>
+									<p><FormattedMessage id="Closing signal："/> <i className={styles.status}>{show.closeIn ? '开' : '关'}</i>
 									</p>
 									<p style={{
 										width: '100%',

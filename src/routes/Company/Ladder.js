@@ -202,7 +202,7 @@ export default class extends Component {
 												</tr>
 												<tr>
 													<Col span={12}>	
-														<a className={styles.text}><FormattedMessage id="door"/> ：</a>
+														<a className={styles.text}><FormattedMessage id="ctrl"/> ：</a>
 														<td className="tl">{item.ctrl ||''}</td>
 													</Col>
 												</tr>
@@ -223,7 +223,7 @@ export default class extends Component {
 													</Col>
 													<Col span={12}>
 														<td className="tl"><FormattedMessage id="state"/> ：</td>
-														<td className="tl">{state[item.state] ||''}</td>
+														<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
 													</Col>
 												</tr>
 											</tbody>
