@@ -27,10 +27,16 @@ export default class extends Component {
 		getDevices({device_id}).then(res=> {
 			if (res.code == 0) {
 				var list = res.data.list[0]
-				this.state.install_addr = res.data.list[0].install_addr
-				this.state.device_name = res.data.list[0].device_name
+				const install_addr = res.data.list[0].install_addr
+				const device_name = res.data.list[0].device_name
+				const maintenance_nexttime = res.data.list[0].maintenance_nexttime
+				const inspection_nexttime = res.data.list[0].inspection_nexttime
 				this.setState({
 					list,
+					install_addr,
+					device_name,
+					// maintenance_nexttime,
+					// inspection_nexttime,
 				})
 			}
 		});
@@ -71,26 +77,26 @@ export default class extends Component {
 	submit = () => {
 		const time1 = this.state.maintenance_remind*24*3600*1000
 		const time2 = this.state.inspection_remind*24*3600*1000
-		
+		console.log(this.state.maintenance_nexttime)
 		this.state.maintenance_nexttime = new Date(this.state.maintenance_nexttime).getTime();
 		this.state.inspection_nexttime = new Date(this.state.inspection_nexttime).getTime();
-		putFollowInfo({
-			device_id: this.state.device_id,
-			device_name: this.state.device_name,
-			install_addr: this.state.install_addr,
-			maintenance_nexttime: this.state.maintenance_nexttime,
-			inspection_nexttime: this.state.inspection_nexttime,
-			maintenance_remind: time1,
-			inspection_remind: time2,
-		}).then((res) => {
-			if (res.code === 0) {
-				message.success('修改成功', 1, () => {
-					this.props.history.goBack();
-				});
-			} else {
-				message.error('修改失败');
-			}
-		});
+		// putFollowInfo({
+		// 	device_id: this.state.device_id,
+		// 	device_name: this.state.device_name,
+		// 	install_addr: this.state.install_addr,
+		// 	maintenance_nexttime: this.state.maintenance_nexttime,
+		// 	inspection_nexttime: this.state.inspection_nexttime,
+		// 	maintenance_remind: time1,
+		// 	inspection_remind: time2,
+		// }).then((res) => {
+		// 	if (res.code === 0) {
+		// 		message.success('修改成功', 1, () => {
+		// 			this.props.history.goBack();
+		// 		});
+		// 	} else {
+		// 		message.error('修改失败');
+		// 	}
+		// });
 	}
 	remove = () => {
 		const { dispatch, location,match } = this.props;
@@ -105,13 +111,13 @@ export default class extends Component {
 			},
 		]);
 	}
-	onStart = async(val) => {
-		await this.setState({
+	onStart = (val) => {
+		this.setState({
 			maintenance_nexttime: val,
 		});
 	}
-	onEnd = async(val) => {
-		await this.setState({
+	onEnd = (val) => {
+		this.setState({
 			inspection_nexttime: val,
 		});
 	}

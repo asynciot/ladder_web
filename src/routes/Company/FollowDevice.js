@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Row, Col, Button, Spin, DatePicker, Pagination, Icon, Input,} from 'antd';
-import { Tabs, Flex, Badge, List, Modal,} from 'antd-mobile';
+import { Row, Col, Button, Spin, DatePicker, Pagination, Icon, Input, List} from 'antd';
+import { Tabs, Flex, Badge, Modal,} from 'antd-mobile';
 import classNames from 'classnames';
 import base64url from 'base64url';
 import pathToRegexp from 'path-to-regexp';
@@ -116,6 +116,7 @@ const ListButton = ({ className = '', ...restProps }) => (
 export default class extends Component {
 	state = {
 		list: [],
+		asd:[],
 		switchIdx:0,
 		device_type: 0,
 		type:0,
@@ -191,8 +192,7 @@ export default class extends Component {
 		}
 	}
 	getFault = (e,device_type) =>{
-		const _this = this
-		let list=[]
+		const list=[]
 		if(device_type=="15"){
 			device_type='door'
 		}else{
@@ -205,7 +205,7 @@ export default class extends Component {
 				}else{
 					item.code = (item.code+50)
 				}
-				_this.getFollowDevices(item.device_id,index,list,item.code)
+				this.getFollowDevices(item.device_id,index,list,item.code)
 			})
 			this.setState({
 				list,
@@ -248,32 +248,7 @@ export default class extends Component {
 	edit = (e, detail) => {
 		e.stopPropagation();
 		e.preventDefault();
-//     if (detail.install_addr == undefined || !detail.install_addr) {
-//       this.props.history.push(`/company/edit-device/${detail.device_id}/undefined`);
-//     }else {
 		this.props.history.push(`/company/edit-device/${detail.device_id}`);
-    // }
-	}
-	qrcode = (e, detail) => {
-		e.stopPropagation();
-		e.preventDefault();
-		this.setState({
-			src: `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${detail.deviceId}`,
-			code: true,
-		});
-	}
-	remove = (e, detail) => {
-		e.stopPropagation();
-		e.preventDefault();
-		alert('提示', '是否取消关注', [
-			{ text: '取消', style: 'default' },
-			{ text: '确认',
-				onPress: () => {
-					deleteFollowInfo({ device_id: detail.device_id }).then((res) => {});
-				},
-			},
-		]);
-		this.forceUpdate()
 	}
 	goFollowList(item,val){
 		const { history } = this.props;
@@ -313,7 +288,7 @@ export default class extends Component {
 		const search_info = this.state.search_info
 		const install_addr = this.state.iddr
 		getFollowDevices({ num: 10, page:1, search_info, install_addr, register: 'registered', }).then((res) => {
-			if (res.code === 0) {
+			if (res.code == 0) {
 				const now = new Date().getTime();
 				const totalNumber = res.data.totalNumber
 				const list = res.data.list.map((item) => {
@@ -323,30 +298,14 @@ export default class extends Component {
 					list,
 					totalNumber,
 				});
-			} else {
-				this.setState({
-					list: [],
-				});
 			}
-		});
+		})
 	}
 	render() {
 		const ModelName = { 1: 'NSFC01-01B', 2: 'NSFC01-02T'};
-		const { navs, list, switchIdx } = this.state;
+		const { navs, list, switchIdx, asd } = this.state;
 		return (
 			<div className="content">
-				<Modal
-				  visible={this.state.code}
-				  transparent
-				  maskClosable={false}
-				  title="二维码"
-				  footer={[{ text: 'Ok', onPress: () => this.setState({code: false}) }] }
-				  wrapProps={{ onTouchStart: this.onWrapTouchStart }}
-				>
-				  <div style={{ width: '100%', overflow: 'scroll' }}>
-					<img src={this.state.src} alt="code"/>
-				  </div>
-				</Modal>
 				<Tabs
 				  tabs={tabs2}
 				  initialPage={this.state.switchIdx}
@@ -355,215 +314,209 @@ export default class extends Component {
 				  onChange={(tab, index) => { this.goFollowList(tab.device_type,index); }}
 				>
 					<div style={{ backgroundColor: '#fff' }}>
-						<List className={styles.lis}>
-							<Row className={styles.page}>
-								<Col span={8} style={{margin:'5px',}}>
-									<Input
-										placeholder="设备编号或串号"
-										onChange={this.onChange}
-										value={this.state.search_info}
-										maxlength="16"></Input>
-								</Col>
-								<Col span={8} style={{margin:'5px',}}>
-									<Input
-										placeholder="安装地址"
-										onChange={this.onChangel}
-										value={this.state.iddr}
-										maxlength="16"></Input>
-								</Col>
-								<Col span={6}>
-									<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
-								</Col>
-								<Col span={24} className={styles.center}>
-									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
-								</Col>
-							</Row>
-							{
-								list.length ?
-								list.map((item, index) => (
-									<List.Item className={styles.item} key={index} onClick={this.goDevice(item)} extra={<ListButton  remove={(event) => { this.remove(event, item); }} edit={(event) => { this.edit(event, item); }} />}>
+						<Row className={styles.page}>
+							<Col span={8} style={{margin:'5px',}}>
+								<Input
+									placeholder="设备编号或串号"
+									onChange={this.onChange}
+									value={this.state.search_info}
+									maxlength="16"></Input>
+							</Col>
+							<Col span={8} style={{margin:'5px',}}>
+								<Input
+									placeholder="安装地址"
+									onChange={this.onChangel}
+									value={this.state.iddr}
+									maxlength="16"></Input>
+							</Col>
+							<Col span={6}>
+								<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
+							</Col>
+							<Col span={24} className={styles.center}>
+								<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
+							</Col>
+						</Row>
+						<List 
+							className={styles.lis} 
+							itemLayout="horizontal"
+							dataSource={this.state.list}
+							renderItem={(item,index) => (
+								<List.Item actions={[<ListButton edit={(event) => { this.edit(event, item); }} />]} className={styles.item} key={index} onClick={this.goDevice(item)}>
+									<Col span={22}>
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 											<tbody>
 												<tr>
 													<a className={styles.text}><FormattedMessage id="install address"/> ：</a>
-													<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
+													<td className="tl" style={{ width: '200px' }}>{item.install_addr}</td>
 												</tr>
 												<tr>
-													<Col span={13}>
+													<Col span={16}>
 														<a className={styles.text}><FormattedMessage id="device name"/> ：</a>
 														<td className="tl">{item.device_name ? item.device_name : '无'}</td>
 													</Col>
-													<Col span={11}>	
+													<Col span={8}>
 														<a className={styles.text}><FormattedMessage id="type"/>：</a>
 														<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 													</Col>	
 												</tr>
 												<tr>
-													<Col span={13}>
+													<Col span={16}>
 														<a className={styles.text}><FormattedMessage id="device IMEI"/> ：</a>
 														<td className="tl">{item.IMEI}</td>
 													</Col>
-													<Col span={11}>	
+													<Col span={8}>
 														<a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
 														<td className="tl"><Signal width={item.rssi}/></td>
 													</Col>	
 												</tr>
 												<tr>
-													<Col span={13}>
+													<Col span={16}>
 														<a className={styles.text}><FormattedMessage id="model"/> ：</a>
 														<td className="tl">{modelName[item.device_model]}</td>
 													</Col>
-													<Col span={11}>
+													<Col span={8}>
 														<a className={styles.text}><FormattedMessage id="state"/> ：</a>
 														<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
 													</Col>
 												</tr>
 											</tbody>
 										</table>
-									</List.Item>
-								)):
-								<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
-									<Col span={24} className={styles.center}>
-										<td></td>
-										<td className="tl" style={{margin:'5px',}}><FormattedMessage id="No Information"/></td>
 									</Col>
-								</table>
-							}
-						</List>
+								</List.Item>
+							)}
+						/>
 					</div>
 					<div style={{ backgroundColor: '#fff' }}>
-						<List className={styles.lis}>
-							<Row className={styles.page}>
-								<Col span={8} style={{margin:'5px',}}>
-									<Input
-										placeholder="设备编号或串号"
-										onChange={this.onChange}
-										value={this.state.search_info}
-										maxlength="16"></Input>
-								</Col>
-								<Col span={8} style={{margin:'5px',}}>
-									<Input
-										placeholder="安装地址"
-										onChange={this.onChangel}
-										value={this.state.iddr}
-										maxlength="16"></Input>
-								</Col>
-								<Col span={6}>
-									<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
-								</Col>
-								<Col span={24} className={styles.center}>
-									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
-								</Col>
-							</Row>
-							{
-								list.length ?
-								list.map((item, index) => (
-									<List.Item className={styles.item} key={index} onClick={this.goDevice(item)} extra={<ListButton  remove={(event) => { this.remove(event, item); }} edit={(event) => { this.edit(event, item); }} />}>
+						<Row className={styles.page}>
+							<Col span={8} style={{margin:'5px',}}>
+								<Input
+									placeholder="设备编号或串号"
+									onChange={this.onChange}
+									value={this.state.search_info}
+									maxlength="16"></Input>
+							</Col>
+							<Col span={8} style={{margin:'5px',}}>
+								<Input
+									placeholder="安装地址"
+									onChange={this.onChangel}
+									value={this.state.iddr}
+									maxlength="16"></Input>
+							</Col>
+							<Col span={6}>
+								<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
+							</Col>
+							<Col span={24} className={styles.center}>
+								<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
+							</Col>
+						</Row>
+						<List 
+							className={styles.lis} 
+							itemLayout="horizontal"
+							dataSource={this.state.list}
+							renderItem={(item,index) => (
+								<List.Item actions={[<ListButton edit={(event) => { this.edit(event, item); }} />]} className={styles.item} key={index} onClick={this.goDevice(item)}>
+									<Col span={22}>
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 											<tbody>
 												<tr>
 													<a className={styles.text}><FormattedMessage id="install address"/> ：</a>
-													<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
+													<td className="tl" style={{ width: '200px' }}>{item.install_addr}</td>
 												</tr>
 												<tr>
-													<Col span={13}>
+													<Col span={16}>
 														<a className={styles.text}><FormattedMessage id="device name"/> ：</a>
 														<td className="tl">{item.device_name ? item.device_name : '无'}</td>
 													</Col>
-													<Col span={11}>	
-														<a className={styles.text}><FormattedMessage id="type"/>：</a>
+													<Col span={8}>
+														<a className={styles.text2}><FormattedMessage id="type"/>：</a>
 														<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 													</Col>	
 												</tr>
 												<tr>
-													<Col span={13}>
+													<Col span={16}>
 														<a className={styles.text}><FormattedMessage id="device IMEI"/> ：</a>
 														<td className="tl">{item.IMEI}</td>
 													</Col>
-													<Col span={11}>	
-														<a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
+													<Col span={8}>
+														<a className={styles.text2}><FormattedMessage id="RSSI"/>：</a>
 														<td className="tl"><Signal width={item.rssi}/></td>
 													</Col>	
 												</tr>
 												<tr>
-													<Col span={13}>
+													<Col span={16}>
 														<a className={styles.text}><FormattedMessage id="model"/> ：</a>
 														<td className="tl">{modelName[item.device_model]}</td>
 													</Col>
-													<Col span={11}>
-														<a className={styles.text}><FormattedMessage id="state"/> ：</a>
+													<Col span={8}>
+														<a className={styles.text2}><FormattedMessage id="state"/> ：</a>
 														<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
 													</Col>
 												</tr>
 											</tbody>
 										</table>
-									</List.Item>
-								)):
-								<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
-									<Col span={24} className={styles.center}>
-										<td></td>
-										<td className="tl" style={{margin:'5px',}}><FormattedMessage id="No Information"/></td>
 									</Col>
-								</table>
-							}
-						</List>
+								</List.Item>
+							)}
+						/>
 					</div>
 					<div style={{ backgroundColor: '#fff' }}>
-						<List className={styles.lis}>
-							<Row className={styles.page}>
-								<Col span={8} style={{margin:'5px',}}>
-									<Input
-										placeholder="设备编号或串号"
-										onChange={this.onChange}
-										value={this.state.search_info}
-										maxlength="16"></Input>
-								</Col>
-								<Col span={8} style={{margin:'5px',}}>
-									<Input
-										placeholder="安装地址"
-										onChange={this.onChangel}
-										value={this.state.iddr}
-										maxlength="16"></Input>
-								</Col>
-								<Col span={6}>
-									<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
-								</Col>
-								<Col span={24} className={styles.center}>
-									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
-								</Col>
-							</Row>
-							{
-								list.length ?
-								list.map((item, index) => (
-									<List.Item className={styles.item} key={index} onClick={this.goDevice(item)} extra={<ListButton  remove={(event) => { this.remove(event, item); }} edit={(event) => { this.edit(event, item); }} />}>
+						<Row className={styles.page}>
+							<Col span={8} style={{margin:'5px',}}>
+								<Input
+									placeholder="设备编号或串号"
+									onChange={this.onChange}
+									value={this.state.search_info}
+									maxlength="16"></Input>
+							</Col>
+							<Col span={8} style={{margin:'5px',}}>
+								<Input
+									placeholder="安装地址"
+									onChange={this.onChangel}
+									value={this.state.iddr}
+									maxlength="16"></Input>
+							</Col>
+							<Col span={6}>
+								<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
+							</Col>
+							<Col span={24} className={styles.center}>
+								<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
+							</Col>
+						</Row>
+						<List 
+							className={styles.lis} 
+							itemLayout="horizontal"
+							dataSource={this.state.list}
+							renderItem={(item,index) => (
+								<List.Item actions={[<ListButton edit={(event) => { this.edit(event, item); }} />]} className={styles.item} key={index} onClick={this.goDevice(item)}>
+									<Col span={22}>
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 											<tbody>
 												<tr>
 													<a className={styles.text}><FormattedMessage id="install address"/> ：</a>
-													<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
+													<td className="tl" style={{ width: '200px' }}>{item.install_addr}</td>
 												</tr>
 												<tr>
-													<Col span={13}>
+													<Col span={16}>
 														<a className={styles.text}><FormattedMessage id="device name"/> ：</a>
 														<td className="tl">{item.device_name ? item.device_name : '无'}</td>
 													</Col>
-													<Col span={11}>	
+													<Col span={8}>	
 														<a className={styles.text}><FormattedMessage id="type"/>：</a>
 														<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 													</Col>	
 												</tr>
 												<tr>
-													<Col span={13}>
-														<a className={styles.text}><FormattedMessage id="type"/> ：</a>
+													<Col span={16}>
+														<a className={styles.text}><FormattedMessage id="device IMEI"/> ：</a>
 														<td className="tl">{item.IMEI}</td>
 													</Col>
-													<Col span={11}>	
+													<Col span={8}>	
 														<a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
 														<td className="tl"><Signal width={item.rssi}/></td>
 													</Col>	
 												</tr>
 												<tr>
-													<Col span={13}>
+													<Col span={16}>
 														<a className={styles.text}><FormattedMessage id="model"/> ：</a>
 														<td className="tl">{modelName[item.device_model]}</td>
 													</Col>
@@ -576,93 +529,83 @@ export default class extends Component {
 												</tr>
 											</tbody>
 										</table>
-									</List.Item>
-								)):
-								<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
-									<Col span={24} className={styles.center}>
-										<td></td>
-										<td className="tl" style={{margin:'5px',}}><FormattedMessage id="No Information"/></td>
 									</Col>
-								</table>
-							}
-						</List>
+								</List.Item>
+							)}
+						/>
 					</div>
 					<div style={{ backgroundColor: '#fff' }}>
-						<List className={styles.lis}>
-							<Row className={styles.page}>
-								<Col span={8} style={{margin:'5px',}}>
-									<Input
-										placeholder="设备编号或串号"
-										onChange={this.onChange}
-										value={this.state.search_info}
-										maxlength="16"></Input>
-								</Col>
-								<Col span={8} style={{margin:'5px',}}>
-									<Input
-										placeholder="安装地址"
-										onChange={this.onChangel}
-										value={this.state.iddr}
-										maxlength="16"></Input>
-								</Col>
-								<Col span={6}>
-									<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
-								</Col>
-								<Col span={24} className={styles.center}>
-									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
-								</Col>
-							</Row>
-							{
-								list.length ?
-								list.map((item, index) => (
-									<List.Item className={styles.item} key={index} onClick={this.goDevice(item)} extra={<ListButton  remove={(event) => { this.remove(event, item); }} edit={(event) => { this.edit(event, item); }} />}>
+						<Row className={styles.page}>
+							<Col span={8} style={{margin:'5px',}}>
+								<Input
+									placeholder="设备编号或串号"
+									onChange={this.onChange}
+									value={this.state.search_info}
+									maxlength="16"></Input>
+							</Col>
+							<Col span={8} style={{margin:'5px',}}>
+								<Input
+									placeholder="安装地址"
+									onChange={this.onChangel}
+									value={this.state.iddr}
+									maxlength="16"></Input>
+							</Col>
+							<Col span={6}>
+								<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
+							</Col>
+							<Col span={24} className={styles.center}>
+								<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
+							</Col>
+						</Row>
+						<List 
+							className={styles.lis} 
+							itemLayout="horizontal"
+							dataSource={this.state.list}
+							renderItem={(item,index) => (
+								<List.Item actions={[<ListButton edit={(event) => { this.edit(event, item); }} />]} className={styles.item} key={index} onClick={this.goDevice(item)}>
+									<Col span={22}>
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 											<tbody>
 												<tr>
 													<a className={styles.text}><FormattedMessage id="install address"/> ：</a>
-													<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
+													<td className="tl" style={{ width: '200px' }}>{item.install_addr}</td>
 												</tr>
 												<tr>
-													<Col span={13}>
+													<Col span={16}>
 														<a className={styles.text}><FormattedMessage id="device name"/> ：</a>
-														<td className="tl">{item.device_name ? item.device_name : ' '}</td>
+														<td className="tl">{item.device_name ? item.device_name : '无'}</td>
 													</Col>
-													<Col span={11}>	
+													<Col span={8}>
 														<a className={styles.text}><FormattedMessage id="type"/>：</a>
 														<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 													</Col>	
 												</tr>
 												<tr>
-													<Col span={13}>
+													<Col span={16}>
 														<a className={styles.text}><FormattedMessage id="device IMEI"/> ：</a>
 														<td className="tl">{item.IMEI}</td>
 													</Col>
-													<Col span={11}>	
+													<Col span={8}>
 														<a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
 														<td className="tl"><Signal width={item.rssi}/></td>
 													</Col>	
 												</tr>
 												<tr>
-													<Col span={13}>
+													<Col span={16}>
 														<a className={styles.text}><FormattedMessage id="model"/> ：</a>
 														<td className="tl">{modelName[item.device_model]}</td>
 													</Col>
-													<Col span={11}>
+													<Col span={8}>
 														<a className={styles.text}><FormattedMessage id="state"/> ：</a>
-														<td className="tl">{state[item.state] ||''}</td>
+														<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
 													</Col>
 												</tr>
 											</tbody>
 										</table>
-									</List.Item>
-								)):
-								<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
-									<Col span={24} className={styles.center}>
-										<td></td>
-										<td className="tl" style={{margin:'5px',}}><FormattedMessage id="No Information"/></td>
 									</Col>
-								</table>
-							}
-						</List>
+								</List.Item>
+							)}
+						/>
 					</div>
 				</Tabs>
 			</div>
