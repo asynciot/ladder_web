@@ -201,7 +201,7 @@ class BasicLayout extends React.PureComponent {
 							{...this.props}
 							title={this.getPageTitle()}
 						></MobileHeader>
-					}
+					}123
 					<Layout className={classNames(styles.content, isDefault ? styles['no-bottom'] : '')}>
 						<Content>
 							<Switch>
