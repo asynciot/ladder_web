@@ -15,9 +15,8 @@ var inte = null;
 const Item = List.Item;
 const Brief = Item.Brief;
 const names = {
-  0: '电话报修',
-  1: '人工报修',
-  2: '自动报修',
+  0: '人工报修',
+  1: '自动报修',
 }
 const typeName ={
   'ctrl':'控制柜',
@@ -67,6 +66,7 @@ const faultCode = {
 	'82': '输出过流',
 	'114': '输入电压过低',
 	'178': '输入电压过高',
+	'179': '电流过高',
 }
 export default class Home extends Component {
 	state = {
@@ -128,7 +128,7 @@ export default class Home extends Component {
 		}).catch((e => console.info(e)));
 	}
 	getFault = () => {
-		getFault({ num: 10, page: 1, state:"untreated", islast:1}).then((res) => {
+		getFault({ num: 1, page: 1, state:"untreated", islast:1}).then((res) => {
 			if (res.code === 0) {
 				let code = res.data.list[0].code
 				if(res.data.list[0].device_type=="ctrl"){

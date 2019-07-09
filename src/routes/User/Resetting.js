@@ -4,6 +4,7 @@ import { Form, Input, Button, Icon, Checkbox, Row, Col, Modal, Alert } from 'ant
 import styles from './Resetting.less';
 import logo from '../../assets/logo-title.png';
 import Background from '../../assets/back.png';
+import { injectIntl, FormattedMessage } from 'react-intl';
 
 var sectionStyle = {
 	width:"100%",
@@ -18,12 +19,11 @@ const FormItem = Form.Item;
 export default class Login extends Component {
 	state = {
 		count: 0,
+		lg:0,
 	}
-
 	componentWillUnmount() {
 		clearInterval(this.interval);
 	}
-
 	onGetCaptcha = () => {
 		const { form } = this.props;
 		if (this.state.count !== 0) return;

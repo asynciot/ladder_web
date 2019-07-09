@@ -191,10 +191,8 @@ export default class extends Component {
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 											<tbody>
 												<tr>
-													<Col span={12}>
-														<td className="tr"><FormattedMessage id="device name"/> ：</td>
-														<td className="tl">{item.name ? item.name : '无'}</td>
-													</Col>
+													<a className={styles.text}><FormattedMessage id="device name"/> ：</a>
+													<td className="tl">{item.name ? item.name : '无'}</td>
 												</tr>
 												<tr>
 													<a className={styles.text}><FormattedMessage id="install address"/> ：</a>
@@ -212,7 +210,7 @@ export default class extends Component {
 														<td className="tl">{item.door1}</td>
 													</Col>
 													<Col span={12}>	
-														<td className="tl"><FormattedMessage id="RSSI"/>：</td>
+														<a className={styles.text2}><FormattedMessage id="RSSI"/>：</a>
 														<td className="tl"><Signal width={item.rssi}/></td>
 													</Col>
 												</tr>

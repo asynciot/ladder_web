@@ -136,10 +136,9 @@ export default class DoorHistory extends Component {
 		this.getFault()
 	}
 	getFault = () =>{
-		console.log(<FormattedMessage id="Maintenance Report"/>)
 		const { dispatch, location } = this.props;
-		const match = pathToRegexp('/order/:id').exec(location.pathname);
-		let id = match[1];
+		const match = pathToRegexp('/company/order/:id').exec(location.pathname);
+		let id = match[2];
 		getFault({ id, page:1, num:1, }).then((res) => {
 			const list = res.data.list.map((item) => {
 				if(item.type == "2"){
@@ -195,8 +194,8 @@ export default class DoorHistory extends Component {
 	}
 	uploadPicture = (e) =>{
 		const { dispatch, location } = this.props;
-		const match = pathToRegexp('/order/:id').exec(location.pathname);
-		const order_id = match[1];
+		const match = pathToRegexp('/company/order/:id').exec(location.pathname);
+		let id = match[2];
 		var formdata = new FormData()
 		formdata = new window.FormData()
 		formdata.append("file1",this.state.file1)
@@ -242,8 +241,8 @@ export default class DoorHistory extends Component {
 	}
 	postFault = (e) =>{
 		const { dispatch, location } = this.props;
-		const match = pathToRegexp('/order/:id').exec(location.pathname);
-		const order_id = match[1];
+		const match = pathToRegexp('/company/order/:id').exec(location.pathname);
+		let id = match[2];
 		postFault({order_id}).then((res) => {
 			if(res.code == 0){
 				alert("接单成功！")
@@ -339,82 +338,82 @@ export default class DoorHistory extends Component {
 		const { list, } = this.state;
 		return (
 			<div className="content tab-hide">
-				<List>
-					{list.map((item, index) => (
-						<List.Item className={styles.item} key={index} >
-							<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
-								<tbody>
-									<tr>
-										<td className="tr"><FormattedMessage id="fault"/> ：</td>
-										<td className="tl" style={{ width: '200px' }}><FormattedMessage id={'E'+item.code}/></td>
-										<td className="tl" onClick={() => this.info(item)}><FormattedMessage id="Details"/></td>
-									</tr>
-									<tr>
-										<td className="tr"><FormattedMessage id="device ID"/> ：</td>
-										<td className="tl">{item.device_id}</td>
-									</tr>
-									<tr>
-										<td className="tr"><FormattedMessage id="fault"/><FormattedMessage id="type"/> ：</td>
-										<td className="tl" style={{ width: '100px' }}><FormattedMessage id={'O'+item.type}/></td>
-									</tr>
-									<tr>
-										<td className="tr"><FormattedMessage id="device type"/> ：</td>
-										<td className="tl"><FormattedMessage id={item.device_type ||''}/></td>
-									</tr>
-									<tr>
-										<td className="tr"><FormattedMessage id="report time"/> ：</td>
-										<td className="tl">{moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')}</td>
-									</tr>
-									<tr>
-										<td className="tr"><FormattedMessage id="fault duration"/> ：</td>
-										<td className="tl">{item.hour}<FormattedMessage id="H"/>{item.minute}<FormattedMessage id="M"/>{item.second}<FormattedMessage id="S"/></td>
-									</tr>
-									<tr>
-										<td className="tr"><FormattedMessage id="next maintenance"/> ：</td>
-										<td className="tl"><DatePicker title="下次维保时间" disabled={this.state.maintenance} size="large" value={this.state.maintenance_nexttime} onChange={this.onStart} /></td>
-									</tr>
-									<tr>
-										<td className="tr"><FormattedMessage id="next yearly check"/> ：</td>
-										<td className="tl"><DatePicker title="下次年检时间" disabled={this.state.inspection} size="large" value={this.state.inspection_nexttime} onChange={this.onEnd} /></td>
-									</tr>
-									<tr>
-										<Col span="8">
-											<td className="tr"><FormattedMessage id="Report"/> ：</td>
-										</Col>
-										<Col span="16">
+				<div className={styles.ct}>
+					<List>
+						{list.map((item, index) => (
+							<List.Item className={styles.item} key={index} >
+								<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
+									<tbody className={styles.tbody}>
+										<tr>
+											<td className="tr"><FormattedMessage id="fault"/> ：</td>
+											<td className="tl" style={{ width: 'auto' }}><FormattedMessage id={'E'+item.code}/></td>
+											<td className="tl" onClick={() => this.info(item)}><FormattedMessage id="Details"/></td>
+										</tr>
+										<tr>
+											<td className="tr"><FormattedMessage id="device ID"/> ：</td>
+											<td className="tl">{item.device_id}</td>
+										</tr>
+										<tr>
+											<td className="tr"><FormattedMessage id="fault"/><FormattedMessage id="type"/> ：</td>
+											<td className="tl" style={{ width: '100px' }}><FormattedMessage id={'O'+item.type}/></td>
+										</tr>
+										<tr>
+											<td className="tr"><FormattedMessage id="device type"/> ：</td>
+											<td className="tl"><FormattedMessage id={item.device_type ||''}/></td>
+										</tr>
+										<tr>
+											<td className="tr"><FormattedMessage id="report time"/> ：</td>
+											<td className="tl">{moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')}</td>
+										</tr>
+										<tr>
+											<td className="tr"><FormattedMessage id="fault duration"/> ：</td>
+											<td className="tl">{item.hour}<FormattedMessage id="H"/>{item.minute}<FormattedMessage id="M"/>{item.second}<FormattedMessage id="S"/></td>
+										</tr>
+										{/*
+											<tr>
+												<td className="tr"><FormattedMessage id="next maintenance"/> ：</td>
+												<td className="tl"><DatePicker title="下次维保时间" disabled={this.state.maintenance} size="large" value={this.state.maintenance_nexttime} onChange={this.onStart} /></td>
+											</tr>
+											<tr>
+												<td className="tr"><FormattedMessage id="next yearly check"/> ：</td>
+												<td className="tl"><DatePicker title="下次年检时间" disabled={this.state.inspection} size="large" value={this.state.inspection_nexttime} onChange={this.onEnd} /></td>
+											</tr>
+										*/}
+										<tr>
 											<div className={styles.ls}>
 												<TextArea
 													// placeholder="50字以内" 
-													maxlength="50" 
+													maxlength={50}
+													// width={100px}
 													value={this.state.remark}
 													onChange={this.onChange}
-													autosize={{ minRows: 2, maxRows: 8 }}/>,
+													autosize={{ minRows: 2, maxRows: 8 }}/>
 											</div>
-										</Col>	
-									</tr>
-								</tbody>
-							</table>
-						</List.Item>
-					))}
-				</List>
-				<Row gutter={40}>
-					<Col span={12} >
-						<img className={styles.icon} id="beforeShow" src={require('../../assets/icon/故障报修1.png')} />
-						<a className={styles.icon1}><FormattedMessage id="photo before treating"/></a>
-						<input accept="image/*" className={styles.input} type="file" id='upload1' onChange={this.upFault}/>
-					</Col>
-					<Col span={12} >
-						<img className={styles.icon} id="afterShow" src={require('../../assets/icon/系统故障.png')} />
-						<a className={styles.icon1}><FormattedMessage id="photo after treating"/></a>
-						<input accept="image/*" className={styles.input} type="file" id='upload2' onChange={this.upFinish}/>
-					</Col>
-					<Col xs={{ span: 12 }} sm={{ span: 18 }} md={{ span: 16 }} className={styles.btn1}>
-						<Button disabled={this.state.disable} onClick={() => this.postFault()} type="primary" style={{ width: '100%' }} ><FormattedMessage id="receive"/></Button>
-					</Col>
-					<Col xs={{ span: 12 }} sm={{ span: 18 }} md={{ span: 16 }} className={styles.btn1}>
-						<Button disabled={this.state.disable1} onClick={(event) => {this.uploadPicture(event)}} type="primary" style={{ width: '100%' }} ><FormattedMessage id="complete"/></Button>
-					</Col>
-				</Row>
+										</tr>
+									</tbody>
+								</table>
+							</List.Item>
+						))}
+					</List>
+					<Row gutter={40}>
+						<Col span={12} >
+							<img className={styles.icon} id="beforeShow" src={require('../../assets/icon/故障报修1.png')} />
+							<a className={styles.icon1}><FormattedMessage id="photo before treating"/></a>
+							<input accept="image/*" className={styles.input} type="file" id='upload1' onChange={this.upFault}/>
+						</Col>
+						<Col span={12} >
+							<img className={styles.icon} id="afterShow" src={require('../../assets/icon/系统故障.png')} />
+							<a className={styles.icon1}><FormattedMessage id="photo after treating"/></a>
+							<input accept="image/*" className={styles.input} type="file" id='upload2' onChange={this.upFinish}/>
+						</Col>
+						<Col xs={{ span: 12 }} sm={{ span: 18 }} md={{ span: 16 }} className={styles.btn1}>
+							<Button disabled={this.state.disable} onClick={() => this.postFault()} type="primary" style={{ width: '100%' }} ><FormattedMessage id="receive"/></Button>
+						</Col>
+						<Col xs={{ span: 12 }} sm={{ span: 18 }} md={{ span: 16 }} className={styles.btn1}>
+							<Button disabled={this.state.disable1} onClick={(event) => {this.uploadPicture(event)}} type="primary" style={{ width: '100%' }} ><FormattedMessage id="complete"/></Button>
+						</Col>
+					</Row>
+				</div>
 			</div>
 		);
 	}

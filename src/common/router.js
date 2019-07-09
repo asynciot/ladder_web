@@ -300,7 +300,7 @@ export const getRouterData = (app) => {
 			name2: 'Manage Order',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/WorkOrder')),
 		},
-		'/order/:id': {
+		'/company/order/:id': {
 			name: '工单详情',
 			name2: 'Order Details',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/Fault')),

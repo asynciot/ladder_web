@@ -29,14 +29,30 @@ export default class extends Component {
 				var list = res.data.list[0]
 				const install_addr = res.data.list[0].install_addr
 				const device_name = res.data.list[0].device_name
-				const maintenance_nexttime = res.data.list[0].maintenance_nexttime
-				const inspection_nexttime = res.data.list[0].inspection_nexttime
+				let maintenance_nexttime
+				let inspection_nexttime
+				let maintenance_remind
+				let inspection_remind
+				if(res.data.list[0].maintenance_nexttime!=null){
+					maintenance_nexttime = new Date(parseInt(res.data.list[0].maintenance_nexttime))
+				}
+				if(res.data.list[0].inspection_nexttime!=null){
+					inspection_nexttime = new Date(parseInt(res.data.list[0].inspection_nexttime))
+				}
+				if(res.data.list[0].maintenance_remind!=null){
+					maintenance_remind = res.data.list[0].maintenance_remind/(24*3600*1000)
+				}
+				if(res.data.list[0].inspection_remind!=null){
+					inspection_remind = res.data.list[0].inspection_remind/(24*3600*1000)
+				}
 				this.setState({
 					list,
 					install_addr,
 					device_name,
-					// maintenance_nexttime,
-					// inspection_nexttime,
+					maintenance_nexttime,
+					inspection_nexttime,
+					maintenance_remind,
+					inspection_remind,
 				})
 			}
 		});
@@ -77,26 +93,25 @@ export default class extends Component {
 	submit = () => {
 		const time1 = this.state.maintenance_remind*24*3600*1000
 		const time2 = this.state.inspection_remind*24*3600*1000
-		console.log(this.state.maintenance_nexttime)
-		this.state.maintenance_nexttime = new Date(this.state.maintenance_nexttime).getTime();
-		this.state.inspection_nexttime = new Date(this.state.inspection_nexttime).getTime();
-		// putFollowInfo({
-		// 	device_id: this.state.device_id,
-		// 	device_name: this.state.device_name,
-		// 	install_addr: this.state.install_addr,
-		// 	maintenance_nexttime: this.state.maintenance_nexttime,
-		// 	inspection_nexttime: this.state.inspection_nexttime,
-		// 	maintenance_remind: time1,
-		// 	inspection_remind: time2,
-		// }).then((res) => {
-		// 	if (res.code === 0) {
-		// 		message.success('修改成功', 1, () => {
-		// 			this.props.history.goBack();
-		// 		});
-		// 	} else {
-		// 		message.error('修改失败');
-		// 	}
-		// });
+		const maintenance_nexttime = new Date(this.state.maintenance_nexttime).getTime();
+		const inspection_nexttime = new Date(this.state.inspection_nexttime).getTime();
+		putFollowInfo({
+			device_id: this.state.device_id,
+			device_name: this.state.device_name,
+			install_addr: this.state.install_addr,
+			maintenance_nexttime: maintenance_nexttime,
+			inspection_nexttime: inspection_nexttime,
+			maintenance_remind: time1,
+			inspection_remind: time2,
+		}).then((res) => {
+			if (res.code === 0) {
+				message.success('修改成功', 1, () => {
+					this.props.history.goBack();
+				});
+			} else {
+				message.error('修改失败');
+			}
+		});
 	}
 	remove = () => {
 		const { dispatch, location,match } = this.props;
@@ -156,15 +171,6 @@ export default class extends Component {
 					>
 						<FormattedMessage className={styles.fontsize} id="early remind (Days)"/>
 					</InputItem>
-					<InputItem
-						disabled={true}
-						onChange={value => this.onChange(value, 'maintenance_lasttime')}
-						className={styles.center}
-						labelNumber={7}
-						value={list.maintenance_lasttime ? moment(parseInt(list.maintenance_lasttime)).format('YYYY-MM-DD HH:mm:ss') : ' '}
-					>
-						<FormattedMessage id="last maintenance"/>
-					</InputItem>
 					<DatePicker
 						value={this.state.inspection_nexttime}
 						onChange={this.onEnd}
@@ -178,15 +184,6 @@ export default class extends Component {
 						labelNumber={7}
 					>
 						<FormattedMessage id="early remind (Days)"/>
-					</InputItem>
-					<InputItem
-						disabled={true}
-						onChange={value => this.onChange(value, 'inspection_lasttime')}
-						className={styles.center}
-						labelNumber={7}
-						value={list.inspection_lasttime ? moment(parseInt(list.inspection_lasttime)).format('YYYY-MM-DD HH:mm:ss') : ' '}
-					>
-						<FormattedMessage id="last yearly check"/>
 					</InputItem>
 					<Row gutter={5}>	
 						<Col span={12}>

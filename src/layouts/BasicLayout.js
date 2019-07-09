@@ -111,7 +111,7 @@ class BasicLayout extends React.PureComponent {
 			const match = pathToRegexp('/:name/:id/:sub?/:end?').exec(pathname);
 			if (match && match[3]) {
 				let path = `/${match[1]}/:id/${match[3]}`;
-				if (match[2] === 'statistics' || match[2] === 'follow' || match[2] === 'door' || match[2] === 'speed' || match[2] === 'electric'|| match[2] === 'params') {
+				if (match[2] === 'statistics' || match[2] === 'follow' || match[2] === 'door' || match[2] === 'speed' || match[2] === 'electric'|| match[2] === 'params'|| match[2] === 'order') {
 					path = `/${match[1]}/${match[2]}/:id`;
 				}
 				if (match[3] === 'params') {
@@ -132,6 +132,9 @@ class BasicLayout extends React.PureComponent {
 				if (match[2] === "add") {
 					path = `/company/add`
 				}
+				// if (match[1] === "order") {
+				// 	path = `/order/:id`
+				// }
 				if (match[2] === "followdoor") {
 					path = `/company/followdoor/all/`
 				}

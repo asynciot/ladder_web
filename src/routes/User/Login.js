@@ -67,91 +67,90 @@ export default class Login extends Component {
 	}
 	componentDidMount() {
 	}
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
+	componentWillUnmount() {
+		clearInterval(this.interval);
+	}
     changeLang = () => {
-    if (this.language=='简体中文'){
-		this.language='English';
-		this.username='Username';
-		this.password='Password';
-		this.rem='Remember';
-		this.login='Login';
-		this.register='Register'
-		this.forget='Forgot?'
-		this.agree='Agree to'
-		this.term='Terms of Service'
-		this.num='Phone or Personal ID'
-		this.input='Please input '
-		window.localStorage.setItem("language",'en');
+		if (this.language=='简体中文'){
+			this.language='English';
+			this.username='Username';
+			this.password='Password';
+			this.rem='Remember';
+			this.login='Login';
+			this.register='Register'
+			this.forget='Forgot?'
+			this.agree='Agree to'
+			this.term='Terms of Service'
+			this.num='Phone or Personal ID'
+			this.input='Please input '
+			window.localStorage.setItem("language",'en');
+		}else if (this.language=='English'){
+			this.language='简体中文';
+			this.username='账号';
+			this.password='密码';
+			this.rem='记住密码';
+			this.login='登录';
+			this.register='注册'
+			this.forget='忘记密码'
+			this.agree='同意'
+			this.term='服务条款'
+			this.num='手机号或个人编号'
+			this.input='请输入'
+			window.localStorage.setItem("language",'zh');
 		}
-	else if (this.language=='English'){
-		this.language='简体中文';
-		this.username='账号';
-		this.password='密码';
-		this.rem='记住密码';
-		this.login='登录';
-		this.register='注册'
-		this.forget='忘记密码'
-		this.agree='同意'
-		this.term='服务条款'
-		this.num='手机号或个人编号'
-		this.input='请输入'
-		window.localStorage.setItem("language",'zh');
-		}
-	this.forceUpdate()
-  }
-  showModal = (e) => {
-    e.preventDefault();
-    Modal.info({
-      title: (window.localStorage.getItem("language")=='en') ? 'This is the agreement clause':'这个是协议条款',
-      content: (
-        <div>
-          <p>这个是协议条款</p>
-          <p>这个是协议条款</p>
-        </div>
-      ),
-      okText: (window.localStorage.getItem("language")=='en') ? 'OK':'确定',
-      onOk() {},
-    });
-  }
-  handleSubmit = (e) => {
+		this.forceUpdate()
+	}
+	showModal = (e) => {
+		e.preventDefault();
+		Modal.info({
+			title: (window.localStorage.getItem("language")=='en') ? 'This is the agreement clause':'这个是协议条款',
+			content: (
+				<div>
+					<p>这个是协议条款</p>
+					<p>这个是协议条款</p>
+				</div>
+			),
+			okText: (window.localStorage.getItem("language")=='en') ? 'OK':'确定',
+			onOk() {},
+		});
+	}
+	handleSubmit = (e) => {
 		const { form } = this.props
 		if(this.state.checkList[0].op == true){
 			window.localStorage.setItem('u',form.getFieldValue('username'))
 			window.localStorage.setItem('p',form.getFieldValue('password'))
 		}
-    e.preventDefault();
-    form.validateFields({ force: true },
-      (err, values) => {
-        if (!err) {
-          this.props.dispatch({
-            type: 'login/login',
-            payload: {
-              ...values,
-            },
-          });
-        }
-      }
-    );
-  }
-  emitEmpty = () => {
-    this.props.form.resetFields('username');
-  }
+		e.preventDefault();
+		form.validateFields({ force: true },
+			(err, values) => {
+				if (!err) {
+					this.props.dispatch({
+						type: 'login/login',
+						payload: {
+							...values,
+						},
+					});
+				}
+			}
+		);
+	}
+	emitEmpty = () => {
+		this.props.form.resetFields('username');
+	}
 	goresetting = () => {
 		const { history } = this.props;
 		history.push('/resetting');
 	};
-  renderMessage = (message) => {
-    return (
-      <Alert
-        style={{ marginBottom: 24 }}
-        message={message}
-        type="error"
-        showIcon
-      />
-    );
-  }
+	renderMessage = (message) => {
+		return (
+			<Alert
+				style={{ marginBottom: 24 }}
+				message={message}
+				type="error"
+				showIcon
+			/>
+		);
+	}
 	test = () =>{
 		this.state.checkList[0].op = !this.state.checkList[0].op
 		window.localStorage.setItem('rem',this.state.checkList[0].op)
