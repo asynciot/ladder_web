@@ -4,11 +4,11 @@ import { connect } from 'dva';
 import _ from 'lodash';
 import base64url from 'base64url';
 import { Debounce } from 'lodash-decorators/debounce';
-import { Row, Col, Button, Spin, DatePicker, Input, Modal, } from 'antd';
-import { Picker, List, Tabs,  Card, } from 'antd-mobile';
+import { Row, Col, Button, Spin, DatePicker, Input, } from 'antd';
+import { Picker, List, Tabs,  Card, Modal, } from 'antd-mobile';
 import classNames from 'classnames';
 import styles from './Fault.less';
-import {getFault, postFinish, postFault, getDispatch } from '../../services/api';
+import {getFault, postFinish, postFault, } from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import c1 from '../../assets/fault/c1.png';
 import c2 from '../../assets/fault/c2.png';
@@ -57,6 +57,8 @@ import c66 from '../../assets/fault/c66.png';
 import c82 from '../../assets/fault/c82.png';
 import c114 from '../../assets/fault/c114.png';
 import c178 from '../../assets/fault/c178.png';
+
+const alert = Modal.alert;
 var _val = ""
 var dispatch_id = 0
 const { TextArea } = Input;
@@ -138,7 +140,7 @@ export default class DoorHistory extends Component {
 	getFault = () =>{
 		const { dispatch, location } = this.props;
 		const match = pathToRegexp('/company/order/:id').exec(location.pathname);
-		let id = match[2];
+		const id = match[1];
 		getFault({ id, page:1, num:1, }).then((res) => {
 			const list = res.data.list.map((item) => {
 				if(item.type == "2"){
@@ -221,10 +223,14 @@ export default class DoorHistory extends Component {
 				body: formdata
 			}).then(res=> { return res.json()}).then(json=>{
 				if(json.code == 0){
-					alert("上传成功")
+					alert('提示','上传成功',[
+						{ text: '确认',},
+					]);
 					this.props.history.push(`/company/work-order`);
 				}else{
-					alert("上传失败")
+					alert('提示', '上传失败', [
+						{ text: '确认',},
+					]);
 				}
 			})
 		}

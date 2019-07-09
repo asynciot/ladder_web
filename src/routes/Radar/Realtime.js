@@ -142,6 +142,9 @@ export default class DoorHistory extends Component {
 		buffer:[],
 		historyEvents:[],
 		id:0,
+		install:'',
+		device_name:'',
+		IMEI:'',
 		threshold:40,
 		interval:50,
 		duration:300,
@@ -305,26 +308,20 @@ export default class DoorHistory extends Component {
 				websock=null
 			}
 			this.initWebsocket()
-			const device_id = this.state.id
-			getFollowDevices({device_id}).then((res)=>{
-				const op = 'open';
-				const IMEI = res.data.list[0].IMEI;
-				const interval = this.state.interval;
-				const threshold = this.state.threshold;
-				const duration = this.state.duration;
-				const device_type = '15';
-				const type = '0';
-				let a=0;
-				const b=5;
-				var intevalT = null;
-				postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {
-					if(res.code == 0){
-						alert("请不要离开当前页面，等待数据传输");
-					}else if(res.code == 670){
-						alert("当前设备已被人启动监控")
-					}
-				});
-			})
+			const op = 'open';
+			const IMEI = this.state.IMEI;
+			const interval = this.state.interval;
+			const threshold = this.state.threshold;
+			const duration = this.state.duration;
+			const device_type = '15';
+			const type = '0';
+			postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {
+				if(res.code == 0){
+					alert("请不要离开当前页面，等待数据传输");
+				}else if(res.code == 670){
+					alert("当前设备已被人启动监控")
+				}
+			});
 		}else{
 			websock.close()
 			this.forceUpdate()
@@ -374,19 +371,36 @@ export default class DoorHistory extends Component {
 			}
 			show.updateTime = res.data.list[0].t_update
 		});
-		if(this.props.location.state.type == '1'){
+		getFollowDevices({device_id}).then((res)=>{
+			this.setState({
+				IMEI:res.data.list[0].IMEI,
+				install:res.data.list[0].install_addr,
+				device_name:res.data.list[0].device_name,
+				device_model:res.data.list[0].device_model,
+			})
+		})
+		if(this.state.device_model == '1'){
 			getDoorData({device_id,num:1,page:1,type:4100}).then((res) => {
-				let buffer = []
-				buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
-				const hex = this.buffer2hex(buffer)
-				this.state.doorWidth =parseInt((hex[26] + hex[27]), 16);
+				if(res.code == 0){
+					let buffer = []
+					buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
+					const hex = this.buffer2hex(buffer)
+					this.setState({
+						doorWidth:parseInt((hex[26] + hex[27]), 16),
+					})
+				}
 			});
 		}else{
 			getDoorData({device_id,num:1,page:1,type:4101}).then((res) => {
-				let buffer = []
-				buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
-				const hex = this.buffer2hex(buffer)
-				this.state.doorWidth =parseInt((hex[14] + hex[15]), 16);
+				if(res.code == 0){
+					let buffer = []
+					buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
+					const hex = this.buffer2hex(buffer)
+					this.setState({
+						doorWidth:parseInt((hex[14] + hex[15]), 16),
+					})
+					console.log(this.state.doorWidth)
+				}
 			});
 		}
 		this.setAnimation();
@@ -838,7 +852,7 @@ export default class DoorHistory extends Component {
 					</Modal>
 					<Row type="flex" justify="center" align="middle">
 						<Col span={18}>
-							<p className={styles.shishi}><FormattedMessage id="Realtime:"/>:</p>
+							<p className={styles.shishi}><FormattedMessage id="Realtime:"/></p>
 						</Col>
 						<Col span={6}>
 							<Switch
@@ -862,6 +876,16 @@ export default class DoorHistory extends Component {
 								className={classNames(styles.door)}
 							>
 								<section>
+									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}><FormattedMessage id="install address"/>：<i className={styles.status}>{this.state.install}</i>
+									</p>
+									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}><FormattedMessage id="device name"/>：<i className={styles.status}>{this.state.device_name}</i>
+									</p>
 									<p><FormattedMessage id="Door coordinate："/> <i className={styles.status}>{show.position || show.position === 0 ? show.position : '0'}</i>
 									</p>
 									<p><FormattedMessage id="Door current："/> <i className={styles.status}>{show.current} A</i>
@@ -906,8 +930,7 @@ export default class DoorHistory extends Component {
 										  justifyContent: 'flex-start',
 										}}
 									>
-										<FormattedMessage id="Last update time"/> ：
-										<i className={styles.status}>{moment(show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
+										<FormattedMessage id="Last update time"/> ：<i className={styles.status}>{moment(show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
 									</p>
 								</section>
 							</Col>

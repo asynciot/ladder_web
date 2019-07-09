@@ -420,7 +420,9 @@ export default class Home extends Component {
 							}
 						</Item>
 					</List>
-					<Button onClick={this.onpress} type="primary" style={{ width: '100%' }}><FormattedMessage id="Location clock"/></Button>
+					{/*
+						<Button onClick={this.onpress} type="primary" style={{ width: '100%' }}><FormattedMessage id="Location clock"/></Button>
+					*/}	
 				</div>
 			</div>
 		);

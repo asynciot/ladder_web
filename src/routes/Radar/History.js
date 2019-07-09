@@ -152,11 +152,16 @@ export default class DoorHistory extends Component {
 		this.state.id = match[2];
 		this.getHistory()
 		this.getType()
-  }
+	}
 	getType = () =>{
 		const device_id = this.state.device_id
 		getFollowDevices({ num: 1, page:1, device_type:15, device_id }).then((res) => {
-			this.state.type = res.data.list[0].device_model
+			this.setState({
+				type:res.data.list[0].device_model,
+				IMEI:res.data.list[0].IMEI,
+				install:res.data.list[0].install_addr,
+				device_name:res.data.list[0].device_name,
+			})
 		})
 	}
 	getHistory = () => {		
@@ -531,48 +536,48 @@ export default class DoorHistory extends Component {
 		const id = this.props.match.params.id;
 		this.props.history.push(`/company/door/${id}`);
 	}
-  render() {
-    const { device: { events, view, property }} = this.props;
-    const id = this.props.match.params.id;
-    const width = parseInt((window.innerWidth - 100) / 2);
-    let type = null
-    if (property.Model) {
-      property.Model.value == "NSFC01-02T" ? type = 1 : type = 2
-    } else {
-      type = 1
-    }
-    let statusName = '无';
-    if (this.state.show.openKeep) {
-      statusName = '开门到位维持';
-    }
-    if (this.state.show.closeKeep) {
-      statusName = '关门到位维持';
-    }
-    if (this.state.show.open) {
-      statusName = '正在开门';
-    }
-    if (this.state.show.close) {
-      statusName = '正在关门';
-    }
-    if (this.state.show.stop) {
-      statusName = '停止输出';
-    }
-    return (
-      <div className="content tab-hide">
-        <div className={styles.content}>
-          <Modal
-            visible={this.state.modal}
-            transparent
-            maskClosable={false}
-            title="二维码"
-            footer={[{ text: '确定', onPress: () => this.setState({modal: false}) }] }
-            wrapProps={{ onTouchStart: this.onWrapTouchStart }}
-          >
-            <div className="qrcode">
-              <Spin className="qrcode-loading"/>
-              <img src={this.state.src} alt="code"/>
-            </div>
-          </Modal>
+	render() {
+		const { device: { events, view, property }} = this.props;
+		const id = this.props.match.params.id;
+		const width = parseInt((window.innerWidth - 100) / 2);
+		let type = null
+		if (property.Model) {
+			property.Model.value == "NSFC01-02T" ? type = 1 : type = 2
+		} else {
+			type = 1
+		}
+		let statusName = '无';
+		if (this.state.show.openKeep) {
+			statusName = '开门到位维持';
+		}
+		if (this.state.show.closeKeep) {
+			statusName = '关门到位维持';
+		}
+		if (this.state.show.open) {
+			tatusName = '正在开门';
+		}
+		if (this.state.show.close) {
+			statusName = '正在关门';
+		}
+		if (this.state.show.stop) {
+			statusName = '停止输出';
+		}
+		return (
+			<div className="content tab-hide">
+				<div className={styles.content}>
+					<Modal
+						visible={this.state.modal}
+						transparent
+						maskClosable={false}
+						title="二维码"
+						footer={[{ text: '确定', onPress: () => this.setState({modal: false}) }] }
+						wrapProps={{ onTouchStart: this.onWrapTouchStart }}
+					>
+						<div className="qrcode">
+							<Spin className="qrcode-loading"/>
+							<img src={this.state.src} alt="code"/>
+						</div>
+					</Modal>
 					<Row type="flex" justify="center" align="middle">
 						<Col span={24}>
 							<List style={{ backgroundColor: 'white' }} className="picker-list" onClick={() => this.props.history.push(`/events/door/${id}`)}>
@@ -580,132 +585,142 @@ export default class DoorHistory extends Component {
 							</List>
 						</Col>
 					</Row>
-          <div className={classNames(styles.tab, view == 0 ?'tab-active' : 'tab-notactive')}>
-            <Row
-              type="flex"
-              justify="space-around"
-              align="middle"
-              className={styles.ladder}
-            >
-              <Col
-                span={24}
-                className={classNames(styles.door)}
-              >
-                <section>
-                  <p><FormattedMessage id="Door coordinate"/> ：<i className={styles.status}>{this.state.show.position || this.state.show.position === 0 ? this.state.show.position : '0'}</i>
-                  </p>
-                  <p><FormattedMessage id="Door current"/> ：<i className={styles.status}>{`${this.state.show.current} A`}</i>
-                  </p>
-                  <p><FormattedMessage id="Door state"/> ：<i className={styles.status}>{statusName || '无'}</i>
-                  </p>
-                  <p><FormattedMessage id="Number of opening"/> ：<i className={styles.status}>{this.state.show.times || '无'}</i>
-                  </p>
-                  <p><FormattedMessage id="Opening signal"/> ：<i className={styles.status}>{this.state.show.openIn ? '开' : '关'}</i>
-                  </p>
-                  <p><FormattedMessage id="Closing signal"/> ：<i className={styles.status}>{this.state.show.closeIn ? '开' : '关'}</i>
-                  </p>
-                  <p><FormattedMessage id="Opening arrival signal"/> ：<i className={styles.status}>{this.state.show.openToOut ? '开' : '关'}</i>
-                  </p>
-                  <p><FormattedMessage id="Closing arrival signal"/> ：<i className={styles.status}>{this.state.show.closeToOut ? '开' : '关'}</i>
-                  </p>
-                  <p style={{
-                    width: '100%',
-                    justifyContent: 'flex-start',
-                  }}
-                  >
-                    <i style={{
-                      flexShrink: 0,
-                    }}
-                    ><FormattedMessage id="Alert"/> ：
-                    </i>
-                    <i className={styles.status}>{alertName(this.state.show)}</i>
-                  </p>
-                  <p
-                    style={{
-                      width: '100%',
-                      justifyContent: 'flex-start',
-                    }}
-                  >
-                    <FormattedMessage id="Last update time"/> ：
-                    <i className={styles.status}>{moment(this.state.show.nowtime).format('YYYY-MM-DD HH:mm:ss')}</i>
-                  </p>
-                </section>
-              </Col>
-            </Row>
-            <Row
-              type="flex"
-              justify="space-around"
-              align="middle"
-              className={styles.ladder}
-            >
-              <Col
-                span={21}
-              >
-                <div className={styles.shaft}>
-                  <section>
-                    <div />
-                  </section>
-                  <section className={styles.noborder}>
-                    <div />
-                  </section>
-                  <p />
-                  <div className={styles.shaftinfo}>
-                    <p><FormattedMessage id="Closing arrival input"/>
-                      <i
-                        className={classNames(styles.signal, this.state.show.closeTo
-                        ? styles.ready
-                        : '')}
-                      />
-                    </p>
-                    <p><FormattedMessage id="Opening arrival input"/>
-                      <i
-                        className={classNames(styles.signal, this.state.show.openTo
-                        ? styles.ready
-                        : '')}
-                      />
-                    </p>
-                  </div>
-                </div>
-                <div className={styles.doors}>
-                  <TweenOne
-                    animation={this.state.leftAnimation}
-                    // updateReStart={false}
-                    style={{ left: `-${(this.state.show.position / this.state.doorWidth) * 50}%` }}
-                    className={styles.doorbox}
-                  />
-                  <section className={styles.doorstitle}>
-                    <div
-                      className={this.state.show.door
-                      ? styles.screen
-                      : ''}
-                    />
-                    <p><FormattedMessage id="Light curtain signal"/></p>
-                  </section>
-                  <TweenOne
-                    animation={this.state.rightAnimation}
-                    style={{ right: `-${(this.state.show.position / this.state.doorWidth) * 50}%` }}
-                    className={styles.doorbox}
-                  />
-                </div>
-              </Col>
-            </Row>
-          </div>
-          <div className={classNames(styles.tab, view == 1 ?'tab-active' : 'tab-notactive')}>
-            <Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>	            
-            	<Col xs={{ span: 24 }} md={{ span: 48 }}>
+					<div className={classNames(styles.tab, view == 0 ?'tab-active' : 'tab-notactive')}>
+						<Row
+							type="flex"
+							justify="space-around"
+							align="middle"
+							className={styles.ladder}
+						>
+							<Col
+								span={24}
+								className={classNames(styles.door)}
+							>
+								<section>
+									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}><FormattedMessage id="install address"/>：<i className={styles.status}>{this.state.install}</i>
+									</p>
+									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}><FormattedMessage id="device name"/>：<i className={styles.status}>{this.state.device_name}</i>
+									</p>
+									<p><FormattedMessage id="Door coordinate："/><i className={styles.status}>{this.state.show.position || this.state.show.position === 0 ? this.state.show.position : '0'}</i>
+									</p>
+									<p><FormattedMessage id="Door current："/><i className={styles.status}>{`${this.state.show.current} A`}</i>
+									</p>
+									<p><FormattedMessage id="Number of opening:"/><i className={styles.status}>{this.state.show.times || '无'}</i>
+									</p>
+									<p><FormattedMessage id="Opening signal："/><i className={styles.status}>{this.state.show.openIn ? '开' : '关'}</i>
+									</p>
+									<p><FormattedMessage id="Closing signal："/><i className={styles.status}>{this.state.show.closeIn ? '开' : '关'}</i>
+									</p>
+									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}><FormattedMessage id="Door state"/>：<i className={styles.status}>{statusName || '无'}</i>
+									</p>
+									{/*<p><FormattedMessage id="Opening arrival signal:"/><i className={styles.status}>{this.state.show.openToOut ? '开' : '关'}</i>
+									</p>
+									<p><FormattedMessage id="Closing arrival signal:"/><i className={styles.status}>{this.state.show.closeToOut ? '开' : '关'}</i>
+									</p>*/}
+									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}
+									>
+										<i style={{
+											flexShrink: 0,
+										}}
+										><FormattedMessage id="Alert"/> ：
+										</i>
+										<i className={styles.status}>{alertName(this.state.show)}</i>
+									</p>
+									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}
+									>
+										<FormattedMessage id="Last update time"/> ：
+										<i className={styles.status}>{moment(this.state.show.nowtime).format('YYYY-MM-DD HH:mm:ss')}</i>
+									</p>
+								</section>
+							</Col>
+						</Row>
+						<Row
+							type="flex"
+							justify="space-around"
+							align="middle"
+							className={styles.ladder}
+						>
+							<Col span={21}>
+								<div className={styles.shaft}>
+									<section>
+										<div />
+									</section>
+									<section className={styles.noborder}>
+										<div />
+									</section>
+									<p />
+									<div className={styles.shaftinfo}>
+										<p><FormattedMessage id="Closing arrival input"/>
+											<i
+												className={classNames(styles.signal, this.state.show.closeTo
+												? styles.ready
+												: '')}
+											/>
+										</p>
+										<p><FormattedMessage id="Opening arrival input"/>
+											<i
+												className={classNames(styles.signal, this.state.show.openTo
+												? styles.ready
+												: '')}
+											/>
+										</p>
+									</div>
+								</div>
+								<div className={styles.doors}>
+									<TweenOne
+										animation={this.state.leftAnimation}
+										// updateReStart={false}
+										style={{ left: `-${(this.state.show.position / this.state.doorWidth) * 50}%` }}
+										className={styles.doorbox}
+									/>
+									<section className={styles.doorstitle}>
+										<div
+											className={this.state.show.door
+											? styles.screen
+											: ''}
+										/>
+										<p><FormattedMessage id="Light curtain signal"/></p>
+									</section>
+									<TweenOne
+										animation={this.state.rightAnimation}
+										style={{ right: `-${(this.state.show.position / this.state.doorWidth) * 50}%` }}
+										className={styles.doorbox}
+									/>
+								</div>
+							</Col>
+						</Row>
+					</div>
+					<div className={classNames(styles.tab, view == 1 ?'tab-active' : 'tab-notactive')}>
+						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>	            
+							<Col xs={{ span: 24 }} md={{ span: 48 }}>
 								<div id = "OpenIn" style={{ width: 320 , height: 80 }}></div>              
-            	</Col>	            	            
-            </Row>
+							</Col>	            	            
+						</Row>
 						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>	            
 							<Col xs={{ span: 24 }} md={{ span: 48 }}>
 								<div id = "OpenTo" style={{ width: 320 , height: 80 }}></div>              
 							</Col>	            	            
 						</Row>
-            <Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
-            	<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
-            			<div id = "CloseIn" style={{ width: 320 , height: 80 }}></div>
-            	</Col>
-            </Row>
+						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
+							<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
+								<div id = "CloseIn" style={{ width: 320 , height: 80 }}></div>
+							</Col>
+						</Row>
 						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
 							<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
 									<div id = "Decelerate" style={{ width: 320 , height: 80 }}></div>
@@ -723,18 +738,18 @@ export default class DoorHistory extends Component {
 						</Row>
 						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
 						 	<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
-						 			<div id = "Speed" style={{ width: 320 , height: 240 }}></div>
+								<div id = "Speed" style={{ width: 320 , height: 240 }}></div>
 						 	</Col>
 						</Row> 
-          </div>
-          <div className={styles.btns}>
-            {/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}
-            <section onClick={this.goDetail(type == 2 ? 'params/2': 'params/1')}><FormattedMessage id="Menu"/></section>
-            <section onClick={this.goQrcode}><FormattedMessage id="QR Code"/></section>
+					</div>
+					<div className={styles.btns}>
+						{/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}
+						<section onClick={this.goDetail(type == 2 ? 'params/2': 'params/1')}><FormattedMessage id="Menu"/></section>
+						<section onClick={this.goQrcode}><FormattedMessage id="QR Code"/></section>
 						<section onClick={this.gohistory}><FormattedMessage id="History fault"/></section>
-          </div>
-        </div>
-      </div>
-    );
-  }
+					</div>
+				</div>
+			</div>
+		);
+	}
 }

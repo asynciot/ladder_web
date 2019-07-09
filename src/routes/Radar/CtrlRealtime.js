@@ -45,28 +45,28 @@ const direction = {
 const parseStatus= (event) => {
 	let statusName = '';
 	if ((event&(0x01)) == 1) {
-		statusName+= '自动,';
+		statusName+= '自动';
 	}
 	if ((event&(0x02))>>1 == 1) {
-		statusName+= '检修,';
+		statusName+= '检修';
 	}
 	if ((event&(0x04))>>2 == 1) {
-		statusName+= '司机,';
+		statusName+= '司机';
 	}
 	if ((event&(0x08))>>3 == 1) {
-		statusName+= '消防,';
+		statusName+= '消防';
 	}
 	if ((event&(0x10))>>4 == 1) {
-		statusName+= '锁体,';
+		statusName+= '锁体';
 	}
 	if ((event&(0x20))>>5 == 1) {
-		statusName+= '故障,';
+		statusName+= '故障';
 	}
 	if ((event&(0x40))>>6 == 1) {
-		statusName+= '超载,';
+		statusName+= '超载';
 	}
 	if ((event&(0x80))>>7 == 1) {
-		statusName+= '满载,';
+		statusName+= '满载';
 	}
 	return statusName
 }
@@ -740,17 +740,32 @@ export default class CtrlRealtime extends Component {
 								className={classNames(styles.door)}
 							>
 								<section>
-									<p><FormattedMessage id="Realtime:"/> <i className={styles.status}>{show.run ? '运行':'停车'}</i>
+									<p style={{
+											width: '40%',
+											justifyContent: 'flex-start',
+										}}><FormattedMessage id="Realtime:"/> <i className={styles.status}>{show.run ? '运行':'停车'}</i>
 									</p>
-									<p><FormattedMessage id="Opening arrival signal:"/><i className={styles.status}>{show.open ? '动作':'不动作'}</i>
+									<p  style={{
+											width: '60%',
+											justifyContent: 'flex-start',
+										}}><FormattedMessage id="Opening arrival signal:"/><i className={styles.status}>{show.open ? '动作':'不动作'}</i>
 									</p>
-									<p><FormattedMessage id="Elevator mode:"/><i className={styles.status}>{parseModel(show.model)}</i>
+									<p style={{
+											width: '40%',
+											justifyContent: 'flex-start',
+										}}><FormattedMessage id="Elevator mode:"/><i className={styles.status}>{parseModel(show.model)}</i>
 									</p>
-									<p><FormattedMessage id="Closing arrival signal:"/><i className={styles.status}>{show.close ? '动作':'不动作'}</i>
+									<p style={{
+											width: '60%',
+											justifyContent: 'flex-start',
+										}}><FormattedMessage id="Closing arrival signal:"/><i className={styles.status}>{show.close ? '动作':'不动作'}</i>
 									</p>
-									<p><FormattedMessage id="Door lock circuit:"/><i className={styles.status}>{show.lock ? '通':'断'}</i>
+									<p style={{
+											width: '40%',
+											justifyContent: 'flex-start',
+										}}><FormattedMessage id="Door lock circuit:"/><i className={styles.status}>{show.lock ? '通':'断'}</i>
 									</p>
-									<p><FormattedMessage id="Elevator run speed:"/><i className={styles.status}>{show.speed ? (show.speed/1000):0}m/s</i>
+									<p ><FormattedMessage id="Elevator run speed:"/><i className={styles.status}>{show.speed ? (show.speed/1000):0}m/s</i>
 									</p>
 									<p style={{
 											width: '100%',
