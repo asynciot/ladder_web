@@ -1195,9 +1195,9 @@ export default class CtrlRealtime extends Component {
 							{/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}
 							<section onClick={this.goDetail('params')}><FormattedMessage id="Menu"/></section>
 							<section onClick={this.goQrcode}><FormattedMessage id="QR Code"/></section>
-							<section onClick={this.goDebug}>查看</section>
-							<section onClick={this.gohistory}>历史故障</section>
-							<section onClick={this.gocall}>呼梯</section>
+							<section onClick={this.goDebug}><FormattedMessage id="watch"/></section>
+							<section onClick={this.gohistory}><FormattedMessage id="History fault"/></section>
+							<section onClick={this.gocall}><FormattedMessage id="Call"/></section>
 						</div>
 					</div>
 					<div className={classNames(styles.tab, view == 1 ?'tab-active' : 'tab-notactive')}>

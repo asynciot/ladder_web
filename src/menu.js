@@ -1,5 +1,5 @@
 export const menuB=[{
-				num:1,label: 'P',
+				num:1,label: (window.localStorage.getItem("language")=='en') ? 'P Params':'P组参数',
 				children:[
 				{num:1,label:'Operation enable setting',value:'',visible: true},
 				{num:1,label:'Low speed torque lifting',value:'',visible: true},
@@ -42,7 +42,7 @@ export const menuB=[{
 				{num:1,label:'Retined',value:'',visible: true},
 				{num:1,label:'Retined',value:'',visible: true}]
 				},{
-				num:1,label: 'D',
+				num:1,label: (window.localStorage.getItem("language")=='en') ? 'D Params':'D组参数',
 				children:[
 				{num:10,label:'Closing Start-up Speed',value:'',visible: true},
 				{num:10,label:'Closing High Speed',value:'',visible: true},
@@ -88,7 +88,7 @@ export const menuB=[{
 
 export const menuT = [
 				  {
-				    num:1,label: 'F07',
+				    num:1,label: (window.localStorage.getItem("language")=='en') ? 'F07 Menu':'F07 菜单',
 				    children: [
 				    {num:100,label: 'Closing Start-up Speed',value:'',visible: true},
 					  {num:100,label: 'Closing High Speed',value:'',visible: true},

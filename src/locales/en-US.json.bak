@@ -12,6 +12,7 @@
 	"Work Flow" : "Work Flow",
 	"faultdevices" : "Fault Devices",
 	"Firmware Update" : "Firmware Update",
+	"watch" : "Watch",
 	"E1" : "over-current",
 	"E2" : "Bus over-voltage",
 	"E3" : "Bus under-voltage",
@@ -60,9 +61,8 @@
 	"dE20" : "Galloping protection",
 	"dE40" : "Motor overload",
 	"dE80" : "Output over-current",
-	"O0":"Phone Alert",
-	"O1":"Manual Alert",
-	"O2":"Auto Alert",
+	"O0":"Manual Alert",
+	"O1":"Automatic Alert",
 	
 	
 	

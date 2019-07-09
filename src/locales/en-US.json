@@ -12,6 +12,8 @@
 	"Work Flow" : "Work Flow",
 	"faultdevices" : "Fault Devices",
 	"Firmware Update" : "Firmware Update",
+	"watch" : "Watch",
+	"History fault" : "History Fault",
 	"E1" : "over-current",
 	"E2" : "Bus over-voltage",
 	"E3" : "Bus under-voltage",
