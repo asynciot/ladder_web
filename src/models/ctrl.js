@@ -55,125 +55,125 @@ function hex2b(hex) {
 function parseMenu(buffer) {
   const arr = [];
   const hex = buffer2hex(buffer);
-  const isOpen = { 0: '常开', 1:'常闭' };
-  const isClosed = { 0: '关闭', 1:'开通' };
+  const isOpen = { 0: (window.localStorage.getItem("language")=='en') ? 'Normally Open':'常开', 1:(window.localStorage.getItem("language")=='en') ? 'Normally Closed':'常闭' };
+  const isClosed = { 0: (window.localStorage.getItem("language")=='en') ? 'Close':'关闭', 1: (window.localStorage.getItem("language")=='en') ? 'Open':'开通' };
   const isRoof = { 
-    '00': '未使用',
-    '01':'门 1 开门按钮',
-    '02': '门 1 关门按钮',
-    '03': '司机开关门',
-    '04': '独立按钮',
-    '05': '直驶按钮',
-    '06': '司机换向按钮',
-    '07': '消防钥匙开关',
-    '08': '门转开关',
-    '09': '延时关门',
-    '10': '门 2 开门按钮',
-    '11': '门 2 关门按钮',
-    '12': '医梯开关',
-    '13': '服务层切换 1',
-    '14': '服务层切换 2',
-    '15': '服务层切换 3',
+    '00': (window.localStorage.getItem("language")=='en') ? 'Unused':'未使用',
+    '01': (window.localStorage.getItem("language")=='en') ? 'Door 1 Open Button':'门 1 开门按钮',
+    '02': (window.localStorage.getItem("language")=='en') ? 'Door 1 Close Button':'门 1 关门按钮',
+    '03': (window.localStorage.getItem("language")=='en') ? 'Driver Opens and Closes the Door':'司机开关门',
+    '04': (window.localStorage.getItem("language")=='en') ? 'Independent Button':'独立按钮',
+    '05': (window.localStorage.getItem("language")=='en') ? 'Direct Drive Button':'直驶按钮',
+    '06': (window.localStorage.getItem("language")=='en') ? "Driver's Switch Button":'司机换向按钮',
+    '07': (window.localStorage.getItem("language")=='en') ? 'Fire Key Switch':'消防钥匙开关',
+    '08': (window.localStorage.getItem("language")=='en') ? 'Door Turn Switch':'门转开关',
+    '09': (window.localStorage.getItem("language")=='en') ? 'Delayed Close':'延时关门',
+    '10': (window.localStorage.getItem("language")=='en') ? 'Door 2 Open Button':'门 2 开门按钮',
+    '11': (window.localStorage.getItem("language")=='en') ? 'Door 2 Close Button':'门 2 关门按钮',
+    '12': (window.localStorage.getItem("language")=='en') ? 'Medical Ladder Switch':'医梯开关',
+    '13': (window.localStorage.getItem("language")=='en') ? 'Service Layer Switching 1':'服务层切换 1',
+    '14': (window.localStorage.getItem("language")=='en') ? 'Service Layer Switching 2':'服务层切换 2',
+    '15': (window.localStorage.getItem("language")=='en') ? 'Service Layer Switching 3':'服务层切换 3',
    };
    const isY = { 
-    '00': '未使用',
-    '01': '运行接触器',
-    '02': '封星接触器',
-    '03': '抱闸接触器',
-    '04': '抱闸维持接触器',
-    '05': '消防照明继电器',
-    '06': '消防道基站',
-    '07': '封门继电器',
-    '08': '停电应急救援运行',
-    '09': '门 1 开门输出',
-    '10': '门 1 关门输出',
-    '11': '门 2 开门输出',
-    '12': '门 2 关门输出',
-    '13': '救援蜂鸣输出 1',
+    '00': (window.localStorage.getItem("language")=='en') ? 'Unused':'未使用',
+    '01': (window.localStorage.getItem("language")=='en') ? 'Operating Contactor':'运行接触器',
+    '02': (window.localStorage.getItem("language")=='en') ? 'Sealing Star Contactor':'封星接触器',
+    '03': (window.localStorage.getItem("language")=='en') ? 'Brake Contactor':'抱闸接触器',
+    '04': (window.localStorage.getItem("language")=='en') ? 'Brake Holding Contactor':'抱闸维持接触器',
+    '05': (window.localStorage.getItem("language")=='en') ? 'Fire Lighting Relay':'消防照明继电器',
+    '06': (window.localStorage.getItem("language")=='en') ? 'Fireway Base Station':'消防道基站',
+    '07': (window.localStorage.getItem("language")=='en') ? 'Door-Closing Relay':'封门继电器',
+    '08': (window.localStorage.getItem("language")=='en') ? 'Outage Emergency Rescue Operation':'停电应急救援运行',
+    '09': (window.localStorage.getItem("language")=='en') ? 'Door 1 Open Output':'门 1 开门输出',
+    '10': (window.localStorage.getItem("language")=='en') ? 'Door 1 Close Output':'门 1 关门输出',
+    '11': (window.localStorage.getItem("language")=='en') ? 'Door 2 Open Output':'门 2 开门输出',
+    '12': (window.localStorage.getItem("language")=='en') ? 'Door 2 Close Output':'门 2 关门输出',
+    '13': (window.localStorage.getItem("language")=='en') ? 'Rescue Buzz Output':'救援蜂鸣输出 1',
    };
    const isY1 = { 
-    '00': '未使用',
-    '01': '输出上行到站钟',
-    '02': '输出下行到站钟',
-    '03': '上下行到站钟合并输出',
-    '04': '超载蜂鸣',
-    '05': '消防警铃',
+    '00': (window.localStorage.getItem("language")=='en') ? 'Unused':'未使用',
+    '01': (window.localStorage.getItem("language")=='en') ? 'Output Up-to-Station Clock':'输出上行到站钟',
+    '02': (window.localStorage.getItem("language")=='en') ? 'Output Down-to-Station Clock':'输出下行到站钟',
+    '03': (window.localStorage.getItem("language")=='en') ? 'Up and Down Clock Combining Output':'上下行到站钟合并输出',
+    '04': (window.localStorage.getItem("language")=='en') ? 'Overload Buzzing':'超载蜂鸣',
+    '05': (window.localStorage.getItem("language")=='en') ? 'Fire Alarm Bell':'消防警铃',
    };
    const isCP8 = { 
-    '00': '无信号输出',
-    '01': '液晶输出',
-    '02': '力必拓 IC 卡',
-    '03': '金博 IC 卡',
+    '00': (window.localStorage.getItem("language")=='en') ? 'No Signal Output':'无信号输出',
+    '01': (window.localStorage.getItem("language")=='en') ? 'LCD Output':'液晶输出',
+    '02': (window.localStorage.getItem("language")=='en') ? 'Rio Billiton IC Card':'力必拓 IC 卡',
+    '03': (window.localStorage.getItem("language")=='en') ? 'Kimber IC Card':'金博 IC 卡',
    };
    const isAll = { 
-    '00': '单梯',
-    '01': '并联',
-    '02': '群控',
+    '00': (window.localStorage.getItem("language")=='en') ? 'Single Ladder':'单梯',
+    '01': (window.localStorage.getItem("language")=='en') ? 'Parallel Connection':'并联',
+    '02': (window.localStorage.getItem("language")=='en') ? 'Group Control':'群控',
    };
    const isMaster = { 
-    '00': '副梯',
-    'ff': '主梯',
+    '00': (window.localStorage.getItem("language")=='en') ? 'Auxiliary Ladder':'副梯',
+    'ff': (window.localStorage.getItem("language")=='en') ? 'Main Ladder':'主梯',
    };
    const isClose = { 
-    '00': '关闭',
-    '01': '开通',
+    '00': (window.localStorage.getItem("language")=='en') ? 'Close':'关闭',
+    '01': (window.localStorage.getItem("language")=='en') ? 'Open':'开通',
    };
    const isBox = { 
-    '00': '单操纵箱',
-    '01': '第二操纵箱作为残疾人操纵箱',
-    '02': '第二操纵箱作为后门操纵箱',
+    '00': (window.localStorage.getItem("language")=='en') ? 'Single Control Box':'单操纵箱',
+    '01': (window.localStorage.getItem("language")=='en') ? 'Second Control Box as Disabled Control Box':'第二操纵箱作为残疾人操纵箱',
+    '02': (window.localStorage.getItem("language")=='en') ? 'Second Control Box as Backdoor Control Box':'第二操纵箱作为后门操纵箱',
    };
    const isLayer = { 
-    '00': '单层站召唤',
-    '01': '残疾人层站召唤开通',
-    '02': '后门层站召唤开通',
+    '00': (window.localStorage.getItem("language")=='en') ? 'Single Level Station Call':'单层站召唤',
+    '01': (window.localStorage.getItem("language")=='en') ? 'The Disabled Level Station Calls Open':'残疾人层站召唤开通',
+    '02': (window.localStorage.getItem("language")=='en') ? 'Backdoor Level Station Calls Open':'后门层站召唤开通',
    };
    const isWeight = { 
-    '00': '无效',
-    '01': '轿顶板',
-    '02': '主板',
+    '00': (window.localStorage.getItem("language")=='en') ? 'Invalid':'无效',
+    '01': (window.localStorage.getItem("language")=='en') ? 'Car Roof':'轿顶板',
+    '02': (window.localStorage.getItem("language")=='en') ? 'Main Board':'主板',
    };
    const isJoke = { 
-    '00': '无效',
-    '01': '称重判断',
-    '02': '光幕判断',
-    '03': '轻载开关判断',
+    '00': (window.localStorage.getItem("language")=='en') ? 'Invalid':'无效',
+    '01': (window.localStorage.getItem("language")=='en') ? 'Weighing Judgment':'称重判断',
+    '02': (window.localStorage.getItem("language")=='en') ? 'Light Screen Judgement':'光幕判断',
+    '03': (window.localStorage.getItem("language")=='en') ? 'Judgment of Lightload Switch':'轻载开关判断',
    };
    const isArrive = { 
-    '00': '到站钟一直开启',
-    '01': '到站钟在设置的时间内开启',
-    '02': '到站钟一直关闭',
+    '00': (window.localStorage.getItem("language")=='en') ? 'Arrival Clock Open All the Way':'到站钟一直开启',
+    '01': (window.localStorage.getItem("language")=='en') ? 'Arrival Clock Open in the Set Time':'到站钟在设置的时间内开启',
+    '02': (window.localStorage.getItem("language")=='en') ? 'Arrival Clock close All the Way':'到站钟一直关闭',
    };
    const isVip = { 
-    '00': '未开通',
-    '01': '通过层站召唤按钮启用开通',
-    '02': '通过层站召唤端子启用开通',
-    '03': '通过 IO 板端口启用开通',
+    '00': (window.localStorage.getItem("language")=='en') ? 'Not Open':'未开通',
+    '01': (window.localStorage.getItem("language")=='en') ? 'Enabling Landing Call Button Open':'通过层站召唤按钮启用开通',
+    '02': (window.localStorage.getItem("language")=='en') ? 'Enabling Landing Call Port Open':'通过层站召唤端子启用开通',
+    '03': (window.localStorage.getItem("language")=='en') ? 'Enabling IO Board Port Open':'通过 IO 板端口启用开通',
    };
    const fireSwitch = { 
-    '00': '无效',
-    '01': '层站召唤板端子输入',
-    '02': 'IO 板端子输入',
+    '00': (window.localStorage.getItem("language")=='en') ? 'Invalid':'无效',
+    '01': (window.localStorage.getItem("language")=='en') ? 'Landing Call Board Port Input':'层站召唤板端子输入',
+    '02': (window.localStorage.getItem("language")=='en') ? 'IO Board Port Input':'IO 板端子输入',
    };
    const fireSet = { 
-    '00': '启用消防电梯开关，消防员钥匙开关和消防联动开关输入无效',
-    '01': '启用消防电梯开关和消防联动开关，消防员钥匙开关输入无效',
-    '02': '启用消防电梯开关和消防员钥匙开关，消防联动开关无效',
-    '03': '启用消防电梯开关、消防员钥匙开关、消防联动开关',
+    '00': (window.localStorage.getItem("language")=='en') ? 'Fire elevator switch enabled, fireman key switch and fire link switch invalid input':'启用消防电梯开关，消防员钥匙开关和消防联动开关输入无效',
+    '01': (window.localStorage.getItem("language")=='en') ? 'Enable fire elevator switch and fire linkage switch, the input of fireman key switch is invalid':'启用消防电梯开关和消防联动开关，消防员钥匙开关输入无效',
+    '02': (window.localStorage.getItem("language")=='en') ? 'Fire elevator switch and fireman key switch are activated, fire linkage switch is invalid':'启用消防电梯开关和消防员钥匙开关，消防联动开关无效',
+    '03': (window.localStorage.getItem("language")=='en') ? 'Enable fire elevator switch, fireman key switch, fire linkage switch':'启用消防电梯开关、消防员钥匙开关、消防联动开关',
    };
    const fireMode = { 
-    '00': '系统标配消防模式',
-    '01': '香港消防模式',
+    '00': (window.localStorage.getItem("language")=='en') ? 'System Standard Fire Fighting Mode':'系统标配消防模式',
+    '01': (window.localStorage.getItem("language")=='en') ? 'Hong Kong Fire Fighting Mode':'香港消防模式',
    };
    const fireProcess = { 
-    '00': '不检测抱闸行程开关',
-    '01': '检测左右抱闸行程开关',
-    '02': '检测左抱闸行程开关',
-    '03': '检测右抱闸行程开关',
+    '00': (window.localStorage.getItem("language")=='en') ? 'No Detection of Brake Holding Travel Switch':'不检测抱闸行程开关',
+    '01': (window.localStorage.getItem("language")=='en') ? 'Detection of Left and Right Brake Trip Switch':'检测左右抱闸行程开关',
+    '02': (window.localStorage.getItem("language")=='en') ? 'Detection of Left Brake Trip Switch':'检测左抱闸行程开关',
+    '03': (window.localStorage.getItem("language")=='en') ? 'Detection of Right Brake Trip Switch':'检测右抱闸行程开关',
    };
    const fireAuto = { 
-    '00': '启动运行部检测关门到位',
-    '01': '启动运行检测关门到位，关门不到位禁止电梯 运行',
+    '00': (window.localStorage.getItem("language")=='en') ? 'Not Detect if Closing Arrival When Start Operation':'启动运行部检测关门到位',
+    '01': (window.localStorage.getItem("language")=='en') ? 'Detect if Closing Arrival When Start Operation,Forbid Operation Unless Closing Arrival':'启动运行检测关门到位，关门不到位禁止电梯 运行',
    };
   ctrlMenu.forEach((item) => {
     item
@@ -290,9 +290,9 @@ function parseInfo(event, floors) {
     'lastTime',
   ];
   const obj = {};
-  const model = { '01': '单梯', '10': '并联', '100': '群控', '000': '无' };
-  const status = ['自动', '检修', '司机', '消防', '锁体', '故障', '超载', '满载'];
-  const btn = { '00': '无', '01': '开门', 10: '关门' };
+  const model = { '01': (window.localStorage.getItem("language")=='en') ? 'Single Ladder':'单梯', '10': (window.localStorage.getItem("language")=='en') ? 'Parallel Connection':'并联', '100': (window.localStorage.getItem("language")=='en') ? 'Group Control':'群控', '000': (window.localStorage.getItem("language")=='en') ? 'None':'无' };
+  const status = (window.localStorage.getItem("language")=='en') ? ['Automatic', 'Overhaul', 'Driver', 'Fire Control', 'Lock Body', 'Fault', 'Overload', 'Fullload']:['自动', '检修', '司机', '消防', '锁体', '故障', '超载', '满载'];
+  const btn = { '00': (window.localStorage.getItem("language")=='en') ? 'None':'无', '01': (window.localStorage.getItem("language")=='en') ? 'Open':'开门', '10' (window.localStorage.getItem("language")=='en') ? 'Close': '关门' };
   let floor = '', lastCode = '', lastFloor = '', lastTime= '';
   event.forEach((item, index) => {
     if (index <= 7) {
@@ -355,9 +355,9 @@ function parseMsg(event, floors) {
     'speed'
   ];
   const obj = {};
-  const model = { '01': '单梯', '10': '并联', '100': '群控', '000': '无' };
-  const status = ['自动', '检修', '司机', '消防', '锁体', '故障', '超载', '满载'];
-  const btn = { '00': '无', '01': '开门', 10: '关门' };
+  const model = { '01': (window.localStorage.getItem("language")=='en') ? 'Single Ladder':'单梯', '10': (window.localStorage.getItem("language")=='en') ? 'Parallel Connection':'并联', '100': (window.localStorage.getItem("language")=='en') ? 'Group Control':'群控', '000': (window.localStorage.getItem("language")=='en') ? 'None':'无' };
+  const status = (window.localStorage.getItem("language")=='en') ? ['Automatic', 'Overhaul', 'Driver', 'Fire Control', 'Lock Body', 'Fault', 'Overload', 'Fullload']:['自动', '检修', '司机', '消防', '锁体', '故障', '超载', '满载'];
+  const btn = { '00': (window.localStorage.getItem("language")=='en') ? 'None':'无', '01': (window.localStorage.getItem("language")=='en') ? 'Open':'开门', '10' (window.localStorage.getItem("language")=='en') ? 'Close': '关门' };
   let upCall = [], downCall = [], register = [], real = '',height='', speed = '';
   
   event.forEach((item, index) => {
