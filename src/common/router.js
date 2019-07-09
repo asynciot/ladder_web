@@ -135,7 +135,7 @@ export const getRouterData = (app) => {
 			name2: 'Door',
 			component: dynamicWrapper(app, ['device'], () => import('../routes/Radar/History')),
 		},
-		'/company/door/:id/fault': {
+		'/company/door/:id': {
 			name: '历史故障',
 			name2: 'History Fault',
 			component: dynamicWrapper(app, [], () => import('../routes/Radar/DoorFault')),

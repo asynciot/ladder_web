@@ -109,11 +109,13 @@ export default class extends Component {
 		}
 		getMessages(params).then(res => {
 			const totalNumber = res.data.totalNumber
-			const page = val
 			if(res.data.totalNumber !=0){
-				const page = 1
 				this.setState({
-					page,
+					page:1,
+				});
+			}else{
+				this.setState({
+					page:0,
 				});
 			}
 			const { messages } = this.state
@@ -121,7 +123,6 @@ export default class extends Component {
 			this.setState({
 				total,
 				messages: res.data.list,
-				page,
 				totalNumber,
 			});
 		})

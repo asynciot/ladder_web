@@ -107,6 +107,9 @@ class BasicLayout extends React.PureComponent {
 
 		if (routerData[pathname] && routerData[pathname].name) {
 			title = routerData[pathname].name;
+			if(window.localStorage.getItem("language")=="en"){
+				title = routerData[pathname].name2;
+			}
 		} else {
 			const match = pathToRegexp('/:name/:id/:sub?/:end?').exec(pathname);
 			if (match && match[3]) {
@@ -132,9 +135,6 @@ class BasicLayout extends React.PureComponent {
 				if (match[2] === "add") {
 					path = `/company/add`
 				}
-				// if (match[1] === "order") {
-				// 	path = `/order/:id`
-				// }
 				if (match[2] === "followdoor") {
 					path = `/company/followdoor/all/`
 				}

@@ -529,7 +529,7 @@ export default class DoorHistory extends Component {
   }
 	gohistory = () => {
 		const id = this.props.match.params.id;
-		this.props.history.push(`/company/door/${id}/fault`);
+		this.props.history.push(`/company/door/${id}`);
 	}
   render() {
     const { device: { events, view, property }} = this.props;

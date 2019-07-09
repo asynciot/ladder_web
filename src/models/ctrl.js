@@ -292,7 +292,9 @@ function parseInfo(event, floors) {
   const obj = {};
   const model = { '01': (window.localStorage.getItem("language")=='en') ? 'Single Ladder':'单梯', '10': (window.localStorage.getItem("language")=='en') ? 'Parallel Connection':'并联', '100': (window.localStorage.getItem("language")=='en') ? 'Group Control':'群控', '000': (window.localStorage.getItem("language")=='en') ? 'None':'无' };
   const status = (window.localStorage.getItem("language")=='en') ? ['Automatic', 'Overhaul', 'Driver', 'Fire Control', 'Lock Body', 'Fault', 'Overload', 'Fullload']:['自动', '检修', '司机', '消防', '锁体', '故障', '超载', '满载'];
+
   const btn = { '00': (window.localStorage.getItem("language")=='en') ? 'None':'无', '01': (window.localStorage.getItem("language")=='en') ? 'Open':'开门', '10' :(window.localStorage.getItem("language")=='en') ? 'Close': '关门' };
+
   let floor = '', lastCode = '', lastFloor = '', lastTime= '';
   event.forEach((item, index) => {
     if (index <= 7) {
@@ -358,6 +360,7 @@ function parseMsg(event, floors) {
   const model = { '01': (window.localStorage.getItem("language")=='en') ? 'Single Ladder':'单梯', '10': (window.localStorage.getItem("language")=='en') ? 'Parallel Connection':'并联', '100': (window.localStorage.getItem("language")=='en') ? 'Group Control':'群控', '000': (window.localStorage.getItem("language")=='en') ? 'None':'无' };
   const status = (window.localStorage.getItem("language")=='en') ? ['Automatic', 'Overhaul', 'Driver', 'Fire Control', 'Lock Body', 'Fault', 'Overload', 'Fullload']:['自动', '检修', '司机', '消防', '锁体', '故障', '超载', '满载'];
   const btn = { '00': (window.localStorage.getItem("language")=='en') ? 'None':'无', '01': (window.localStorage.getItem("language")=='en') ? 'Open':'开门', '10' :(window.localStorage.getItem("language")=='en') ? 'Close': '关门' };
+
   let upCall = [], downCall = [], register = [], real = '',height='', speed = '';
   
   event.forEach((item, index) => {

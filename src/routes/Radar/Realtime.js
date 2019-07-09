@@ -763,7 +763,7 @@ export default class DoorHistory extends Component {
 	}
 	gohistory = () => {
 		const id = this.state.id;
-		this.props.history.push(`/company/door/${id}/fault`);
+		this.props.history.push(`/company/door/${id}`);
 	}
 	setAnimation = () => {
 		const {doorWidth, show} = this.state;
@@ -838,7 +838,7 @@ export default class DoorHistory extends Component {
 					</Modal>
 					<Row type="flex" justify="center" align="middle">
 						<Col span={18}>
-							<p className={styles.shishi}><FormattedMessage id="Realtime"/>:</p>
+							<p className={styles.shishi}><FormattedMessage id="Realtime:"/>:</p>
 						</Col>
 						<Col span={6}>
 							<Switch
