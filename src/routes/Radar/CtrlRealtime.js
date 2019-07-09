@@ -204,8 +204,14 @@ export default class CtrlRealtime extends Component {
 		isCar:true,
 		IoInfo1:'Io板输入口监控:',
 		IoInfo:'轿顶板输入口监控:',
+		la:true,
 	}
 	componentWillMount() {
+		if(window.localStorage.getItem("language")=="en"){
+			this.setState({
+				la:false,
+			})
+		}
 		this.getBaseData()
 		this.getfloor()
 		document.addEventListener('visibilitychange', () => {
@@ -710,7 +716,7 @@ export default class CtrlRealtime extends Component {
 					</Modal>
 					<Row type="flex" justify="center" align="middle">
 						<Col span={18}>
-							<p className={styles.shishi}><FormattedMessage id="Realtime"/>:</p>
+							<p className={styles.shishi}><FormattedMessage id="Realtime:"/></p>
 						</Col>
 						<Col span={6}>
 							<Switch
@@ -734,23 +740,23 @@ export default class CtrlRealtime extends Component {
 								className={classNames(styles.door)}
 							>
 								<section>
-									<p><FormattedMessage id="Realtime"/> ：<i className={styles.status}>{show.run ? '运行':'停车'}</i>
+									<p><FormattedMessage id="Realtime:"/> <i className={styles.status}>{show.run ? '运行':'停车'}</i>
 									</p>
-									<p><FormattedMessage id="Opening arrival signal"/> ：<i className={styles.status}>{show.open ? '动作':'不动作'}</i>
+									<p><FormattedMessage id="Opening arrival signal:"/><i className={styles.status}>{show.open ? '动作':'不动作'}</i>
 									</p>
-									<p><FormattedMessage id="Elevator mode"/> ：<i className={styles.status}>{parseModel(show.model)}</i>
+									<p><FormattedMessage id="Elevator mode:"/><i className={styles.status}>{parseModel(show.model)}</i>
 									</p>
-									<p><FormattedMessage id="Closing arrival signal"/>：<i className={styles.status}>{show.close ? '动作':'不动作'}</i>
+									<p><FormattedMessage id="Closing arrival signal:"/><i className={styles.status}>{show.close ? '动作':'不动作'}</i>
 									</p>
-									<p><FormattedMessage id="Door lock circuit"/>：<i className={styles.status}>{show.lock ? '通':'断'}</i>
+									<p><FormattedMessage id="Door lock circuit:"/><i className={styles.status}>{show.lock ? '通':'断'}</i>
 									</p>
-									<p><FormattedMessage id="Elevator run speed"/>：<i className={styles.status}>{show.speed ? (show.speed/1000):0}m/s</i>
+									<p><FormattedMessage id="Elevator run speed:"/><i className={styles.status}>{show.speed ? (show.speed/1000):0}m/s</i>
 									</p>
 									<p style={{
 											width: '100%',
 											justifyContent: 'flex-start',
 										}}
-									><FormattedMessage id="Devices State"/> ：<i className={styles.status}>{parseStatus(show.status)}</i>
+									><FormattedMessage id="Devices State:"/><i className={styles.status}>{parseStatus(show.status)}</i>
 									</p>
 									<p
 										style={{
@@ -766,14 +772,25 @@ export default class CtrlRealtime extends Component {
 											width: '20%',
 											justifyContent: 'flex-start',
 										}}
-									>
-										<Switch
-										  checkedChildren="IO"
-										  unCheckedChildren="轿顶"
-										  onChange={this.onChange1}
-										  checked={this.state.switch1}
-										  defaultChecked={this.state.switch1}
-										/>
+									>	
+										{	this.state.la
+											?
+											<Switch
+												checkedChildren="IO"
+												unCheckedChildren="轿顶"
+												onChange={this.onChange1}
+												checked={this.state.switch1}
+												defaultChecked={this.state.switch1}
+											/>
+											:
+											<Switch
+												checkedChildren="IO"
+												unCheckedChildren="Car"
+												onChange={this.onChange1}
+												checked={this.state.switch1}
+												defaultChecked={this.state.switch1}
+											/>
+										}
 									</p>
 								</section>
 							</Col>
