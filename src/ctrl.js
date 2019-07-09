@@ -141,7 +141,7 @@ export const ctrlMenu = [{
 				{num: 1,label:'IC card service floor 4',value:'',visible: true},
 				{num: 1,label:'IC card service floor 00‐FF call switch',value:'',visible: true}],
 				},{
-				num: 1,label:'Software version',
+				num: 1,label:'Software Version',
 				children:[
 				{num: 1,label:'Elevator control software version',value:'',visible: true},
 				{num: 1,label:'Motor control software version',value:'',visible: true},
