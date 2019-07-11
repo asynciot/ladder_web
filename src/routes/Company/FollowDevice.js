@@ -487,7 +487,7 @@ export default class extends Component {
 							itemLayout="horizontal"
 							dataSource={this.state.list}
 							renderItem={(item,index) => (
-								<List.Item actions={[<ListButton edit={(event) => { this.edit(event, item); }} />]} className={styles.item} key={index} onClick={this.goDevice(item)}>
+								<List.Item className={styles.item} key={index} onClick={this.goDevice(item)}>
 									<Col span={22}>
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 											<tbody>

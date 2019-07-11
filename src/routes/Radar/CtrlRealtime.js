@@ -8,9 +8,7 @@ import { Picker, List, Tabs, Modal } from 'antd-mobile';
 import classNames from 'classnames';
 import styles from './CtrlRealtime.less';
 import echarts from 'echarts';
-import {getEvent, postMonitor, getFollowDevices, 
-	getDeviceList, getFloorData, getCtrlData,
-} from '../../services/api';
+import { getEvent, postMonitor, getFollowDevices, getFault, getDeviceList, getFloorData, getCtrlData, } from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
 
 var counts=0;
@@ -21,21 +19,7 @@ var intes = null;
 var charts = true;
 var websock = '';
 const alert = Modal.alert
-const tabs = [
-	{ title: '门' },
-	{ title: '分屏' },
-	{ title: '滤波' },
-];
-const timeList = [{
-	label: '90s',
-	value: '90',
-},{
-	label: '60s',
-	value: '60',
-}, {
-	label: '30s',
-	value: '30',
-}];
+
 const direction = {
 	'01': 'arrow-up',
 	'10': 'arrow-down',
@@ -46,29 +30,70 @@ const parseStatus= (event) => {
 	let statusName = '';
 	if ((event&(0x01)) == 1) {
 		statusName+= '自动';
-	}
-	if ((event&(0x02))>>1 == 1) {
+	}else{
 		statusName+= '检修';
 	}
-	if ((event&(0x04))>>2 == 1) {
-		statusName+= '司机';
-	}
-	if ((event&(0x08))>>3 == 1) {
-		statusName+= '消防';
-	}
-	if ((event&(0x10))>>4 == 1) {
-		statusName+= '锁体';
-	}
-	if ((event&(0x20))>>5 == 1) {
-		statusName+= '故障';
-	}
-	if ((event&(0x40))>>6 == 1) {
-		statusName+= '超载';
-	}
-	if ((event&(0x80))>>7 == 1) {
-		statusName+= '满载';
-	}
+	// if ((event&(0x02))>>1 == 1) {
+	// 	statusName+= '检修';
+	// }
+	// if ((event&(0x04))>>2 == 1) {
+	// 	statusName+= '司机';
+	// }
+	// if ((event&(0x08))>>3 == 1) {
+	// 	statusName+= '消防';
+	// }
+	// if ((event&(0x10))>>4 == 1) {
+	// 	statusName+= '锁体';
+	// }
+	// if ((event&(0x20))>>5 == 1) {
+	// 	statusName+= '故障';
+	// }
+	// if ((event&(0x40))>>6 == 1) {
+	// 	statusName+= '超载';
+	// }
+	// if ((event&(0x80))>>7 == 1) {
+	// 	statusName+= '满载';
+	// }
 	return statusName
+}
+const faultCode = {
+	'1': '过流',
+	'2': '母线过压',
+	'3': '母线欠压',
+	'4': '输入缺相',
+	'5': '输出缺相',
+	'6': '输出过力矩',
+	'7': '编码器故障',
+	'8': '模块过热',
+	'9': '运行接触器故障',
+	'10': '抱闸接触器故障',
+	'11': '封星继电器故障',
+	'12': '抱闸开关故障',
+	'13': '运行中安全回路断开',
+	'14': '运行中门锁断开',
+	'15': '门锁短接故障',
+	'16': '层站召唤通讯故障',
+	'17': '轿厢通讯故障',
+	'18': '并联通讯故障',
+	'19': '开门故障',
+	'20': '关门故障',
+	'21': '开关门到位故障',
+	'22': '平层信号异常',
+	'23': '终端减速开关故障',
+	'24': '下限位信号异常',
+	'25': '上限位信号异常',
+	'26': '打滑故障',
+	'27': '电梯速度异常',
+	'28': '电机反转故障',
+	'31': '停车速度检测',
+	'33': '马达过热故障',
+	'34': '制动力严重不足',
+	'35': '制动力不足警告',
+	'36': 'UCMP故障',
+	'37': 'IPM故障',
+	'38': '再平层开关异常',
+	'40': '驱动保护故障',
+	'41': '平层位置异常',
 }
 const parseModel = (event) => {
 	let statusName = '无';
@@ -83,28 +108,13 @@ const parseModel = (event) => {
 	}
 	return statusName
 }
-const randomHexColor = () => { // 随机生成十六进制颜色
-	let hex = Math.floor(Math.random() * 11777216).toString(16); // 生成ffffff以内16进制数
-	while (hex.length < 6) { // while循环判断hex位数，少于6位前面加0凑够6位
-		hex = `0${hex}`;
-	}
-	return `#${hex}`; // 返回‘#'开头16进制颜色
-};
-
-const getRecord = (offset) => {
-	offset = offset || 0;
-	return {
-		time: new Date().getTime() + offset * 1000,
-		value: Math.random() + 10,
-	};
-};
 const data = [{
 	time: 0,
 	value: 0,
 }];
 
 @connect(({ ctrl,user }) => ({
-  ctrl,
+	ctrl,
 	currentUser: user.currentUser,
 }))
 
@@ -129,7 +139,6 @@ export default class CtrlRealtime extends Component {
 		pick: '',
 		modal: false,
 		src: '',
-		sliderCurrent: 0,
 		event:{
 			run:[],
 			lock:[],
@@ -189,10 +198,6 @@ export default class CtrlRealtime extends Component {
 			speed:[],
 		},
 		doorWidth: 4096,
-		historyEvents:[],
-		sliderMax: 0,
-		startTime: 0,
-		stop: true,
 		run:[],
 		lock:[],
 		close:[],
@@ -205,6 +210,9 @@ export default class CtrlRealtime extends Component {
 		IoInfo1:'Io板输入口监控:',
 		IoInfo:'轿顶板输入口监控:',
 		la:true,
+		IMEI:'',
+		install_addr:'',
+		device_name:'',
 	}
 	componentWillMount() {
 		if(window.localStorage.getItem("language")=="en"){
@@ -258,7 +266,6 @@ export default class CtrlRealtime extends Component {
 			if(e.data=="closed"){
 				alert("此次实时数据已结束")
 				this.state.switch = false;
-				this.state.stop = 1
 				websock.close()
 				clearInterval(inte)
 				this.forceUpdate()
@@ -280,7 +287,7 @@ export default class CtrlRealtime extends Component {
 	websocketonopen() {
 		console.log("WebSocket连接成功");
 	}
-	websocketonerror(e) { //错误
+	websocketonerror(e) {
 		console.log("WebSocket连接发生错误");
 	}
 	websocketclosed(){
@@ -299,23 +306,22 @@ export default class CtrlRealtime extends Component {
 				websock=null
 			}
 			this.initWebsocket()
-			getFollowDevices({device_id}).then((res)=>{
+			const op = 'open';
+			const IMEI = this.state.IMEI;
+			const interval = 500;
+			const threshold = 4;
+			const duration = 1440;
+			const device_type = '240';
+			const type = '0';
+			const segment = '00,00,00,00';
+			const address = '00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00';
+			postMonitor({ op, IMEI, interval, threshold, duration, device_type, type, segment, address}).then((res) => {
 				if(res.code == 0){
-					const op = 'open';
-					const IMEI = res.data.list[0].IMEI;
-					const interval = 500;
-					const threshold = 4;
-					const duration = 1440;
-					const device_type = '240';
-					const type = '0';
-					const segment = '00,00,00,00';
-					const address = '00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00';
-					postMonitor({ op, IMEI, interval, threshold, duration, device_type, type, segment, address}).then((res) => {});
 					alert("请等待接收数据");
 				}else if(res.code == 670){
 					alert("当前设备已被人启动监控")
 				}
-			})
+			});
 		}else{
 			websock.close()
 			this.forceUpdate()
@@ -340,7 +346,23 @@ export default class CtrlRealtime extends Component {
 			show.floor    = buffer[9]&0xff           			//获取电梯当前楼层
 			show.updateTime = res.data.list[0].t_update
 		});
-		this.forceUpdate()
+		getFollowDevices({device_id}).then((res)=>{
+			if(res.code ==0){
+				this.setState({
+					IMEI:res.data.list[0].IMEI,
+					install_addr:res.data.list[0].install_addr,
+					device_name:res.data.list[0].device_name,
+				})
+			}
+		})
+		getFault({ num: 1, page:1, islast:1, device_type:'ctrl', state:'untreated', device_id }).then((res) => {
+			if(res.code ==0){
+				this.setState({
+					code:res.data.list[0].code.toString(16),
+				})
+				 
+			}
+		})
 	}
 	pushData = (val) => {
 		let buffer = []
@@ -471,7 +493,7 @@ export default class CtrlRealtime extends Component {
 		}
 	}
 	clears = () => {
-		let { arr, } = this.state
+		let { arr } = this.state
 		this.state.buffer = []
 		arr.upCall = []
 		arr.downCall = []
@@ -741,6 +763,16 @@ export default class CtrlRealtime extends Component {
 							>
 								<section>
 									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}><FormattedMessage id="install address"/>：<i className={styles.status}>{this.state.install_addr}</i>
+									</p>
+									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}><FormattedMessage id="device name"/>：<i className={styles.status}>{this.state.device_name}</i>
+									</p>
+									<p style={{
 											width: '40%',
 											justifyContent: 'flex-start',
 										}}><FormattedMessage id="Realtime:"/> <i className={styles.status}>{show.run ? '运行':'停车'}</i>
@@ -768,10 +800,16 @@ export default class CtrlRealtime extends Component {
 									<p ><FormattedMessage id="Elevator run speed:"/><i className={styles.status}>{show.speed ? (show.speed/1000):0}m/s</i>
 									</p>
 									<p style={{
-											width: '100%',
+											width: '40%',
 											justifyContent: 'flex-start',
 										}}
 									><FormattedMessage id="Devices State:"/><i className={styles.status}>{parseStatus(show.status)}</i>
+									</p>
+									<p style={{
+											width: '60%',
+											justifyContent: 'flex-start',
+										}}
+									><FormattedMessage id="Order"/>：<i className={styles.status}>{faultCode[this.state.code]}</i>
 									</p>
 									<p
 										style={{
