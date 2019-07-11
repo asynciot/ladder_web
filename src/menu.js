@@ -111,7 +111,7 @@ export const menuT = [
 				    ]
 				  },
 				  {
-				    num:1,label: 'F08',
+				    num:1,label: (window.localStorage.getItem("language")=='en') ? 'F08 Menu':'F08 菜单',
 					children: [
 				      {
 				        num:100,label: 'Acceleration Time',
@@ -185,7 +185,7 @@ export const menuT = [
 				      },
 				    ]
 				  }, {
-					  num:1,label: 'F09',
+					  num:1,label: (window.localStorage.getItem("language")=='en') ? 'F09 Menu':'F09 菜单',
 					children: [
 				      {
 				        num:1,label: 'Opening Deceleration Distance',
@@ -247,7 +247,7 @@ export const menuT = [
 				      },
 				    ]
 				  }, {
-					  num:1,label: 'F10',
+					  num:1,label: (window.localStorage.getItem("language")=='en') ? 'F10 Menu':'F10 菜单',
 					children: [
 				      {
 				        num:100,label: 'Low Speed Torque',
@@ -282,7 +282,7 @@ export const menuT = [
 				      },
 				    ]
 				  }, {
-					  num:1,label: 'F11',
+					  num:1,label: (window.localStorage.getItem("language")=='en') ? 'F11 Menu':'F11 菜单',
 					children: [
 				      {
 				        num:100,label: 'Maximum Torque',
@@ -335,7 +335,7 @@ export const menuT = [
 				      },
 				    ]
 				  }, {
-					  num:1,label: 'F12',
+					  num:1,label: (window.localStorage.getItem("language")=='en') ? 'F12 Menu':'F12 菜单',
 					children: [
 				      {
 				        num:1,label: 'Synchronous Door Selection Setting',

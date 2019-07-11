@@ -13,6 +13,7 @@
 	"faultdevices" : "Fault Devices",
 	"Firmware Update" : "Firmware Update",
 	"watch" : "Watch",
+	"edit" : "Edit",
 	"History fault" : "History Fault",
 	"E1" : "over-current",
 	"E2" : "Bus over-voltage",
