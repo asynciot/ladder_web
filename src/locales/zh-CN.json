@@ -665,7 +665,7 @@
 	"Edit elevator":"电梯编辑",
 	"elevator information":"电梯信息",
 	"elevator group":"电梯组",
-	"Hot news":"最新消息",
+	"Hot News":"最新消息",
 	"No News":"没有消息",
 	"Order State":"工单状态",
 	"Order":"故障",
@@ -763,7 +763,8 @@
 	"fault duration":"故障时长",
 	"switch":"开关",
 	"Door state":"门状态",
-	"Door state":"门状态",
+	"Ok":"确定",
+	
     "refresh" : "刷新",
     "array": [
         1,2,3,4
