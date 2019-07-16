@@ -14,10 +14,6 @@ const alert = Modal.alert;
 var inte = null;
 const Item = List.Item;
 const Brief = Item.Brief;
-const names = {
-  0: '人工报修',
-  1: '自动报修',
-}
 const typeName ={
   'ctrl':'控制柜',
   'door':'控制器',

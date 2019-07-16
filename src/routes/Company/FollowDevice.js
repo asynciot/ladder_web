@@ -24,7 +24,7 @@ const tabs2 = [
 	{ title: (window.localStorage.getItem("language")=='en') ? 'Offline' : '离线', state: 'longoffline' },
 ];
 const modelName = {
-	'0':' ',
+	'0':'HPC181',
 	"1":'NSFC01-01B',
 	"2":'NSFC01 -02T',
 }

@@ -27,84 +27,43 @@ const direction = {
 	'11': '',
 }
 const parseStatus= (event) => {
-	let statusName = '';
+	let statusName = 'None';
 	if ((event&(0x01)) == 1) {
-		statusName+= '自动';
-	}else{
-		statusName+= '检修';
-	}
-	// if ((event&(0x02))>>1 == 1) {
-	// 	statusName+= '检修';
-	// }
-	// if ((event&(0x04))>>2 == 1) {
-	// 	statusName+= '司机';
-	// }
-	// if ((event&(0x08))>>3 == 1) {
-	// 	statusName+= '消防';
-	// }
-	// if ((event&(0x10))>>4 == 1) {
-	// 	statusName+= '锁体';
-	// }
-	// if ((event&(0x20))>>5 == 1) {
-	// 	statusName+= '故障';
-	// }
-	// if ((event&(0x40))>>6 == 1) {
-	// 	statusName+= '超载';
-	// }
-	// if ((event&(0x80))>>7 == 1) {
-	// 	statusName+= '满载';
-	// }
-	return statusName
-}
-const faultCode = {
-	'1': '过流',
-	'2': '母线过压',
-	'3': '母线欠压',
-	'4': '输入缺相',
-	'5': '输出缺相',
-	'6': '输出过力矩',
-	'7': '编码器故障',
-	'8': '模块过热',
-	'9': '运行接触器故障',
-	'10': '抱闸接触器故障',
-	'11': '封星继电器故障',
-	'12': '抱闸开关故障',
-	'13': '运行中安全回路断开',
-	'14': '运行中门锁断开',
-	'15': '门锁短接故障',
-	'16': '层站召唤通讯故障',
-	'17': '轿厢通讯故障',
-	'18': '并联通讯故障',
-	'19': '开门故障',
-	'20': '关门故障',
-	'21': '开关门到位故障',
-	'22': '平层信号异常',
-	'23': '终端减速开关故障',
-	'24': '下限位信号异常',
-	'25': '上限位信号异常',
-	'26': '打滑故障',
-	'27': '电梯速度异常',
-	'28': '电机反转故障',
-	'31': '停车速度检测',
-	'33': '马达过热故障',
-	'34': '制动力严重不足',
-	'35': '制动力不足警告',
-	'36': 'UCMP故障',
-	'37': 'IPM故障',
-	'38': '再平层开关异常',
-	'40': '驱动保护故障',
-	'41': '平层位置异常',
-}
-const parseModel = (event) => {
-	let statusName = '无';
-	if ((event&(0x01)) == 1) {
-		statusName = '单梯';
+		statusName= '自动';
 	}
 	if ((event&(0x02))>>1 == 1) {
-		statusName = '并联';
+		statusName= 'Overhaul';
 	}
 	if ((event&(0x04))>>2 == 1) {
-		statusName = '群控';
+		statusName= 'Driver';
+	}
+	if ((event&(0x08))>>3 == 1) {
+		statusName= '消防';
+	}
+	if ((event&(0x10))>>4 == 1) {
+		statusName= '锁体';
+	}
+	if ((event&(0x20))>>5 == 1) {
+		statusName= 'Order';
+	}
+	if ((event&(0x40))>>6 == 1) {
+		statusName= 'Overload';
+	}
+	if ((event&(0x80))>>7 == 1) {
+		statusName= 'Full load';
+	}
+	return statusName
+}
+const parseModel = (event) => {
+	let statusName = 'None';
+	if ((event&(0x01)) == 1) {
+		statusName = 'Single Ladder';
+	}
+	if ((event&(0x02))>>1 == 1) {
+		statusName = 'Parallel Connection';
+	}
+	if ((event&(0x04))>>2 == 1) {
+		statusName = 'Group Control';
 	}
 	return statusName
 }
@@ -211,6 +170,7 @@ export default class CtrlRealtime extends Component {
 		IoInfo:'轿顶板输入口监控:',
 		la:true,
 		IMEI:'',
+		code:'',
 		install_addr:'',
 		device_name:'',
 	}
@@ -357,10 +317,11 @@ export default class CtrlRealtime extends Component {
 		})
 		getFault({ num: 1, page:1, islast:1, device_type:'ctrl', state:'untreated', device_id }).then((res) => {
 			if(res.code ==0){
-				this.setState({
-					code:res.data.list[0].code.toString(16),
-				})
-				 
+				if(res.data.list[0]!=null){
+					this.setState({
+						code:res.data.list[0].code.toString(16),
+					})
+				}
 			}
 		})
 	}
@@ -742,8 +703,8 @@ export default class CtrlRealtime extends Component {
 						</Col>
 						<Col span={6}>
 							<Switch
-							  checkedChildren="开"
-							  unCheckedChildren="关"
+							  checkedChildren=<FormattedMessage id="Open"/>
+							  unCheckedChildren=<FormattedMessage id="Close"/>
 							  onChange={this.onChange}
 							  checked={this.state.switch}
 							  defaultChecked={this.state.switch}
@@ -773,77 +734,60 @@ export default class CtrlRealtime extends Component {
 									}}><FormattedMessage id="device name"/>：<i className={styles.status}>{this.state.device_name}</i>
 									</p>
 									<p style={{
-											width: '40%',
-											justifyContent: 'flex-start',
-										}}><FormattedMessage id="Realtime:"/> <i className={styles.status}>{show.run ? '运行':'停车'}</i>
+										width: '40%',
+										justifyContent: 'flex-start',
+									}}><FormattedMessage id="Realtime:"/> <i className={styles.status}>{show.run ? <FormattedMessage id={"Operation"}/>:<FormattedMessage id={"Shutdown"}/>}</i>
 									</p>
 									<p  style={{
-											width: '60%',
-											justifyContent: 'flex-start',
-										}}><FormattedMessage id="Opening arrival signal:"/><i className={styles.status}>{show.open ? '动作':'不动作'}</i>
+										width: '60%',
+										justifyContent: 'flex-start',
+									}}><FormattedMessage id="Opening arrival signal:"/><i className={styles.status}>{show.open ? <FormattedMessage id={"Action"}/>:<FormattedMessage id={"Stop"}/>}</i>
 									</p>
 									<p style={{
-											width: '40%',
-											justifyContent: 'flex-start',
-										}}><FormattedMessage id="Elevator mode:"/><i className={styles.status}>{parseModel(show.model)}</i>
+										width: '40%',
+										justifyContent: 'flex-start',
+									}}><FormattedMessage id="Elevator mode:"/><i className={styles.status}>{<FormattedMessage id={parseModel(show.model)}/>}</i>
 									</p>
 									<p style={{
-											width: '60%',
-											justifyContent: 'flex-start',
-										}}><FormattedMessage id="Closing arrival signal:"/><i className={styles.status}>{show.close ? '动作':'不动作'}</i>
+										width: '60%',
+										justifyContent: 'flex-start',
+									}}><FormattedMessage id="Closing arrival signal:"/><i className={styles.status}>{show.close ? <FormattedMessage id={"Action"}/>:<FormattedMessage id={"Stop"}/>}</i>
 									</p>
 									<p style={{
-											width: '40%',
-											justifyContent: 'flex-start',
-										}}><FormattedMessage id="Door lock circuit:"/><i className={styles.status}>{show.lock ? '通':'断'}</i>
+										width: '40%',
+										justifyContent: 'flex-start',
+									}}><FormattedMessage id="Door lock circuit:"/><i className={styles.status}>{show.lock ? '通':'断'}</i>
 									</p>
 									<p ><FormattedMessage id="Elevator run speed:"/><i className={styles.status}>{show.speed ? (show.speed/1000):0}m/s</i>
 									</p>
 									<p style={{
-											width: '40%',
-											justifyContent: 'flex-start',
-										}}
-									><FormattedMessage id="Devices State:"/><i className={styles.status}>{parseStatus(show.status)}</i>
+										width: '40%',
+										justifyContent: 'flex-start',
+									}}><FormattedMessage id="Devices State:"/><i className={styles.status}>{<FormattedMessage id={parseStatus(show.status)}/>}</i>
 									</p>
 									<p style={{
-											width: '60%',
-											justifyContent: 'flex-start',
-										}}
-									><FormattedMessage id="Order"/>：<i className={styles.status}>{faultCode[this.state.code]}</i>
+										width: '60%',
+										justifyContent: 'flex-start',
+									}}><FormattedMessage id="Order"/>：<i className={styles.status}>{this.state.code?<FormattedMessage id={'E'+this.state.code}/>:<FormattedMessage id={"None"}/>}</i>
 									</p>
-									<p
-										style={{
-											width: '80%',
-											justifyContent: 'flex-start',
-										}}
-									>
+									<p style={{
+										width: '80%',
+										justifyContent: 'flex-start',
+									}}>
 										<FormattedMessage id="Last update time"/> ：
 										<i className={styles.status}>{moment(show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
 									</p>
-									<p
-										style={{
-											width: '20%',
-											justifyContent: 'flex-start',
-										}}
-									>	
-										{	this.state.la
-											?
-											<Switch
-												checkedChildren="IO"
-												unCheckedChildren="轿顶"
-												onChange={this.onChange1}
-												checked={this.state.switch1}
-												defaultChecked={this.state.switch1}
-											/>
-											:
-											<Switch
-												checkedChildren="IO"
-												unCheckedChildren="Car"
-												onChange={this.onChange1}
-												checked={this.state.switch1}
-												defaultChecked={this.state.switch1}
-											/>
-										}
+									<p style={{
+										width: '20%',
+										justifyContent: 'flex-start',
+									}}>
+										<Switch
+											checkedChildren="IO"
+											unCheckedChildren={<FormattedMessage id="Car"/>}
+											onChange={this.onChange1}
+											checked={this.state.switch1}
+											defaultChecked={this.state.switch1}
+										/>
 									</p>
 								</section>
 							</Col>

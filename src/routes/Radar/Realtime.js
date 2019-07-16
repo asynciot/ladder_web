@@ -20,6 +20,25 @@ var showc =null;
 var inte =null;
 var intes = null;
 var websock = '';
+const parseState = (event) => {
+	let statusName = 'None';
+	if (event.openKeep) {
+		statusName = 'Keep the door open';
+	}
+	if (event.closeKeep) {
+		statusName = 'Keep the door close';
+	}
+	if (event.open) {
+		statusName = 'Open the door';
+	}
+	if (event.close) {
+		statusName = 'Close the door';
+	}
+	if (event.stop) {
+		statusName = 'Stop Output';
+	}
+	return statusName;
+}
 @connect(({ device, user }) => ({
   device,
 	currentUser: user.currentUser
@@ -149,41 +168,6 @@ export default class DoorHistory extends Component {
 		interval:50,
 		duration:300,
 	}
-	alertName = (show) => {
-	  if (show.isLoss) {
-	    return '无';
-	  }
-	  let str = '';
-	  if (show.inHigh) {
-	    str += ' 输入电压过高 ';
-		this.state.color=true
-	  }
-	  if (show.inLow) {
-	    str += ' 输入电压过低 ';
-		this.state.color=true
-	  }
-	  if (show.outHigh) {
-	    str += ' 输出过流 ';
-		this.state.color=true
-	  }
-	  if (show.motorHigh) {
-	    str += ' 电机过载 ';
-		this.state.color=true
-	  }
-	  if (show.flySafe) {
-	    str += ' 飞车保护 ';
-		this.state.color=true
-	  }
-	  if (show.closeStop) {
-	    str += ' 开关门受阻 ';
-		this.state.color=true
-	  }
-	  if (str === '') {
-	    str = '运行正常';
-		this.state.color=false
-	  }
-	  return str;
-	};
 	componentWillMount() {
 		this.state.id = this.props.match.params.id
 		this.getBaseData()
@@ -257,7 +241,41 @@ export default class DoorHistory extends Component {
 	websocketclosed(){
 		console.log("WebSocket连接关闭");
 	}
-	
+	alertName = (show) => {
+		if (show.isLoss) {
+			return 'None';
+		}
+		let str = '';
+		if (show.inHigh) {
+			str += 'Output under-voltage';
+			this.state.color=true
+		}
+		if (show.inLow) {
+			str += 'Input under-voltage';
+			this.state.color=true
+		}
+		if (show.outHigh) {
+			str += 'Output over-current';
+			this.state.color=true
+		}
+		if (show.motorHigh) {
+			str += 'Motor overload';
+			this.state.color=true
+		}
+		if (show.flySafe) {
+			str += 'Galloping protection';
+			this.state.color=true
+		}
+		if (show.closeStop) {
+			str += 'Switch door blocked';
+			this.state.color=true
+		}
+		if (str === '') {
+			str = 'Normal Operation';
+			this.state.color=false
+		}
+		return str;
+	};
 	clears = () => {
 		let { chart, arr, } = this.state
 		this.state.buffer = []
@@ -818,22 +836,6 @@ export default class DoorHistory extends Component {
 		} else {
 			type = 1
 		}
-		let statusName = '无';
-		if (show.openKeep) {
-			statusName = '开门到位维持';
-		}
-		if (show.closeKeep) {
-			statusName = '关门到位维持';
-		}
-		if (show.open) {
-			statusName = '正在开门';
-		}
-		if (show.close) {
-			statusName = '正在关门';
-		}
-		if (show.stop) {
-			statusName = '停止输出';
-		}
 		return (
 			<div className="content tab-hide">
 				<div className={styles.content}>
@@ -841,8 +843,8 @@ export default class DoorHistory extends Component {
 						visible={this.state.modal}
 						transparent
 						maskClosable={false}
-						title="二维码"
-						footer={[{ text: '确定', onPress: () => this.setState({modal: false}) }] }
+						title={<FormattedMessage id="QR Code"/>}
+						footer={[{ text: 'OK', onPress: () => this.setState({modal: false}) }] }
 						wrapProps={{ onTouchStart: this.onWrapTouchStart }}
 					>
 						<div className="qrcode">
@@ -856,8 +858,8 @@ export default class DoorHistory extends Component {
 						</Col>
 						<Col span={6}>
 							<Switch
-							  checkedChildren="开"
-							  unCheckedChildren="关"
+							  checkedChildren={<FormattedMessage id="Open"/>}
+							  unCheckedChildren={<FormattedMessage id="Close"/>}
 							  onChange={this.onChange}
 							  checked={this.state.switch}
 							  defaultChecked={this.state.switch}
@@ -892,24 +894,24 @@ export default class DoorHistory extends Component {
 									</p>
 									{/*<p>开门次数 ：<i className={styles.status}>{show.times || '无'}</i>
 									</p>*/}
-									<p><FormattedMessage id="Opening signal："/> <i className={styles.status}>{show.openIn ? '开' : '关'}</i>
+									<p><FormattedMessage id="Opening signal："/> <i className={styles.status}>{show.openIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
-									<p><FormattedMessage id="Closing signal："/> <i className={styles.status}>{show.closeIn ? '开' : '关'}</i>
-									</p>
-									<p style={{
-										width: '100%',
-										justifyContent: 'flex-start',
-									}}><FormattedMessage id="Door state"/> ：<i className={styles.status}>{statusName || '无'}</i>
+									<p><FormattedMessage id="Closing signal："/> <i className={styles.status}>{show.closeIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
 									<p style={{
 										width: '100%',
 										justifyContent: 'flex-start',
-									}}><FormattedMessage id="Opening arrival signal"/> ：<i className={styles.status}>{show.openToOut ? '开' : '关'}</i>
+									}}><FormattedMessage id="Door state"/> ：<i className={styles.status}>{<FormattedMessage id={parseState(show)}/>}</i>
 									</p>
 									<p style={{
 										width: '100%',
 										justifyContent: 'flex-start',
-									}}><FormattedMessage id="Closing arrival signal"/> ：<i className={styles.status}>{show.closeToOut ? '开' : '关'}</i>
+									}}><FormattedMessage id="Opening arrival signal"/> ：<i className={styles.status}>{show.openToOut ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									</p>
+									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}><FormattedMessage id="Closing arrival signal"/> ：<i className={styles.status}>{show.closeToOut ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
 									<p style={{
 										width: '100%',
@@ -919,9 +921,9 @@ export default class DoorHistory extends Component {
 										<i style={{flexShrink: 0,}}><FormattedMessage id="Alert"/> ：</i>
 										{
 											this.state.color ? 
-											<i className={styles.status} style={{ color:'red'}}>{this.alertName(show)}</i>
+											<i className={styles.status} style={{ color:'red'}}>{<FormattedMessage id={this.alertName(show)}/>}</i>
 											:
-											<i className={styles.status}>{this.alertName(show)}</i>
+											<i className={styles.status}>{<FormattedMessage id={this.alertName(show)}/>}</i>
 										}
 									</p>
 									<p
