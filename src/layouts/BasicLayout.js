@@ -104,12 +104,13 @@ class BasicLayout extends React.PureComponent {
 		const { routerData, location } = this.props;
 		const { pathname } = location;
 		let title = '';
-
 		if (routerData[pathname] && routerData[pathname].name) {
+			
 			title = routerData[pathname].name;
 			if(window.localStorage.getItem("language")=="en"){
 				title = routerData[pathname].name2;
 			}
+			
 		} else {
 			const match = pathToRegexp('/:name/:id/:sub?/:end?').exec(pathname);
 			if (match && match[3]) {
@@ -153,9 +154,19 @@ class BasicLayout extends React.PureComponent {
 				if(match[1] === "door") {
 					path = `/door/:id/history/:type`
 				}
+				if(match[2] === "reader") {
+					path = `/tech/reader/:id`
+				}
 				if (routerData[path]) {
 					title = routerData[path].name;
 					if (window.localStorage.getItem("language") == 'en') {title = routerData[path].name2;}
+				}
+			}else{
+				if(match!=null){
+					if (match[1] === "ladder") {
+						title = routerData[`/ladder/:id`].name;
+						if (window.localStorage.getItem("language") == 'en') {title = routerData[`/ladder/:id`].name2;}
+					}
 				}
 			}
 		}

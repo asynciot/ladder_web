@@ -80,7 +80,6 @@ export default class extends Component {
 		});
 	}
 	onAddr = (val) => {
-		console.log(val)
 		this.setState({
 			install_addr: val,
 		});

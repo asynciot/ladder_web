@@ -78,7 +78,7 @@ export default class extends Component {
 		}else if(switchIdx == 2){
 			state = "longoffline"
 		}
-		getLadder({ num: 10, page, state}).then((res) => {
+		getLadder({ num: 10, page, state, follow:"yes"}).then((res) => {
 			if (res.code === 0) {
 				const list = res.data.list.map((item) => {
 					return item;

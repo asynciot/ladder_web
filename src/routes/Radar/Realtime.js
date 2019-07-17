@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import pathToRegexp from 'path-to-regexp';
 import { connect } from 'dva';
 import _ from 'lodash';
 import base64url from 'base64url';
@@ -9,8 +8,7 @@ import classNames from 'classnames';
 import TweenOne from 'rc-tween-one';
 import styles from './Realtime.less';
 import echarts from 'echarts';
-import ReactEcharts from 'echarts-for-react';
-import {getEvent, postMonitor, getFollowDevices, getDeviceList, getDoorData} from '../../services/api';
+import {getEvent, postMonitor, getFollowDevices, getDeviceList, getDoorRuntime} from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
 
 var counts=0;
@@ -358,25 +356,25 @@ export default class DoorHistory extends Component {
 	getBaseData = () => {
 		const {show} = this.state
 		const device_id = this.state.id
-		getDoorData({device_id,type:4096,num:1,page:1}).then((res) => {
+		getDoorRuntime({device_id,type:4096,num:1,page:1}).then((res) => {
 			let buffer = []
 			buffer = base64url.toBuffer(res.data.list[0].data)				//8位转流
 			show.openIn			 = (buffer[0]&0x80)>>7 						//获取开门输入信号
 			show.closeIn		 = (buffer[0]&0x40)>>6						//获取关门输入信号
 			show.openTo 		 = (buffer[0]&0x20)>>5						//获取开到位输入信号
 			show.closeTo 		 = (buffer[0]&0x10)>>4						//获取关到位输入信号
-			show.openDecelerate	 =	(buffer[0]&0x08)>>3						//开减速输入信号
-			show.closeDecelerate = 	(buffer[0]&0x04)>>2						//关减速输入信号
+			show.openDecelerate	 = (buffer[0]&0x08)>>3						//开减速输入信号
+			show.closeDecelerate = (buffer[0]&0x04)>>2						//关减速输入信号
 			show.openToOut		 = (buffer[0]&0x02)>>1						//获取开到位输出信号
 			show.closeToOut 	 = buffer[0]&0x01							//获取关到位输出信号
 			show.door			 = (buffer[1]&0x80)>>7						//门光幕信号
 			show.open			 = (buffer[1]&0x40)>>6						//正在开门信号
-			show.close			 =	(buffer[1]&0x20)>>5						//正在关门信号
+			show.close			 = (buffer[1]&0x20)>>5						//正在关门信号
 			show.openKeep		 = (buffer[1]&0x10)>>4						//开门到位维持信号
 			show.closeKeep		 = (buffer[1]&0x08)>>3						//关门到位维持信号
 			show.stop			 = (buffer[1]&0x04)>>2						//停止输出信号
 			show.inHigh			 = (buffer[1]&0x02)>>1						//输入电压过高
-			show.inLow			 = 	buffer[1]&0x01							//输入电压过低
+			show.inLow			 = buffer[1]&0x01							//输入电压过低
 			show.outHigh		 = (buffer[2]&0x80)>>7						//输出过流
 			show.motorHigh		 = (buffer[2]&0x40)>>6						//电机过载
 			show.flySafe		 = (buffer[2]&0x20)>>5						//飞车保护
@@ -398,7 +396,7 @@ export default class DoorHistory extends Component {
 			})
 		})
 		if(this.state.device_model == '1'){
-			getDoorData({device_id,num:1,page:1,type:4100}).then((res) => {
+			getDoorRuntime({device_id,num:1,page:1,type:4100}).then((res) => {
 				if(res.code == 0){
 					let buffer = []
 					buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
@@ -409,7 +407,7 @@ export default class DoorHistory extends Component {
 				}
 			});
 		}else{
-			getDoorData({device_id,num:1,page:1,type:4101}).then((res) => {
+			getDoorRuntime({device_id,num:1,page:1,type:4101}).then((res) => {
 				if(res.code == 0){
 					let buffer = []
 					buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
@@ -417,7 +415,6 @@ export default class DoorHistory extends Component {
 					this.setState({
 						doorWidth:parseInt((hex[14] + hex[15]), 16),
 					})
-					console.log(this.state.doorWidth)
 				}
 			});
 		}

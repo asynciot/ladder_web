@@ -13,7 +13,7 @@ import styles from './History.less';
 import echarts from 'echarts';
 import ReactEcharts from 'echarts-for-react';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import {getEvent, getDeviceList, getFollowDevices, getDoorData } from '../../services/api';
+import {getEvent, getDeviceList, getFollowDevices, getDoorRuntime } from '../../services/api';
 
 const alertName = (show) => {
 	if (show.isLoss) {
@@ -206,14 +206,14 @@ export default class DoorHistory extends Component {
 					}
 				}
 				if(this.state.type == '1'){
-					getDoorData({device_id,num:1,page:1,type:4100}).then((res) => {
+					getDoorRuntime({device_id,num:1,page:1,type:4100}).then((res) => {
 						let buffer = []
 						buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
 						const hex = this.buffer2hex(buffer)
 						this.state.doorWidth =parseInt((hex[26] + hex[27]), 16);
 					});
 				}else{
-					getDoorData({device_id,num:1,page:1,type:4101}).then((res) => {
+					getDoorRuntime({device_id,num:1,page:1,type:4101}).then((res) => {
 						let buffer = []
 						buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
 						const hex = this.buffer2hex(buffer)

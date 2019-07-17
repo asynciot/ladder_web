@@ -67,7 +67,6 @@ export default class extends Component {
 				this.setState({
 					floor,
 				})
-				console.log(floor)
 			}else{
 				alert("获取楼层高度失败！")
 			}

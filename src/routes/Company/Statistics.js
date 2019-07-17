@@ -270,7 +270,6 @@ export default class History extends Component {
     const { isMobile, match } = this.props;   
     const { statistics } = this.state;
     const type = match.params.id;
-    console.log(this.state.alertOpt);
     
     return (
       <div className="content">

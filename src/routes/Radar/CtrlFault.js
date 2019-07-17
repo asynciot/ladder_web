@@ -81,9 +81,7 @@ export default class DoorHistory extends Component {
 		let starttime = ''
 		let endtime = ''
 		if(this.state.start != 0){
-			console.log(this.state.start)
 			starttime = new Date(this.state.start).getTime()
-			console.log(starttime)
 		}else{
 			starttime = ''
 		}

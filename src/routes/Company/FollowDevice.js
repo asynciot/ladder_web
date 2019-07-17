@@ -126,7 +126,7 @@ export default class extends Component {
 		search_info:'',
 		iddr:'',
 	}
-	async componentWillMount() {
+	componentWillMount() {
 		const { location } = this.props;
 		const match = pathToRegexp('/company/:id/:state').exec(location.pathname);
 		if(match[1]=="followdoor"){
@@ -146,7 +146,7 @@ export default class extends Component {
 			switchIdx = 3
 		}
 		this.state.switchIdx = switchIdx
-		await this.getDevice(type,1,switchIdx);
+		this.getDevice(type,1,switchIdx);
 	}
 	pageChange = (val) => {
 		const { device_type,} =this.state

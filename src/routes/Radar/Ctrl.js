@@ -11,10 +11,10 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 
 const TabPane = Tabs.TabPane;
 let menu = menu = [{
-	label: '门',
+	label: 'door',
 	view: 0,
 }, {
-	label: '分屏',
+	label: 'Line',
 	view: 1,
 }, 
 // {
@@ -26,10 +26,10 @@ const activeNav = (data, idx) => {
 	return data === idx ? styles.active : '';
 };
 const menus = [{
-		name: '实时',
+		name: 'Real',
 		link: 'realtime',
 	},{
-		name: '实时',
+		name: 'Real',
 		link: 'realtime',
 	},
 // {
@@ -42,7 +42,7 @@ const menus = [{
 }))
 export default class Device extends Component {
 	state = {
-		menuName: '实时',
+		menuName: 'Real',
 	}
 	componentWillMount() {
 		const { dispatch, location } = this.props;
@@ -85,7 +85,7 @@ export default class Device extends Component {
 				{
 					menus.filter(item => item.link !== pathName[2]).map((item, idx) => (
 						<Menu.Item key={item.link}>
-							{item.name}
+							<FormattedMessage id={item.name}/>
 						</Menu.Item>
 					))
 				}
@@ -105,7 +105,7 @@ export default class Device extends Component {
 						<div className={classNames(styles.menu)}>
 							<Dropdown overlay={menuList} placement="bottomCenter" trigger={['click']}>
 								<a className={styles.dropdown} href="#">
-									{this.state.menuName} <Icon type="down" />
+									{<FormattedMessage id={this.state.menuName}/>}
 								</a>
 							</Dropdown>
 							{
@@ -115,7 +115,7 @@ export default class Device extends Component {
 										onClick={() => this.changeView(item)}
 										className={classNames(styles.nav, activeNav(item.view, view))}
 									>
-										{item.label}
+										<FormattedMessage id={item.label}/>
 									</section>
 								))
 							}
