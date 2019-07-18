@@ -11,7 +11,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 
 const TabPane = Tabs.TabPane;
 let menu = menu = [{
-	label: 'door',
+	label: 'Watch',
 	view: 0,
 }, {
 	label: 'Line',

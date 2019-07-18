@@ -228,3 +228,8 @@ export function getStatistic(params) {
 	return request(`/mointors/statistic?${stringify(params)}`);
 }
 
+//command
+export function getCommand(params) {
+	return request(`/device/Command?${stringify(params)}`);
+}
+

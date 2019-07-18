@@ -1,7 +1,6 @@
 {
     "lang" : "English",
     "register" : "register",
-	"login" : "login",
 	"forget_password?" : "forget_password?",
 	"remember" : "remember",
 	"NBSL" : "Ningbo Shen Ling Management System",

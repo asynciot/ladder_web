@@ -66,13 +66,13 @@ export default class extends Component {
 						value={list.name}
 						disabled="true"
 					>
-						<FormattedMessage id="device name"/>
+						<FormattedMessage id="Device Name"/>
 					</InputItem>
 					<InputItem
 						value={list.install_addr}
 						disabled="true"
 					>
-						<FormattedMessage id="install address"/>
+						<FormattedMessage id="Install Address"/>
 					</InputItem>
 					<div onClick={()=>this.goDevice(0,list.ctrl_id)}>
 						<InputItem

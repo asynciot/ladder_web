@@ -146,7 +146,7 @@ export default class extends Component {
 						value={this.state.install_addr}
 						labelNumber={7}
 					>
-						<FormattedMessage id="install address"/>
+						<FormattedMessage id="Install Address"/>
 					</InputItem>
 					<InputItem
 						onChange={value => this.onName(value)}
@@ -154,7 +154,7 @@ export default class extends Component {
 						className={styles.center}
 						labelNumber={7}
 					>
-						<FormattedMessage id="device name"/>
+						<FormattedMessage id="Device Name"/>
 					</InputItem>
 					<DatePicker
 						value={this.state.maintenance_nexttime}

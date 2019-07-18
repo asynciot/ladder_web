@@ -191,11 +191,11 @@ export default class extends Component {
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 											<tbody>
 												<tr>
-													<a className={styles.text}><FormattedMessage id="device name"/> ：</a>
+													<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
 													<td className="tl">{item.name ? item.name : '无'}</td>
 												</tr>
 												<tr>
-													<a className={styles.text}><FormattedMessage id="install address"/> ：</a>
+													<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
 													<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
 												</tr>
 												<tr>

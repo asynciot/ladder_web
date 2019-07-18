@@ -74,7 +74,7 @@ const ListButton = ({ className = '', ...restProps }) => (
 		</span>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.address ? restProps.address:''}>
 			<Icon className={`${styles.edit} ${styles.icon}`} type="arrow-down" />
-			<em><FormattedMessage id="install address"/></em>
+			<em><FormattedMessage id="Install Address"/></em>
 		</span>
 	</div>
 );
@@ -86,7 +86,7 @@ const Finish = ({ className = '', ...restProps }) => (
 		</span>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.address ? restProps.address:''}>
 			<Icon className={`${styles.edit} ${styles.icon}`} type="arrow-down" />
-			<em><FormattedMessage id="install address"/></em>
+			<em><FormattedMessage id="Install Address"/></em>
 		</span>
 	</div>
 );
@@ -262,7 +262,7 @@ export default class extends Component {
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault(item)}>
 											<tbody>
 												<tr>
-													<td className="tr"><FormattedMessage id="device name"/> ：</td>
+													<td className="tr"><FormattedMessage id="Device Name"/> ：</td>
 													<td className="tl">{device_name[index]}</td>
 												</tr>
 												<tr>
@@ -311,7 +311,7 @@ export default class extends Component {
 													<td className="tl" style={{ width: '100px' }}>{item.order_id}</td>
 												</tr>
 												<tr>
-													<td className="tr"><FormattedMessage id="device name"/> ：</td>
+													<td className="tr"><FormattedMessage id="Device Name"/> ：</td>
 													<td className="tl">{device_name[index]}</td>
 												</tr>
 												<tr>

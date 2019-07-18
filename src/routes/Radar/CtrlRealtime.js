@@ -8,14 +8,15 @@ import { Picker, List, Tabs, Modal } from 'antd-mobile';
 import classNames from 'classnames';
 import styles from './CtrlRealtime.less';
 import echarts from 'echarts';
-import { getEvent, postMonitor, getFollowDevices, getFault, getFloorData, getCtrlRuntime, } from '../../services/api';
+import { getEvent, postMonitor, getFollowDevices, getFault, getFloorData, getCtrlRuntime, getCommand } from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
 
 var counts=0;
 var ct=0;
-var showc =null;
-var inte = null;
-var intes = null;
+var chartInte =null;
+var showInte = null;
+var DataInte = null;
+var timing = null;
 var charts = true;
 var websock = '';
 const alert = Modal.alert
@@ -41,7 +42,7 @@ const parseStatus= (event) => {
 		statusName= 'Firefighting';
 	}
 	if ((event&(0x10))>>4 == 1) {
-		statusName= 'Lock body';
+		statusName= 'Lock ladder';
 	}
 	if ((event&(0x20))>>5 == 1) {
 		statusName= 'Order';
@@ -173,6 +174,9 @@ export default class CtrlRealtime extends Component {
 		code:'',
 		install_addr:'',
 		device_name:'',
+		startTime:'',
+		endTime:'',
+		command:false,
 	}
 	componentWillMount() {
 		if(window.localStorage.getItem("language")=="en"){
@@ -205,9 +209,10 @@ export default class CtrlRealtime extends Component {
 	componentWillUnmount() {
 		this.state.charts = false;
 		this.state.pclock = false;
-		clearInterval(showc)
-		clearInterval(inte)
-		clearInterval(intes)
+		clearInterval(chartInte)
+		clearInterval(showInte)
+		clearInterval(DataInte)
+		clearInterval(timing)
 		if(websock){
 			websock.close()
 			websock=null
@@ -219,21 +224,23 @@ export default class CtrlRealtime extends Component {
 		const device_id = this.props.match.params.id
 		const userId = currentUser.id
 		const wsurl = 'ws://47.96.162.192:9006/device/Monitor/socket?deviceId='+device_id+'&userId='+userId;
+		this.state.command = true
 		websock = new WebSocket(wsurl);
 		websock.onopen = this.websocketonopen;
 		websock.onerror = this.websocketonerror;
 		websock.onmessage= (e) =>{
 			if(e.data=="closed"){
-				alert("此次实时数据已结束")
-				this.state.switch = false;
+				this.state.switch = false
+				this.state.command = false
 				websock.close()
-				clearInterval(inte)
+				clearInterval(showInte)
+				clearInterval(timing)
 				this.forceUpdate()
 			}else{
 				var redata = JSON.parse(e.data)
 				this.pushData(redata)
 				if(counts==0){
-					intes = setInterval( () => {
+					DataInte = setInterval( () => {
 						if(this.state.clock==true){
 							this.getData()
 						}
@@ -281,6 +288,27 @@ export default class CtrlRealtime extends Component {
 					alert("当前设备已被人启动监控")
 				}
 			});
+			setTimeout(()=>{ 
+				getCommand({num:1,page:1,IMEI}).then((res)=>{
+					if(res.code==0){
+						timing = setInterval( () => {
+							const date = new Date().getTime()
+							const endTime = Math.round(((res.list[0].submit+duration*1000)-date)/1000)
+							if(endTime<0){
+								this.setState({
+									endTime:0,
+								})
+								clearInterval(timing)
+							}else{
+								this.setState({
+									endTime,
+								})
+							}
+							this.forceUpdate()
+						},1000)
+					}
+				})
+			}, 1000);
 		}else{
 			websock.close()
 		}
@@ -307,12 +335,18 @@ export default class CtrlRealtime extends Component {
 			show,
 		})
 		getFollowDevices({device_id}).then((res)=>{
+			let command = false
 			if(res.code ==0){
+				if(res.data.list[0].commond=="ok"||res.data.list[0].commond=="monitor"){
+					command = false
+				}else{
+					command = true
+				}
 				this.setState({
-					
 					IMEI:res.data.list[0].IMEI,
 					install_addr:res.data.list[0].install_addr,
 					device_name:res.data.list[0].device_name,
+					command,
 				})
 			}
 		})
@@ -445,7 +479,7 @@ export default class CtrlRealtime extends Component {
 			this.state.clock=true
 			if(ct==0){
 				ct = ct+1
-				inte = setInterval(() => {
+				showInte = setInterval(() => {
 					if(this.state.pclock==true){
 						this.showData()
 					}
@@ -644,6 +678,7 @@ export default class CtrlRealtime extends Component {
 		}else{
 			this.state.IoInfo="Car Output Watch:"
 		}
+		this.forceUpdate()
 	}
 	changeIo1 = () => {
 		this.state.isIo1 = !this.state.isIo1
@@ -652,6 +687,7 @@ export default class CtrlRealtime extends Component {
 		}else{
 			this.state.IoInfo1="Io Output Watch:"
 		}
+		this.forceUpdate()
 	}
 	onChange1 = () => {
 		this.state.switch1 = !this.state.switch1
@@ -663,7 +699,7 @@ export default class CtrlRealtime extends Component {
 		const id = this.props.match.params.id
 		const la = window.localStorage.getItem("language")
 		if(view == 1 && counts == 1){
-			showc = setInterval(() => {
+			chartInte = setInterval(() => {
 				if(this.state.pclock==true){
 					this.showChart()
 					this.forceUpdate()
@@ -672,7 +708,7 @@ export default class CtrlRealtime extends Component {
 			counts = 2
 		}
 		if(view == 0 && counts == 2){
-			clearInterval(showc)
+			clearInterval(chartInte)
 			counts = 1
 		}
 		return (
@@ -701,6 +737,7 @@ export default class CtrlRealtime extends Component {
 							  unCheckedChildren=<FormattedMessage id="Close"/>
 							  onChange={this.onChange}
 							  checked={this.state.switch}
+							  disabled={this.state.command}
 							  defaultChecked={this.state.switch}
 							/>
 						</Col>
@@ -722,49 +759,48 @@ export default class CtrlRealtime extends Component {
 										<p style={{
 											width: '100%',
 											justifyContent: 'flex-start',
-										}}><FormattedMessage id="install address"/>：<i className={styles.status}>{this.state.install_addr}</i>
+										}}><FormattedMessage id="Install Address"/>：<i className={styles.status}>{this.state.install_addr}</i>
 										</p>
 										<p style={{
 											width: '100%',
 											justifyContent: 'flex-start',
-										}}><FormattedMessage id="device name"/>：<i className={styles.status}>{this.state.device_name}</i>
+										}}><FormattedMessage id="Device Name"/>：<i className={styles.status}>{this.state.device_name}</i>
 										</p>
 										<p style={{
 											width: '40%',
-											justifyContent: 'flex-start',
 										}}><FormattedMessage id="Realtime:"/> <i className={styles.status}>{show.run ? <FormattedMessage id={"Operation"}/>:<FormattedMessage id={"Shutdown"}/>}</i>
 										</p>
 										<p  style={{
 											width: '60%',
-											justifyContent: 'flex-start',
-										}}><FormattedMessage id="Opening arrival signal:"/><i className={styles.status}>{show.open ? <FormattedMessage id={"Action"}/>:<FormattedMessage id={"Stop"}/>}</i>
+										}}><FormattedMessage id="Opening arrival signal:"/><i className={styles.status}>{show.open ? <FormattedMessage id="Action"/>:<FormattedMessage id={"Stop"}/>}</i>
 										</p>
 										<p style={{
 											width: '40%',
-											justifyContent: 'flex-start',
 										}}><FormattedMessage id="Elevator mode:"/><i className={styles.status}>{<FormattedMessage id={parseModel(show.model)}/>}</i>
 										</p>
 										<p style={{
 											width: '60%',
-											justifyContent: 'flex-start',
-										}}><FormattedMessage id="Closing arrival signal:"/><i className={styles.status}>{show.close ? <FormattedMessage id={"Action"}/>:<FormattedMessage id={"Stop"}/>}</i>
+										}}><FormattedMessage id="Closing arrival signal:"/><i className={styles.status}>{show.close ? <FormattedMessage id="Action"/>:<FormattedMessage id="Stop"/>}</i>
 										</p>
 										<p style={{
 											width: '40%',
-											justifyContent: 'flex-start',
 										}}><FormattedMessage id="Door lock circuit:"/><i className={styles.status}>{show.lock ? '通':'断'}</i>
 										</p>
-										<p ><FormattedMessage id="Elevator run speed:"/><i className={styles.status}>{show.speed ? (show.speed/1000):0}m/s</i>
+										<p style={{
+											width: '60%',
+										}}><FormattedMessage id="Elevator run speed:"/><i className={styles.status}>{show.speed ? (show.speed/1000):0}m/s</i>
 										</p>
 										<p style={{
 											width: '40%',
-											justifyContent: 'flex-start',
 										}}><FormattedMessage id="Devices State:"/><i className={styles.status}>{<FormattedMessage id={parseStatus(show.status)}/>}</i>
 										</p>
 										<p style={{
 											width: '60%',
-											justifyContent: 'flex-start',
-										}}><FormattedMessage id="Order"/>：<i className={styles.status}>{this.state.code?<FormattedMessage id={'E'+this.state.code}/>:<FormattedMessage id={"None"}/>}</i>
+										}}><FormattedMessage id="Order:"/><i className={styles.status}>{this.state.code?<FormattedMessage id={'E'+this.state.code}/>:<FormattedMessage id={"None"}/>}</i>
+										</p>
+										<p style={{
+											width: '40%',
+										}}><FormattedMessage id="Monitor remaining time"/><i className={styles.status}>{this.state.endTime?(this.state.endTime+"s"):"0s"}</i>
 										</p>
 										<p style={{
 											width: '80%',
@@ -1226,49 +1262,48 @@ export default class CtrlRealtime extends Component {
 										<p style={{
 											width: '100%',
 											justifyContent: 'flex-start',
-										}}><FormattedMessage id="install address"/>：<i className={styles.status}>{this.state.install_addr}</i>
+										}}><FormattedMessage id="Install Address"/>：<i className={styles.status}>{this.state.install_addr}</i>
 										</p>
 										<p style={{
 											width: '100%',
 											justifyContent: 'flex-start',
-										}}><FormattedMessage id="device name"/>：<i className={styles.status}>{this.state.device_name}</i>
+										}}><FormattedMessage id="Device Name"/>：<i className={styles.status}>{this.state.device_name}</i>
 										</p>
 										<p style={{
-											width: '40%',
-											justifyContent: 'flex-start',
+											width: '100%',
 										}}><FormattedMessage id="Realtime:"/> <i className={styles.status}>{show.run ? <FormattedMessage id={"Operation"}/>:<FormattedMessage id={"Shutdown"}/>}</i>
 										</p>
 										<p  style={{
-											width: '60%',
-											justifyContent: 'flex-start',
+											width: '100%',
 										}}><FormattedMessage id="Opening arrival signal:"/><i className={styles.status}>{show.open ? <FormattedMessage id={"Action"}/>:<FormattedMessage id={"Stop"}/>}</i>
 										</p>
 										<p style={{
 											width: '100%',
-											justifyContent: 'flex-start',
 										}}><FormattedMessage id="Elevator mode:"/><i className={styles.status}>{<FormattedMessage id={parseModel(show.model)}/>}</i>
 										</p>
 										<p style={{
-											width: '60%',
-											justifyContent: 'flex-start',
+											width: '100%',
 										}}><FormattedMessage id="Closing arrival signal:"/><i className={styles.status}>{show.close ? <FormattedMessage id={"Action"}/>:<FormattedMessage id={"Stop"}/>}</i>
 										</p>
 										<p style={{
 											width: '100%',
-											justifyContent: 'flex-start',
 										}}><FormattedMessage id="Door lock circuit:"/><i className={styles.status}>{show.lock ? <FormattedMessage id={"Through"}/>:<FormattedMessage id={"Break"}/>}</i>
 										</p>
-										<p ><FormattedMessage id="Elevator run speed:"/><i className={styles.status}>{show.speed ? (show.speed/1000):0}m/s</i>
+										<p style={{
+											width: '100%',
+										}}><FormattedMessage id="Elevator run speed:"/><i className={styles.status}>{show.speed ? (show.speed/1000):0}m/s</i>
 										</p>
 										<p style={{
-											width: '50%',
-											justifyContent: 'flex-start',
+											width: '100%',
 										}}><FormattedMessage id="Devices State:"/><i className={styles.status}>{<FormattedMessage id={parseStatus(show.status)}/>}</i>
 										</p>
 										<p style={{
-											width: '50%',
-											justifyContent: 'flex-start',
-										}}><FormattedMessage id="Order"/>：<i className={styles.status}>{this.state.code?<FormattedMessage id={'E'+this.state.code}/>:<FormattedMessage id={"None"}/>}</i>
+											width: '100%',
+										}}><FormattedMessage id="Order:"/><i className={styles.status}>{this.state.code?<FormattedMessage id={'E'+this.state.code}/>:<FormattedMessage id={"None"}/>}</i>
+										</p>
+										<p style={{
+											width: '100%',
+										}}><FormattedMessage id="Monitor remaining time"/> <i className={styles.status}>{this.state.endTime?(this.state.endTime+"s"):"0s"}</i>
 										</p>
 										<p style={{
 											width: '80%',

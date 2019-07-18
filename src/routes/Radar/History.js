@@ -583,12 +583,12 @@ export default class DoorHistory extends Component {
 									<p style={{
 										width: '100%',
 										justifyContent: 'flex-start',
-									}}><FormattedMessage id="install address"/>：<i className={styles.status}>{this.state.install}</i>
+									}}><FormattedMessage id="Install Address"/>：<i className={styles.status}>{this.state.install}</i>
 									</p>
 									<p style={{
 										width: '100%',
 										justifyContent: 'flex-start',
-									}}><FormattedMessage id="device name"/>：<i className={styles.status}>{this.state.device_name}</i>
+									}}><FormattedMessage id="Device Name"/>：<i className={styles.status}>{this.state.device_name}</i>
 									</p>
 									<p><FormattedMessage id="Door coordinate："/><i className={styles.status}>{show.position || show.position === 0 ? show.position : '0'}</i>
 									</p>
@@ -603,7 +603,7 @@ export default class DoorHistory extends Component {
 									<p style={{
 										width: '100%',
 										justifyContent: 'flex-start',
-									}}><FormattedMessage id="Door state"/>：<i className={styles.status}>{<FormattedMessage id={parseState(show)}/>}</i>
+									}}><FormattedMessage id="Door state"/><i className={styles.status}>{<FormattedMessage id={parseState(show)}/>}</i>
 									</p>
 									{/*<p><FormattedMessage id="Opening arrival signal:"/><i className={styles.status}>{show.openToOut ? '开' : '关'}</i>
 									</p>

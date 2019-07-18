@@ -23,10 +23,6 @@ const options = [
 export default class Tech extends Component {
 	state = {
 		navs: [
-// 			{
-//       label: '故障代码查询',
-//       link: '/tech/code',
-//     },
 		{
 			label: '产品说明书',
 			link: '/tech/manual',
@@ -41,6 +37,9 @@ export default class Tech extends Component {
 		this.props.history.push(`/tech/reader/${link}`);
 		// window.location.href = link;
 	}
+	onChange = () => {
+		
+	}
 	render() {
 		const { location } = this.props;
 		const currentPath = pathToRegexp('/tech/:name').exec(location.pathname);
@@ -53,6 +52,28 @@ export default class Tech extends Component {
 					navs={this.state.navs}
 				/>
 				<div className={styles.content}>
+					{/* <Row className={styles.page}>
+						<Col span={8} style={{margin:'5px',}}>
+							<Input
+								placeholder={(la=="zh")?"故障代码":"Order Code"}
+								onChange={this.onChange}
+								value={this.state.search_info}
+								maxlength="16"></Input>
+						</Col>
+						<Col span={8} style={{margin:'5px',}}>
+							<Input
+								placeholder={(la=="zh")?"关键词":"Key Word"}
+								onChange={this.onChangel}
+								value={this.state.iddr}
+								maxlength="16"></Input>
+						</Col>
+						<Col span={6}>
+							<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
+						</Col>
+						<Col span={24} className={styles.center}>
+							<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
+						</Col>
+					</Row> */}
 					<List style={{ backgroundColor: 'white' }}>
 						{
 							options.map(item => (
