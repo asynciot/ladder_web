@@ -126,7 +126,7 @@ export default class DoorHistory extends Component {
 	goOrder = item => () =>{
 		const id = item.id
 		this.props.history.push({
-			pathname:`/order/${item.id}`,
+			pathname:`/company/order/${item.id}`,
 			state: { id }
 		});
 	}
