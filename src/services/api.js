@@ -65,10 +65,10 @@ export async function getDeviceInfo(params) {
 export async function getFileData(params) {
 	return request(`/device/Runtime?&num=30&page=1&device_id=${params}`);
 }
-export async function getCtrlData(params) {
+export async function getCtrlRuntime(params) {
 	return request(`/device/Runtime?&num=1&page=1&type=8192&${stringify(params)}`);
 }
-export async function getDoorData(params) {
+export async function getDoorRuntime(params) {
 	return request(`/device/Runtime?&${stringify(params)}`);
 }
 export async function getFloorData(params) {
@@ -226,5 +226,10 @@ export function getBanners(params) {
 // statistic
 export function getStatistic(params) {
 	return request(`/mointors/statistic?${stringify(params)}`);
+}
+
+//command
+export function getCommand(params) {
+	return request(`/device/Command?${stringify(params)}`);
 }
 

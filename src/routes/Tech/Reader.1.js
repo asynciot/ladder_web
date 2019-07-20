@@ -35,9 +35,6 @@ function genData(pIndex = 0) {
   }
   sectionIDs = [...sectionIDs];
   rowIDs = [...rowIDs];
-  console.log(sectionIDs);
-  console.log(rowIDs);
-  console.log(dataBlobs);
 }
 let data = [];
 export default class Reader extends Component {

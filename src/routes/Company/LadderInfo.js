@@ -5,20 +5,21 @@ import { List, InputItem, DatePicker, Modal} from 'antd-mobile';
 import styles from './EditDevice.less';
 import { getLadder, getFollowDevices } from '../../services/api';
 import pathToRegexp from 'path-to-regexp';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage, } from 'react-intl';
 var _val1 = '';
 var _val2 = '';
 
 const alert = Modal.alert;
 const state ={
-	'online':'online',
+	'online':'在线',
 	'offline':'offline',
-	'longoffline':'long offline',
+	'longoffline':'长期离线',
 }
 export default class extends Component {
 	state = {
 		ladder_name: '',
 		list:[],
+		la:window.localStorage.getItem("language"),
 	}
 	componentWillMount() {
 		this.getInfo();
@@ -38,6 +39,12 @@ export default class extends Component {
 				});
 			});
 		}
+	}
+	goLadder = () => {
+		const id = this.state.list.id
+		this.props.history.push({
+			pathname:`/ladder/${id}`,
+		});
 	}
 	getInfo = () => {
 		const id = this.props.match.params.id
@@ -59,13 +66,13 @@ export default class extends Component {
 						value={list.name}
 						disabled="true"
 					>
-						<FormattedMessage id="device name"/>
+						<FormattedMessage id="Device Name"/>
 					</InputItem>
 					<InputItem
 						value={list.install_addr}
 						disabled="true"
 					>
-						<FormattedMessage id="install address"/>
+						<FormattedMessage id="Install Address"/>
 					</InputItem>
 					<div onClick={()=>this.goDevice(0,list.ctrl_id)}>
 						<InputItem
@@ -94,12 +101,30 @@ export default class extends Component {
 							<FormattedMessage id="door"/>
 						</InputItem>
 					</div>
-					<InputItem
-						value={state[list.state]}
-						disabled="true"
-					>
-						<FormattedMessage id="state"/>
-					</InputItem>
+					<div onClick={()=>this.goLadder()}>
+						<InputItem
+							disabled="true"
+							style={{color:'red'}}
+						>
+							电梯
+						</InputItem>
+					</div>
+					{
+						(this.state.la=="zh")?
+						<InputItem
+							value={state[list.state]}
+							disabled="true"
+						>
+							<FormattedMessage id="state"/>
+						</InputItem>
+						:
+						<InputItem
+							value={list.state}
+							disabled="true"
+						>
+							<FormattedMessage id="state"/>
+						</InputItem>
+					}
 				</Form>
 			</div>
 		);

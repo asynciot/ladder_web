@@ -8,14 +8,15 @@ import { Picker, List, Tabs, Modal } from 'antd-mobile';
 import classNames from 'classnames';
 import styles from './CtrlRealtime.less';
 import echarts from 'echarts';
-import { getEvent, postMonitor, getFollowDevices, getFault, getDeviceList, getFloorData, getCtrlData, } from '../../services/api';
+import { getEvent, postMonitor, getFollowDevices, getFault, getFloorData, getCtrlRuntime, getCommand } from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
 
 var counts=0;
 var ct=0;
-var showc =null;
-var inte = null;
-var intes = null;
+var chartInte =null;
+var showInte = null;
+var DataInte = null;
+var timing = null;
 var charts = true;
 var websock = '';
 const alert = Modal.alert
@@ -27,84 +28,43 @@ const direction = {
 	'11': '',
 }
 const parseStatus= (event) => {
-	let statusName = '';
+	let statusName = 'None';
 	if ((event&(0x01)) == 1) {
-		statusName+= '自动';
-	}else{
-		statusName+= '检修';
-	}
-	// if ((event&(0x02))>>1 == 1) {
-	// 	statusName+= '检修';
-	// }
-	// if ((event&(0x04))>>2 == 1) {
-	// 	statusName+= '司机';
-	// }
-	// if ((event&(0x08))>>3 == 1) {
-	// 	statusName+= '消防';
-	// }
-	// if ((event&(0x10))>>4 == 1) {
-	// 	statusName+= '锁体';
-	// }
-	// if ((event&(0x20))>>5 == 1) {
-	// 	statusName+= '故障';
-	// }
-	// if ((event&(0x40))>>6 == 1) {
-	// 	statusName+= '超载';
-	// }
-	// if ((event&(0x80))>>7 == 1) {
-	// 	statusName+= '满载';
-	// }
-	return statusName
-}
-const faultCode = {
-	'1': '过流',
-	'2': '母线过压',
-	'3': '母线欠压',
-	'4': '输入缺相',
-	'5': '输出缺相',
-	'6': '输出过力矩',
-	'7': '编码器故障',
-	'8': '模块过热',
-	'9': '运行接触器故障',
-	'10': '抱闸接触器故障',
-	'11': '封星继电器故障',
-	'12': '抱闸开关故障',
-	'13': '运行中安全回路断开',
-	'14': '运行中门锁断开',
-	'15': '门锁短接故障',
-	'16': '层站召唤通讯故障',
-	'17': '轿厢通讯故障',
-	'18': '并联通讯故障',
-	'19': '开门故障',
-	'20': '关门故障',
-	'21': '开关门到位故障',
-	'22': '平层信号异常',
-	'23': '终端减速开关故障',
-	'24': '下限位信号异常',
-	'25': '上限位信号异常',
-	'26': '打滑故障',
-	'27': '电梯速度异常',
-	'28': '电机反转故障',
-	'31': '停车速度检测',
-	'33': '马达过热故障',
-	'34': '制动力严重不足',
-	'35': '制动力不足警告',
-	'36': 'UCMP故障',
-	'37': 'IPM故障',
-	'38': '再平层开关异常',
-	'40': '驱动保护故障',
-	'41': '平层位置异常',
-}
-const parseModel = (event) => {
-	let statusName = '无';
-	if ((event&(0x01)) == 1) {
-		statusName = '单梯';
+		statusName= 'Automatic';
 	}
 	if ((event&(0x02))>>1 == 1) {
-		statusName = '并联';
+		statusName= 'Overhaul';
 	}
 	if ((event&(0x04))>>2 == 1) {
-		statusName = '群控';
+		statusName= 'Driver';
+	}
+	if ((event&(0x08))>>3 == 1) {
+		statusName= 'Firefighting';
+	}
+	if ((event&(0x10))>>4 == 1) {
+		statusName= 'Lock ladder';
+	}
+	if ((event&(0x20))>>5 == 1) {
+		statusName= 'Order';
+	}
+	if ((event&(0x40))>>6 == 1) {
+		statusName= 'Overload';
+	}
+	if ((event&(0x80))>>7 == 1) {
+		statusName= 'Full load';
+	}
+	return statusName
+}
+const parseModel = (event) => {
+	let statusName = 'None';
+	if ((event&(0x01)) == 1) {
+		statusName = 'Single Ladder';
+	}
+	if ((event&(0x02))>>1 == 1) {
+		statusName = 'Parallel Connection';
+	}
+	if ((event&(0x04))>>2 == 1) {
+		statusName = 'Group Control';
 	}
 	return statusName
 }
@@ -207,12 +167,16 @@ export default class CtrlRealtime extends Component {
 		isIo:true,
 		isIo1:true,
 		isCar:true,
-		IoInfo1:'Io板输入口监控:',
-		IoInfo:'轿顶板输入口监控:',
+		IoInfo1:'Io Input Watch:',
+		IoInfo:'Car Input Watch:',
 		la:true,
 		IMEI:'',
+		code:'',
 		install_addr:'',
 		device_name:'',
+		startTime:'',
+		endTime:'',
+		command:false,
 	}
 	componentWillMount() {
 		if(window.localStorage.getItem("language")=="en"){
@@ -245,9 +209,10 @@ export default class CtrlRealtime extends Component {
 	componentWillUnmount() {
 		this.state.charts = false;
 		this.state.pclock = false;
-		clearInterval(showc)
-		clearInterval(inte)
-		clearInterval(intes)
+		clearInterval(chartInte)
+		clearInterval(showInte)
+		clearInterval(DataInte)
+		clearInterval(timing)
 		if(websock){
 			websock.close()
 			websock=null
@@ -259,21 +224,23 @@ export default class CtrlRealtime extends Component {
 		const device_id = this.props.match.params.id
 		const userId = currentUser.id
 		const wsurl = 'ws://47.96.162.192:9006/device/Monitor/socket?deviceId='+device_id+'&userId='+userId;
+		this.state.command = true
 		websock = new WebSocket(wsurl);
 		websock.onopen = this.websocketonopen;
 		websock.onerror = this.websocketonerror;
 		websock.onmessage= (e) =>{
 			if(e.data=="closed"){
-				alert("此次实时数据已结束")
-				this.state.switch = false;
+				this.state.switch = false
+				this.state.command = false
 				websock.close()
-				clearInterval(inte)
+				clearInterval(showInte)
+				clearInterval(timing)
 				this.forceUpdate()
 			}else{
 				var redata = JSON.parse(e.data)
 				this.pushData(redata)
 				if(counts==0){
-					intes = setInterval( () => {
+					DataInte = setInterval( () => {
 						if(this.state.clock==true){
 							this.getData()
 						}
@@ -295,7 +262,6 @@ export default class CtrlRealtime extends Component {
 	}
 	onChange = (val) => {
 		this.state.switch = !this.state.switch
-		this.forceUpdate()
 		this.clears()
 		counts = 0
 		ct = 0
@@ -310,7 +276,7 @@ export default class CtrlRealtime extends Component {
 			const IMEI = this.state.IMEI;
 			const interval = 500;
 			const threshold = 4;
-			const duration = 1440;
+			const duration = 300;
 			const device_type = '240';
 			const type = '0';
 			const segment = '00,00,00,00';
@@ -322,17 +288,36 @@ export default class CtrlRealtime extends Component {
 					alert("当前设备已被人启动监控")
 				}
 			});
+			setTimeout(()=>{ 
+				getCommand({num:1,page:1,IMEI}).then((res)=>{
+					if(res.code==0){
+						timing = setInterval( () => {
+							const date = new Date().getTime()
+							const endTime = Math.round(((res.list[0].submit+duration*1000)-date)/1000)
+							if(endTime<0){
+								this.setState({
+									endTime:0,
+								})
+								clearInterval(timing)
+							}else{
+								this.setState({
+									endTime,
+								})
+							}
+							this.forceUpdate()
+						},1000)
+					}
+				})
+			}, 1000);
 		}else{
 			websock.close()
-			this.forceUpdate()
 		}
 	}
 	getBaseData = () => {
+		const { show } = this.state
 		const device_id = this.props.match.params.id
-		const show = this.state.show
-		getCtrlData({device_id}).then((res) => {
-			let buffer = []
-			buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
+		getCtrlRuntime({device_id}).then((res) => {
+			let buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
 			show.upCall   = buffer[6]&0x01
 			show.downCall = (buffer[6]&0x02)>>1
 			show.run      = (buffer[6]&0x04)>>2					//获取运行信号
@@ -346,21 +331,32 @@ export default class CtrlRealtime extends Component {
 			show.floor    = buffer[9]&0xff           			//获取电梯当前楼层
 			show.updateTime = res.data.list[0].t_update
 		});
+		this.setState({
+			show,
+		})
 		getFollowDevices({device_id}).then((res)=>{
+			let command = false
 			if(res.code ==0){
+				if(res.data.list[0].commond=="ok"||res.data.list[0].commond=="monitor"){
+					command = false
+				}else{
+					command = true
+				}
 				this.setState({
 					IMEI:res.data.list[0].IMEI,
 					install_addr:res.data.list[0].install_addr,
 					device_name:res.data.list[0].device_name,
+					command,
 				})
 			}
 		})
 		getFault({ num: 1, page:1, islast:1, device_type:'ctrl', state:'untreated', device_id }).then((res) => {
 			if(res.code ==0){
-				this.setState({
-					code:res.data.list[0].code.toString(16),
-				})
-				 
+				if(res.data.list[0]!=null){
+					this.setState({
+						code:res.data.list[0].code.toString(16),
+					})
+				}
 			}
 		})
 	}
@@ -476,7 +472,6 @@ export default class CtrlRealtime extends Component {
 						this.state.markList[i] = markList[i]
 					}
 					this.state.markList.reverse()
-					this.forceUpdate()
 					count+=33
 				}
 			}
@@ -484,7 +479,7 @@ export default class CtrlRealtime extends Component {
 			this.state.clock=true
 			if(ct==0){
 				ct = ct+1
-				inte = setInterval(() => {
+				showInte = setInterval(() => {
 					if(this.state.pclock==true){
 						this.showData()
 					}
@@ -529,7 +524,6 @@ export default class CtrlRealtime extends Component {
 			Object.values(arr).forEach(item => {
 				item.shift()
 			});
-			this.forceUpdate()
 		}
 	}
 	getfloor = (val) => {
@@ -558,7 +552,6 @@ export default class CtrlRealtime extends Component {
 				alert("获取楼层高度失败！");
 			}
 		})
-		this.forceUpdate()
 	}
 	showChart = () =>{
 		const {event} = this.props;
@@ -660,14 +653,11 @@ export default class CtrlRealtime extends Component {
 		this.props.history.push(`/ctrl/${id}/${link}`);
 	}
 	goQrcode = () => {
-		const device_id = this.props.match.params.id;
-		getDeviceList({device_id}).then((res)=>{
-			const id = res.data.list[0].IMEI
-			this.setState({
-				src: `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=http://server.asynciot.com/company/follow/${id}`,
-				modal: true,
-			});
-		})
+		const id = this.state.IMEI
+		this.setState({
+			src: `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=http://server.asynciot.com/company/follow/${id}`,
+			modal: true,
+		});
 	}
 	goDebug = () => {
 		const id = this.props.match.params.id;
@@ -684,18 +674,18 @@ export default class CtrlRealtime extends Component {
 	changeIo = () => {
 		this.state.isIo = !this.state.isIo
 		if(this.state.isIo==true){
-			this.state.IoInfo="轿顶板输入口监控:"
+			this.state.IoInfo="Car Input Watch:"
 		}else{
-			this.state.IoInfo="轿顶板输出口监控:"
+			this.state.IoInfo="Car Output Watch:"
 		}
 		this.forceUpdate()
 	}
 	changeIo1 = () => {
 		this.state.isIo1 = !this.state.isIo1
 		if(this.state.isIo1==true){
-			this.state.IoInfo1="Io板输入口监控:"
+			this.state.IoInfo1="Io Input Watch:"
 		}else{
-			this.state.IoInfo1="Io板输出口监控:"
+			this.state.IoInfo1="Io Output Watch:"
 		}
 		this.forceUpdate()
 	}
@@ -707,8 +697,9 @@ export default class CtrlRealtime extends Component {
 		let { ctrl: { event, view, device, floors, property, } } = this.props
 		const { floor, markFloor, markList, show} = this.state
 		const id = this.props.match.params.id
+		const la = window.localStorage.getItem("language")
 		if(view == 1 && counts == 1){
-			showc = setInterval(() => {
+			chartInte = setInterval(() => {
 				if(this.state.pclock==true){
 					this.showChart()
 					this.forceUpdate()
@@ -717,7 +708,7 @@ export default class CtrlRealtime extends Component {
 			counts = 2
 		}
 		if(view == 0 && counts == 2){
-			clearInterval(showc)
+			clearInterval(chartInte)
 			counts = 1
 		}
 		return (
@@ -742,534 +733,1025 @@ export default class CtrlRealtime extends Component {
 						</Col>
 						<Col span={6}>
 							<Switch
-							  checkedChildren="开"
-							  unCheckedChildren="关"
+							  checkedChildren=<FormattedMessage id="Open"/>
+							  unCheckedChildren=<FormattedMessage id="Close"/>
 							  onChange={this.onChange}
 							  checked={this.state.switch}
+							  disabled={this.state.command}
 							  defaultChecked={this.state.switch}
 							/>
 						</Col>
 					</Row>
-					<div className={classNames(styles.tab, view == 0 ?'tab-active' : 'tab-notactive')}>
-						<Row
-							type="flex"
-							justify="space-around"
-							align="middle"
-							className={styles.ladder}
-						>
-							<Col
-								span={24}
-								className={classNames(styles.door)}
+					{
+						(la=="zh") ?
+						<div className={classNames(styles.tab, view == 0 ?'tab-active' : 'tab-notactive')}>
+							<Row
+								type="flex"
+								justify="space-around"
+								align="middle"
+								className={styles.ladder}
 							>
-								<section>
-									<p style={{
-										width: '100%',
-										justifyContent: 'flex-start',
-									}}><FormattedMessage id="install address"/>：<i className={styles.status}>{this.state.install_addr}</i>
-									</p>
-									<p style={{
-										width: '100%',
-										justifyContent: 'flex-start',
-									}}><FormattedMessage id="device name"/>：<i className={styles.status}>{this.state.device_name}</i>
-									</p>
-									<p style={{
-											width: '40%',
+								<Col
+									span={24}
+									className={classNames(styles.door)}
+								>
+									<section>
+										<p style={{
+											width: '100%',
 											justifyContent: 'flex-start',
-										}}><FormattedMessage id="Realtime:"/> <i className={styles.status}>{show.run ? '运行':'停车'}</i>
-									</p>
-									<p  style={{
+										}}><FormattedMessage id="Install Address"/>：<i className={styles.status}>{this.state.install_addr}</i>
+										</p>
+										<p style={{
+											width: '100%',
+											justifyContent: 'flex-start',
+										}}><FormattedMessage id="Device Name"/>：<i className={styles.status}>{this.state.device_name}</i>
+										</p>
+										<p style={{
+											width: '40%',
+										}}><FormattedMessage id="Realtime:"/> <i className={styles.status}>{show.run ? <FormattedMessage id={"Operation"}/>:<FormattedMessage id={"Shutdown"}/>}</i>
+										</p>
+										<p  style={{
 											width: '60%',
-											justifyContent: 'flex-start',
-										}}><FormattedMessage id="Opening arrival signal:"/><i className={styles.status}>{show.open ? '动作':'不动作'}</i>
-									</p>
-									<p style={{
+										}}><FormattedMessage id="Opening arrival signal:"/><i className={styles.status}>{show.open ? <FormattedMessage id="Action"/>:<FormattedMessage id={"Stop"}/>}</i>
+										</p>
+										<p style={{
 											width: '40%',
-											justifyContent: 'flex-start',
-										}}><FormattedMessage id="Elevator mode:"/><i className={styles.status}>{parseModel(show.model)}</i>
-									</p>
-									<p style={{
+										}}><FormattedMessage id="Elevator mode:"/><i className={styles.status}>{<FormattedMessage id={parseModel(show.model)}/>}</i>
+										</p>
+										<p style={{
 											width: '60%',
-											justifyContent: 'flex-start',
-										}}><FormattedMessage id="Closing arrival signal:"/><i className={styles.status}>{show.close ? '动作':'不动作'}</i>
-									</p>
-									<p style={{
+										}}><FormattedMessage id="Closing arrival signal:"/><i className={styles.status}>{show.close ? <FormattedMessage id="Action"/>:<FormattedMessage id="Stop"/>}</i>
+										</p>
+										<p style={{
 											width: '40%',
-											justifyContent: 'flex-start',
 										}}><FormattedMessage id="Door lock circuit:"/><i className={styles.status}>{show.lock ? '通':'断'}</i>
-									</p>
-									<p ><FormattedMessage id="Elevator run speed:"/><i className={styles.status}>{show.speed ? (show.speed/1000):0}m/s</i>
-									</p>
-									<p style={{
-											width: '40%',
-											justifyContent: 'flex-start',
-										}}
-									><FormattedMessage id="Devices State:"/><i className={styles.status}>{parseStatus(show.status)}</i>
-									</p>
-									<p style={{
+										</p>
+										<p style={{
 											width: '60%',
-											justifyContent: 'flex-start',
-										}}
-									><FormattedMessage id="Order"/>：<i className={styles.status}>{faultCode[this.state.code]}</i>
-									</p>
-									<p
-										style={{
+										}}><FormattedMessage id="Elevator run speed:"/><i className={styles.status}>{show.speed ? (show.speed/1000):0}m/s</i>
+										</p>
+										<p style={{
+											width: '40%',
+										}}><FormattedMessage id="Devices State:"/><i className={styles.status}>{<FormattedMessage id={parseStatus(show.status)}/>}</i>
+										</p>
+										<p style={{
+											width: '60%',
+										}}><FormattedMessage id="Order:"/><i className={styles.status}>{this.state.code?<FormattedMessage id={'E'+this.state.code}/>:<FormattedMessage id={"None"}/>}</i>
+										</p>
+										<p style={{
+											width: '40%',
+										}}><FormattedMessage id="Monitor remaining time"/><i className={styles.status}>{this.state.endTime?(this.state.endTime+"s"):"0s"}</i>
+										</p>
+										<p style={{
 											width: '80%',
 											justifyContent: 'flex-start',
-										}}
-									>
-										<FormattedMessage id="Last update time"/> ：
-										<i className={styles.status}>{moment(show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
-									</p>
-									<p
-										style={{
+										}}>
+											<FormattedMessage id="Last update time"/> ：
+											<i className={styles.status}>{moment(show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
+										</p>
+										<p style={{
 											width: '20%',
 											justifyContent: 'flex-start',
-										}}
-									>	
-										{	this.state.la
-											?
+										}}>
 											<Switch
 												checkedChildren="IO"
-												unCheckedChildren="轿顶"
+												unCheckedChildren={<FormattedMessage id="Car"/>}
 												onChange={this.onChange1}
 												checked={this.state.switch1}
 												defaultChecked={this.state.switch1}
 											/>
-											:
-											<Switch
-												checkedChildren="IO"
-												unCheckedChildren="Car"
-												onChange={this.onChange1}
-												checked={this.state.switch1}
-												defaultChecked={this.state.switch1}
-											/>
-										}
-									</p>
-								</section>
-							</Col>
-						</Row>
-						<div>
-							<Col span={18}>
-								<Row>
-									{
-										this.state.switch1 ?
-										<Col
-											span={24}
-											className={styles.door}
-										>
-											<p className={styles.pd} >{this.state.IoInfo1}
-												<section style={{color:"blue"}} onClick={()=>{this.changeIo1()}}><FormattedMessage id="switch"/></section>
-											</p>
-											{
-												this.state.isIo1 ?
-												<section>
-													<p style={{width:'25%'}}>X1
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X2
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X3
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X4
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X5
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X6
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X7
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X8
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X9
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X10
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X11
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X12
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X13
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X14
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X15
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X16
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X17
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X18
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X19
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X20
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X21
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X22
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X23
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X24
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p style={{width:'25%'}}>X25
-														<i
-															className={styles.signal}
-														/>
-													</p>
-												</section> : 
-												<section>
-													<p ><FormattedMessage id="Main contactor"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Re-leveling"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Sealing star"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Front door opening"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Brake"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Front door closing"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Front door opening command"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Brake keeping"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Back door opening"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Fire-fighting light"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Back door closing"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Rescue buzzer"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p className={styles.pd1}><FormattedMessage id="Emergency electric operation"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p className={styles.pd1}><FormattedMessage id="Firelink to base station"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													
-												</section>
-											}
-										</Col> : 
-										<Col
-											span={24}
-											className={styles.door}
-										>
-											<p className={styles.pd} >{this.state.IoInfo}
-												<section style={{color:"blue"}} onClick={()=>{this.changeIo()}}><FormattedMessage id="switch"/></section>
-											</p>
-											{
-												this.state.isIo ?
-												<section>
-													<p ><FormattedMessage id="Front door light curtain"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Front door opening arrival"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Back door light curtain"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Back door opening arrival"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Front door safety touch pad"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Front door opening arrival"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Back door safety touch pad"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Back door closing arrival"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Full load"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Direct drive"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Overload"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Driver"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Open door"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Fireman switch"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="close door"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Independent"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-												</section> : 
-												<section>
-													<p ><FormattedMessage id="Up to the station clock"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Full load"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Down to the station clock"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Overload"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Lighting command"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Full load passing signal"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Front door opening command"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Full load passing signal"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Front door closing command"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Open door lamp"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Back door opening command"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Close door lamp"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Back door closing command"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p ><FormattedMessage id="Fire-fighting lamp"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p className={styles.pd1}><FormattedMessage id="Up and down arrival clock output"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-													<p><FormattedMessage id="Overhaul"/>
-														<i
-															className={styles.signal}
-														/>
-													</p>
-												</section>
-											}
-										</Col>
-									}
-								</Row>
-							</Col>
-							<Col span={6}>
-								<div className={styles.info}>
-									<p>
-										<Icon className={styles.icon} type={direction[`${show.downCall}${show.upCall}`]} />
-										<i>{this.state.floor[this.state.floor.length-show.floor]}</i>
-									</p>
-									<ul>
+										</p>
+									</section>
+								</Col>
+							</Row>
+							<div>
+								<Col span={18}>
+									<Row>
 										{
-											floor.map((item,index) => (
-												markList[index] ?
-												<li style={{ width: 30, color:'red'}} key={`${index}`} id={`${index}`}>{item}</li>
-												:
-												<li style={{ width: 30}} key={`${index}`} id={`${index}`}>{item}</li>
-											))
+											this.state.switch1 ?
+											<Col
+												span={24}
+												className={styles.door}
+											>
+												<p className={styles.pd} ><FormattedMessage id={this.state.IoInfo1}/>
+													<section style={{color:"blue"}} onClick={()=>{this.changeIo1()}}><FormattedMessage id="switch"/></section>
+												</p>
+												{
+													this.state.isIo1 ?
+													<section>
+														<p style={{width:'25%'}}>X1
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X2
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X3
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X4
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X5
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X6
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X7
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X8
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X9
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X10
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X11
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X12
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X13
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X14
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X15
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X16
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X17
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X18
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X19
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X20
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X21
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X22
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X23
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X24
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X25
+															<i
+																className={styles.signal}
+															/>
+														</p>
+													</section> : 
+													<section>
+														<p ><FormattedMessage id="Main contactor"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Re-leveling"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Sealing star"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Front door opening"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Brake"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Front door closing"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Front door opening command"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Brake keeping"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Back door opening"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Fire-fighting light"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Back door closing"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Rescue buzzer"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p className={styles.pd1}><FormattedMessage id="Emergency electric operation"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p className={styles.pd1}><FormattedMessage id="Firelink to base station"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														
+													</section>
+												}
+											</Col> : 
+											<Col
+												span={24}
+												className={styles.door}
+											>
+												<p className={styles.pd} ><FormattedMessage id={this.state.IoInfo}/>
+													<section style={{color:"blue"}} onClick={()=>{this.changeIo()}}><FormattedMessage id="switch"/></section>
+												</p>
+												{
+													this.state.isIo ?
+													<section>
+														<p ><FormattedMessage id="Front door light curtain"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Front door opening arrival"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Back door light curtain"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Back door opening arrival"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Front door safety touch pad"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Front door opening arrival"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Back door safety touch pad"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Back door closing arrival"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Full load"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Direct drive"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Overload"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Driver"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Open door"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Fireman switch"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="close door"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Independent"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+													</section> : 
+													<section>
+														<p ><FormattedMessage id="Up to the station clock"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Full load"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Down to the station clock"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Overload"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Lighting command"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Full load passing signal"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Front door opening command"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Full load passing signal"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Front door closing command"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Open door lamp"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Back door opening command"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Close door lamp"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Back door closing command"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Fire-fighting lamp"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p className={styles.pd1}><FormattedMessage id="Up and down arrival clock output"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p><FormattedMessage id="Overhaul"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+													</section>
+												}
+											</Col>
 										}
-									</ul>
-								</div>
-							</Col>
+									</Row>
+								</Col>
+								<Col span={6}>
+									<div className={styles.info}>
+										<p>
+											<Icon className={styles.icon} type={direction[`${show.downCall}${show.upCall}`]} />
+											<i>{this.state.floor[this.state.floor.length-show.floor]}</i>
+										</p>
+										<ul>
+											{
+												floor.map((item,index) => (
+													markList[index] ?
+													<li style={{ width: 30, color:'red'}} key={`${index}`} id={`${index}`}>{item}</li>
+													:
+													<li style={{ width: 30}} key={`${index}`} id={`${index}`}>{item}</li>
+												))
+											}
+										</ul>
+									</div>
+								</Col>
+							</div>
+							<div className={styles.btns}>
+								{/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}
+								<section onClick={this.goDetail('params')}><FormattedMessage id="Menu"/></section>
+								<section onClick={this.goQrcode}><FormattedMessage id="QR Code"/></section>
+								<section onClick={this.goDebug}><FormattedMessage id="watch"/></section>
+								<section onClick={this.gohistory}><FormattedMessage id="History fault"/></section>
+								<section onClick={this.gocall}><FormattedMessage id="Call"/></section>
+							</div>
 						</div>
-						<div className={styles.btns}>
-							{/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}
-							<section onClick={this.goDetail('params')}><FormattedMessage id="Menu"/></section>
-							<section onClick={this.goQrcode}><FormattedMessage id="QR Code"/></section>
-							<section onClick={this.goDebug}><FormattedMessage id="watch"/></section>
-							<section onClick={this.gohistory}><FormattedMessage id="History fault"/></section>
-							<section onClick={this.gocall}><FormattedMessage id="Call"/></section>
+						:
+						<div className={classNames(styles.tab, view == 0 ?'tab-active' : 'tab-notactive')}>
+							<Row
+								type="flex"
+								justify="space-around"
+								align="middle"
+								className={styles.ladder}
+							>
+								<Col
+									span={24}
+									className={classNames(styles.door)}
+								>
+									<section>
+										<p style={{
+											width: '100%',
+											justifyContent: 'flex-start',
+										}}><FormattedMessage id="Install Address"/>：<i className={styles.status}>{this.state.install_addr}</i>
+										</p>
+										<p style={{
+											width: '100%',
+											justifyContent: 'flex-start',
+										}}><FormattedMessage id="Device Name"/>：<i className={styles.status}>{this.state.device_name}</i>
+										</p>
+										<p style={{
+											width: '100%',
+										}}><FormattedMessage id="Realtime:"/> <i className={styles.status}>{show.run ? <FormattedMessage id={"Operation"}/>:<FormattedMessage id={"Shutdown"}/>}</i>
+										</p>
+										<p  style={{
+											width: '100%',
+										}}><FormattedMessage id="Opening arrival signal:"/><i className={styles.status}>{show.open ? <FormattedMessage id={"Action"}/>:<FormattedMessage id={"Stop"}/>}</i>
+										</p>
+										<p style={{
+											width: '100%',
+										}}><FormattedMessage id="Elevator mode:"/><i className={styles.status}>{<FormattedMessage id={parseModel(show.model)}/>}</i>
+										</p>
+										<p style={{
+											width: '100%',
+										}}><FormattedMessage id="Closing arrival signal:"/><i className={styles.status}>{show.close ? <FormattedMessage id={"Action"}/>:<FormattedMessage id={"Stop"}/>}</i>
+										</p>
+										<p style={{
+											width: '100%',
+										}}><FormattedMessage id="Door lock circuit:"/><i className={styles.status}>{show.lock ? <FormattedMessage id={"Through"}/>:<FormattedMessage id={"Break"}/>}</i>
+										</p>
+										<p style={{
+											width: '100%',
+										}}><FormattedMessage id="Elevator run speed:"/><i className={styles.status}>{show.speed ? (show.speed/1000):0}m/s</i>
+										</p>
+										<p style={{
+											width: '100%',
+										}}><FormattedMessage id="Devices State:"/><i className={styles.status}>{<FormattedMessage id={parseStatus(show.status)}/>}</i>
+										</p>
+										<p style={{
+											width: '100%',
+										}}><FormattedMessage id="Order:"/><i className={styles.status}>{this.state.code?<FormattedMessage id={'E'+this.state.code}/>:<FormattedMessage id={"None"}/>}</i>
+										</p>
+										<p style={{
+											width: '100%',
+										}}><FormattedMessage id="Monitor remaining time"/> <i className={styles.status}>{this.state.endTime?(this.state.endTime+"s"):"0s"}</i>
+										</p>
+										<p style={{
+											width: '80%',
+											justifyContent: 'flex-start',
+										}}>
+											<FormattedMessage id="Last update time"/> ：
+											<i className={styles.status}>{moment(show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
+										</p>
+										<p style={{
+											width: '20%',
+											justifyContent: 'flex-start',
+										}}>
+											<Switch
+												checkedChildren="IO"
+												unCheckedChildren={<FormattedMessage id="Car"/>}
+												onChange={this.onChange1}
+												checked={this.state.switch1}
+												defaultChecked={this.state.switch1}
+											/>
+										</p>
+									</section>
+								</Col>
+							</Row>
+							<div>
+								<Col span={18}>
+									<Row>
+										{
+											this.state.switch1 ?
+											<Col
+												span={24}
+												className={styles.door}
+											>
+												<p className={styles.pd} ><FormattedMessage id={this.state.IoInfo1}/>
+													<section style={{color:"blue"}} onClick={()=>{this.changeIo1()}}><FormattedMessage id="switch"/></section>
+												</p>
+												{
+													this.state.isIo1 ?
+													<section>
+														<p style={{width:'25%'}}>X1
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X2
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X3
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X4
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X5
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X6
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X7
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X8
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X9
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X10
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X11
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X12
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X13
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X14
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X15
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X16
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X17
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X18
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X19
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X20
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X21
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X22
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X23
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X24
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p style={{width:'25%'}}>X25
+															<i
+																className={styles.signal}
+															/>
+														</p>
+													</section> : 
+													<section>
+														<p ><FormattedMessage id="Main contactor"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Re-leveling"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Sealing star"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Brake"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Brake keeping"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Rescue buzzer"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p  className={styles.pd1}><FormattedMessage id="Front door opening"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														
+														<p  className={styles.pd1}><FormattedMessage id="Front door closing"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p  className={styles.pd1}><FormattedMessage id="Front door opening command"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p  className={styles.pd1}><FormattedMessage id="Back door opening"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p  className={styles.pd1}><FormattedMessage id="Fire-fighting light"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p  className={styles.pd1}><FormattedMessage id="Back door closing"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p className={styles.pd1}><FormattedMessage id="Emergency electric operation"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p className={styles.pd1}><FormattedMessage id="Firelink to base station"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														
+													</section>
+												}
+											</Col> : 
+											<Col
+												span={24}
+												className={styles.door}
+											>
+												<p className={styles.pd} ><FormattedMessage id={this.state.IoInfo}/>
+													<section style={{color:"blue"}} onClick={()=>{this.changeIo()}}><FormattedMessage id="switch"/></section>
+												</p>
+												{
+													this.state.isIo ?
+													<section>
+														<p className={styles.pd1}><FormattedMessage id="Front door light curtain"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p className={styles.pd1}><FormattedMessage id="Front door opening arrival"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p className={styles.pd1}><FormattedMessage id="Back door light curtain"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p className={styles.pd1}><FormattedMessage id="Back door opening arrival"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p className={styles.pd1}><FormattedMessage id="Front door safety touch pad"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p className={styles.pd1}><FormattedMessage id="Front door opening arrival"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p className={styles.pd1}><FormattedMessage id="Back door safety touch pad"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p className={styles.pd1}><FormattedMessage id="Back door closing arrival"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Full load"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Direct drive"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Overload"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Driver"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Open door"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Fireman switch"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="close door"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Independent"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+													</section> : 
+													<section>
+														<p className={styles.pd1}><FormattedMessage id="Up to the station clock"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Full load"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Overload"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p className={styles.pd1}><FormattedMessage id="Down to the station clock"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p className={styles.pd1}><FormattedMessage id="Lighting command"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p className={styles.pd1}><FormattedMessage id="Full load passing signal"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p className={styles.pd1}><FormattedMessage id="Front door opening command"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p className={styles.pd1}><FormattedMessage id="Full load passing signal"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p className={styles.pd1}><FormattedMessage id="Front door closing command"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Open door lamp"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p ><FormattedMessage id="Close door lamp"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p className={styles.pd1}><FormattedMessage id="Back door opening command"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p className={styles.pd1}><FormattedMessage id="Back door closing command"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p className={styles.pd1}><FormattedMessage id="Fire-fighting lamp"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p className={styles.pd1}><FormattedMessage id="Up and down arrival clock output"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+														<p><FormattedMessage id="Overhaul"/>
+															<i
+																className={styles.signal}
+															/>
+														</p>
+													</section>
+												}
+											</Col>
+										}
+									</Row>
+								</Col>
+								<Col span={6}>
+									<div className={styles.info}>
+										<p>
+											<Icon className={styles.icon} type={direction[`${show.downCall}${show.upCall}`]} />
+											<i>{this.state.floor[this.state.floor.length-show.floor]}</i>
+										</p>
+										<ul>
+											{
+												floor.map((item,index) => (
+													markList[index] ?
+													<li style={{ width: 30, color:'red'}} key={`${index}`} id={`${index}`}>{item}</li>
+													:
+													<li style={{ width: 30}} key={`${index}`} id={`${index}`}>{item}</li>
+												))
+											}
+										</ul>
+									</div>
+								</Col>
+							</div>
+							<div className={styles.btns}>
+								{/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}
+								<section onClick={this.goDetail('params')}><FormattedMessage id="Menu"/></section>
+								<section onClick={this.goQrcode}><FormattedMessage id="QR Code"/></section>
+								<section onClick={this.goDebug}><FormattedMessage id="watch"/></section>
+								<section onClick={this.gohistory}><FormattedMessage id="History fault"/></section>
+								<section onClick={this.gocall}><FormattedMessage id="Call"/></section>
+							</div>
 						</div>
-					</div>
+						}
+						
 					<div className={classNames(styles.tab, view == 1 ?'tab-active' : 'tab-notactive')}>
 						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
 							<Col xs={{ span: 24 }} md={{ span: 48 }}>

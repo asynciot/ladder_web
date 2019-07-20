@@ -24,7 +24,6 @@ export default class Params extends Component {
 	}
 	submit = (val,item) => {
 		const { device: { menu }} = this.props;
-		console.log(menu)
 		Modal.info({
 			title: '参数详情',
 			content: (

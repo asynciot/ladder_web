@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import pathToRegexp from 'path-to-regexp';
 import { connect } from 'dva';
 import _ from 'lodash';
 import base64url from 'base64url';
@@ -9,17 +8,36 @@ import classNames from 'classnames';
 import TweenOne from 'rc-tween-one';
 import styles from './Realtime.less';
 import echarts from 'echarts';
-import ReactEcharts from 'echarts-for-react';
-import {getEvent, postMonitor, getFollowDevices, getDeviceList, getDoorData} from '../../services/api';
+import {getEvent, postMonitor, getFollowDevices, getDeviceList, getDoorRuntime, getCommand} from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
 
 var counts=0;
 var ct=0;
 const alert = Modal.alert;
-var showc =null;
-var inte =null;
-var intes = null;
+var chartInte =null;
+var showInte =null;
+var dateInte = null;
+var timing = null;
 var websock = '';
+const parseState = (event) => {
+	let statusName = 'None';
+	if (event.openKeep) {
+		statusName = 'Keep the door open';
+	}
+	if (event.closeKeep) {
+		statusName = 'Keep the door close';
+	}
+	if (event.open) {
+		statusName = 'Open the door';
+	}
+	if (event.close) {
+		statusName = 'Close the door';
+	}
+	if (event.stop) {
+		statusName = 'Stop Output';
+	}
+	return statusName;
+}
 @connect(({ device, user }) => ({
   device,
 	currentUser: user.currentUser
@@ -148,42 +166,10 @@ export default class DoorHistory extends Component {
 		threshold:40,
 		interval:50,
 		duration:300,
+		startTime:'',
+		endTime:'',
+		command:false,
 	}
-	alertName = (show) => {
-	  if (show.isLoss) {
-	    return '无';
-	  }
-	  let str = '';
-	  if (show.inHigh) {
-	    str += ' 输入电压过高 ';
-		this.state.color=true
-	  }
-	  if (show.inLow) {
-	    str += ' 输入电压过低 ';
-		this.state.color=true
-	  }
-	  if (show.outHigh) {
-	    str += ' 输出过流 ';
-		this.state.color=true
-	  }
-	  if (show.motorHigh) {
-	    str += ' 电机过载 ';
-		this.state.color=true
-	  }
-	  if (show.flySafe) {
-	    str += ' 飞车保护 ';
-		this.state.color=true
-	  }
-	  if (show.closeStop) {
-	    str += ' 开关门受阻 ';
-		this.state.color=true
-	  }
-	  if (str === '') {
-	    str = '运行正常';
-		this.state.color=false
-	  }
-	  return str;
-	};
 	componentWillMount() {
 		this.state.id = this.props.match.params.id
 		this.getBaseData()
@@ -210,9 +196,10 @@ export default class DoorHistory extends Component {
 	componentWillUnmount() {
 		this.state.charts = false;
 		this.state.pclock = false;
-		clearInterval(showc)
-		clearInterval(inte)
-		clearInterval(intes)
+		clearInterval(chartInte)
+		clearInterval(showInte)
+		clearInterval(dateInte)
+		clearInterval(timing)
 		if(websock){
 			websock.close()
 			websock=null
@@ -223,21 +210,23 @@ export default class DoorHistory extends Component {
 		const device_id = this.state.id
 		const userId = currentUser.id
 		const wsurl = 'ws://47.96.162.192:9006/device/Monitor/socket?deviceId='+device_id+'&userId='+userId;
+		this.state.command = true
 		websock = new WebSocket(wsurl);
 		websock.onopen = this.websocketonopen;
 		websock.onerror = this.websocketonerror;
 		websock.onmessage= (e) =>{
 			if(e.data=="closed"){
-				alert("数据传输结束")
-				this.state.switch = false;
+				this.state.switch = false
 				this.state.stop = 1
+				this.state.command = false
 				websock.close()
+				clearInterval(timing)
 				this.forceUpdate()
 			}else{
 				var redata = JSON.parse(e.data)
 				this.pushData(redata)
 				if(counts==0){
-					intes = setInterval( () => {
+					dateInte = setInterval( () => {
 						if(this.state.clock==true){
 							this.getData()
 						}
@@ -257,7 +246,41 @@ export default class DoorHistory extends Component {
 	websocketclosed(){
 		console.log("WebSocket连接关闭");
 	}
-	
+	alertName = (show) => {
+		if (show.isLoss) {
+			return 'None';
+		}
+		let str = '';
+		if (show.inHigh) {
+			str += 'Output under-voltage';
+			this.state.color=true
+		}
+		if (show.inLow) {
+			str += 'Input under-voltage';
+			this.state.color=true
+		}
+		if (show.outHigh) {
+			str += 'Output over-current';
+			this.state.color=true
+		}
+		if (show.motorHigh) {
+			str += 'Motor overload';
+			this.state.color=true
+		}
+		if (show.flySafe) {
+			str += 'Galloping protection';
+			this.state.color=true
+		}
+		if (show.closeStop) {
+			str += 'Switch door blocked';
+			this.state.color=true
+		}
+		if (str === '') {
+			str = 'None';
+			this.state.color=false
+		}
+		return str;
+	};
 	clears = () => {
 		let { chart, arr, } = this.state
 		this.state.buffer = []
@@ -322,6 +345,27 @@ export default class DoorHistory extends Component {
 					alert("当前设备已被人启动监控")
 				}
 			});
+			setTimeout(()=>{ 
+				getCommand({num:1,page:1,IMEI}).then((res)=>{
+					if(res.code==0){
+						timing = setInterval( () => {
+							const date = new Date().getTime()
+							const endTime = Math.round(((res.list[0].submit+duration*1000)-date)/1000)
+							if(endTime<0){
+								this.setState({
+									endTime:0,
+								})
+								clearInterval(timing)
+							}else{
+								this.setState({
+									endTime,
+								})
+							}
+							this.forceUpdate()
+						},1000)
+					}
+				})
+			}, 1000);
 		}else{
 			websock.close()
 			this.forceUpdate()
@@ -340,47 +384,58 @@ export default class DoorHistory extends Component {
 	getBaseData = () => {
 		const {show} = this.state
 		const device_id = this.state.id
-		getDoorData({device_id,type:4096,num:1,page:1}).then((res) => {
+		getDoorRuntime({device_id,type:4096,num:1,page:1}).then((res) => {
 			let buffer = []
+			
 			buffer = base64url.toBuffer(res.data.list[0].data)				//8位转流
-			show.openIn			 = (buffer[0]&0x80)>>7 						//获取开门输入信号
-			show.closeIn		 = (buffer[0]&0x40)>>6						//获取关门输入信号
-			show.openTo 		 = (buffer[0]&0x20)>>5						//获取开到位输入信号
-			show.closeTo 		 = (buffer[0]&0x10)>>4						//获取关到位输入信号
-			show.openDecelerate	 =	(buffer[0]&0x08)>>3						//开减速输入信号
-			show.closeDecelerate = 	(buffer[0]&0x04)>>2						//关减速输入信号
-			show.openToOut		 = (buffer[0]&0x02)>>1						//获取开到位输出信号
-			show.closeToOut 	 = buffer[0]&0x01							//获取关到位输出信号
-			show.door			 = (buffer[1]&0x80)>>7						//门光幕信号
-			show.open			 = (buffer[1]&0x40)>>6						//正在开门信号
-			show.close			 =	(buffer[1]&0x20)>>5						//正在关门信号
-			show.openKeep		 = (buffer[1]&0x10)>>4						//开门到位维持信号
-			show.closeKeep		 = (buffer[1]&0x08)>>3						//关门到位维持信号
-			show.stop			 = (buffer[1]&0x04)>>2						//停止输出信号
-			show.inHigh			 = (buffer[1]&0x02)>>1						//输入电压过高
-			show.inLow			 = 	buffer[1]&0x01							//输入电压过低
-			show.outHigh		 = (buffer[2]&0x80)>>7						//输出过流
-			show.motorHigh		 = (buffer[2]&0x40)>>6						//电机过载
-			show.flySafe		 = (buffer[2]&0x20)>>5						//飞车保护
-			show.closeStop		 = (buffer[2]&0x10)>>4						//开关门受阻
-			show.position		 = ((buffer[2]&0x0f)<<8)+(buffer[3]&0xff)	//获取位置信号
+			show.openIn			 = (buffer[6]&0x80)>>7 						//获取开门输入信号
+			show.closeIn		 = (buffer[6]&0x40)>>6						//获取关门输入信号
+			show.openTo 		 = (buffer[6]&0x20)>>5						//获取开到位输入信号
+			show.closeTo 		 = (buffer[6]&0x10)>>4						//获取关到位输入信号
+			show.openDecelerate	 = (buffer[6]&0x08)>>3						//开减速输入信号
+			show.closeDecelerate = (buffer[6]&0x04)>>2						//关减速输入信号
+			show.openToOut		 = (buffer[6]&0x02)>>1						//获取开到位输出信号
+			show.closeToOut 	 = buffer[6]&0x01							//获取关到位输出信号
+			show.door			 = (buffer[7]&0x80)>>7						//门光幕信号
+			show.open			 = (buffer[7]&0x40)>>6						//正在开门信号
+			show.close			 = (buffer[7]&0x20)>>5						//正在关门信号
+			show.openKeep		 = (buffer[7]&0x10)>>4						//开门到位维持信号
+			show.closeKeep		 = (buffer[7]&0x08)>>3						//关门到位维持信号
+			show.stop			 = (buffer[7]&0x04)>>2						//停止输出信号
+			show.inHigh			 = (buffer[7]&0x02)>>1						//输入电压过高
+			show.inLow			 = buffer[7]&0x01							//输入电压过低
+			show.outHigh		 = (buffer[8]&0x80)>>7						//输出过流
+			show.motorHigh		 = (buffer[8]&0x40)>>6						//电机过载
+			show.flySafe		 = (buffer[8]&0x20)>>5						//飞车保护
+			show.closeStop		 = (buffer[8]&0x10)>>4						//开关门受阻
+			show.position		 = ((buffer[8]&0x0f)<<8)+(buffer[3]&0xff)	//获取位置信号
 			show.current		 = 0										//获取电流信号
-			show.speed = (((buffer[6]&0xff)<<8)+(buffer[7]&0xff))/1000		//获取速度
+			show.speed = (((buffer[12]&0xff)<<8)+(buffer[13]&0xff))/1000		//获取速度
 			if(show.speed>32.767){
 				show.speed = show.speed-65.535
 			}
 			show.updateTime = res.data.list[0].t_update
 		});
 		getFollowDevices({device_id}).then((res)=>{
-			this.setState({
-				IMEI:res.data.list[0].IMEI,
-				install:res.data.list[0].install_addr,
-				device_name:res.data.list[0].device_name,
-				device_model:res.data.list[0].device_model,
-			})
+			let command = false
+			if(res.code==0){
+				if(res.data.list[0].commond=="ok"||res.data.list[0].commond=="monitor"){
+					command = false
+				}else{
+					command = true
+				}
+				this.setState({
+					IMEI:res.data.list[0].IMEI,
+					install:res.data.list[0].install_addr,
+					device_name:res.data.list[0].device_name,
+					device_model:res.data.list[0].device_model,
+					command,
+				})
+			}
+			
 		})
 		if(this.state.device_model == '1'){
-			getDoorData({device_id,num:1,page:1,type:4100}).then((res) => {
+			getDoorRuntime({device_id,num:1,page:1,type:4100}).then((res) => {
 				if(res.code == 0){
 					let buffer = []
 					buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
@@ -391,7 +446,7 @@ export default class DoorHistory extends Component {
 				}
 			});
 		}else{
-			getDoorData({device_id,num:1,page:1,type:4101}).then((res) => {
+			getDoorRuntime({device_id,num:1,page:1,type:4101}).then((res) => {
 				if(res.code == 0){
 					let buffer = []
 					buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
@@ -399,7 +454,6 @@ export default class DoorHistory extends Component {
 					this.setState({
 						doorWidth:parseInt((hex[14] + hex[15]), 16),
 					})
-					console.log(this.state.doorWidth)
 				}
 			});
 		}
@@ -486,7 +540,7 @@ export default class DoorHistory extends Component {
 			this.state.clock=true
 			if(ct==0){
 				ct = ct+1
-				inte = setInterval(() => {
+				showInte = setInterval(() => {
 					if(this.state.pclock==true){
 						this.showData()
 						this.setAnimation()
@@ -799,40 +853,25 @@ export default class DoorHistory extends Component {
 		const { device: { events, view, property, updateTime, }} = this.props;
 		const { show, id } = this.state;
 		const width = parseInt((window.innerWidth - 100) / 2);
-		let type = null
+		const la = window.localStorage.getItem("language");
+		let type = null;
 		if(view == 1 && counts == 1){
-			showc = setInterval(() => {
+			chartInte = setInterval(() => {
 				if(this.state.pclock==true){
-					this.showChart()
-					this.forceUpdate()
+					this.showChart();
+					this.forceUpdate();
 				}
 			},450)
-			counts = 2
+			counts = 2;
 		}
 		if(view == 0 && counts == 2){
-			clearInterval(showc)
-			counts = 1
+			clearInterval(chartInte);
+			counts = 1;
 		}
 		if (property.Model) {
-			property.Model.value == "NSFC01-02T" ? type = 1 : type = 2
+			property.Model.value == "NSFC01-02T" ? type = 1 : type = 2;
 		} else {
-			type = 1
-		}
-		let statusName = '无';
-		if (show.openKeep) {
-			statusName = '开门到位维持';
-		}
-		if (show.closeKeep) {
-			statusName = '关门到位维持';
-		}
-		if (show.open) {
-			statusName = '正在开门';
-		}
-		if (show.close) {
-			statusName = '正在关门';
-		}
-		if (show.stop) {
-			statusName = '停止输出';
+			type = 1;
 		}
 		return (
 			<div className="content tab-hide">
@@ -841,8 +880,8 @@ export default class DoorHistory extends Component {
 						visible={this.state.modal}
 						transparent
 						maskClosable={false}
-						title="二维码"
-						footer={[{ text: '确定', onPress: () => this.setState({modal: false}) }] }
+						title={<FormattedMessage id="QR Code"/>}
+						footer={[{ text: 'OK', onPress: () => this.setState({modal: false}) }] }
 						wrapProps={{ onTouchStart: this.onWrapTouchStart }}
 					>
 						<div className="qrcode">
@@ -856,9 +895,10 @@ export default class DoorHistory extends Component {
 						</Col>
 						<Col span={6}>
 							<Switch
-							  checkedChildren="开"
-							  unCheckedChildren="关"
+							  checkedChildren={<FormattedMessage id="Open"/>}
+							  unCheckedChildren={<FormattedMessage id="Close"/>}
 							  onChange={this.onChange}
+							  disabled={this.state.command}
 							  checked={this.state.switch}
 							  defaultChecked={this.state.switch}
 							/>
@@ -875,53 +915,43 @@ export default class DoorHistory extends Component {
 								span={24}
 								className={classNames(styles.door)}
 							>
+							{
+								(la=="zh")?
 								<section>
 									<p style={{
 										width: '100%',
 										justifyContent: 'flex-start',
-									}}><FormattedMessage id="install address"/>：<i className={styles.status}>{this.state.install}</i>
+									}}><FormattedMessage id="Install Address"/>：<i className={styles.status}>{this.state.install}</i>
 									</p>
 									<p style={{
 										width: '100%',
 										justifyContent: 'flex-start',
-									}}><FormattedMessage id="device name"/>：<i className={styles.status}>{this.state.device_name}</i>
-									</p>
-									<p><FormattedMessage id="Door coordinate："/> <i className={styles.status}>{show.position || show.position === 0 ? show.position : '0'}</i>
-									</p>
-									<p><FormattedMessage id="Door current："/> <i className={styles.status}>{show.current} A</i>
-									</p>
-									{/*<p>开门次数 ：<i className={styles.status}>{show.times || '无'}</i>
-									</p>*/}
-									<p><FormattedMessage id="Opening signal："/> <i className={styles.status}>{show.openIn ? '开' : '关'}</i>
-									</p>
-									<p><FormattedMessage id="Closing signal："/> <i className={styles.status}>{show.closeIn ? '开' : '关'}</i>
+									}}><FormattedMessage id="Device Name"/>：<i className={styles.status}>{this.state.device_name}</i>
 									</p>
 									<p style={{
-										width: '100%',
-										justifyContent: 'flex-start',
-									}}><FormattedMessage id="Door state"/> ：<i className={styles.status}>{statusName || '无'}</i>
+										width: '60%',
+									}}><FormattedMessage id="Door state"/><i className={styles.status}>{<FormattedMessage id={parseState(show)}/>}</i>
 									</p>
 									<p style={{
-										width: '100%',
-										justifyContent: 'flex-start',
-									}}><FormattedMessage id="Opening arrival signal"/> ：<i className={styles.status}>{show.openToOut ? '开' : '关'}</i>
+										width: '40%',
+									}}><FormattedMessage id="Door current："/> <i className={styles.status}>{show.current} A</i>
 									</p>
-									<p style={{
-										width: '100%',
-										justifyContent: 'flex-start',
-									}}><FormattedMessage id="Closing arrival signal"/> ：<i className={styles.status}>{show.closeToOut ? '开' : '关'}</i>
+									<p ><FormattedMessage id="Opening signal："/> <i className={styles.status}>{show.openIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
-									<p style={{
-										width: '100%',
-										justifyContent: 'flex-start',
-									}}
-									>
-										<i style={{flexShrink: 0,}}><FormattedMessage id="Alert"/> ：</i>
+									<p ><FormattedMessage id="Closing signal："/> <i className={styles.status}>{show.closeIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									</p>
+									<p ><FormattedMessage id="Opening arrival signal"/> ：<i className={styles.status}>{show.openToOut ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									</p>
+									<p ><FormattedMessage id="Closing arrival signal"/> ：<i className={styles.status}>{show.closeToOut ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									</p>
+									<p><FormattedMessage id="Monitor remaining time"/> ：<i className={styles.status}>{this.state.endTime?(this.state.endTime+"s"):"0s"}</i>
+									</p>
+									<p ><i style={{flexShrink: 0,}}><FormattedMessage id="Order"/> ：</i>
 										{
 											this.state.color ? 
-											<i className={styles.status} style={{ color:'red'}}>{this.alertName(show)}</i>
+											<i className={styles.status} style={{ color:'red'}}>{<FormattedMessage id={this.alertName(show)}/>}</i>
 											:
-											<i className={styles.status}>{this.alertName(show)}</i>
+											<i className={styles.status}>{<FormattedMessage id={this.alertName(show)}/>}</i>
 										}
 									</p>
 									<p
@@ -933,6 +963,64 @@ export default class DoorHistory extends Component {
 										<FormattedMessage id="Last update time"/> ：<i className={styles.status}>{moment(show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
 									</p>
 								</section>
+								:
+								<section>
+									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}><FormattedMessage id="Install Address"/>：<i className={styles.status}>{this.state.install}</i>
+									</p>
+									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}><FormattedMessage id="Device Name"/>：<i className={styles.status}>{this.state.device_name}</i>
+									</p>
+									<p style={{
+										width: '100%',
+									}}><FormattedMessage id="Door current："/> <i className={styles.status}>{show.current?show.current:"0"} A</i>
+									</p>
+									{/*<p>开门次数 ：<i className={styles.status}>{show.times || '无'}</i>
+									</p>*/}
+									<p style={{
+										width: '100%',
+									}}><FormattedMessage id="Opening signal："/> <i className={styles.status}>{show.openIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									</p>
+									<p style={{
+										width: '100%',
+									}}><FormattedMessage id="Closing signal："/> <i className={styles.status}>{show.closeIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									</p>
+									<p style={{
+										width: '100%',
+									}}><FormattedMessage id="Door state"/><i className={styles.status}>{<FormattedMessage id={parseState(show)}/>}</i>
+									</p>
+									<p style={{
+										width: '100%',
+									}}><FormattedMessage id="Opening arrival signal"/><i className={styles.status}>{show.openToOut ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									</p>
+									<p style={{
+										width: '100%',
+									}}><FormattedMessage id="Closing arrival signal"/><i className={styles.status}>{show.closeToOut ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									</p>
+									<p style={{
+										width: '100%',
+									}}><i style={{flexShrink: 0,}}><FormattedMessage id="Order:"/> </i>
+										{
+											this.state.color ? 
+											<i className={styles.status} style={{ color:'red'}}>{<FormattedMessage id={this.alertName(show)}/>}</i>
+											:
+											<i className={styles.status}>{<FormattedMessage id={this.alertName(show)}/>}</i>
+										}
+									</p>
+									<p style={{
+										width: '100%',
+									}}><FormattedMessage id="Monitor remaining time:"/> <i className={styles.status}>{this.state.endTime?(this.state.endTime+"s"):"0s"}</i>
+									</p>
+									<p style={{
+										  width: '100%',
+										}}><FormattedMessage id="Last update time"/> ：<i className={styles.status}>{moment(show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
+									</p>
+								</section>
+							}
 							</Col>
 						</Row>
 						<Row

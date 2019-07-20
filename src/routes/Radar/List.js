@@ -191,7 +191,7 @@ export default class LadderList extends Component {
                     <td>{this.state.device.deviceId}</td>
                   </tr>
                   <tr>
-                    <td><FormattedMessage id="install address"/>：</td>
+                    <td><FormattedMessage id="Install Address"/>：</td>
                     <td>{this.state.device.Address}</td>
                   </tr>
                   <tr>
@@ -221,7 +221,7 @@ export default class LadderList extends Component {
                     <table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
                       <tbody>
                         <tr>
-                          <td className="tr"><FormattedMessage id="install address"/> ：</td>
+                          <td className="tr"><FormattedMessage id="Install Address"/> ：</td>
                           <td className="tl" style={{ width: '260px' }}>{item.Address}</td>
                         </tr>
                         <tr>

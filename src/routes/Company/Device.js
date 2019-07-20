@@ -437,7 +437,7 @@ export default class extends Component {
 													<td className="tl" style={{ width: '260px' }}>{item.cell_address}</td>
 												</tr>
 												<tr>
-													<td className="tr"><FormattedMessage id="device name"/> ：</td>
+													<td className="tr"><FormattedMessage id="Device Name"/> ：</td>
 													<td className="tl">{item.device_name ? item.device_name : ' '}</td>
 													<td className="tl"><FormattedMessage id="type"/> ：</td>
 													<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
@@ -479,7 +479,7 @@ export default class extends Component {
 														<td className="tl" style={{ width: '260px' }}>{item.cell_address}</td>
 												</tr>
 												<tr>
-													<td className="tr"><FormattedMessage id="device name"/> ：</td>
+													<td className="tr"><FormattedMessage id="Device Name"/> ：</td>
 													<td className="tl">{item.device_name ? item.device_name : ' '}</td>
 													<td className="tl"><FormattedMessage id="device type"/> ：</td>
 													<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
@@ -521,7 +521,7 @@ export default class extends Component {
 													<td className="tl" style={{ width: '260px' }}>{item.cell_address}</td>
 												</tr>
 												<tr>
-													<td className="tr"><FormattedMessage id="device name"/> ：</td>
+													<td className="tr"><FormattedMessage id="Device Name"/> ：</td>
 													<td className="tl">{item.device_name ? item.device_name : '无'}</td>
 													<td className="tl"><FormattedMessage id="type"/> ：</td>
 													<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>

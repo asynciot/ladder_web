@@ -136,7 +136,6 @@ export default class extends Component {
 	}
 	delete = (e, detail) => {
 		const id = detail.id
-		console.log(1)
 		alert('提示', '是否确定', [
 			{ text: '取消', style: 'default' },
 			{ text: '确认',

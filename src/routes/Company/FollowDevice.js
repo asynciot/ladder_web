@@ -24,7 +24,7 @@ const tabs2 = [
 	{ title: (window.localStorage.getItem("language")=='en') ? 'Offline' : '离线', state: 'longoffline' },
 ];
 const modelName = {
-	'0':' ',
+	'0':'HPC181',
 	"1":'NSFC01-01B',
 	"2":'NSFC01 -02T',
 }
@@ -36,6 +36,11 @@ const state ={
 	'online':'online',
 	'offline':'offline',
 	'longoffline':'long offline',
+}
+const module = {
+	'1':'wifi',
+	'3':'China Unicom',
+	'6':'China Mobile',
 }
 const faultCode = {
 	'1': '过流',
@@ -126,7 +131,7 @@ export default class extends Component {
 		search_info:'',
 		iddr:'',
 	}
-	async componentWillMount() {
+	componentWillMount() {
 		const { location } = this.props;
 		const match = pathToRegexp('/company/:id/:state').exec(location.pathname);
 		if(match[1]=="followdoor"){
@@ -146,7 +151,7 @@ export default class extends Component {
 			switchIdx = 3
 		}
 		this.state.switchIdx = switchIdx
-		await this.getDevice(type,1,switchIdx);
+		this.getDevice(type,1,switchIdx);
 	}
 	pageChange = (val) => {
 		const { device_type,} =this.state
@@ -304,6 +309,8 @@ export default class extends Component {
 	render() {
 		const ModelName = { 1: 'NSFC01-01B', 2: 'NSFC01-02T'};
 		const { navs, list, switchIdx, asd } = this.state;
+		const la = window.localStorage.getItem("language")
+		console.log()
 		return (
 			<div className="content">
 				<Tabs
@@ -317,14 +324,14 @@ export default class extends Component {
 						<Row className={styles.page}>
 							<Col span={8} style={{margin:'5px',}}>
 								<Input
-									placeholder="设备编号或串号"
+									placeholder={(la=="zh")?"设备编号":"IMEI"}
 									onChange={this.onChange}
 									value={this.state.search_info}
 									maxlength="16"></Input>
 							</Col>
 							<Col span={8} style={{margin:'5px',}}>
 								<Input
-									placeholder="安装地址"
+									placeholder={(la=="zh")?"安装地址":"Install Address"}
 									onChange={this.onChangel}
 									value={this.state.iddr}
 									maxlength="16"></Input>
@@ -346,12 +353,12 @@ export default class extends Component {
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 											<tbody>
 												<tr>
-													<a className={styles.text}><FormattedMessage id="install address"/> ：</a>
+													<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
 													<td className="tl" style={{ width: '200px' }}>{item.install_addr}</td>
 												</tr>
 												<tr>
 													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="device name"/> ：</a>
+														<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
 														<td className="tl">{item.device_name ? item.device_name : '无'}</td>
 													</Col>
 													<Col span={8}>
@@ -379,6 +386,12 @@ export default class extends Component {
 														<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
 													</Col>
 												</tr>
+												<tr>
+													<Col span={16}>
+														<a className={styles.text}><FormattedMessage id="Module"/> ：</a>
+														<td className="tl">{<FormattedMessage id={module[item.cellular]}/>}</td>
+													</Col>
+												</tr>
 											</tbody>
 										</table>
 									</Col>
@@ -390,14 +403,14 @@ export default class extends Component {
 						<Row className={styles.page}>
 							<Col span={8} style={{margin:'5px',}}>
 								<Input
-									placeholder="设备编号或串号"
+									placeholder={(la=="zh")?"设备编号":"IMEI"}
 									onChange={this.onChange}
 									value={this.state.search_info}
 									maxlength="16"></Input>
 							</Col>
 							<Col span={8} style={{margin:'5px',}}>
 								<Input
-									placeholder="安装地址"
+									placeholder={(la=="zh")?"安装地址":"Install Address"}
 									onChange={this.onChangel}
 									value={this.state.iddr}
 									maxlength="16"></Input>
@@ -419,12 +432,12 @@ export default class extends Component {
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 											<tbody>
 												<tr>
-													<a className={styles.text}><FormattedMessage id="install address"/> ：</a>
+													<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
 													<td className="tl" style={{ width: '200px' }}>{item.install_addr}</td>
 												</tr>
 												<tr>
 													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="device name"/> ：</a>
+														<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
 														<td className="tl">{item.device_name ? item.device_name : '无'}</td>
 													</Col>
 													<Col span={8}>
@@ -452,6 +465,12 @@ export default class extends Component {
 														<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
 													</Col>
 												</tr>
+												<tr>
+													<Col span={16}>
+														<a className={styles.text}><FormattedMessage id="Module"/> ：</a>
+														<td className="tl">{<FormattedMessage id={module[item.cellular]}/>}</td>
+													</Col>
+												</tr>
 											</tbody>
 										</table>
 									</Col>
@@ -463,14 +482,14 @@ export default class extends Component {
 						<Row className={styles.page}>
 							<Col span={8} style={{margin:'5px',}}>
 								<Input
-									placeholder="设备编号或串号"
+									placeholder={(la=="zh")?"设备编号":"IMEI"}
 									onChange={this.onChange}
 									value={this.state.search_info}
 									maxlength="16"></Input>
 							</Col>
 							<Col span={8} style={{margin:'5px',}}>
 								<Input
-									placeholder="安装地址"
+									placeholder={(la=="zh")?"安装地址":"Install Address"}
 									onChange={this.onChangel}
 									value={this.state.iddr}
 									maxlength="16"></Input>
@@ -492,12 +511,12 @@ export default class extends Component {
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 											<tbody>
 												<tr>
-													<a className={styles.text}><FormattedMessage id="install address"/> ：</a>
+													<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
 													<td className="tl" style={{ width: '200px' }}>{item.install_addr}</td>
 												</tr>
 												<tr>
 													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="device name"/> ：</a>
+														<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
 														<td className="tl">{item.device_name ? item.device_name : '无'}</td>
 													</Col>
 													<Col span={8}>	
@@ -527,6 +546,12 @@ export default class extends Component {
 														<td className="tl">{faultCode[item.code]}</td>
 													</Col>
 												</tr>
+												<tr>
+													<Col span={16}>
+														<a className={styles.text}><FormattedMessage id="Module"/> ：</a>
+														<td className="tl">{<FormattedMessage id={module[item.cellular]}/>}</td>
+													</Col>
+												</tr>
 											</tbody>
 										</table>
 									</Col>
@@ -538,14 +563,14 @@ export default class extends Component {
 						<Row className={styles.page}>
 							<Col span={8} style={{margin:'5px',}}>
 								<Input
-									placeholder="设备编号或串号"
+									placeholder={(la=="zh")?"设备编号":"IMEI"}
 									onChange={this.onChange}
 									value={this.state.search_info}
 									maxlength="16"></Input>
 							</Col>
 							<Col span={8} style={{margin:'5px',}}>
 								<Input
-									placeholder="安装地址"
+									placeholder={(la=="zh")?"安装地址":"Install Address"}
 									onChange={this.onChangel}
 									value={this.state.iddr}
 									maxlength="16"></Input>
@@ -567,12 +592,12 @@ export default class extends Component {
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 											<tbody>
 												<tr>
-													<a className={styles.text}><FormattedMessage id="install address"/> ：</a>
+													<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
 													<td className="tl" style={{ width: '200px' }}>{item.install_addr}</td>
 												</tr>
 												<tr>
 													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="device name"/> ：</a>
+														<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
 														<td className="tl">{item.device_name ? item.device_name : '无'}</td>
 													</Col>
 													<Col span={8}>
@@ -598,6 +623,12 @@ export default class extends Component {
 													<Col span={8}>
 														<a className={styles.text}><FormattedMessage id="state"/> ：</a>
 														<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
+													</Col>
+												</tr>
+												<tr>
+													<Col span={16}>
+														<a className={styles.text}><FormattedMessage id="Module"/> ：</a>
+														<td className="tl">{<FormattedMessage id={module[item.cellular]}/>}</td>
 													</Col>
 												</tr>
 											</tbody>
