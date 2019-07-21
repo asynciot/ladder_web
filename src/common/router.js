@@ -310,6 +310,11 @@ export const getRouterData = (app) => {
 			name2: 'Order Details',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/Fault')),
 		},
+		'/company/order/code/:id': {
+			name: '故障详情',
+			name2: 'Fault Details',
+			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/OrderCode')),
+		},
 		'/company/follow/:IMEI': {
 			name: '关注设备',
 			name2: 'Follow',

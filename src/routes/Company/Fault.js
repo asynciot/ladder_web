@@ -8,7 +8,7 @@ import { Row, Col, Button, Spin, DatePicker, Input, } from 'antd';
 import { Picker, List, Tabs,  Card, Modal, } from 'antd-mobile';
 import classNames from 'classnames';
 import styles from './Fault.less';
-import {getFault, postFinish, postFault, } from '../../services/api';
+import { getFault, postFinish, postFault, getFollowDevices, getOrderCode } from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import c1 from '../../assets/fault/c1.png';
 import c2 from '../../assets/fault/c2.png';
@@ -133,6 +133,7 @@ export default class DoorHistory extends Component {
 		maintenance:true,
 		inspection:true,
 		remark:'',
+		device_name:'',
 	}
 	componentWillMount() {
 		this.getFault()
@@ -166,7 +167,13 @@ export default class DoorHistory extends Component {
 					this.state.disable = true
 					this.state.disable1 = true
 				}
-				
+				const device_id = item.device_id;
+				let name = '';
+				getFollowDevices({device_id,num:1,page:1}).then(res=>{
+					this.setState({
+						device_name:res.data.list[0].device_name,
+					})
+				})
 				return item;
 			})
 			this.setState({
@@ -245,93 +252,24 @@ export default class DoorHistory extends Component {
 			inspection_nexttime: val,
 		});
 	}
-	postFault = (e) =>{
-		const { dispatch, location } = this.props;
-		const match = pathToRegexp('/company/order/:id').exec(location.pathname);
-		let id = match[2];
+	postFault = () =>{
+		const { history } = this.props;
+		const order_id = this.props.match.params.id
 		postFault({order_id}).then((res) => {
 			if(res.code == 0){
 				alert("接单成功！")
+				history.push({
+					pathname: `/company/work-order`,
+				});
 			}else{
 				alert("接单失败！")
 			}
 		})
 	}
-	info = (item) => {
-		let imgList= [
-			c1,
-			c2,
-			c3,
-			c4,
-			c5,
-			c6,
-			c7,
-			c8,
-			c9,
-			c10,
-			c11,
-			c12,
-			c13,
-			c14,
-			c15,
-			c16,
-			c17,
-			c18,
-			c19,
-			c20,
-			c21,
-			c22,
-			c23,
-			c24,
-			c25,
-			c26,
-			c27,
-			c28,
-			c29,
-			c31,
-			c31,
-			c32,
-			c33,
-			c34,
-			c35,
-			c36,
-			c37,
-			c38,
-			c38,
-			c40,
-			c41,
-			c51,
-			c52,
-			c66,
-			c82,
-			c114,
-			c178,
-		]
-		if(item.device_type == 'ctrl'){
-			imgList=imgList[item.code-1]
-		}else{
-			if(item.code=='51'){
-				imgList=imgList[41]
-			}else if(item.code=='52'){
-				imgList=imgList[42]
-			}else if(item.code=='66'){
-				imgList=imgList[43]
-			}else if(item.code=='82'){
-				imgList=imgList[44]
-			}else if(item.code=='114'){
-				imgList=imgList[45]
-			}else if(item.code=='178'){
-				imgList=imgList[46]
-			}
-		}
-		Modal.info({
-			title: '故障详情',
-			content: (
-				<div>
-					<img className={styles.img} src={imgList} />
-				</div>
-			),
-			onOk() {},
+	info = () => {
+		const id = "E"+this.state.list[0].code
+		this.props.history.push({
+			pathname: `/company/order/code/${id}`,
 		});
 	}
 	onChange = (e) =>{
@@ -351,28 +289,27 @@ export default class DoorHistory extends Component {
 								<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 									<tbody className={styles.tbody}>
 										<tr>
-											<td className="tr"><FormattedMessage id="fault"/> ：</td>
-											<td className="tl" style={{ width: 'auto' }}><FormattedMessage id={'E'+item.code}/></td>
-											<td className="tl" onClick={() => this.info(item)}><FormattedMessage id="Details"/></td>
+											<a className={styles.text}><FormattedMessage id="fault"/> ：</a>
+											<td className="tl" style={{ width: 'auto',color:'red'}} onClick={() => this.info(item)}><FormattedMessage id={'E'+item.code}/></td>
 										</tr>
 										<tr>
-											<td className="tr"><FormattedMessage id="device ID"/> ：</td>
-											<td className="tl">{item.device_id}</td>
+											<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
+											<td className="tl">{this.state.device_name}</td>
 										</tr>
 										<tr>
-											<td className="tr"><FormattedMessage id="fault"/><FormattedMessage id="type"/> ：</td>
+											<a className={styles.text}><FormattedMessage id="fault"/><FormattedMessage id="type"/> ：</a>
 											<td className="tl" style={{ width: '100px' }}><FormattedMessage id={'O'+item.type}/></td>
 										</tr>
 										<tr>
-											<td className="tr"><FormattedMessage id="device type"/> ：</td>
+											<a className={styles.text}><FormattedMessage id="device type"/> ：</a>
 											<td className="tl"><FormattedMessage id={item.device_type ||''}/></td>
 										</tr>
 										<tr>
-											<td className="tr"><FormattedMessage id="report time"/> ：</td>
+											<a className={styles.text}><FormattedMessage id="report time"/> ：</a>
 											<td className="tl">{moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')}</td>
 										</tr>
 										<tr>
-											<td className="tr"><FormattedMessage id="fault duration"/> ：</td>
+											<a className={styles.text}><FormattedMessage id="fault duration"/> ：</a>
 											<td className="tl">{item.hour}<FormattedMessage id="H"/>{item.minute}<FormattedMessage id="M"/>{item.second}<FormattedMessage id="S"/></td>
 										</tr>
 										{/*
@@ -405,12 +342,12 @@ export default class DoorHistory extends Component {
 						<Col span={12} >
 							<img className={styles.icon} id="beforeShow" src={require('../../assets/icon/故障报修1.png')} />
 							<a className={styles.icon1}><FormattedMessage id="photo before treating"/></a>
-							<input accept="image/*" className={styles.input} type="file" id='upload1' onChange={this.upFault}/>
+							<input accept="image/*" className={styles.input} type="file" id='upload1' multiple onChange={this.upFault} />
 						</Col>
 						<Col span={12} >
 							<img className={styles.icon} id="afterShow" src={require('../../assets/icon/系统故障.png')} />
 							<a className={styles.icon1}><FormattedMessage id="photo after treating"/></a>
-							<input accept="image/*" className={styles.input} type="file" id='upload2' onChange={this.upFinish}/>
+							<input accept="image/*" className={styles.input} type="file" id='upload2' onChange={this.upFinish} multiple/>
 						</Col>
 						<Col xs={{ span: 12 }} sm={{ span: 18 }} md={{ span: 16 }} className={styles.btn1}>
 							<Button disabled={this.state.disable} onClick={() => this.postFault()} type="primary" style={{ width: '100%' }} ><FormattedMessage id="receive"/></Button>

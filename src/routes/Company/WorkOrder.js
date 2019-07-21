@@ -13,9 +13,9 @@ const desc = {
 	'treated': '是否完成',
 };
 const names = {
-	0: '电话报修',
-	1: '人工报修',
-	2: '自动报修',
+	0: 'O1',
+	1: 'O2',
+	2: 'O3',
 }
 const typeName = {
 	'door':'door',
@@ -74,7 +74,7 @@ const ListButton = ({ className = '', ...restProps }) => (
 		</span>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.address ? restProps.address:''}>
 			<Icon className={`${styles.edit} ${styles.icon}`} type="arrow-down" />
-			<em><FormattedMessage id="Install Address"/></em>
+			<em><FormattedMessage id="Address"/></em>
 		</span>
 	</div>
 );
@@ -86,7 +86,7 @@ const Finish = ({ className = '', ...restProps }) => (
 		</span>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.address ? restProps.address:''}>
 			<Icon className={`${styles.edit} ${styles.icon}`} type="arrow-down" />
-			<em><FormattedMessage id="Install Address"/></em>
+			<em><FormattedMessage id="Address"/></em>
 		</span>
 	</div>
 );
@@ -94,19 +94,19 @@ export default class extends Component {
 	state = {
 		historyEvents: [],
 		list:[],
-		list1:[],
+		dispatchList:[],
 		nowTime: new Date().getTime(),
 		tab: 0,
 		page: 1,
 		total: 1,
+		dispatchTotal:1,
 		type:'',
 		totalNumber:0,
 		device_name:'',
 	}
 	tabs = [
-		{ title: '待接单', type: 'untreated', count: 0 },
-		{ title: '急修中', type: 'treated', count: 0 },
-		// { title: '已完成', type: 2, count: 0 },
+		{ title: (window.localStorage.getItem("language")=='en') ? 'untreated' : '待接单'},
+		{ title: (window.localStorage.getItem("language")=='en') ? 'treated' : '急修中'},
 	];
 	componentWillMount() {
 		this.getFault('untreated')
@@ -158,13 +158,12 @@ export default class extends Component {
 				})
 				this.setState({
 					list,
-					total: res.data.totalPage
 				})
 			}).catch((e => console.info(e)));
 		}else{
-			getDispatch({ num: 10, page, follow:'yes', state:'untreated', isreg:"True"}).then((res) => {
+			getDispatch({ num: 10, page, follow:'yes', state:'treating', isreg:"True"}).then((res) => {
 				clearInterval(inte)
-				const list1 = res.data.list.map((item,index) => {
+				const dispatchList = res.data.list.map((item,index) => {
 					const time = this.state.nowTime - item.create_time
 					item.create_time = moment(parseInt(item.create_time)).format('YYYY-MM-DD HH:mm:ss')
 					item.hour = parseInt((time)/(1000*3600))
@@ -180,11 +179,11 @@ export default class extends Component {
 							device_name,
 						})
 					})
+					item.code = 'E'+res.data.list[index].code.toString(16)
 					return item;
 				})
 				this.setState({
-					list1,
-					total:res.data.totalPage,
+					dispatchList,
 				})
 			}).catch((e => console.info(e)));
 		}	
@@ -236,7 +235,7 @@ export default class extends Component {
 		]);
 	}
 	render() {
-		const { historyEvents, list, list1, device_name} = this.state;
+		const { historyEvents, list, dispatchList, device_name} = this.state;
 		return (
 			<div className="content">
 				<Tabs
@@ -262,27 +261,27 @@ export default class extends Component {
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault(item)}>
 											<tbody>
 												<tr>
-													<td className="tr"><FormattedMessage id="Device Name"/> ：</td>
+													<a className={styles.text}><FormattedMessage id="Device Name"/>：</a>
 													<td className="tl">{device_name[index]}</td>
 												</tr>
 												<tr>
-													<td className="tr"><FormattedMessage id="fault code"/> ：</td>
-													<td className="tl" style={{ width: '200px' }}>{item.code}    <FormattedMessage id={item.code}/></td>
+													<a className={styles.text}><FormattedMessage id="fault code"/>：</a>
+													<td className="tl" style={{ width: '200px' }}><FormattedMessage id={item.code}/></td>
 												</tr>
 												<tr>
-													<td className="tr"><FormattedMessage id="fault"/><FormattedMessage id="type"/> ：</td>
+													<a className={styles.text}><FormattedMessage id="type"/>：</a>
 													<td className="tl" style={{ width: '80px' }}><FormattedMessage id={'O'+item.type}/></td>
 												</tr>
 												<tr>
-													<td className="tr"><FormattedMessage id="device type"/> ：</td>
+													<a className={styles.text}><FormattedMessage id="device type"/>：</a>
 													<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 												</tr>
 												<tr>
-													<td className="tr"><FormattedMessage id="report time"/> ：</td>
+													<a className={styles.text}><FormattedMessage id="report time"/>：</a>
 													<td className="tl">{moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')}</td>
 												</tr>
 												<tr>
-													<td className="tr"><FormattedMessage id="fault duration"/> ：</td>
+													<a className={styles.text}><FormattedMessage id="fault duration"/>：</a>
 													<td className="tl">{item.hour}<FormattedMessage id="H"/>{item.minute}<FormattedMessage id="M"/>{item.second}<FormattedMessage id="S"/></td>
 												</tr>
 											</tbody>
@@ -302,28 +301,24 @@ export default class extends Component {
 								</Col>
 							</Row>
 							{
-								list1.map((item, index) => (
+								dispatchList.map((item, index) => (
 									<List.Item className={styles.item} key={index}  extra={<Finish address={(event) => { this.address(item) }} remove={(event) => { this.remove(event, item); }} />}>
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault1(item)}>
 											<tbody>
 												<tr>
-													<td className="tr"><FormattedMessage id="order ID"/> ：</td>
-													<td className="tl" style={{ width: '100px' }}>{item.order_id}</td>
-												</tr>
-												<tr>
-													<td className="tr"><FormattedMessage id="Device Name"/> ：</td>
+													<a className={styles.text}><FormattedMessage id="Device Name"/>：</a>
 													<td className="tl">{device_name[index]}</td>
 												</tr>
 												<tr>
-													<td className="tr"><FormattedMessage id="maintenance type"/> ：</td>
-													<td className="tl" style={{ width: '100px' }}>{names[item.order_type]}</td>
+													<a className={styles.text}><FormattedMessage id="fault code"/>：</a>
+													<td className="tl" style={{ width: '200px' }}><FormattedMessage id={item.code}/></td>
 												</tr>
 												<tr>
-													<td className="tr"><FormattedMessage id="accept time"/> ：</td>
+													<a className={styles.text}><FormattedMessage id="accept time"/> ：</a>
 													<td className="tl">{item.create_time}</td>
 												</tr>
 												<tr>
-													<td className="tr"><FormattedMessage id="order duration"/> ：</td>
+													<a className={styles.text}><FormattedMessage id="order duration"/> ：</a>
 													<td className="tl">{item.hour}<FormattedMessage id="H"/>{item.minute}<FormattedMessage id="M"/>{item.second}<FormattedMessage id="S"/></td>
 												</tr>
 											</tbody>

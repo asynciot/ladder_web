@@ -35,7 +35,6 @@ export default class Tech extends Component {
 	}
 	onClick = (link) => {
 		this.props.history.push(`/tech/reader/${link}`);
-		// window.location.href = link;
 	}
 	onChange = () => {
 		

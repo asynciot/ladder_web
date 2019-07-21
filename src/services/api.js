@@ -233,3 +233,7 @@ export function getCommand(params) {
 	return request(`/device/Command?${stringify(params)}`);
 }
 
+//orderCode
+export function getOrderCode(params) {
+	return request(`/device/OrderCode?${stringify(params)}`);
+}

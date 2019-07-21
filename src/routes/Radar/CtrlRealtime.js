@@ -772,19 +772,19 @@ export default class CtrlRealtime extends Component {
 										</p>
 										<p  style={{
 											width: '60%',
-										}}><FormattedMessage id="Opening arrival signal:"/><i className={styles.status}>{show.open ? <FormattedMessage id="Action"/>:<FormattedMessage id={"Stop"}/>}</i>
+										}}><FormattedMessage id="Opening arrival signal"/><i className={styles.status}>{show.open ? <FormattedMessage id="Action"/>:<FormattedMessage id={"Stop"}/>}</i>
 										</p>
 										<p style={{
 											width: '40%',
-										}}><FormattedMessage id="Elevator mode:"/><i className={styles.status}>{<FormattedMessage id={parseModel(show.model)}/>}</i>
+										}}><FormattedMessage id="Elevator mode"/><i className={styles.status}>{<FormattedMessage id={parseModel(show.model)}/>}</i>
 										</p>
 										<p style={{
 											width: '60%',
-										}}><FormattedMessage id="Closing arrival signal:"/><i className={styles.status}>{show.close ? <FormattedMessage id="Action"/>:<FormattedMessage id="Stop"/>}</i>
+										}}><FormattedMessage id="Closing arrival signal"/><i className={styles.status}>{show.close ? <FormattedMessage id="Action"/>:<FormattedMessage id="Stop"/>}</i>
 										</p>
 										<p style={{
 											width: '40%',
-										}}><FormattedMessage id="Door lock circuit:"/><i className={styles.status}>{show.lock ? '通':'断'}</i>
+										}}><FormattedMessage id="Door lock circuit:"/><i className={styles.status}>{show.lock ? <FormattedMessage id={"Through"}/>:<FormattedMessage id={"Break"}/>}</i>
 										</p>
 										<p style={{
 											width: '60%',
@@ -792,11 +792,11 @@ export default class CtrlRealtime extends Component {
 										</p>
 										<p style={{
 											width: '40%',
-										}}><FormattedMessage id="Devices State:"/><i className={styles.status}>{<FormattedMessage id={parseStatus(show.status)}/>}</i>
+										}}><FormattedMessage id="Devices State"/><i className={styles.status}>{<FormattedMessage id={parseStatus(show.status)}/>}</i>
 										</p>
 										<p style={{
 											width: '60%',
-										}}><FormattedMessage id="Order:"/><i className={styles.status}>{this.state.code?<FormattedMessage id={'E'+this.state.code}/>:<FormattedMessage id={"None"}/>}</i>
+										}}><FormattedMessage id="Order"/><i className={styles.status}>{this.state.code?<FormattedMessage id={'E'+this.state.code}/>:<FormattedMessage id={"None"}/>}</i>
 										</p>
 										<p style={{
 											width: '40%',
@@ -1275,15 +1275,15 @@ export default class CtrlRealtime extends Component {
 										</p>
 										<p  style={{
 											width: '100%',
-										}}><FormattedMessage id="Opening arrival signal:"/><i className={styles.status}>{show.open ? <FormattedMessage id={"Action"}/>:<FormattedMessage id={"Stop"}/>}</i>
+										}}><FormattedMessage id="Opening arrival signal"/><i className={styles.status}>{show.open ? <FormattedMessage id={"Action"}/>:<FormattedMessage id={"Stop"}/>}</i>
 										</p>
 										<p style={{
 											width: '100%',
-										}}><FormattedMessage id="Elevator mode:"/><i className={styles.status}>{<FormattedMessage id={parseModel(show.model)}/>}</i>
+										}}><FormattedMessage id="Elevator mode"/><i className={styles.status}>{<FormattedMessage id={parseModel(show.model)}/>}</i>
 										</p>
 										<p style={{
 											width: '100%',
-										}}><FormattedMessage id="Closing arrival signal:"/><i className={styles.status}>{show.close ? <FormattedMessage id={"Action"}/>:<FormattedMessage id={"Stop"}/>}</i>
+										}}><FormattedMessage id="Closing arrival signal"/><i className={styles.status}>{show.close ? <FormattedMessage id={"Action"}/>:<FormattedMessage id={"Stop"}/>}</i>
 										</p>
 										<p style={{
 											width: '100%',
@@ -1295,11 +1295,11 @@ export default class CtrlRealtime extends Component {
 										</p>
 										<p style={{
 											width: '100%',
-										}}><FormattedMessage id="Devices State:"/><i className={styles.status}>{<FormattedMessage id={parseStatus(show.status)}/>}</i>
+										}}><FormattedMessage id="Devices State"/><i className={styles.status}>{<FormattedMessage id={parseStatus(show.status)}/>}</i>
 										</p>
 										<p style={{
 											width: '100%',
-										}}><FormattedMessage id="Order:"/><i className={styles.status}>{this.state.code?<FormattedMessage id={'E'+this.state.code}/>:<FormattedMessage id={"None"}/>}</i>
+										}}><FormattedMessage id="Order"/><i className={styles.status}>{this.state.code?<FormattedMessage id={'E'+this.state.code}/>:<FormattedMessage id={"None"}/>}</i>
 										</p>
 										<p style={{
 											width: '100%',

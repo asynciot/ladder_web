@@ -58,7 +58,7 @@ export default class DoorHistory extends Component {
 		}else{
 			endtime = ''
 		}
-		getFault({ num: 10, page, device_id, starttime, endtime}).then((res) => {
+		getFault({ num: 10, page, device_id, starttime, endtime, state:'treated' }).then((res) => {
 			if (res.code == 0) {
 				const list = res.data.list
 				const totalNumber = res.data.totalNumber
@@ -93,7 +93,7 @@ export default class DoorHistory extends Component {
 	goOrder = item => () =>{
 		const id = item.id
 		this.props.history.push({
-			pathname:`/order/${item.id}`,
+			pathname:`/company/order/${item.id}`,
 			state: { id }
 		});
 	}

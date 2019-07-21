@@ -929,24 +929,24 @@ export default class DoorHistory extends Component {
 									}}><FormattedMessage id="Device Name"/>：<i className={styles.status}>{this.state.device_name}</i>
 									</p>
 									<p style={{
-										width: '60%',
+										width: '50%',
 									}}><FormattedMessage id="Door state"/><i className={styles.status}>{<FormattedMessage id={parseState(show)}/>}</i>
 									</p>
 									<p style={{
-										width: '40%',
-									}}><FormattedMessage id="Door current："/> <i className={styles.status}>{show.current} A</i>
+										width: '50%',
+									}}><FormattedMessage id="Door current"/> <i className={styles.status}>{show.current} A</i>
 									</p>
-									<p ><FormattedMessage id="Opening signal："/> <i className={styles.status}>{show.openIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									<p ><FormattedMessage id="Opening signal"/> <i className={styles.status}>{show.openIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
-									<p ><FormattedMessage id="Closing signal："/> <i className={styles.status}>{show.closeIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									<p ><FormattedMessage id="Closing signal"/> <i className={styles.status}>{show.closeIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
-									<p ><FormattedMessage id="Opening arrival signal"/> ：<i className={styles.status}>{show.openToOut ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									<p ><FormattedMessage id="Opening arrival signal"/><i className={styles.status}>{show.openToOut ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
-									<p ><FormattedMessage id="Closing arrival signal"/> ：<i className={styles.status}>{show.closeToOut ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									<p ><FormattedMessage id="Closing arrival signal"/><i className={styles.status}>{show.closeToOut ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
-									<p><FormattedMessage id="Monitor remaining time"/> ：<i className={styles.status}>{this.state.endTime?(this.state.endTime+"s"):"0s"}</i>
+									<p><FormattedMessage id="Monitor remaining time"/> <i className={styles.status}>{this.state.endTime?(this.state.endTime+"s"):"0s"}</i>
 									</p>
-									<p ><i style={{flexShrink: 0,}}><FormattedMessage id="Order"/> ：</i>
+									<p ><i style={{flexShrink: 0,}}><FormattedMessage id="Order"/></i>
 										{
 											this.state.color ? 
 											<i className={styles.status} style={{ color:'red'}}>{<FormattedMessage id={this.alertName(show)}/>}</i>
@@ -977,17 +977,17 @@ export default class DoorHistory extends Component {
 									</p>
 									<p style={{
 										width: '100%',
-									}}><FormattedMessage id="Door current："/> <i className={styles.status}>{show.current?show.current:"0"} A</i>
+									}}><FormattedMessage id="Door current"/> <i className={styles.status}>{show.current?show.current:"0"} A</i>
 									</p>
 									{/*<p>开门次数 ：<i className={styles.status}>{show.times || '无'}</i>
 									</p>*/}
 									<p style={{
 										width: '100%',
-									}}><FormattedMessage id="Opening signal："/> <i className={styles.status}>{show.openIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									}}><FormattedMessage id="Opening signal"/> <i className={styles.status}>{show.openIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
 									<p style={{
 										width: '100%',
-									}}><FormattedMessage id="Closing signal："/> <i className={styles.status}>{show.closeIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									}}><FormattedMessage id="Closing signal"/> <i className={styles.status}>{show.closeIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
 									<p style={{
 										width: '100%',
@@ -1003,7 +1003,7 @@ export default class DoorHistory extends Component {
 									</p>
 									<p style={{
 										width: '100%',
-									}}><i style={{flexShrink: 0,}}><FormattedMessage id="Order:"/> </i>
+									}}><i style={{flexShrink: 0,}}><FormattedMessage id="Order"/> </i>
 										{
 											this.state.color ? 
 											<i className={styles.status} style={{ color:'red'}}>{<FormattedMessage id={this.alertName(show)}/>}</i>
@@ -1013,11 +1013,11 @@ export default class DoorHistory extends Component {
 									</p>
 									<p style={{
 										width: '100%',
-									}}><FormattedMessage id="Monitor remaining time:"/> <i className={styles.status}>{this.state.endTime?(this.state.endTime+"s"):"0s"}</i>
+									}}><FormattedMessage id="Monitor remaining time"/> <i className={styles.status}>{this.state.endTime?(this.state.endTime+"s"):"0s"}</i>
 									</p>
 									<p style={{
 										  width: '100%',
-										}}><FormattedMessage id="Last update time"/> ：<i className={styles.status}>{moment(show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
+										}}><FormattedMessage id="Last update time"/><i className={styles.status}>{moment(show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
 									</p>
 								</section>
 							}

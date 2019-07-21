@@ -590,22 +590,20 @@ export default class DoorHistory extends Component {
 										justifyContent: 'flex-start',
 									}}><FormattedMessage id="Device Name"/>：<i className={styles.status}>{this.state.device_name}</i>
 									</p>
-									<p><FormattedMessage id="Door coordinate："/><i className={styles.status}>{show.position || show.position === 0 ? show.position : '0'}</i>
-									</p>
-									<p><FormattedMessage id="Door current："/><i className={styles.status}>{`${show.current} A`}</i>
+									<p><FormattedMessage id="Door current"/><i className={styles.status}>{`${show.current} A`}</i>
 									</p>
 									<p><FormattedMessage id="Number of opening:"/><i className={styles.status}>{show.times || 'None'}</i>
 									</p>
-									<p><FormattedMessage id="Opening signal："/><i className={styles.status}>{show.openIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									<p><FormattedMessage id="Opening signal"/><i className={styles.status}>{show.openIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
-									<p><FormattedMessage id="Closing signal："/><i className={styles.status}>{show.closeIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									<p><FormattedMessage id="Closing signal"/><i className={styles.status}>{show.closeIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
 									<p style={{
 										width: '100%',
 										justifyContent: 'flex-start',
 									}}><FormattedMessage id="Door state"/><i className={styles.status}>{<FormattedMessage id={parseState(show)}/>}</i>
 									</p>
-									{/*<p><FormattedMessage id="Opening arrival signal:"/><i className={styles.status}>{show.openToOut ? '开' : '关'}</i>
+									{/*<p><FormattedMessage id="Opening arrival signal"/><i className={styles.status}>{show.openToOut ? '开' : '关'}</i>
 									</p>
 									<p><FormattedMessage id="Closing arrival signal:"/><i className={styles.status}>{show.closeToOut ? '开' : '关'}</i>
 									</p>*/}

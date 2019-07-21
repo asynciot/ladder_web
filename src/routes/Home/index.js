@@ -279,8 +279,6 @@ export default class Home extends Component {
 				<Carousel
 					autoplay={false}
 					infinite
-					beforeChange={(from, to) => console.log(`slide from ${from} to ${to}`)}
-					afterChange={index => console.log('slide to', index)}
 				>
 					{imgList.map((item, index) => {
 						return (

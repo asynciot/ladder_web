@@ -90,7 +90,7 @@ export default class DoorHistory extends Component {
 		}else{
 			endtime = ''
 		}		
-		getFault({ num: 10, page, device_id,starttime,endtime}).then((res) => {
+		getFault({ num: 10, page, device_id, starttime, endtime, state:'treated'}).then((res) => {
 			if (res.code == 0) {
 				const list = res.data.list.map((item,index) => {
 					item.code = res.data.list[index].code.toString(16)

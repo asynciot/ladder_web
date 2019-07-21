@@ -580,7 +580,7 @@ export default class CtrlRealtime extends Component {
 									</p> */}
 									<p><FormattedMessage id="Door lock circuit"/> ：<i className={styles.status}>{this.state.show.lock ? '通':'断'}</i>
 									</p>
-									<p><FormattedMessage id="Opening arrival signal"/> ：<i className={styles.status}>{this.state.show.open ? '动作':'不动作'}</i>
+									<p><FormattedMessage id="Opening arrival signal"/><i className={styles.status}>{this.state.show.open ? '动作':'不动作'}</i>
 									</p>
 									<p><FormattedMessage id="Closing arrival signal"/> ：<i className={styles.status}>{this.state.show.close ? '动作':'不动作'}</i>
 									</p>
