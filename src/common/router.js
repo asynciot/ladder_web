@@ -290,7 +290,7 @@ export const getRouterData = (app) => {
 			name2: 'Manage Ctrl',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/FollowDevice')),
 		},
-		'/company/edit-device/:IMEI/': {
+		'/company/edit-device/:id/': {
 			name: '编辑设备',
 			name2: 'Edit Device',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/EditDevice')),

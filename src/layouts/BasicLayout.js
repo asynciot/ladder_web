@@ -157,6 +157,9 @@ class BasicLayout extends React.PureComponent {
 				if(match[2] === "reader") {
 					path = `/tech/reader/:id`
 				}
+				if(match[2] === "edit-device") {
+					path = `/company/edit-device/:id/`
+				}
 				if (routerData[path]) {
 					title = routerData[path].name;
 					if (window.localStorage.getItem("language") == 'en') {title = routerData[path].name2;}

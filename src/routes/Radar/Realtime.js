@@ -940,9 +940,9 @@ export default class DoorHistory extends Component {
 									</p>
 									<p ><FormattedMessage id="Closing signal"/> <i className={styles.status}>{show.closeIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
-									<p ><FormattedMessage id="Opening arrival signal"/><i className={styles.status}>{show.openToOut ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									<p ><FormattedMessage id="Opening arrival signal"/><i className={styles.status}>{show.openTo ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
-									<p ><FormattedMessage id="Closing arrival signal"/><i className={styles.status}>{show.closeToOut ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									<p ><FormattedMessage id="Closing arrival signal"/><i className={styles.status}>{show.closeTo ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
 									<p><FormattedMessage id="Monitor remaining time"/> <i className={styles.status}>{this.state.endTime?(this.state.endTime+"s"):"0s"}</i>
 									</p>
@@ -995,11 +995,11 @@ export default class DoorHistory extends Component {
 									</p>
 									<p style={{
 										width: '100%',
-									}}><FormattedMessage id="Opening arrival signal"/><i className={styles.status}>{show.openToOut ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									}}><FormattedMessage id="Opening arrival signal"/><i className={styles.status}>{show.openTo ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
 									<p style={{
 										width: '100%',
-									}}><FormattedMessage id="Closing arrival signal"/><i className={styles.status}>{show.closeToOut ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									}}><FormattedMessage id="Closing arrival signal"/><i className={styles.status}>{show.closeTo ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
 									<p style={{
 										width: '100%',

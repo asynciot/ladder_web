@@ -113,13 +113,18 @@ export default class extends Component {
 		});
 	}
 	remove = () => {
-		const { dispatch, location,match } = this.props;
-		const device_id =match.id
+		const { dispatch, location, match } = this.props;
+		const device_id =match.params.id
+		console.log(device_id)
 		alert('提示', '是否取消关注', [
 			{ text: '取消', style: 'default' },
 			{ text: '确认',
 				onPress: () => {
-					deleteFollowInfo({ device_id}).then((res) => {            
+					deleteFollowInfo({ device_id}).then((res) => {
+						if(res.code==0){
+							alert("成功");
+							this.props.history.goBack();
+						}
 					});
 				},
 			},

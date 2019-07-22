@@ -380,7 +380,7 @@ export default class CtrlRealtime extends Component {
 					page.downCall = (buffer[count+0]&0x02)>>1					//下运行方向
 					page.run      = (buffer[count+0]&0x04)>>2					//获取运行信号
 					page.lock     = (buffer[count+0]&0x08)>>3					//获取门锁信号
-					page.open     = (buffer[count+0]&0x10)>>4					//获取关门信号
+					page.open     = (buffer[count+0]&0x10)>>4					//获取开门信号
 					page.close    = (buffer[count+0]&0x20)>>5					//获取关门信号
 					page.openBtn  = (buffer[count+0]&0x40)>>6					//获取开门按钮信号
 					page.closeBtn = (buffer[count+0]&0x80)>>7					//获取关门按钮信号
