@@ -53,7 +53,16 @@ export default class DoorHistory extends Component {
 		const page = val
 		getEvent({ device_id, num: 10, page, starttime, endtime, }).then((res) => {
 			if (res.code === 0) {
-				const list = res.data.list
+				const list = res.data.list.map((item)=>{
+					if(item.interval!=null){
+						item.endtime = item.time+item.interval*item["length"]
+						item.state = "Nomal Event"
+					}else{
+						item.endtime = item.time+20*item["length"]
+						item.state = "Realtime"
+					}
+					return item;
+				})
 				const totalNumber = res.data.totalNumber
 				this.setState({
 					list,
@@ -91,15 +100,15 @@ export default class DoorHistory extends Component {
 							<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
 						</Col>
 					</Row>
-					<List>
+					<List className={styles.table}>
 						{
 							list.map((item, index) => (
 								<List.Item className={styles.item} key={index} onClick={() => this.goHistory(item)}>
-									<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
+									<table border="0" cellPadding="0" cellSpacing="0">
 										<tbody>
 											<tr>
-												<td className="tr">id ：</td>
-												<td className="tl" style={{ width: '260px' }}>{item.id}</td>
+												<td className="tr"><FormattedMessage id="Event State"/></td>
+												<td className="tl" style={{ width: '260px' }}>{<FormattedMessage id={item.state}/>}</td>
 											</tr>
 											<tr>
 												<td className="tr"><FormattedMessage id="start time"/> ：</td>
@@ -107,7 +116,7 @@ export default class DoorHistory extends Component {
 											</tr>
 											<tr>
 												<td className="tr"><FormattedMessage id="end time"/> ：</td>
-												<td className="tl">{moment(item.time+item.interval*item["length"]).format('YYYY-MM-DD HH:mm:ss')}</td>					
+												<td className="tl">{item.endtime? moment(item.endtime).format('YYYY-MM-DD HH:mm:ss'):<FormattedMessage id="None"/>}</td>					
 											</tr>
 										</tbody>
 									</table>

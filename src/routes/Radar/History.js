@@ -84,6 +84,7 @@ export default class DoorHistory extends Component {
 		modal: false,
 		src: '',
 		sliderCurrent: 0,
+		event:"Open Door",
 		events:{
 			openIn:[],
 			closeIn:[],
@@ -166,6 +167,9 @@ export default class DoorHistory extends Component {
 		const { show, events } = this.state;
 		const device_id = this.state.device_id
 		const id = this.state.id
+		this.setState({
+			event:"None",
+		})
 		getEvent({id}).then((res) => {
 			if (res.code == 0) {
 				let response = res.data.list[0]
@@ -204,6 +208,19 @@ export default class DoorHistory extends Component {
 						events.speed[i] = (events.speed[i]-65.535).toFixed(2)
 						show.speed = events.speed[i]
 					}
+				}
+				if(show.openIn==1){
+					this.setState({
+						event:"Open Door",
+					})
+				}else if(show.closeIn==1){
+					this.setState({
+						event:"Close Door",
+					})
+				}else{
+					this.setState({
+						event:"None",
+					})
 				}
 				if(this.state.type == '1'){
 					getDoorRuntime({device_id,num:1,page:1,type:4100}).then((res) => {
@@ -504,11 +521,11 @@ export default class DoorHistory extends Component {
 			ss(i)
 		});
 	}
-  onChange = (val) => {
+	onChange = (val) => {
 		this.setState({
 			pick: val,
 		});
-  }
+	}
 	goEvent = item => () => {
 		const { history } = this.props;
 		const id = this.props.match.params.id;
@@ -523,13 +540,13 @@ export default class DoorHistory extends Component {
 		})
 		
 	}
-  goQrcode = () => {
-    const id = this.props.match.params.id;
-    this.setState({
-      src: `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=http://server.asynciot.com/company/follow/${id}`,
-      modal: true,
-    });    
-  }
+	goQrcode = () => {
+		const id = this.props.match.params.id;
+		this.setState({
+			src: `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=http://server.asynciot.com/company/follow/${id}`,
+			modal: true,
+		});    
+	}
 	gohistory = () => {
 		const id = this.props.match.params.id;
 		this.props.history.push(`/company/door/${id}`);
@@ -539,6 +556,7 @@ export default class DoorHistory extends Component {
 		const { show } = this.state
 		const id = this.props.match.params.id;
 		const width = parseInt((window.innerWidth - 100) / 2);
+		const la = window.localStorage.getItem("language");
 		let type = null
 		if (property.Model) {
 			property.Model.value == "NSFC01-02T" ? type = 1 : type = 2
@@ -579,7 +597,8 @@ export default class DoorHistory extends Component {
 								span={24}
 								className={classNames(styles.door)}
 							>
-								<section>
+							{
+								(la=="zh")?<section>
 									<p style={{
 										width: '100%',
 										justifyContent: 'flex-start',
@@ -592,16 +611,19 @@ export default class DoorHistory extends Component {
 									</p>
 									<p><FormattedMessage id="Door current"/><i className={styles.status}>{`${show.current} A`}</i>
 									</p>
-									<p><FormattedMessage id="Number of opening:"/><i className={styles.status}>{show.times || 'None'}</i>
+									<p><FormattedMessage id="Number of opening:"/><i className={styles.status}>{show.times || <FormattedMessage id="None"/>}</i>
 									</p>
 									<p><FormattedMessage id="Opening signal"/><i className={styles.status}>{show.openIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
 									<p><FormattedMessage id="Closing signal"/><i className={styles.status}>{show.closeIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
 									<p style={{
-										width: '100%',
-										justifyContent: 'flex-start',
+										width: '50%',
 									}}><FormattedMessage id="Door state"/><i className={styles.status}>{<FormattedMessage id={parseState(show)}/>}</i>
+									</p>
+									<p style={{
+										width: '50%',
+									}}><FormattedMessage id="Now Event"/><i className={styles.status}>{<FormattedMessage id={this.state.event}/> || <FormattedMessage id="None"/>}</i>
 									</p>
 									{/*<p><FormattedMessage id="Opening arrival signal"/><i className={styles.status}>{show.openToOut ? '开' : '关'}</i>
 									</p>
@@ -628,6 +650,62 @@ export default class DoorHistory extends Component {
 										<i className={styles.status}>{moment(show.nowtime).format('YYYY-MM-DD HH:mm:ss')}</i>
 									</p>
 								</section>
+								:
+								<section>
+									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}><FormattedMessage id="Install Address"/>：<i className={styles.status}>{this.state.install}</i>
+									</p>
+									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}><FormattedMessage id="Device Name"/>：<i className={styles.status}>{this.state.device_name}</i>
+									</p>
+									<p><FormattedMessage id="Door current"/><i className={styles.status}>{`${show.current} A`}</i>
+									</p>
+									<p><FormattedMessage id="Number of opening:"/><i className={styles.status}>{show.times || <FormattedMessage id="None"/>}</i>
+									</p>
+									<p><FormattedMessage id="Opening signal"/><i className={styles.status}>{show.openIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									</p>
+									<p><FormattedMessage id="Closing signal"/><i className={styles.status}>{show.closeIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									</p>
+									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}><FormattedMessage id="Door state"/><i className={styles.status}>{<FormattedMessage id={parseState(show)}/>}</i>
+									</p>
+									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}><FormattedMessage id="Now Event"/><i className={styles.status}>{<FormattedMessage id={this.state.event}/> || <FormattedMessage id="None"/>} </i>
+									</p>
+									{/*<p><FormattedMessage id="Opening arrival signal"/><i className={styles.status}>{show.openToOut ? '开' : '关'}</i>
+									</p>
+									<p><FormattedMessage id="Closing arrival signal:"/><i className={styles.status}>{show.closeToOut ? '开' : '关'}</i>
+									</p>*/}
+									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}
+									>
+										<i style={{
+											flexShrink: 0,
+										}}
+										><FormattedMessage id="Alert"/> ：
+										</i>
+										<i className={styles.status}>{<FormattedMessage id={alertName(show)}/>}</i>
+									</p>
+									<p style={{
+										width: '100%',
+										justifyContent: 'flex-start',
+									}}
+									>
+										<FormattedMessage id="Last update time"/> ：
+										<i className={styles.status}>{moment(show.nowtime).format('YYYY-MM-DD HH:mm:ss')}</i>
+									</p>
+								</section>
+							}
 							</Col>
 						</Row>
 						<Row

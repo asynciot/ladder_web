@@ -13,9 +13,9 @@ const desc = {
 	'treated': '是否完成',
 };
 const names = {
-	0: 'O1',
-	1: 'O2',
-	2: 'O3',
+	1: 'O1',
+	2: 'O2',
+	3: 'O3',
 }
 const typeName = {
 	'door':'door',
@@ -105,8 +105,8 @@ export default class extends Component {
 		device_name:'',
 	}
 	tabs = [
-		{ title: (window.localStorage.getItem("language")=='en') ? 'untreated' : '待接单'},
-		{ title: (window.localStorage.getItem("language")=='en') ? 'treated' : '急修中'},
+		{ title: (window.localStorage.getItem("language")=='en') ? 'untreated' : '待接单', type:"untreated"},
+		{ title: (window.localStorage.getItem("language")=='en') ? 'treated' : '急修中' , type:"treating"},
 	];
 	componentWillMount() {
 		this.getFault('untreated')
@@ -140,6 +140,9 @@ export default class extends Component {
 					item.minute = parseInt(time%(1000*3600)/(1000*60))
 					item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
 					const device_id = item.device_id
+					this.setState({
+						totalNumber:res.data.totalNumber,
+					})
 					getFollowDevices({num:1,page:1,device_id}).then((ind) => {
 						device_name[index] = ind.data.list[0].device_name
 						this.setState({
@@ -149,11 +152,8 @@ export default class extends Component {
 					if(item.device_type=='ctrl'){
 						item.code = 'E'+res.data.list[index].code.toString(16)
 					}else{
-						item.code = 'dE'+res.data.list[index].code.toString(16)
+						item.code = parseInt(res.data.list[index].code)+50
 					}
-					this.setState({
-						totalNumber:res.data.totalNumber,
-					})
 					return item;
 				})
 				this.setState({
@@ -169,9 +169,6 @@ export default class extends Component {
 					item.hour = parseInt((time)/(1000*3600))
 					item.minute = parseInt(time%(1000*3600)/(1000*60))
 					item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
-					this.setState({
-						totalNumber:res.data.totalNumber,
-					})
 					const device_id = item.device_id
 					getFollowDevices({num:1,page:1,device_id}).then((ind) => {
 						device_name[index] = ind.data.list[0].device_name
@@ -182,8 +179,14 @@ export default class extends Component {
 					item.code = 'E'+res.data.list[index].code.toString(16)
 					return item;
 				})
+				if(res.data.totalPage==0){
+					this.setState({
+						page:0,
+					})
+				}
 				this.setState({
 					dispatchList,
+					totalNumber:res.data.totalNumber,
 				})
 			}).catch((e => console.info(e)));
 		}	

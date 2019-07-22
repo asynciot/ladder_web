@@ -220,9 +220,9 @@
 	"No Order":"No Order",
 	"No Information":"No Information",
 	"Location clock":"Location clock",
-	"O1":"Manual Alert",
-	"O2":"Manual Alert",
-	"O3":"Manual Alert",
+	"O1":"Fault",
+	"O2":"Maintain",
+	"O3":"Inspection",
 	"Watch" :"Watch",
 	"Line":"Line",
 	"Close":"Close",
@@ -263,5 +263,8 @@
 	],
 	"H":"H",
 	"M":"M",
-	"S":"S"
+	"S":"S",
+	"Now Event":"Now Event：",
+	"Open Door":"Open Door",
+	"Close Door":"Close Door"
 }

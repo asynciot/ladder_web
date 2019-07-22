@@ -131,7 +131,7 @@ export default class Home extends Component {
 					this.setState({
 						historyEvents: res.data.list,
 						total:res.data.totalNumber,
-						code: code.toString(16)
+						code:"E"+code.toString(16)
 					});
 				}else{
 					code = (code+50)
@@ -403,7 +403,7 @@ export default class Home extends Component {
 												<Flex.Item><FormattedMessage id="model"/>:<span className={styles.tips}><FormattedMessage id={item.device_type}/></span></Flex.Item>
 											</Flex>
 										</Brief>
-										<Brief><FormattedMessage id="fault"/>:<span className={styles.tips}><FormattedMessage id={'E'+this.state.code}/></span></Brief>
+										<Brief><FormattedMessage id="fault"/>:<span className={styles.tips}><FormattedMessage id={this.state.code}/></span></Brief>
 									</span>
 								)) : (
 									<span>
