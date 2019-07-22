@@ -143,6 +143,7 @@ export default class DoorHistory extends Component {
 		type:'1',
 		device_id:0,
 		id:0,
+		la:window.localStorage.getItem("language")
 	}
 	componentWillMount() {
 		const { dispatch, location, } = this.props;
@@ -241,7 +242,11 @@ export default class DoorHistory extends Component {
 					show,
 					events,
 				});
-				this.showChart()			
+				if(this.state.la=="zh"){
+					this.showChart()
+				}else{
+					this.showChartEn()
+				}
 			}
 		}).catch((e => console.info(e)));
 		this.forceUpdate();
@@ -521,6 +526,271 @@ export default class DoorHistory extends Component {
 			ss(i)
 		});
 	}
+	showChartEn = () =>{
+		const { show, events } = this.state
+		let OpenIn = echarts.init(document.getElementById('OpenIn'));
+		let OpenTo = echarts.init(document.getElementById('OpenTo'));
+		let CloseIn = echarts.init(document.getElementById('CloseIn'));
+		let Decelerate = echarts.init(document.getElementById('Decelerate'));
+		let Position = echarts.init(document.getElementById('Position'));
+		let Current = echarts.init(document.getElementById('Current'));
+		let Speed = echarts.init(document.getElementById('Speed'));
+		OpenIn.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['Open Signal','Close Signal']
+			},
+			grid: {					
+				left: '3%',
+				right: '4%',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:events.nums,
+			},
+			yAxis: {
+				data:[0,1]
+			},
+			series: [{
+				name:'Open Signal',
+				type:'line',
+				step: 'start',
+				data:events.openIn,
+			},{
+				name:'Close Signal',
+				type:'line',
+				step: 'start',
+				data:events.closeIn,
+			}]
+		})
+		OpenTo.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['Open arrival Input','Close arrival Input']
+			},
+			grid: {					
+				left: '3%',
+				right: '4%',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:events.nums,
+			},
+			yAxis: {
+				data:[0,1]
+			},
+			series: [{
+				name:'Open arrival Input',
+				type:'line',
+				step: 'start',
+				data:events.OpenTo,
+			},{
+				name:'Close arrival Input',
+				type:'line',
+				step: 'start',
+				data:events.closeTo,
+			}]
+		})
+		CloseIn.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['Open arrival Output','Close arrival Output']
+			},
+			grid: {					
+				left: '3%',
+				right: '4%',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:events.nums,
+			},
+			yAxis: {
+				data:[0,1]
+			},
+			series: [{
+				name:'Open arrival Output',
+				type:'line',
+				step: 'start',
+				data:events.openToOut,
+			},{
+				name:'Close arrival Output',
+				type:'line',
+				step: 'start',
+				data:events.closeToOut,
+			}]
+		})
+		Decelerate.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['Open Decelerate Output','Close Decelerate Output']
+			},
+			grid: {					
+				left: '3%',
+				right: '4%',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:events.nums,
+			},
+			yAxis: {
+				data:[0,1]
+			},
+			series: [{
+				name:'Open Decelerate Output',
+				type:'line',
+				step: 'start',
+				data:events.openDecelerate,
+			},{
+				name:'Close Decelerate Output',
+				type:'line',
+				step: 'start',
+				data:events.closeDecelerate,
+			}]
+		})
+		Position.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:["Door coordinate"]
+			},
+			grid: {					
+				left: '3%',
+				right: '4%',
+				top: '3%',
+				bottom:'20px',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:events.nums,
+			},
+			yAxis: {
+			},
+			series: [{
+				name:'Door coordinate',
+				type:'line',
+				step: 'start',
+				data:events.position,
+			}]
+		})
+		Current.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['Current']
+			},
+			grid: {					
+				left: '3%',
+				right: '4%',
+				top: '3%',
+				bottom:'20px',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:events.nums,
+			},
+			yAxis: {
+			},
+			series: [{
+				name:'Current',
+				type:'line',
+				step: 'start',
+				data:events.current,
+			}]
+		})
+		Speed.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['Speed']
+			},
+			grid: {					
+				left: '3%',
+				right: '4%',
+				top: '3%',
+				bottom:'20px',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:events.nums,
+			},
+			yAxis: {
+			},
+			series: [{
+				name:'Speed',
+				type:'line',
+				step: 'start',
+				data:events.speed,
+			}]
+		})
+		var _this = this
+		ss = (i) => {
+			show.openIn  = events.openIn[i]					//获取开门信号
+			show.closeIn = events.closeIn[i]				//获取关门信号
+			show.openToOut = events.openToOut[i]			//获取开到位输出信号
+			show.closeToOut = events.closeToOut[i]			//获取关到位输出信号
+			show.openDecelerate =	events.openDecelerate[i] 		//开减速输入信号
+			show.closeDecelerate = events.closeDecelerate[i]		//关减速输入信号
+			show.closeTo = events.closeTo[i]				//获取关到位输入信号				
+			show.openTo =	events.openTo[i]				//获取开到位输入信号
+			show.door	= events.door[i]					//门光幕信号
+			show.open	= events.open[i]					//正在开门信号
+			show.close =	events.close[i]					//正在关门信号
+			show.openKeep	= events.openKeep[i]			//开门到位维持信号
+			show.closeKeep = events.closeKeep[i]			//关门到位维持信号
+			show.stop	= events.stop[i]					//停止输出信号
+			show.inHigh = events.inHigh[i]					//输入电压过高
+			show.inLow = events.inLow[i]					//输入电压过低
+			show.outHigh = events.outHigh[i]				//输出过流
+			show.motorHigh = events.motorHigh[i]			//电机过载
+			show.flySafe = events.flySafe[i]				//飞车保护
+			show.position	= events.position[i]			//获取位置信号
+			show.closeStop = events.closeStop[i]			//开关门受阻
+			show.current = events.current[i]				//获取电流信号
+			show.speed = events.speed[i]
+		}
+		OpenIn.on('click',function (params){					
+			var i = params.name;//横坐标的值
+			ss(i)
+		});
+		OpenTo.on('click',function (params){					
+			var i = params.name;//横坐标的值
+			ss(i)
+		});
+		Current.on('click',function (params){					
+			var i = params.name;//横坐标的值
+			ss(i)
+		});
+		Decelerate.on('click',function (params){					
+			var i = params.name;//横坐标的值
+			ss(i)
+		});
+		CloseIn.on('click',function (params){					
+			var i = params.name;//横坐标的值
+			ss(i)
+		});
+		Speed.on('click',function (params){					
+			var i = params.name;//横坐标的值
+			ss(i)
+		});
+	}
 	onChange = (val) => {
 		this.setState({
 			pick: val,
@@ -664,7 +934,7 @@ export default class DoorHistory extends Component {
 									</p>
 									<p><FormattedMessage id="Door current"/><i className={styles.status}>{`${show.current} A`}</i>
 									</p>
-									<p><FormattedMessage id="Number of opening:"/><i className={styles.status}>{show.times || <FormattedMessage id="None"/>}</i>
+									<p><FormattedMessage id="Number of opening"/><i className={styles.status}>{show.times || <FormattedMessage id="None"/>}</i>
 									</p>
 									<p><FormattedMessage id="Opening signal"/><i className={styles.status}>{show.openIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>

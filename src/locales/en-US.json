@@ -190,7 +190,12 @@
 	"E82": "Output over-current",
 	"E114": "Input under-voltage",
 	"E178": "Input over-voltage",
-	
+	"51": "Switch door blocked",
+	"52": "Galloping protection",
+	"66": "Motor overload",
+	"82": "Output over-current",
+	"114": "Input under-voltage",
+	"178": "Input over-voltage",
 	"No install address":"No install address",
 	"follow":"Follow",
 	"Follow Device":"Follow Device",
@@ -236,9 +241,9 @@
 	"Call":"Call",
 	"Last update time":"Last update time：",
 	"Door coordinate：":"Door coordinate：",
-	"Door current：":"Door current：",
-	"Door state":"Door state:",
-	"Number of opening:":"Number of opening",
+	"Door current":"Door current：",
+	"Door state":"Door state：",
+	"Number of opening":"Number of opening：",
 	"Opening signal":"Opening signal：",
 	"Closing signal":"Closing signal：",
 	"Alert":"Alert",
@@ -266,5 +271,8 @@
 	"S":"S",
 	"Now Event":"Now Event：",
 	"Open Door":"Open Door",
-	"Close Door":"Close Door"
+	"Close Door":"Close Door",
+	"Event State":"Event State：",
+	"Reason":"Reason：",
+	"Answer":"Answer："
 }

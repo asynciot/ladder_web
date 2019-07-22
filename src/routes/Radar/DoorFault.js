@@ -125,16 +125,14 @@ export default class DoorHistory extends Component {
 									<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goOrder(item)}>
 										<tbody>
 											<tr>
-												<td className="tr">id ：</td>
-												<td className="tl" style={{ width: '95px' }}>{item.id}</td>
-												<td className="tl"><FormattedMessage id="state"/> ：</td>
-												<td className="tl" style={{ width: '260px' }}><FormattedMessage id={item.state}/></td>
+												<td className="tr"><FormattedMessage id="state"/> ：</td>
+												<td className="tl" style={{ width: '100px' }}><FormattedMessage id={item.state}/></td>
+												<td className="tl"><FormattedMessage id="creator"/> ：</td>
+												<td className="tl" style={{ width: '100px' }}>{item.producer}</td>
 											</tr>
 											<tr>
 												<td className="tr"><FormattedMessage id="fault code"/> ：</td>
-												<td className="tl" style={{ width: '95px' }}><FormattedMessage id={'dE'+item.code}/></td>
-												<td className="tl"><FormattedMessage id="creator"/> ：</td>
-												<td className="tl" style={{ width: '100px' }}>{item.producer}</td>
+												<td className="tl" style={{ width: '100%' }}><FormattedMessage id={item.code+50}/></td>
 											</tr>
 											<tr>
 												<td className="tr"><FormattedMessage id="start time"/> ：</td>
