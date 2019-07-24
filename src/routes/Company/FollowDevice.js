@@ -310,7 +310,6 @@ export default class extends Component {
 		const ModelName = { 1: 'NSFC01-01B', 2: 'NSFC01-02T'};
 		const { navs, list, switchIdx, asd } = this.state;
 		const la = window.localStorage.getItem("language")
-		console.log()
 		return (
 			<div className="content">
 				<Tabs
@@ -368,7 +367,7 @@ export default class extends Component {
 												</tr>
 												<tr>
 													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="device IMEI"/> ：</a>
+														<a className={styles.text}><FormattedMessage id="Device IMEI"/> ：</a>
 														<td className="tl">{item.IMEI}</td>
 													</Col>
 													<Col span={8}>
@@ -447,7 +446,7 @@ export default class extends Component {
 												</tr>
 												<tr>
 													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="device IMEI"/> ：</a>
+														<a className={styles.text}><FormattedMessage id="Device IMEI"/> ：</a>
 														<td className="tl">{item.IMEI}</td>
 													</Col>
 													<Col span={8}>
@@ -526,7 +525,7 @@ export default class extends Component {
 												</tr>
 												<tr>
 													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="device IMEI"/> ：</a>
+														<a className={styles.text}><FormattedMessage id="Device IMEI"/> ：</a>
 														<td className="tl">{item.IMEI}</td>
 													</Col>
 													<Col span={8}>	
@@ -607,7 +606,7 @@ export default class extends Component {
 												</tr>
 												<tr>
 													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="device IMEI"/> ：</a>
+														<a className={styles.text}><FormattedMessage id="Device IMEI"/> ：</a>
 														<td className="tl">{item.IMEI}</td>
 													</Col>
 													<Col span={8}>

@@ -20,6 +20,7 @@ export default class Login extends Component {
 	state = {
 		count: 0,
 		lg:0,
+		language:window.localStorage.getItem("language"),
 	}
 	componentWillUnmount() {
 		clearInterval(this.interval);
@@ -47,14 +48,12 @@ export default class Login extends Component {
 	showModal = (e) => {
 		e.preventDefault();
 		Modal.info({
-			title: '这个是协议条款',
+			title: (window.localStorage.getItem("language")=='en') ? 'This is the agreement clause':'这个是协议条款',
 			content: (
 				<div>
-					<p>这个是协议条款</p>
-					<p>这个是协议条款</p>
 				</div>
 			),
-			okText: '确定',
+			okText: (window.localStorage.getItem("language")=='en') ? 'OK':'确定',
 			onOk() {},
 		});
 	}
@@ -83,7 +82,11 @@ export default class Login extends Component {
 	compareToFirstPassword = (rule, value, callback) => {
 		const form = this.props.form;
 		if (value && value !== form.getFieldValue('newpassword')) {
-			callback('两次密码输入不一样!');
+			if(this.state.language=="zh"){
+				callback('两次密码输入不一样!');
+			}else{
+				callback('Inconsistent passwords!');
+			}
 		} else {
 			callback();
 		}
@@ -128,7 +131,7 @@ export default class Login extends Component {
 													type="text"
 													size="large"
 													suffix={suffix}
-													// placeholder="请输入手机号"
+													placeholder={this.state.language=="zh"?"请输入手机号":"Plese input phone"}
 												/>)}
 										</Col>
 									</Row>
@@ -136,7 +139,7 @@ export default class Login extends Component {
 								<FormItem>
 									<Row gutter={8}>
 										<Col span={6}>
-											<div><FormattedMessage id="verification"/>:</div>
+											<div><FormattedMessage id="Verification"/>:</div>
 										</Col>
 										<Col span={13}>
 											{getFieldDecorator('verifyCode', {
@@ -146,7 +149,7 @@ export default class Login extends Component {
 											})(<Input
 												type="text"
 												size="large"
-												// placeholder="请输入验证码"
+												placeholder={this.state.language=="zh"?"请输入验证码":"input verification code"}
 											/>)}
 										</Col>
 										<Col span={5}>
@@ -156,7 +159,7 @@ export default class Login extends Component {
 												size="large"
 												onClick={() => this.onGetCaptcha()}
 											>
-												<FormattedMessage id={count ? `${count} s` : 'get code'}/>
+												<FormattedMessage id={count ? `${count} s` : 'Get Code'}/>
 											</Button>
 										</Col>
 									</Row>
@@ -174,7 +177,7 @@ export default class Login extends Component {
 											})(<Input
 													type="password"
 													size="large"
-													placeholder="请输入密码"
+													placeholder={this.state.language=="zh"?"请输入密码":"Plese input password"}
 											/>)}
 										</Col>
 									</Row>
@@ -195,7 +198,7 @@ export default class Login extends Component {
 												})(<Input
 														type="password"
 														size="large"
-														placeholder="请确认密码"
+														placeholder={this.state.language=="zh"?"请确认密码":"Plese confirm password"}
 												/>)}
 										</Col>
 									</Row>
@@ -212,7 +215,7 @@ export default class Login extends Component {
 												type="primary"
 												htmlType="submit"
 											>
-												<FormattedMessage id="reset"/>
+												<FormattedMessage id="Reset"/>
 											</Button>
 										</Col>
 										<Col span={12}>
@@ -222,7 +225,7 @@ export default class Login extends Component {
 												className={styles.submit}
 												type="primary"
 											>
-												<FormattedMessage id="back"/>
+												<FormattedMessage id="Back"/>
 											</Button>
 										</Col>
 									</Row>
@@ -233,7 +236,7 @@ export default class Login extends Component {
 													valuePropName: 'checked',
 													initialValue: true,
 													})(
-														<Checkbox><FormattedMessage id="Agree to "/><i className={styles.deal} onClick={this.showModal} loading={this.state.loading}>《<FormattedMessage id="Terms of Service"/>》</i></Checkbox>
+														<Checkbox><FormattedMessage id="Agree To"/><i className={styles.deal} onClick={this.showModal} loading={this.state.loading}>《<FormattedMessage id="Terms of Service"/>》</i></Checkbox>
 													)}
 											</Col>
 										</Row>

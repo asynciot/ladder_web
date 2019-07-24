@@ -421,7 +421,7 @@ export default class extends Component {
 				>
 					<div style={{ backgroundColor: '#fff' }}>
 						<Flex>
-							<Flex.Item onClick={() => this.switchList(0)}><PlaceHolder className={switchIdx === 0 ? styles.active : ''}><FormattedMessage id="all"/> {navs.all}</PlaceHolder></Flex.Item>
+							<Flex.Item onClick={() => this.switchList(0)}><PlaceHolder className={switchIdx === 0 ? styles.active : ''}><FormattedMessage id="All"/> {navs.all}</PlaceHolder></Flex.Item>
 							<Flex.Item onClick={() => this.switchList(1)}><PlaceHolder className={switchIdx === 1 ? styles.active : ''}><FormattedMessage id="online"/> {navs.ok}</PlaceHolder></Flex.Item>
 							<Flex.Item onClick={() => this.switchList(2)}><PlaceHolder className={switchIdx === 2 ? styles.active : ''}><FormattedMessage id="offline"/> {navs.fault}</PlaceHolder></Flex.Item>
 							<Flex.Item onClick={() => this.switchList(3)}><PlaceHolder className={switchIdx === 3 ? styles.active : ''}><FormattedMessage id="long offline"/> {navs.missing}</PlaceHolder></Flex.Item>
@@ -433,7 +433,7 @@ export default class extends Component {
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 											<tbody>
 												<tr>
-													<td className="tr"><FormattedMessage id="base station"/> ：</td>
+													<td className="tr"><FormattedMessage id="Base Station"/> ：</td>
 													<td className="tl" style={{ width: '260px' }}>{item.cell_address}</td>
 												</tr>
 												<tr>
@@ -443,7 +443,7 @@ export default class extends Component {
 													<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 												</tr>
 												<tr>
-													<td className="tr"><FormattedMessage id="device IMEI"/> ：</td>
+													<td className="tr"><FormattedMessage id="Device IMEI"/> ：</td>
 													<td className="tl">{item.IMEI}</td>
 													<td className="tl"><FormattedMessage id="RSSI"/> ：</td>
 													<td className="tl"><Signal width={item.RSSI}/></td>
@@ -463,7 +463,7 @@ export default class extends Component {
 					</div>
 					<div style={{ backgroundColor: '#fff' }}>
 						<Flex>
-							<Flex.Item onClick={() => this.switchList(0)}><PlaceHolder className={switchIdx === 0 ? styles.active : ''}><FormattedMessage id="all"/> {navs.all}</PlaceHolder></Flex.Item>
+							<Flex.Item onClick={() => this.switchList(0)}><PlaceHolder className={switchIdx === 0 ? styles.active : ''}><FormattedMessage id="All"/> {navs.all}</PlaceHolder></Flex.Item>
 							<Flex.Item onClick={() => this.switchList(1)}><PlaceHolder className={switchIdx === 1 ? styles.active : ''}><FormattedMessage id="online"/> {navs.ok}</PlaceHolder></Flex.Item>
 							<Flex.Item onClick={() => this.switchList(2)}><PlaceHolder className={switchIdx === 2 ? styles.active : ''}><FormattedMessage id="offline"/> {navs.fault}</PlaceHolder></Flex.Item>
 							<Flex.Item onClick={() => this.switchList(3)}><PlaceHolder className={switchIdx === 3 ? styles.active : ''}><FormattedMessage id="long offline"/> {navs.missing}</PlaceHolder></Flex.Item>
@@ -475,17 +475,17 @@ export default class extends Component {
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 											<tbody>
 												<tr>
-														<td className="tr"><FormattedMessage id="base station"/> ：</td>
+														<td className="tr"><FormattedMessage id="Base Station"/> ：</td>
 														<td className="tl" style={{ width: '260px' }}>{item.cell_address}</td>
 												</tr>
 												<tr>
 													<td className="tr"><FormattedMessage id="Device Name"/> ：</td>
 													<td className="tl">{item.device_name ? item.device_name : ' '}</td>
-													<td className="tl"><FormattedMessage id="device type"/> ：</td>
+													<td className="tl"><FormattedMessage id="Device Type"/> ：</td>
 													<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 												</tr>
 												<tr>
-													<td className="tr"><FormattedMessage id="device IMEI"/> ：</td>
+													<td className="tr"><FormattedMessage id="Device IMEI"/> ：</td>
 													<td className="tl">{item.IMEI}</td>
 													<td className="tl"><FormattedMessage id="RSSI"/> ：</td>
 													<td className="tl"><Signal width={item.RSSI}/></td>
@@ -505,7 +505,7 @@ export default class extends Component {
 					</div>
 					<div style={{ backgroundColor: '#fff' }}>
 						<Flex>
-							<Flex.Item onClick={() => this.switchList(0)}><PlaceHolder className={switchIdx === 0 ? styles.active : ''}><FormattedMessage id="all"/> {navs.all}</PlaceHolder></Flex.Item>
+							<Flex.Item onClick={() => this.switchList(0)}><PlaceHolder className={switchIdx === 0 ? styles.active : ''}><FormattedMessage id="All"/> {navs.all}</PlaceHolder></Flex.Item>
 							<Flex.Item onClick={() => this.switchList(1)}><PlaceHolder className={switchIdx === 1 ? styles.active : ''}><FormattedMessage id="online"/> {navs.ok}</PlaceHolder></Flex.Item>
 							<Flex.Item onClick={() => this.switchList(2)}><PlaceHolder className={switchIdx === 2 ? styles.active : ''}><FormattedMessage id="offline"/> {navs.fault}</PlaceHolder></Flex.Item>
 							<Flex.Item onClick={() => this.switchList(3)}><PlaceHolder className={switchIdx === 3 ? styles.active : ''}><FormattedMessage id="long offline"/> {navs.missing}</PlaceHolder></Flex.Item>
@@ -527,7 +527,7 @@ export default class extends Component {
 													<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 												</tr>
 												<tr>
-													<td className="tr"><FormattedMessage id="device IMEI"/> ：</td>
+													<td className="tr"><FormattedMessage id="Device IMEI"/> ：</td>
 													<td className="tl">{item.IMEI}</td>
 													<td className="tl"><FormattedMessage id="RSSI"/> ：</td>
 													<td className="tl"><Signal width={item.RSSI}/></td>

@@ -8,35 +8,24 @@ import Background from '../../assets/back.png';
 import { FormattedMessage  } from 'react-intl';
 var sectionStyle = {
 	width:"100%",
-  backgroundImage: `url(${Background})` 
+	backgroundImage: `url(${Background})` 
 };
 const FormItem = Form.Item;
 @connect(({ login, loading }) => ({
-  login,
-  submitting: loading.effects['login/login'],
+	login,
+	submitting: loading.effects['login/login'],
 }))
 @Form.create()
 export default class Login extends Component {
-  state = {
+	state = {
 		checkList:[{
 			op:false,
 		}],
 		username:'',
 		password:'',
-  }
+	}
   	left='<'
 	right='>'
-	language='简体中文'
-	username='账号'
-	password='密码'
-	rem='记住密码'
-	login='登录'
-	register='注册'
-	forget='忘记密码'
-	agree='同意'
-	term='服务条款'
-	num='手机号或个人编号'
-	input='请输入'
 	componentWillMount() {
 		if (window.localStorage.getItem("language")=='en'){
 			this.language='English';
@@ -65,40 +54,15 @@ export default class Login extends Component {
 			window.localStorage.setItem('p','')
 		}
 	}
-	componentDidMount() {
-	}
-	componentWillUnmount() {
-		clearInterval(this.interval);
-	}
     changeLang = () => {
-		if (this.language=='简体中文'){
-			this.language='English';
-			this.username='Username';
-			this.password='Password';
-			this.rem='Remember';
-			this.login='Login';
-			this.register='Register'
-			this.forget='Forgot?'
-			this.agree='Agree to'
-			this.term='Terms of Service'
-			this.num='Phone or Personal ID'
-			this.input='Please input '
-			window.localStorage.setItem("language",'en');
-		}else if (this.language=='English'){
+		if (this.language=='English'){
 			this.language='简体中文';
-			this.username='账号';
-			this.password='密码';
-			this.rem='记住密码';
-			this.login='登录';
-			this.register='注册'
-			this.forget='忘记密码'
-			this.agree='同意'
-			this.term='服务条款'
-			this.num='手机号或个人编号'
-			this.input='请输入'
 			window.localStorage.setItem("language",'zh');
-		}
-		this.forceUpdate()
+		}else{
+			this.language='English';
+			window.localStorage.setItem("language",'en');
+		} 
+		window.location.reload()
 	}
 	showModal = (e) => {
 		e.preventDefault();
@@ -106,8 +70,6 @@ export default class Login extends Component {
 			title: (window.localStorage.getItem("language")=='en') ? 'This is the agreement clause':'这个是协议条款',
 			content: (
 				<div>
-					<p>这个是协议条款</p>
-					<p>这个是协议条款</p>
 				</div>
 			),
 			okText: (window.localStorage.getItem("language")=='en') ? 'OK':'确定',
@@ -178,7 +140,7 @@ export default class Login extends Component {
 								<FormItem>
 									<Row gutter={8}>
 										<Col span={6}>
-											<div>{this.username}:</div>
+											<div>{<FormattedMessage id="Username"/>}:</div>
 										</Col>
 										<Col span={18}>
 											{getFieldDecorator('username', {
@@ -202,7 +164,7 @@ export default class Login extends Component {
 								<FormItem>
 									<Row gutter={8}>
 										<Col span={6}>
-											<div>{this.password}:</div>
+											<div>{<FormattedMessage id="Password"/>}:</div>
 										</Col>
 										<Col span={18}>
 											{getFieldDecorator('password', {
@@ -225,13 +187,13 @@ export default class Login extends Component {
 									<Col span={1}>
 									</Col>
 									<Col span={5}>
-										Language:
+										<FormattedMessage id="Language" />
 									</Col>
 									<Col span={2} onClick={() => this.changeLang()} className={styles.pointer}>
 										{this.left}
 									</Col>
 									<Col span={6}>
-										{this.language}
+										{<FormattedMessage id='Lang'/>}
 									</Col>
 									<Col span={1} onClick={() => this.changeLang()} className={styles.pointer}>
 										{this.right}
@@ -239,7 +201,7 @@ export default class Login extends Component {
 									<Col span={9}>
 										{
 											checkList.map((item, index)=>(
-												<Checkbox defaultChecked={item.op} className={styles.pd} key={index} onChange={this.test}>{this.rem}</Checkbox>
+												<Checkbox defaultChecked={item.op} className={styles.pd} key={index} onChange={this.test}>{<FormattedMessage id="Remember"/>}</Checkbox>
 											))
 										}
 									</Col>
@@ -248,7 +210,7 @@ export default class Login extends Component {
 							<Col span={22} offset={1}>
 								<FormItem className={styles.additional}>
 									<Button size="large" loading={submitting} className={styles.submit} type="primary" htmlType="submit">
-										{this.login}
+										{<FormattedMessage id="Login"/>}
 									</Button>
 									<div>
 										<Row gutter={2}>
@@ -257,17 +219,17 @@ export default class Login extends Component {
 													valuePropName: 'checked',
 													initialValue: true,
 												})(
-													<Checkbox>{this.agree} <i className={styles.deal} onClick={this.showModal}>《{this.term}》</i></Checkbox>
+													<Checkbox>{<FormattedMessage id="Agree To"/>} <i className={styles.deal} onClick={this.showModal}>《{<FormattedMessage id='Terms of Service'/>}》</i></Checkbox>
 												)}
 											</Col>
 											<Col span={3}>
 												<div>
-													<Link to="/register" className={styles.reg}>{this.register}</Link>
+													<Link to="/register" className={styles.reg}>{<FormattedMessage id="Register"/>}</Link>
 												</div>
 											</Col>
 											<Col span={5}>
 												<div>
-													<a onClick={this.goresetting} className={styles.res}>{this.forget}</a>
+													<a onClick={this.goresetting} className={styles.res}>{<FormattedMessage id="Forget"/>}</a>
 												</div>	
 											</Col>
 										</Row>

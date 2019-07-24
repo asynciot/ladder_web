@@ -13,7 +13,7 @@ const options = [
 		label: 'NSFC01-02T',
 		link: 'NSFC01-02T',
 	},{
-		label: '控制柜故障代码',
+		label: (window.localStorage.getItem("language")=='zh')?'控制柜故障代码':'Ctrl Fault Code',
 		link: 'CtrlCode',
 	},
 ];
@@ -24,12 +24,14 @@ export default class Tech extends Component {
 	state = {
 		navs: [
 		{
-			label: '产品说明书',
+			label: (window.localStorage.getItem("language")=='zh')?'产品说明书':'Description',
 			link: '/tech/manual',
-		}, {
-			label: '其他相关资料',
+		}, 
+		/* {
+			label: (window.localStorage.getItem("language")=='zh')?'其他相关资料':'Other Data',
 			link: '/tech/other',
-		}],
+		} */
+		],
 	}
 	componentDidMount() {
 	}
@@ -76,7 +78,7 @@ export default class Tech extends Component {
 					<List style={{ backgroundColor: 'white' }}>
 						{
 							options.map(item => (
-								<List.Item key={item.label} onClick={() => this.onClick(item.link)} arrow="horizontal">{item.label}说明书</List.Item>
+								<List.Item key={item.label} onClick={() => this.onClick(item.link)} arrow="horizontal">{item.label}</List.Item>
 							))
 						}
 					</List>

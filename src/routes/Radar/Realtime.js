@@ -19,6 +19,8 @@ var showInte =null;
 var dateInte = null;
 var timing = null;
 var websock = '';
+const la = window.localStorage.getItem("language");
+
 const parseState = (event) => {
 	let statusName = 'None';
 	if (event.openKeep) {
@@ -340,9 +342,17 @@ export default class DoorHistory extends Component {
 			const type = '0';
 			postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {
 				if(res.code == 0){
-					alert("请不要离开当前页面，等待数据传输");
+					if(la=="zh"){
+						alert("请等待接收数据");
+					}else{
+						alert("Await data");
+					}
 				}else if(res.code == 670){
-					alert("当前设备已被人启动监控")
+					if(la=="zh"){
+						alert("当前设备已被人启动监控");
+					}else{
+						alert("Monitor has been activated");
+					}
 				}
 			});
 			setTimeout(()=>{ 
@@ -808,6 +818,228 @@ export default class DoorHistory extends Component {
 			}]
 		})
 	}
+	showChartEn = () =>{
+		const { chart } = this.state
+		let OpenIn = echarts.init(document.getElementById('OpenIn'));
+		let OpenTo = echarts.init(document.getElementById('OpenTo'));
+		let Decelerate = echarts.init(document.getElementById('Decelerate'));
+		let CloseTo = echarts.init(document.getElementById('CloseTo'));
+		let Position = echarts.init(document.getElementById('Position'));
+		let Current = echarts.init(document.getElementById('Current'));
+		let Speed = echarts.init(document.getElementById('Speed'));
+		if(chart.Position != null){
+			while(chart.Position.length>10){
+				Object.values(chart).forEach(item => {
+					item.shift()
+				});
+			}
+		}
+		OpenIn.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['Open signal','Close signal']
+			},
+			grid: {
+				left: '3%',
+				right: '4%',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:this.state.events.nums,
+			},
+			yAxis: {
+				data:[0,1]
+			},
+			series: [{
+				name:'Open signal',
+				type:'line',
+				step: 'start',
+				data:this.state.chart.openIn,
+			},{
+				name:'Close signal',
+				type:'line',
+				step: 'start',
+				data:this.state.chart.closeIn,
+			}]
+		})
+		OpenTo.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['Open arrival Input','Close arrival Input']
+			},
+			grid: {
+				left: '3%',
+				right: '4%',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:this.state.events.nums,
+			},
+			yAxis: {
+				data:[0,1]
+			},
+			series: [{
+				name:'Open arrival Input',
+				type:'line',
+				step: 'start',
+				data:this.state.chart.openTo,
+			},{
+				name:'Close arrival Input',
+				type:'line',
+				step: 'start',
+				data:this.state.chart.closeTo,
+			}]
+		})
+		CloseTo.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['Open arrival Output','Close arrival Output']
+			},
+			grid: {
+				left: '3%',
+				right: '4%',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:this.state.events.nums,
+			},
+			yAxis: {
+				data:[0,1]
+			},
+			series: [{
+				name:'Open arrival Output',
+				type:'line',
+				step: 'start',
+				data:this.state.chart.openToOut,
+			},{
+				name:'Close arrival Output',
+				type:'line',
+				step: 'start',
+				data:this.state.chart.closeToOut,
+			}]
+		})
+		Decelerate.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['Open Decelerate Input','Close Decelerate Input']
+			},
+			grid: {
+				left: '3%',
+				right: '4%',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:this.state.events.nums,
+			},
+			yAxis: {
+				data:[0,1]
+			},
+			series: [{
+				name:'Open Decelerate Input',
+				type:'line',
+				step: 'start',
+				data:this.state.chart.openDecelerate,
+			},{
+				name:'Close Decelerate Input',
+				type:'line',
+				step: 'start',
+				data:this.state.chart.closeDecelerate,
+			}]
+		})
+		Position.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['Door coordinate']
+			},
+			grid: {
+				left: '3%',
+				right: '4%',
+				top: '3%',
+				bottom:'20px',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:this.state.events.nums,
+			},
+			yAxis: {
+			},
+			series: [{
+				name:'Door coordinate',
+				type:'line',
+				smooth: true,
+				data:this.state.chart.Position,
+			}]
+		})
+		Current.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['Current']
+			},
+			grid: {
+				left: '3%',
+				right: '4%',
+				top: '3%',
+				bottom:'20px',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:this.state.events.nums,
+			},
+			yAxis: {
+			},
+			series: [{
+				name:'Current',
+				type:'line',
+				smooth: true,
+				data:this.state.chart.current,
+			}]
+		})
+		Speed.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['Speed']
+			},
+			grid: {
+				left: '3%',
+				right: '4%',
+				top: '3%',
+				bottom:'20px',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data:this.state.events.nums,
+			},
+			yAxis: {
+			},
+			series: [{
+				name:'Speed',
+				type:'line',
+				smooth: true,
+				data:this.state.chart.speed,
+			}]
+		})
+	}
 	goEvent = item => () => {
 		const { history } = this.props;
 		const id = this.state.id;
@@ -853,13 +1085,16 @@ export default class DoorHistory extends Component {
 		const { device: { events, view, property, updateTime, }} = this.props;
 		const { show, id } = this.state;
 		const width = parseInt((window.innerWidth - 100) / 2);
-		const la = window.localStorage.getItem("language");
 		let type = null;
 		if(view == 1 && counts == 1){
 			chartInte = setInterval(() => {
 				if(this.state.pclock==true){
-					this.showChart();
-					this.forceUpdate();
+					if(la=="zh"){
+						this.showChart()
+					}else{
+						this.showChartEn()
+					}
+					this.forceUpdate()
 				}
 			},450)
 			counts = 2;
@@ -881,7 +1116,7 @@ export default class DoorHistory extends Component {
 						transparent
 						maskClosable={false}
 						title={<FormattedMessage id="QR Code"/>}
-						footer={[{ text: 'OK', onPress: () => this.setState({modal: false}) }] }
+						footer={la=="en"?[{ text: 'OK', onPress: () => this.setState({modal: false}) }]:[{ text: '确定', onPress: () => this.setState({modal: false}) }]}
 						wrapProps={{ onTouchStart: this.onWrapTouchStart }}
 					>
 						<div className="qrcode">
@@ -930,11 +1165,11 @@ export default class DoorHistory extends Component {
 									</p>
 									<p style={{
 										width: '50%',
-									}}><FormattedMessage id="Door state"/><i className={styles.status}>{<FormattedMessage id={parseState(show)}/>}</i>
+									}}><FormattedMessage id="Door State"/><i className={styles.status}>{<FormattedMessage id={parseState(show)}/>}</i>
 									</p>
 									<p style={{
 										width: '50%',
-									}}><FormattedMessage id="Door current"/> <i className={styles.status}>{show.current} A</i>
+									}}><FormattedMessage id="Door Current"/> <i className={styles.status}>{show.current} A</i>
 									</p>
 									<p ><FormattedMessage id="Opening signal"/> <i className={styles.status}>{show.openIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
@@ -977,7 +1212,7 @@ export default class DoorHistory extends Component {
 									</p>
 									<p style={{
 										width: '100%',
-									}}><FormattedMessage id="Door current"/> <i className={styles.status}>{show.current?show.current:"0"} A</i>
+									}}><FormattedMessage id="Door Current"/> <i className={styles.status}>{show.current?show.current:"0"} A</i>
 									</p>
 									{/*<p>开门次数 ：<i className={styles.status}>{show.times || '无'}</i>
 									</p>*/}
@@ -991,7 +1226,7 @@ export default class DoorHistory extends Component {
 									</p>
 									<p style={{
 										width: '100%',
-									}}><FormattedMessage id="Door state"/><i className={styles.status}>{<FormattedMessage id={parseState(show)}/>}</i>
+									}}><FormattedMessage id="Door State"/><i className={styles.status}>{<FormattedMessage id={parseState(show)}/>}</i>
 									</p>
 									<p style={{
 										width: '100%',

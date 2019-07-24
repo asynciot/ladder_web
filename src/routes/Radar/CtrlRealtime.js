@@ -19,7 +19,8 @@ var DataInte = null;
 var timing = null;
 var charts = true;
 var websock = '';
-const alert = Modal.alert
+const alert = Modal.alert;
+const la = window.localStorage.getItem("language");
 
 const direction = {
 	'01': 'arrow-up',
@@ -283,9 +284,17 @@ export default class CtrlRealtime extends Component {
 			const address = '00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00';
 			postMonitor({ op, IMEI, interval, threshold, duration, device_type, type, segment, address}).then((res) => {
 				if(res.code == 0){
-					alert("请等待接收数据");
+					if(la=="zh"){
+						alert("请等待接收数据");
+					}else{
+						alert("Await data");
+					}
 				}else if(res.code == 670){
-					alert("当前设备已被人启动监控")
+					if(la=="zh"){
+						alert("当前设备已被人启动监控");
+					}else{
+						alert("Monitor has been activated");
+					}
 				}
 			});
 			setTimeout(()=>{ 
@@ -548,8 +557,6 @@ export default class CtrlRealtime extends Component {
 				this.setState({
 					floor,
 				});
-			}else{
-				alert("获取楼层高度失败！");
 			}
 		})
 	}
@@ -643,6 +650,96 @@ export default class CtrlRealtime extends Component {
 			}]
 		});
 	}
+	showChartEn = () =>{
+		const {event} = this.props;
+		const {run,lock,close,} = this.state;
+		let Run = echarts.init(document.getElementById('run'))
+		let Lock = echarts.init(document.getElementById('lock'))
+		let Close = echarts.init(document.getElementById('close'))
+		if(run.length > 10){
+			run.shift()
+			lock.shift()
+			close.shift()
+		}
+		Run.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['Operating signal']
+			},
+			grid: {
+				left: '3%',
+				right: '4%',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data: this.state.event.nums,
+			},
+			yAxis: {
+				data:[0,1]
+			},
+			series: [{
+				name:'Operating signal',
+				type:'line',
+				step: 'start',
+				data:this.state.run
+			}]
+		});
+		Lock.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['Lock signal']
+			},
+			grid: {
+				left: '3%',
+				right: '4%',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data: this.state.event.nums,
+			},
+			yAxis: {
+				data:[0,1]
+			},
+			series: [{
+				name:'Lock signal',
+				type:'line',
+				step: 'start',
+				data:this.state.lock
+			}]
+		});
+		Close.setOption({
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['Closing signal']
+			},
+			grid: {
+				left: '3%',
+				right: '4%',
+				containLabel: true
+			},
+			xAxis: {
+				type: 'category',
+				data: this.state.event.nums,
+			},
+			yAxis: {
+				data:[0,1]
+			},
+			series: [{
+				name:'Closing signal',
+				type:'line',
+				step: 'start',
+				data:this.state.close
+			}]
+		});
+	}
 	goEvent = item => () => {
 		const { history } = this.props;
 		const id = this.props.match.params.id;
@@ -696,12 +793,15 @@ export default class CtrlRealtime extends Component {
 	render() {
 		let { ctrl: { event, view, device, floors, property, } } = this.props
 		const { floor, markFloor, markList, show} = this.state
-		const id = this.props.match.params.id
-		const la = window.localStorage.getItem("language")
+		const id = this.props.match.params.id;
 		if(view == 1 && counts == 1){
 			chartInte = setInterval(() => {
 				if(this.state.pclock==true){
-					this.showChart()
+					if(la=="zh"){
+						this.showChart()
+					}else{
+						this.showChartEn()
+					}
 					this.forceUpdate()
 				}
 			},450)
@@ -719,7 +819,7 @@ export default class CtrlRealtime extends Component {
 						transparent
 						maskClosable={false}
 						title="二维码"
-						footer={[{ text: '确定', onPress: () => this.setState({modal: false}) }] }
+						footer={la=="en"?[{ text: 'OK', onPress: () => this.setState({modal: false}) }]:[{ text: '确定', onPress: () => this.setState({modal: false}) }]}
 						wrapProps={{ onTouchStart: this.onWrapTouchStart }}
 					>
 						<div className="qrcode">
@@ -1197,7 +1297,7 @@ export default class CtrlRealtime extends Component {
 																className={styles.signal}
 															/>
 														</p>
-														<p ><FormattedMessage id="Fire-fighting lamp"/>
+														<p ><FormattedMessage id="Fire-fighting Lamp"/>
 															<i
 																className={styles.signal}
 															/>
@@ -1701,7 +1801,7 @@ export default class CtrlRealtime extends Component {
 																className={styles.signal}
 															/>
 														</p>
-														<p className={styles.pd1}><FormattedMessage id="Fire-fighting lamp"/>
+														<p className={styles.pd1}><FormattedMessage id="Fire-fighting Lamp"/>
 															<i
 																className={styles.signal}
 															/>

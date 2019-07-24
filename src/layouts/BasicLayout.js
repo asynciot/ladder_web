@@ -105,7 +105,6 @@ class BasicLayout extends React.PureComponent {
 		const { pathname } = location;
 		let title = '';
 		if (routerData[pathname] && routerData[pathname].name) {
-			
 			title = routerData[pathname].name;
 			if(window.localStorage.getItem("language")=="en"){
 				title = routerData[pathname].name2;

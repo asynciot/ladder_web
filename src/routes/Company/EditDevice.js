@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Button, message, Form, Col, Row, } from 'antd';
-import { List, InputItem, DatePicker, Modal} from 'antd-mobile';
+import { List, InputItem, DatePicker, Modal, LocaleProvider} from 'antd-mobile';
 import styles from './EditDevice.less';
 import { putFollowInfo, getDevices, deleteFollowInfo } from '../../services/api';
 import pathToRegexp from 'path-to-regexp';
 import { injectIntl, FormattedMessage } from 'react-intl';
+import en from 'antd-mobile/lib/locale-provider/en_US';
+import moment from 'moment';
+import 'moment/locale/zh-cn';
+
+moment.locale('en');
 var _val1 = '';
 var _val2 = '';
 
@@ -143,66 +148,74 @@ export default class extends Component {
 	render() {
 		const { submitting } = this.state;
 		const list = this.state.list
+		var la 
+		if(window.localStorage.getItem("language")=="zh"){
+			la = undefined;
+		}else{
+			la = en;
+		}
 		return (
-			<div >
-				<Form labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
-					<InputItem
-						onChange={value => this.onAddr(value)}
-						value={this.state.install_addr}
-						labelNumber={7}
-					>
-						<FormattedMessage id="Install Address"/>
-					</InputItem>
-					<InputItem
-						onChange={value => this.onName(value)}
-						value={this.state.device_name}
-						className={styles.center}
-						labelNumber={7}
-					>
-						<FormattedMessage id="Device Name"/>
-					</InputItem>
-					<DatePicker
-						value={this.state.maintenance_nexttime}
-						onChange={this.onStart}
-					>
-						<List.Item arrow="horizontal"><FormattedMessage id="next maintenance"/></List.Item>
-					</DatePicker>
-					<InputItem
-						id='1'
-						onChange={value => this.remind()}
-						labelNumber={7}
-						value={this.state.maintenance_remind}
-					>
-						<FormattedMessage className={styles.fontsize} id="early remind (Days)"/>
-					</InputItem>
-					<DatePicker
-						value={this.state.inspection_nexttime}
-						onChange={this.onEnd}
-					>
-						<List.Item arrow="horizontal"><FormattedMessage id="next yearly check"/></List.Item>
-					</DatePicker>
-					<InputItem
-						id='2'
-						onChange={value => this.remind()}
-						value={this.state.inspection_remind}
-						labelNumber={7}
-					>
-						<FormattedMessage id="early remind (Days)"/>
-					</InputItem>
-					<Row gutter={5}>	
-						<Col span={12}>
-							<Button size="large" loading={submitting} style={{ width: '100%' }} type="primary" onClick={() => this.submit()}>
-								<FormattedMessage id="modify"/>
-							</Button>
-						</Col>
-						<Col span={12}>
-							<Button size="large" loading={submitting} style={{ width: '100%' }} type="danger" onClick={() => this.remove()}>
-								<FormattedMessage id="remove follow"/>
-							</Button>
-						</Col>
-					</Row>
-				</Form>
-			</div>
+			<LocaleProvider locale={la}>
+				<div>
+					<Form labelCol={{ span: 10 }} wrapperCol={{ span: 12 }}>
+						<InputItem
+							onChange={value => this.onAddr(value)}
+							value={this.state.install_addr}
+							labelNumber={7}
+						>
+							<FormattedMessage id="Install Address"/>
+						</InputItem>
+						<InputItem
+							onChange={value => this.onName(value)}
+							value={this.state.device_name}
+							className={styles.center}
+							labelNumber={7}
+						>
+							<FormattedMessage id="Device Name"/>
+						</InputItem>
+						<DatePicker
+							value={this.state.maintenance_nexttime}
+							onChange={this.onStart}
+						>
+							<List.Item arrow="horizontal"><FormattedMessage id="next maintenance"/></List.Item>
+						</DatePicker>
+						<InputItem
+							id='1'
+							onChange={value => this.remind()}
+							labelNumber={7}
+							value={this.state.maintenance_remind}
+						>
+							<FormattedMessage className={styles.fontsize} id="early remind Days"/>
+						</InputItem>
+						<DatePicker
+							value={this.state.inspection_nexttime}
+							onChange={this.onEnd}
+						>
+							<List.Item arrow="horizontal"><FormattedMessage id="next yearly check"/></List.Item>
+						</DatePicker>
+						<InputItem
+							id='2'
+							onChange={value => this.remind()}
+							value={this.state.inspection_remind}
+							labelNumber={7}
+						>
+							<FormattedMessage id="early remind Days"/>
+						</InputItem>
+						<Row gutter={5}>	
+							<Col span={12}>
+								<Button size="large" loading={submitting} style={{ width: '100%' }} type="primary" onClick={() => this.submit()}>
+									<FormattedMessage id="modify"/>
+								</Button>
+							</Col>
+							<Col span={12}>
+								<Button size="large" loading={submitting} style={{ width: '100%' }} type="danger" onClick={() => this.remove()}>
+									<FormattedMessage id="remove follow"/>
+								</Button>
+							</Col>
+						</Row>
+					</Form>
+				</div>
+			</LocaleProvider>
 		);
 	}
 }

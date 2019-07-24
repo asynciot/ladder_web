@@ -1,16 +1,22 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'dva';
-import { Tabs, Flex, ImagePicker, List, InputItem, Picker } from 'antd-mobile';
-import { Button, message } from 'antd';
+import { Tabs, Flex, ImagePicker, List, InputItem, Picker, LocaleProvider } from 'antd-mobile';
+import { Button, message,  } from 'antd';
 import base64url from 'base64url';
 import qrcode from 'qrcode.js';
 import pathToRegexp from 'path-to-regexp';
 import styles from './Call.less';
 import { postCall, getFollowDevices, getFloorData } from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
+// import zh from 'antd-mobile/lib/locale-provider/zh_CN';
+import en from 'antd-mobile/lib/locale-provider/en_US';
+import moment from 'moment';
+import 'moment/locale/zh-cn';
+
+moment.locale('en');
 const tabs = [
-	{ title: '呼叫电梯' },
+	{ title: (window.localStorage.getItem("language")=="zh")?'呼叫电梯':"Call"},
 ];
 @connect(({ submit, user, loading }) => ({
 	submit,
@@ -67,8 +73,6 @@ export default class extends Component {
 				this.setState({
 					floor,
 				})
-			}else{
-				alert("获取楼层高度失败！")
 			}
 		})
 		this.forceUpdate()
@@ -96,46 +100,52 @@ export default class extends Component {
 	}
 	render() {
 		const { submitting } = this.props;
+		var la 
+		if(window.localStorage.getItem("language")=="zh"){
+			la = undefined;
+		}else{
+			la = en;
+		}
 		return (
-			<div className="content">
-				<Tabs
-				  tabs={tabs}
-				  initialPage={this.state.view}
-				  onChange={this.tabChange}
-				  tabBarActiveTextColor="#1E90FF"
-				  tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
-				>
-					<div style={{ backgroundColor: '#fff' }}>
-						<List>
-							<Picker
-								title="选择当前楼层"
-								disabled={this.state.change}
-								cols={1}
-								data={this.state.floor}
-								value={this.state.from}
-								onOk={v => this.onChange(v)}
-							>
-								<List.Item arrow="horizontal"><FormattedMessage id="Current Floor"/></List.Item>
-							</Picker>
-							<Picker
-								title="选择目的楼层"
-								disabled={this.state.change}
-								cols={1}
-								data={this.state.floor}
-								value={this.state.to}
-								onOk={v => this.onChangel(v)}
-							>
-								<List.Item arrow="horizontal"><FormattedMessage id="Destination Floor"/></List.Item>
-							</Picker>
-							<List.Item>
-								<Button disabled={!this.state.from} size="large" loading={submitting} style={{ width: '100%' }} type="primary" onClick={() => this.submit()}>
-									<FormattedMessage id="Destination Floor"/>
-								</Button>
-							</List.Item>
-						</List>
-					</div>
-				</Tabs>
-			</div>
+			<LocaleProvider locale={la}>
+				<div className="content">
+					<Tabs
+					  tabs={tabs}
+					  initialPage={this.state.view}
+					  onChange={this.tabChange}
+					  tabBarActiveTextColor="#1E90FF"
+					  tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
+					>
+						<div style={{ backgroundColor: '#fff' }}>
+							<List>
+								<Picker
+									disabled={this.state.change}
+									cols={1}
+									data={this.state.floor}
+									value={this.state.from}
+									onOk={v => this.onChange(v)}
+								>
+									<List.Item arrow="horizontal"><FormattedMessage id="Current Floor"/></List.Item>
+								</Picker>
+								<Picker
+									disabled={this.state.change}
+									cols={1}
+									data={this.state.floor}
+									value={this.state.to}
+									onOk={v => this.onChangel(v)}
+								>
+									<List.Item arrow="horizontal"><FormattedMessage id="Destination Floor"/></List.Item>
+								</Picker>
+								<List.Item>
+									<Button disabled={!this.state.from} size="large" loading={submitting} style={{ width: '100%' }} type="primary" onClick={() => this.submit()}>
+										<FormattedMessage id="Destination Floor"/>
+									</Button>
+								</List.Item>
+							</List>
+						</div>
+					</Tabs>
+				</div>
+			</LocaleProvider>
 		);
 	}
 }

@@ -297,7 +297,7 @@ export default class Home extends Component {
 										<div className={styles.gridnum4}>
 											{doornum}
 										</div>
-										<FormattedMessage id="door"/>
+										<FormattedMessage id="Door"/>
 									</div>
 								</Card>
 							</Col>
@@ -339,7 +339,7 @@ export default class Home extends Component {
 										<div className={styles.gridnum4}>
 											{ctrlnum}
 										</div>
-										<FormattedMessage id="ctrl"/>
+										<FormattedMessage id="Ctrl"/>
 									</div>
 								</Card>
 							</Col>

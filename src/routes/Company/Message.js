@@ -15,9 +15,9 @@ let page = 1
 const format = "YY/MM/DD"
 const alert = Modal.alert;
 const tabs = [
-	{ title: '全部', type: '' },
-	{ title: '已查看', type: 'done' },
-	{ title: '未查看', type: 'unfinished' },
+	{ title: (window.localStorage.getItem("language")=='zh')?'全部':"All", type: '' },
+	{ title: (window.localStorage.getItem("language")=='zh')?'已查看':"Read", type: 'done' },
+	{ title: (window.localStorage.getItem("language")=='zh')?'未查看':"Unread", type: 'unfinished' },
 ];
 const Delete = ({ className = '', ...restProps }) => (
 	<div className={`${className} ${styles['list-btn']}`}>
@@ -180,9 +180,9 @@ export default class extends Component {
 										extra={<Delete delete={(event) => { this.delete(event,message); }} />}
 									>
 										<div onClick={this.showModal(message)} >
-											<div><FormattedMessage id="create time"/>: {moment(message.createTime).format(format)}</div>
+											<div><FormattedMessage id="Create Time"/>: {moment(message.createTime).format(format)}</div>
 											<div><FormattedMessage id="title"/>: {message.title}</div>
-											<div><FormattedMessage id="content"/>: {message.content}</div>
+											<div><FormattedMessage id="Content"/>: {message.content}</div>
 										</div>
 									</List.Item>
 								))
@@ -200,9 +200,9 @@ export default class extends Component {
 					footer={[{ text: '确定', onPress: () => { this.onClose(); } }]}
 				>
 					<div style={{ height: 100, overflow: 'scroll' }}>
-						<div><FormattedMessage id="create time"/>: {moment(currMessage.createTime).format(format)}</div>
+						<div><FormattedMessage id="Create Time"/>: {moment(currMessage.createTime).format(format)}</div>
 						<div><FormattedMessage id="title"/>: {currMessage.title}</div>
-						<div><FormattedMessage id="content"/>: {currMessage.content}</div>
+						<div><FormattedMessage id="Content"/>: {currMessage.content}</div>
 					</div>
 				</Modal>
 			</div>

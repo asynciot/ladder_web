@@ -9,24 +9,26 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 
 var sectionStyle = {
 	width:"100%",
-  backgroundImage: `url(${Background})` 
+	backgroundImage: `url(${Background})` 
 };
 const FormItem = Form.Item;
 @connect(({ login, loading }) => ({
-  login,
-  submitting: loading.effects['login/register'],
+	login,
+	submitting: loading.effects['login/register'],
 }))
 @Form.create()
 export default class Login extends Component {
-  state = {
-    count: 0,
-  }
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-  onGetCaptcha = () => {
-    const { form } = this.props;
-    if (this.state.count !== 0) return;
+	state = {
+		count: 0,
+		language:window.localStorage.getItem("language")
+	}
+	componentWillUnmount() {
+		clearInterval(this.interval);
+	}
+	onGetCaptcha = () => {
+		const { form } = this.props;
+		if (this.state.count !== 0) 
+			return;
 		const mobile = form.getFieldValue('mobile')	
 		fetch('http://server.asynciot.com/common/sms/'+mobile, {
 			method: 'POST',
@@ -46,68 +48,70 @@ export default class Login extends Component {
 				clearInterval(this.interval);
 			}
 		}, 1000);
-  }
+	}
 
-  showModal = (e) => {
-    e.preventDefault();
-    Modal.info({
-      title: '这个是协议条款',
-      content: (
-        <div>
-          <p>这个是协议条款</p>
-          <p>这个是协议条款</p>
-        </div>
-      ),
-      okText: '确定',
-      onOk() {},
-    });
-  }
-  handleSubmit = (e) => {
-    e.preventDefault();
-    this.props.form.validateFields({ force: true },
-      (err, values) => {
-        if (!err) {
-          this.props.dispatch({
-            type: 'login/register',
-            payload: {
-              ...values,
-            },
-          });
-        }
-      }
-    );
-  }
+	showModal = (e) => {
+		e.preventDefault();
+		Modal.info({
+			title: '',
+			content: (
+				<div>
+				</div>
+			),
+			okText: (this.state.language=="zh")?'确定':"Ok",
+			onOk() {},
+		});
+	}
+	handleSubmit = (e) => {
+		e.preventDefault();
+		this.props.form.validateFields({ force: true },
+			(err, values) => {
+				if (!err) {
+					this.props.dispatch({
+						type: 'login/register',
+						payload: {
+							...values,
+						},
+					});
+				}
+			}
+		);
+	}
 	gologin = () => {
 		const { history } = this.props;
 		history.push('/login');
 	};
-  emitEmpty = () => {
-    this.props.form.resetFields('mobile');
-  }
-  compareToFirstPassword = (rule, value, callback) => {
-    const form = this.props.form;
-    if (value && value !== form.getFieldValue('password')) {
-      callback('两次密码输入不一样!');
-    } else {
-      callback();
-    }
-  }
-  renderMessage = (message) => {
-    return (
-      <Alert
-        style={{ marginBottom: 24 }}
-        message={message}
-        type="error"
-        showIcon
-      />
-    );
-  }
-  render() {
-    const { form, submitting } = this.props;
-    const { getFieldDecorator } = form;
-    const { count } = this.state;
-    const suffix = form.getFieldValue('mobile') ? <Icon type="close-circle" onClick={this.emitEmpty} /> : null;
-    return (
+	emitEmpty = () => {
+		this.props.form.resetFields('mobile');
+	}
+	compareToFirstPassword = (rule, value, callback) => {
+		const form = this.props.form;
+		if (value && value !== form.getFieldValue('password')) {
+			if(this.state.language=="zh"){
+				callback('两次密码输入不一样!');
+			}else{
+				callback('Inconsistent passwords!');
+			}
+		} else {
+			callback();
+		}
+	}
+	renderMessage = (message) => {
+		return (
+			<Alert
+				style={{ marginBottom: 24 }}
+				message={message}
+				type="error"
+				showIcon
+			/>
+		);
+	}
+	render() {
+		const { form, submitting } = this.props;
+		const { getFieldDecorator } = form;
+		const { count } = this.state;
+		const suffix = form.getFieldValue('mobile') ? <Icon type="close-circle" onClick={this.emitEmpty} /> : null;
+		return (
 			<div className={styles.back} style={sectionStyle}>
 				<div className={styles.main}>
 					<Form onSubmit={this.handleSubmit}>
@@ -119,7 +123,7 @@ export default class Login extends Component {
 								<FormItem>
 									<Row gutter={8}>
 										<Col span={6}>
-											<div><FormattedMessage id="user name"/>:</div>
+											<div><FormattedMessage id="Username"/>:</div>
 										</Col>
 										<Col span={18}>
 											{getFieldDecorator('username', {
@@ -132,7 +136,7 @@ export default class Login extends Component {
 													type="text"
 													size="large"
 													suffix={suffix}
-													placeholder="请输入用户名"
+													placeholder={this.state.language=="zh"?"请输入用户名":"Plese input username"}
 												/>)}
 										</Col>
 									</Row>
@@ -154,7 +158,7 @@ export default class Login extends Component {
 													type="text"
 													size="large"
 													suffix={suffix}
-													placeholder="请输入手机号"
+													placeholder={this.state.language=="zh"?"请输入手机号":"Plese input phone"}
 												/>)}
 										</Col>
 									</Row>
@@ -162,7 +166,7 @@ export default class Login extends Component {
 								<FormItem>
 									<Row gutter={8}>
 										<Col span={6}>
-											<div><FormattedMessage id="verification"/>:</div>
+											<div><FormattedMessage id="Verification"/>:</div>
 										</Col>
 										<Col span={12}>
 											{getFieldDecorator('verifyCode', {
@@ -173,7 +177,7 @@ export default class Login extends Component {
 											})(<Input
 												type="text"
 												size="large"
-												placeholder="请输入验证码"
+												placeholder={this.state.language=="zh"?"请输入验证码":"Plese input verification code"}
 											/>)}
 										</Col>
 										<Col span={6}>
@@ -183,7 +187,7 @@ export default class Login extends Component {
 												size="large"
 												onClick={() => this.onGetCaptcha()}
 											>
-												<FormattedMessage id={count ? `${count} s` : 'get code'}/>
+												<FormattedMessage id={count ? `${count} s` : 'Get Code'}/>
 											</Button>
 										</Col>
 									</Row>
@@ -203,7 +207,7 @@ export default class Login extends Component {
 											})(<Input
 													type="password"
 													size="large"
-													placeholder="请输入密码"
+													placeholder={this.state.language=="zh"?"请输入密码":"Plese input password"}
 											/>)}
 										</Col>
 									</Row>
@@ -211,7 +215,7 @@ export default class Login extends Component {
 								<FormItem>
 									<Row gutter={8}>
 										<Col span={6}>
-											<div><FormattedMessage id="Confirm password"/>:</div>
+											<div><FormattedMessage id="Confirm"/>:</div>
 										</Col>
 										<Col span={18}>
 											{getFieldDecorator('confirm', {
@@ -224,7 +228,7 @@ export default class Login extends Component {
 												})(<Input
 														type="password"
 														size="large"
-														placeholder="请确认密码"
+														placeholder={this.state.language=="zh"?"请确认密码":"Plese confirm password"}
 												/>)}
 										</Col>
 									</Row>
@@ -241,7 +245,7 @@ export default class Login extends Component {
 												type="primary"
 												htmlType="submit"
 											>
-												<FormattedMessage id="register"/>
+												<FormattedMessage id="Register"/>
 											</Button>
 										</Col>
 										<Col span={12}>
@@ -251,7 +255,7 @@ export default class Login extends Component {
 												className={styles.submit}
 												type="primary"
 											>
-												<FormattedMessage id="back"/>
+												<FormattedMessage id="Back"/>
 											</Button>
 										</Col>
 									</Row>
@@ -262,7 +266,7 @@ export default class Login extends Component {
 														valuePropName: 'checked',
 														initialValue: true,
 													})(
-														<Checkbox><FormattedMessage id="Agree to "/><i className={styles.deal} onClick={this.showModal} loading={this.state.loading}>《<FormattedMessage id="Terms of Service"/>》</i></Checkbox>
+														<Checkbox><FormattedMessage id="Agree To"/><i className={styles.deal} onClick={this.showModal} loading={this.state.loading}>《<FormattedMessage id="Terms of Service"/>》</i></Checkbox>
 													)}
 											</Col>
 										</Row>
@@ -273,6 +277,6 @@ export default class Login extends Component {
 					</Form>
 				</div>
 			</div>
-    );
+	);
   }
 }

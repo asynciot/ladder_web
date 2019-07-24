@@ -10,6 +10,7 @@ export default {
 	effects: {
 		*login({ payload }, { call, put }) {
 			const response = yield call(accountLogin, payload);
+			const la = window.localStorage.getItem("language");
 			yield put({
 				type: 'changeLoginStatus',
 				payload: response,
@@ -23,26 +24,49 @@ export default {
 						currentAuthority: 'admin',
 					},
 				});
-				yield message.success(
-					'登录成功',
-					1,
-					() => {
-						localStorage.setItem('userId', response.account.id);
-						window.location.reload();
-					},
-				);
+				if(la=="zh"){
+					yield message.success(
+						'登录成功',
+						1,
+						() => {
+							localStorage.setItem('userId', response.account.id);
+							window.location.reload();
+						},
+					);
+				}else{
+					yield message.success(
+						'Login success',
+						1,
+						() => {
+							localStorage.setItem('userId', response.account.id);
+							window.location.reload();
+						},
+					);
+				}
 			} else {
-				message.error('登录失败');
+				if(la == "zh"){
+					message.error('登录失败');
+				}else{
+					message.error('Login failed');
+				}
 			}
 		},
 		*register({ payload }, { call, put }) {
 			const params = Object.assign({ username: payload.username }, payload);
 			const response = yield call(register, params);
 			if (response.code === 0) {
-				const msg = message.success(
-					'注册成功，正在登录...',
-					0,
-				);
+				if(la == "zh"){
+					const msg = message.success(
+						'注册成功，正在登录...',
+						0,
+					);
+				}else{
+					const msg = message.success(
+						'success，logining...',
+						0,
+					);
+				}
+				
 				yield setTimeout(msg, 500);
 				yield put({
 					type: 'login',
@@ -52,19 +76,35 @@ export default {
 					},
 				});
 			} else if (response.code === 613){
-				message.error('该账号已注册');
+				if(la=="zh"){
+					message.error('该账号已注册');
+				}else{
+					message.error('Account has been registered');
+				}
+				
 			} else {
-				message.error('注册失败');
+				if(la=="zh"){
+					message.error('注册失败');
+				}else{
+					message.error('register failed');
+				}
 			} 
 		},
 		*retrieve({ payload }, { call, put }) {
 			const params = Object.assign({ username: payload.username }, payload);
 			const response = yield call(retrieve, params);
 			if (response.code === 0) {
-				const msg = message.success(
-					'密码修改成功，正在登录...',
-					0,
-				);
+				if(la=="zh"){
+					const msg = message.success(
+						'密码修改成功，正在登录...',
+						0,
+					);
+				}else{
+					const msg = message.success(
+						'success，login...',
+						0,
+					);
+				}
 				yield setTimeout(msg, 500);
 				yield put({
 					type: 'login',
@@ -74,15 +114,29 @@ export default {
 					},
 				});
 			}else {
-				message.error('密码修改失败');
+				if(la=="zh"){
+					message.error('密码修改失败');
+				}else{
+					message.error('failed');
+				}
+				
 			}
 		},
 		*captcha({ payload }, { call, put }) {
 			const response = yield call(getCaptcha, payload.mobile);
 			if (response.code === 0) {
-				yield message.success('发送成功');
+				if(la=="zh"){
+					yield message.success('发送成功');
+				}else{
+					yield message.success('success');
+				}
 			} else {
-				message.error('发送失败');
+				if(la=="zh"){
+					message.error('发送失败');
+				}else{
+					message.error('failed');
+				}
+				
 			}
 		},
 		*logout({ payload }, { call, put }) {

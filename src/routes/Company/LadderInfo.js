@@ -59,6 +59,7 @@ export default class extends Component {
 	}
 	render() {
 		const list = this.state.list
+		const la = window.localStorage.getItem("language")
 		return (
 			<div >
 				<Form labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
@@ -80,7 +81,7 @@ export default class extends Component {
 							disabled="true"
 							style={{color:'red'}}
 						>
-							<FormattedMessage id="ctrl"/>
+							<FormattedMessage id="Ctrl"/>
 						</InputItem>
 					</div>
 					<div onClick={()=>this.goDevice(1,list.door1)}>
@@ -89,7 +90,7 @@ export default class extends Component {
 							disabled="true"
 							style={{color:'red'}}
 						>
-							<FormattedMessage id="door"/>
+							<FormattedMessage id="Door"/>
 						</InputItem>
 					</div>
 					<div onClick={()=>this.goDevice(1,list.door2)}>
@@ -98,17 +99,17 @@ export default class extends Component {
 							disabled="true"
 							style={{color:'red'}}
 						>
-							<FormattedMessage id="door"/>
+							<FormattedMessage id="Door"/>
 						</InputItem>
 					</div>
-					<div onClick={()=>this.goLadder()}>
+					{/* <div onClick={()=>this.goLadder()}>
 						<InputItem
 							disabled="true"
 							style={{color:'red'}}
 						>
 							电梯
 						</InputItem>
-					</div>
+					</div> */}
 					{
 						(this.state.la=="zh")?
 						<InputItem

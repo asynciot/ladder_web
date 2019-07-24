@@ -5,16 +5,16 @@ import classNames from 'classnames';
 import base64url from 'base64url';
 import pathToRegexp from 'path-to-regexp';
 import MobileNav from '../../components/MobileNav';
-import styles from './FollowDevice.less';
+import styles from './Ladder.less';
 import singalImg from '../../assets/signal.png';
 import { getLadder,} from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
 var switchIdx = 0;
 const alert = Modal.alert;
 const tabs2 = [
-	{ title: '全部', state: '' },
-	{ title: '在线', state: 'online' },
-	{ title: '离线', state: 'longoffline' },
+	{ title: (window.localStorage.getItem("language")=='zh')?'全部':'All', state: '' },
+	{ title: (window.localStorage.getItem("language")=='zh')?'在线':'Online', state: 'online' },
+	{ title: (window.localStorage.getItem("language")=='zh')?'离线':'Offline', state: 'longoffline' },
 ];
 const state ={
 	'online':'online',
@@ -151,6 +151,7 @@ export default class extends Component {
 	}
 	render() {
 		const { navs, list, switchIdx } = this.state;
+		const la = window.localStorage.getItem("language")
 		return (
 			<div className="content">
 				<Tabs
@@ -165,14 +166,14 @@ export default class extends Component {
 							<Row className={styles.page}>
 								<Col span={8} style={{margin:'5px'}}>
 									<Input
-										placeholder="设备编号或串号"
+										placeholder={(la=="zh")?"设备编号":"IMEI"}
 										onChange={this.onChange}
 										value={this.state.search_info}
 										maxlength="16"></Input>
 								</Col>
 								<Col span={8} style={{margin:'5px'}}>
 									<Input
-										placeholder="安装地址"
+										placeholder={(la=="zh")?"安装地址":"Install Address"}
 										onChange={this.onChangel}
 										value={this.state.iddr}
 										maxlength="16"></Input>
@@ -189,42 +190,82 @@ export default class extends Component {
 								list.map((item, index) => (
 									<List.Item className={styles.item} key={index} onClick={()=>this.goLadder(item)} extra={<ListButton edit={(event) => { this.edit(event, item); }} />}>
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
-											<tbody>
-												<tr>
-													<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
-													<td className="tl">{item.name ? item.name : '无'}</td>
-												</tr>
-												<tr>
-													<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
-													<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
-												</tr>
-												<tr>
-													<Col span={12}>	
-														<a className={styles.text}><FormattedMessage id="ctrl"/> ：</a>
-														<td className="tl">{item.ctrl ||''}</td>
-													</Col>
-												</tr>
-												<tr>
-													<Col span={12}>
-														<td className="tr"><FormattedMessage id="door"/> ：</td>
-														<td className="tl">{item.door1}</td>
-													</Col>
-													<Col span={12}>	
-														<a className={styles.text2}><FormattedMessage id="RSSI"/>：</a>
-														<td className="tl"><Signal width={item.rssi}/></td>
-													</Col>
-												</tr>
-												<tr>
-													<Col span={12}>
-														<td className="tr"><FormattedMessage id="door"/> ：</td>
-														<td className="tl">{item.door2}</td>
-													</Col>
-													<Col span={12}>
-														<td className="tl"><FormattedMessage id="state"/> ：</td>
-														<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
-													</Col>
-												</tr>
-											</tbody>
+											{
+												la=="zh"?
+												<tbody>
+													<tr>
+														<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
+														<td className="tl">{item.name ? item.name : <FormattedMessage id="None"/>}</td>
+													</tr>
+													<tr>
+														<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
+														<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
+													</tr>
+													<tr>
+														<Col span={12}>	
+															<a className={styles.text}><FormattedMessage id="Ctrl"/> ：</a>
+															<td className="tl">{item.ctrl ||''}</td>
+														</Col>
+													</tr>
+													<tr>
+														<Col span={12}>
+															<a className={styles.text}><FormattedMessage id="Door"/> ：</a>
+															<td className="tl">{item.door1}</td>
+														</Col>
+														<Col span={12}>	
+															<a className={styles.text2}><FormattedMessage id="RSSI"/>：</a>
+															<td className="tl"><Signal width={item.rssi}/></td>
+														</Col>
+													</tr>
+													<tr>
+														<Col span={12}>
+															<a className={styles.text}><FormattedMessage id="Door"/> ：</a>
+															<td className="tl">{item.door2}</td>
+														</Col>
+														<Col span={12}>
+															<a className={styles.text}><FormattedMessage id="state"/> ：</a>
+															<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
+														</Col>
+													</tr>
+												</tbody>
+												:
+												<tbody>
+													<tr>
+														<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
+														<td className="tl">{item.name ? item.name : <FormattedMessage id="None"/>}</td>
+													</tr>
+													<tr>
+														<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
+														<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
+													</tr>
+													<tr>
+														<Col span={16}>
+															<a className={styles.text}><FormattedMessage id="Ctrl"/> ：</a>
+															<td className="tl" style={{ width: '260px' }}>{item.ctrl ||''}</td>
+														</Col>
+													</tr>
+													<tr>
+														<Col span={16}>
+															<a className={styles.text}><FormattedMessage id="Door"/> ：</a>
+															<td className="tl">{item.door1}</td>
+														</Col>
+														<Col span={8}>
+															<a className={styles.text2}><FormattedMessage id="RSSI"/>：</a>
+															<td className="tl"><Signal width={item.rssi}/></td>
+														</Col>
+													</tr>
+													<tr>
+														<Col span={16}>
+															<a className={styles.text}><FormattedMessage id="Door"/> ：</a>
+															<td className="tl">{item.door2}</td>
+														</Col>
+														<Col span={8}>
+															<a className={styles.text}><FormattedMessage id="state"/> ：</a>
+															<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
+														</Col>
+													</tr>
+												</tbody>
+											}
 										</table>
 									</List.Item>
 								)):

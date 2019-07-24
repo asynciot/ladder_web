@@ -336,6 +336,7 @@ export const getRouterData = (app) => {
 		},
 		'/login/': {
 			name: '登录',
+			name2: 'Login',
 			component: dynamicWrapper(app, ['login'], () => import('../routes/User/Login')),
 		},
 		'/register/': {

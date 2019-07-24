@@ -390,7 +390,7 @@ export default class Debug extends Component {
 						</Picker>
 						<Item>
 							<label htmlFor="check" className={styles.check}>
-								<Checkbox id="check" disabled={this.state.switch} onChange={this.onChange} className={styles.pas}><FormattedMessage id="continuous"/></Checkbox>
+								<Checkbox id="Check" disabled={this.state.switch} onChange={this.onChange} className={styles.pas}><FormattedMessage id="Continuous"/></Checkbox>
 							</label>
 							<span className={styles.switch}>
 								<Switch

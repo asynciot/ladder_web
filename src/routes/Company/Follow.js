@@ -11,9 +11,7 @@ import camera from '../../assets/camera.png';
 import { postFollowInfo } from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
 const tabs = [
-	{ title: '输入串号' },
-	// { title: '上传二维码' },
-	
+	{ title: (window.localStorage.getItem("language")=='zh')?'输入IMEI':"Input IMEI"},
 ];
 
 @connect(({ submit, user, loading }) => ({
@@ -69,12 +67,24 @@ export default class extends Component {
 			imei: this.state.deviceNo,
 		}).then((res) => {
 			if (res.code === 0) {
-				message.success('关注成功');
+				if(window.localStorage.getItem("language")=='zh'){
+					message.success('关注成功');
+				}else{
+					message.success('Follow Success');
+				}
 				this.props.history.push(`/home`);
 			} else if (res.code === 855) {
-				return message.error('您已经关注此设备');
+				if(window.localStorage.getItem("language")=='zh'){
+					return message.error('您已经关注此设备');
+				}else{
+					return message.error('Attention has been paid to it');
+				}
 			} else {
-				return message.error('关注失败');
+				if(window.localStorage.getItem("language")=='zh'){
+					return message.error('关注失败');
+				}else{
+					return message.error('Follow Failed');
+				}
 			}
 		});
 	}
@@ -129,7 +139,7 @@ export default class extends Component {
 								onChange={this.onChange}
 								value={this.state.deviceNo}
 							>
-								<FormattedMessage id="device IMEI"/>:
+								<FormattedMessage id="Device IMEI"/>:
 							</InputItem>
 							<List.Item>
 								<Button disabled={!this.state.deviceNo} size="large" loading={submitting} style={{ width: '100%' }} type="primary" onClick={() => this.submit()}>

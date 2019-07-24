@@ -633,7 +633,7 @@ export default class DoorHistory extends Component {
 				trigger: 'axis'
 			},
 			legend: {
-				data:['Open Decelerate Output','Close Decelerate Output']
+				data:['Open Decelerate Input','Close Decelerate Input']
 			},
 			grid: {					
 				left: '3%',
@@ -648,12 +648,12 @@ export default class DoorHistory extends Component {
 				data:[0,1]
 			},
 			series: [{
-				name:'Open Decelerate Output',
+				name:'Open Decelerate Input',
 				type:'line',
 				step: 'start',
 				data:events.openDecelerate,
 			},{
-				name:'Close Decelerate Output',
+				name:'Close Decelerate Input',
 				type:'line',
 				step: 'start',
 				data:events.closeDecelerate,
@@ -664,7 +664,7 @@ export default class DoorHistory extends Component {
 				trigger: 'axis'
 			},
 			legend: {
-				data:["Door coordinate"]
+				data:["Door Coordinate"]
 			},
 			grid: {					
 				left: '3%',
@@ -680,7 +680,7 @@ export default class DoorHistory extends Component {
 			yAxis: {
 			},
 			series: [{
-				name:'Door coordinate',
+				name:'Door Coordinate',
 				type:'line',
 				step: 'start',
 				data:events.position,
@@ -879,7 +879,7 @@ export default class DoorHistory extends Component {
 										justifyContent: 'flex-start',
 									}}><FormattedMessage id="Device Name"/>：<i className={styles.status}>{this.state.device_name}</i>
 									</p>
-									<p><FormattedMessage id="Door current"/><i className={styles.status}>{`${show.current} A`}</i>
+									<p><FormattedMessage id="Door Current"/><i className={styles.status}>{`${show.current} A`}</i>
 									</p>
 									<p><FormattedMessage id="Number of opening:"/><i className={styles.status}>{show.times || <FormattedMessage id="None"/>}</i>
 									</p>
@@ -889,7 +889,7 @@ export default class DoorHistory extends Component {
 									</p>
 									<p style={{
 										width: '50%',
-									}}><FormattedMessage id="Door state"/><i className={styles.status}>{<FormattedMessage id={parseState(show)}/>}</i>
+									}}><FormattedMessage id="Door State"/><i className={styles.status}>{<FormattedMessage id={parseState(show)}/>}</i>
 									</p>
 									<p style={{
 										width: '50%',
@@ -932,7 +932,7 @@ export default class DoorHistory extends Component {
 										justifyContent: 'flex-start',
 									}}><FormattedMessage id="Device Name"/>：<i className={styles.status}>{this.state.device_name}</i>
 									</p>
-									<p><FormattedMessage id="Door current"/><i className={styles.status}>{`${show.current} A`}</i>
+									<p><FormattedMessage id="Door Current"/><i className={styles.status}>{`${show.current} A`}</i>
 									</p>
 									<p><FormattedMessage id="Number of opening"/><i className={styles.status}>{show.times || <FormattedMessage id="None"/>}</i>
 									</p>
@@ -943,7 +943,7 @@ export default class DoorHistory extends Component {
 									<p style={{
 										width: '100%',
 										justifyContent: 'flex-start',
-									}}><FormattedMessage id="Door state"/><i className={styles.status}>{<FormattedMessage id={parseState(show)}/>}</i>
+									}}><FormattedMessage id="Door State"/><i className={styles.status}>{<FormattedMessage id={parseState(show)}/>}</i>
 									</p>
 									<p style={{
 										width: '100%',

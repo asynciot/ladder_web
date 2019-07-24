@@ -301,7 +301,7 @@ export default class DoorHistory extends Component {
 											<td className="tl" style={{ width: '100px' }}><FormattedMessage id={'O'+item.type}/></td>
 										</tr>
 										<tr>
-											<a className={styles.text}><FormattedMessage id="device type"/> ：</a>
+											<a className={styles.text}><FormattedMessage id="Device Type"/> ：</a>
 											<td className="tl"><FormattedMessage id={item.device_type ||''}/></td>
 										</tr>
 										<tr>
@@ -353,7 +353,7 @@ export default class DoorHistory extends Component {
 							<Button disabled={this.state.disable} onClick={() => this.postFault()} type="primary" style={{ width: '100%' }} ><FormattedMessage id="receive"/></Button>
 						</Col>
 						<Col xs={{ span: 12 }} sm={{ span: 18 }} md={{ span: 16 }} className={styles.btn1}>
-							<Button disabled={this.state.disable1} onClick={(event) => {this.uploadPicture(event)}} type="primary" style={{ width: '100%' }} ><FormattedMessage id="complete"/></Button>
+							<Button disabled={this.state.disable1} onClick={(event) => {this.uploadPicture(event)}} type="primary" style={{ width: '100%' }} ><FormattedMessage id="Complete"/></Button>
 						</Col>
 					</Row>
 				</div>

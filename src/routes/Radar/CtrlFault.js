@@ -168,7 +168,7 @@ export default class DoorHistory extends Component {
 											<tr>
 												<td className="tr"><FormattedMessage id="fault code"/> ：</td>
 												<td className="tl" style={{ width: '100px' }}><FormattedMessage id={'E'+item.code}/></td>
-												<td className="tl"><FormattedMessage id="creator"/> ：</td>
+												<td className="tl"><FormattedMessage id="Creator"/> ：</td>
 												<td className="tl" style={{ width: '260px' }}>{item.producer}</td>
 											</tr>
 											<tr>

@@ -276,7 +276,7 @@ export default class extends Component {
 													<td className="tl" style={{ width: '80px' }}><FormattedMessage id={'O'+item.type}/></td>
 												</tr>
 												<tr>
-													<a className={styles.text}><FormattedMessage id="device type"/>：</a>
+													<a className={styles.text}><FormattedMessage id="Device Type"/>：</a>
 													<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 												</tr>
 												<tr>
@@ -317,7 +317,7 @@ export default class extends Component {
 													<td className="tl" style={{ width: '200px' }}><FormattedMessage id={item.code}/></td>
 												</tr>
 												<tr>
-													<a className={styles.text}><FormattedMessage id="accept time"/> ：</a>
+													<a className={styles.text}><FormattedMessage id="Accept Time"/> ：</a>
 													<td className="tl">{item.create_time}</td>
 												</tr>
 												<tr>
