@@ -79,9 +79,9 @@ export default class MobileHeader extends PureComponent {
 					)
 				}
 				{
-					title === '地图列表' && (
+					/* title === '地图列表' && (
 						<Icon className={styles.setting} type="profile" onClick={() => this.link('/company/device')} />
-					)
+					) */
 				}
 			</Header>
 		);

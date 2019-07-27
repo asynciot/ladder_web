@@ -11,7 +11,7 @@
 	"Allowed Opening/Closing Time": "允许开、关门运行时间",
 	"Allowed Minutely Fault Count": "每分钟允许故障次数",
 	"Acceleration Time": "加速时间",
-	"Allowed Tolerance frequency during Acceleration and Deceleration": "加减速时允许误差频率", 
+	"Allowed Tolerance frequency during Acceleration and Deceleration": "加减速时允许误差频率",
 	"Allowed Tolerance Frequency at Stable Speed": "速度稳定时允许误差频率",
 	"Arrival Clock Open All the Way":"到站钟一直开启",
 	"Arrival Clock Open in the Set Time":"到站钟在设置的时间内开启",
@@ -39,8 +39,8 @@
 	"Brake":"抱闸",
 	"Brake keeping":"抱闸维持",
 	"Buzzer signal":"蜂鸣器信号",
-	
-	
+
+
 	"Call":"呼梯",
 	"Car":"轿厢",
 	"Car Roof":"轿顶板",
@@ -88,7 +88,7 @@
 	"Closing accelerate 1 period speed":"关门加速1段速度",
 	"Closing overtime reverse opening delay":"关门超时反开延时",
 	"Closing accelerate 1 period accelerate time":"关门加速1段加速时间",
-	"Closing Limit Position": "关门极限位置",	
+	"Closing Limit Position": "关门极限位置",
 	"Closing Overload Current during Stable Operation": "稳定运行时关门过载电流",
 	"Closing Overload Current during Acceleration and Deceleration": "加减速运行时关门过载电流",
 	"Closing Over-current Detection Distance": "关门过流检测距离",
@@ -108,11 +108,11 @@
 	"Common Faults" : "常见故障",
 	"Current zero value":"电流零点值",
 	"Control mode mark":"控制方式标志",
-	"CP3-Y1 Function selection":"CP3‐Y1 功能选择",
-	"CP3-Y2 Function selection":"CP3‐Y2 功能选择",
-	"CP3-Y3 Function selection":"CP3‐Y3 功能选择",
+	"CP3‐Y1 Function Selection":"CP3‐Y1 功能选择",
+	"CP3‐Y2 Function Selection":"CP3‐Y2 功能选择",
+	"CP3‐Y3 Function Selection":"CP3‐Y3 功能选择",
 	"CP8":"CP8",
-	
+
 	"Door Current":"门电流：",
 	"Door State":"门状态：",
 	"Dispatch List" : "维保列表",
@@ -147,20 +147,20 @@
 	"Determination of Magnetic Pole Position": "磁极位置测定操作",
 	"Data Write-protected Setting": "数据写保护设置",
 	"DC brake voltage":"直流制动电压",
-	
+
 	"Excitation Current Ring P Parameter": "励磁电流环 P 参数",
 	"Excitation Current Ring I Parameter": "励磁电流环 I 参数",
 	"Encoder Pulse Per Revolution": "编码器每转脉冲数",
 	"Encoder Direction Setting": "编码器方向设置",
 	"Examine List" : "审核列表",
-	
+
 	"Fire-fighting Lamp":"消防灯",
 	"Front door closing command":"前门关门指令",
 	"Forget":"忘记密码?",
 	"Fireman Function Selection": "消防功能选择",
 	"Fire-fighting Input Signal Terminal Selection": "消防输入信号端子选择",
 	"Feedback" : "意见反馈",
-	
+
 	"Instructions" : "说明文档",
 
 	"Light Curtain Polarity Setting": "光幕极性设置",
@@ -170,17 +170,20 @@
 	"Lang":"简体中文",
 	"Login" : "登录",
 	"Logout" : "退出",
-	
+
 	"Menu adjustment demonstration": "菜单调节演示",
 	"Motor UVW wiring direction setting": "电机 UVW 接线方向设置",
 	"Motor Tempreture Switch Polarity setting": "电机温控开关极性设置",
 	"Motor Pole Number Setting": "电机级数设置",
-	
+	"Module Type" : "模块型号",
+	"Manage Elevator":"电梯管理",
+	"Monitor remaining time":"监控剩余时间：",
+
 	"NBSL" : "宁波申菱 管理系统",
 	"NBSL Elevator QR Code" : "宁波申菱电梯二维码",
 	"Notification Record" : "通知记录",
 	"Notice" : "发送邮件",
-	
+
 	"Opening Limit Output Relay Polarity Setting": "开门限位输出继电器极性设置",
 	"Opening Limit Switch Polarity Setting": "开门限位开关极性设置",
 	"Opening Input Signal Terminal Selection": "开门输入信号端子选择",
@@ -194,15 +197,15 @@
 	"Operation Monitor" : "运行监控",
 	"Operation" : "运行",
 	"Operation State" : "运行状态",
-	
+
 	"Permission Assignment" : "权限管理",
 	"Print QR Code" : "打印二维码",
 	"print" : "打印",
 	"Personal Information" : "个人信息",
-	
+
 	"QR Code" : "二维码",
 	"Quit" : "退出全屏",
-	
+
 	"Retined": "保留",
 	"Register" : "注册",
 	"Remember" : "记住密码",
@@ -210,7 +213,7 @@
 	"respond here" : "回复本条",
 	"reply" : "回复",
 	"respond " : "回复",
-	
+
 	"Synchronous Motor Magnetic Pole Position": "同步电机磁极位置",
 	"Synchronous Door Selection Setting": "同步门选择设置",
 	"Selection of Opening Brake/Long-term Brake": "开门制动定时/长期制动选择",
@@ -220,19 +223,20 @@
 	"Setting for front and rear door": "前后门设置",
 	"System" : "系统管理",
 	"sent notice" : "发送通知",
-	
+
 	"Torque Current Ring P Parameter": "力矩电流环 P 参数",
 	"Torque Current Ring I Parameter": "力矩电流环 I 参数",
 	"Treating Progress" : "故障处理进程",
 	"Tasks Completed Today" : "今日完成任务",
-	
+
 	"User Management" : "用户管理",
-	
+
 	"Verification" : "验证码",
-	
+
 	"Work Flow" : "工作流",
 	"WeChat Follow" : "出厂设置",
-	
+  "Wifi" : "Wifi",
+
 	"Fault Devices" : "故障设备",
 	"Updateable Firmware" : "可更新固件",
 	"Online Devices" : "在线设备",
@@ -266,12 +270,12 @@
 	"List" : "列表",
 	"online" : "在线",
 	"offline" : "离线",
-	"long offline" : "长期离线",
+	"long offline" : "离线",
 	"keyword" : "关键词",
 	"search" : "搜索",
 	"type" : "类型",
 	"state" : "状态",
-	
+
 	"IP location" : "IP定位",
 	"warning" : "警告",
 	"try keyword within 15 bytes" : "关键词请不要超过15字",
@@ -281,7 +285,7 @@
 	"model" : "型号",
 	"Event Record" : "事件记录",
 	"tip" : "提示",
-	
+
 	"event id" : "事件序号",
 	"start time" : "开始时间",
 	"end time" : "结束时间",
@@ -318,7 +322,7 @@
 	"phone number" : "联系电话",
 	"introduction" : "备注",
 	"finish time" : "完成时间",
-	
+
 	"photo before treating" : "处理前照片",
 	"photo after treating" : "处理后照片",
 	"Parameter" : "参数信息",
@@ -409,19 +413,19 @@
 	"Output over-current": "输出过流",
 	"Input under-voltage": "输入电压过低",
 	"Output under-voltage": "输入电压过高",
-	
-	
+
+
 
 	"Synchronous Door Coupler Opening Speed": "同步门门刀打开速度",
 	"Opening Start Speed": "开门启动速度",
 	"Opening High Speed": "开门高速",
 	"Opening Low Speed 1": "开门低速 1",
 	"Opening Low Speed 2": "开门低速 2",
-	"Self-learning and Power-up Speed": "自学习及上电运行速度", 
+	"Self-learning and Power-up Speed": "自学习及上电运行速度",
 	"Opening Limit Position Torque Coefficient": "开门限位时保持速度",
-	"Run Speed for Start at Low Speed Area": "低速区启动时运行速度", 
-	"Run Speed during power-up of Synchronous Motor": "同步电机上电时运行速度", 
-	"Maximum Output Frequency": "最大输出频率", 
+	"Run Speed for Start at Low Speed Area": "低速区启动时运行速度",
+	"Run Speed during power-up of Synchronous Motor": "同步电机上电时运行速度",
+	"Maximum Output Frequency": "最大输出频率",
 	"Reference Frequency": "基准频率",
 	"Start S Curve": "启动时 S 曲线",
 	"S Curve on Arrival": "到达时 S 曲线",
@@ -452,13 +456,13 @@
 	"Opening/Closing Overload Protection Current": "开、关门过载保护电流",
 
 	"Maximum Torque": "最大转矩",
-	
-	
-	
-  
-  
-	
-	
+
+
+
+
+
+
+
 	"High speed torque lifting":"高速力矩提升",
 
 	"Opening arrival relay Polar setting":"开门到位继电器极性设置",
@@ -489,8 +493,8 @@
 	"Opening start acceleration time":"开门启动加速时间",
 	"Opening accelerate 1 period accelerate time":"开门加速1段加速时间",
 	"Opening accelerate 1 period speed":"开门加速1段速度",
-	
-	
+
+
 	"Motor rated power":"电机额定功率",
 	"Motor rated voltage":"电机额定电压",
 	"Motor rated current":"电机额定电流",
@@ -514,7 +518,7 @@
 	"Dead zone time setting":"死区时间设置",
 	"Exciting current setting":"励磁电流设置",
 	"Integral coefficient of starting brake distance":"启动制动力矩积分系数/模拟量称重增益系数",
-	
+
 	"X1 Function selection":"X1 功能选择",
 	"X2 Function selection":"X2 功能选择",
 	"X3 Function selection":"X3 功能选择",
@@ -667,6 +671,7 @@
 	"No Order":"暂无工单",
 	"No Information":"暂无数据",
 	"Location clock":"定位打卡",
+  "O0":"故障",
 	"O1":"故障",
 	"O2":"保养",
 	"O3":"校检",
@@ -675,7 +680,7 @@
 	"Get Code":"获取",
 	"Please input verification code":"请输入验证码",
 	"Please input phone number":"请输入手机号",
-	"Illegal phone number":"手机号错误",
+	"Illegal phone number":"不合法的手机号",
 	"User name should not less than 6 characters":"用户名不得少于6位",
 	"Password should not less than 6 characters":"密码不得少于6位",
 	"Password":"密码",
@@ -694,7 +699,7 @@
 	"Re-leveling":"再平层",
 	"Sealing star":"封星",
 	"Front door opening":"前门开门",
-	
+
 	"Front door closing":"前门关门",
 	"Front door opening command":"前门开门指令",
 	"Fire-fighting light":"消防照明",
@@ -703,8 +708,8 @@
 	"Firelink to base station":"消防联动到基站",
 	"Front door light curtain":"前门光幕",
 	"Front door opening arrival":"前门开门到位",
-	
-	
+
+
 	"Front door safety touch pad":"前门安全触板",
 	"Opening arrival signal":"开门到位信号：",
 	"Closing arrival signal":"关门到位信号：",
@@ -724,11 +729,11 @@
 	"Lighting command":"照明指令",
 	"Full load passing signal":"满载通过信号",
 	"Front door opening command":"前门开门指令",
-	
-	
+
+
 	"Open door lamp":"开门灯",
 	"Up and down arrival clock output":"上下行到站钟合并输出",
-	
+
 	"View":"查看",
 	"Last update time":"最后更新时间",
 	"Number of opening:":"开门次数：",
@@ -740,7 +745,7 @@
 	"fault duration":"故障时长",
 	"switch":"开关",
 	"Ok":"确定",
-	
+
 	"refresh" : "刷新",
 	"switch":"切换",
 	"None":"无",
@@ -756,7 +761,7 @@
 	"Second Control Box as Backdoor Control Box":"第二操纵箱作为后门操纵箱",
 	"Single Level Station Call":"单层站召唤",
 	"The Disabled Level Station Calls Open":"残疾人层站召唤开通",
-	
+
 	"Invalid":"无效",
 	"Main Board":"主板",
 	"Weighing Judgment":"称重判断",
@@ -797,11 +802,8 @@
 	"Close the door":"正在关门",
 	"Create order":"创建工单",
 	"Through" : "通",
-	
+
 	"Watch" : "状态监控",
-	"Manage Elevator":"电梯管理",
-	"Module":"模块",
-	"Monitor remaining time":"监控剩余时间：",
 	"Reason":"可能原因：",
 	"Answer":"解决办法：",
 	"Now Event":"本次事件：",

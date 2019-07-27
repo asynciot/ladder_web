@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Col, Button, Spin, DatePicker, Pagination, Icon, Input, List} from 'antd';
-import { Tabs, Flex, Badge, Modal,} from 'antd-mobile';
+import { Tabs, Flex, Badge, Modal, LocaleProvider} from 'antd-mobile';
 import classNames from 'classnames';
 import base64url from 'base64url';
 import pathToRegexp from 'path-to-regexp';
@@ -8,6 +8,7 @@ import MobileNav from '../../components/MobileNav';
 import styles from './FollowDevice.less';
 import singalImg from '../../assets/signal.png';
 import { getFollowDevices, getDevicesStatus, getFault } from '../../services/api';
+import en from 'antd-mobile/lib/locale-provider/en_US';
 import { injectIntl, FormattedMessage } from 'react-intl';
 
 var switchIdx = 0;
@@ -38,59 +39,14 @@ const state ={
 	'longoffline':'long offline',
 }
 const module = {
-	'1':'wifi',
+	'1':'Wifi',
 	'3':'China Unicom',
 	'6':'China Mobile',
 }
-const faultCode = {
-	'1': '过流',
-	'2': '母线过压',
-	'3': '母线欠压',
-	'4': '输入缺相',
-	'5': '输出缺相',
-	'6': '输出过力矩',
-	'7': '编码器故障',
-	'8': '模块过热',
-	'9': '运行接触器故障',
-	'10': '抱闸接触器故障',
-	'11': '封星继电器故障',
-	'12': '抱闸开关故障',
-	'13': '运行中安全回路断开',
-	'14': '运行中门锁断开',
-	'15': '门锁短接故障',
-	'16': '层站召唤通讯故障',
-	'17': '轿厢通讯故障',
-	'18': '并联通讯故障',
-	'19': '开门故障',
-	'20': '关门故障',
-	'21': '开关门到位故障',
-	'22': '平层信号异常',
-	'23': '终端减速开关故障',
-	'24': '下限位信号异常',
-	'25': '上限位信号异常',
-	'26': '打滑故障',
-	'27': '电梯速度异常',
-	'28': '电机反转故障',
-	'31': '停车速度检测',
-	'33': '马达过热故障',
-	'34': '制动力严重不足',
-	'35': '制动力不足警告',
-	'36': 'UCMP故障',
-	'37': 'IPM故障',
-	'38': '再平层开关异常',
-	'40': '驱动保护故障',
-	'41': '平层位置异常',
-	'51': '开关门受阻',
-	'52': '飞车保护',
-	'66': '电机过载',
-	'82': '输出过流',
-	'114': '输入电压过低',
-	'178': '输入电压过高',
-}
+
 const PlaceHolder = ({ className = '', ...restProps }) => (
 	<div className={`${className} ${styles.placeholder}`} {...restProps}>{restProps.children}</div>
 );
-
 
 const Signal = ({ className = '', ...restProps }) => {
 	let width = 1;
@@ -121,6 +77,7 @@ const ListButton = ({ className = '', ...restProps }) => (
 export default class extends Component {
 	state = {
 		list: [],
+		codelist:[],
 		asd:[],
 		switchIdx:0,
 		device_type: 0,
@@ -183,11 +140,17 @@ export default class extends Component {
 					const list = res.data.list.map((item) => {
 						return item;
 					});
-					this.setState({
-						list,
-						page,
-						totalNumber,
-					});
+					if(totalNumber==0){
+						this.setState({
+							page:0,
+						});
+					}else{
+						this.setState({
+							list,
+							page,
+							totalNumber,
+						});
+					}
 				} else {
 					this.setState({
 						list: [],
@@ -206,17 +169,22 @@ export default class extends Component {
 		getFault({ num: 10, page:e, islast:1, device_type, state:'untreated' }).then((res) => {
 			const pos = res.data.list.map((item,index) => {
 				if(device_type=='ctrl'){
-					item.code = res.data.list[index].code.toString(16)
+					item.code = 'E'+res.data.list[index].code.toString(16)
 				}else{
-					item.code = (item.code+50)
+					item.code = parseInt(res.data.list[index].code)+50
 				}
 				this.getFollowDevices(item.device_id,index,list,item.code)
 			})
-			this.setState({
-				list,
-				page:e,
-				totalNumber:res.data.totalNumber,
-			});
+			if(res.data.totalNumber==0){
+				this.setState({
+					page:0,
+				});
+			}else{
+				this.setState({
+					page:e,
+          totalNumber:res.data.totalNumber,
+				});
+			}
 		})
 	}
 	getFollowDevices = (e,index,list,code) =>{
@@ -232,7 +200,7 @@ export default class extends Component {
 					list.push(as[0])
 				}
 				this.setState({
-					list,
+					codelist:list,
 				});
 			}
 		});
@@ -308,337 +276,681 @@ export default class extends Component {
 	}
 	render() {
 		const ModelName = { 1: 'NSFC01-01B', 2: 'NSFC01-02T'};
-		const { navs, list, switchIdx, asd } = this.state;
-		const la = window.localStorage.getItem("language")
+		const { navs, list, switchIdx } = this.state;
+		var la = window.localStorage.getItem("language")
+		if(la == "zh" ){
+			la = undefined;
+		}else{
+			la = en;
+		}
 		return (
-			<div className="content">
-				<Tabs
-				  tabs={tabs2}
-				  initialPage={this.state.switchIdx}
-				  tabBarActiveTextColor="#1E90FF"
-				  tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
-				  onChange={(tab, index) => { this.goFollowList(tab.device_type,index); }}
-				>
-					<div style={{ backgroundColor: '#fff' }}>
-						<Row className={styles.page}>
-							<Col span={8} style={{margin:'5px',}}>
-								<Input
-									placeholder={(la=="zh")?"设备编号":"IMEI"}
-									onChange={this.onChange}
-									value={this.state.search_info}
-									maxlength="16"></Input>
-							</Col>
-							<Col span={8} style={{margin:'5px',}}>
-								<Input
-									placeholder={(la=="zh")?"安装地址":"Install Address"}
-									onChange={this.onChangel}
-									value={this.state.iddr}
-									maxlength="16"></Input>
-							</Col>
-							<Col span={6}>
-								<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
-							</Col>
-							<Col span={24} className={styles.center}>
-								<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
-							</Col>
-						</Row>
-						<List 
-							className={styles.lis} 
-							itemLayout="horizontal"
-							dataSource={this.state.list}
-							renderItem={(item,index) => (
-								<List.Item actions={[<ListButton edit={(event) => { this.edit(event, item); }} />]} className={styles.item} key={index} onClick={this.goDevice(item)}>
-									<Col span={22}>
-										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
-											<tbody>
-												<tr>
-													<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
-													<td className="tl" style={{ width: '200px' }}>{item.install_addr}</td>
-												</tr>
-												<tr>
-													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
-														<td className="tl">{item.device_name ? item.device_name : '无'}</td>
-													</Col>
-													<Col span={8}>
-														<a className={styles.text}><FormattedMessage id="type"/>：</a>
-														<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
-													</Col>	
-												</tr>
-												<tr>
-													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="Device IMEI"/> ：</a>
-														<td className="tl">{item.IMEI}</td>
-													</Col>
-													<Col span={8}>
-														<a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
-														<td className="tl"><Signal width={item.rssi}/></td>
-													</Col>	
-												</tr>
-												<tr>
-													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="model"/> ：</a>
-														<td className="tl">{modelName[item.device_model]}</td>
-													</Col>
-													<Col span={8}>
-														<a className={styles.text}><FormattedMessage id="state"/> ：</a>
-														<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
-													</Col>
-												</tr>
-												<tr>
-													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="Module"/> ：</a>
-														<td className="tl">{<FormattedMessage id={module[item.cellular]}/>}</td>
-													</Col>
-												</tr>
-											</tbody>
-										</table>
-									</Col>
-								</List.Item>
-							)}
-						/>
-					</div>
-					<div style={{ backgroundColor: '#fff' }}>
-						<Row className={styles.page}>
-							<Col span={8} style={{margin:'5px',}}>
-								<Input
-									placeholder={(la=="zh")?"设备编号":"IMEI"}
-									onChange={this.onChange}
-									value={this.state.search_info}
-									maxlength="16"></Input>
-							</Col>
-							<Col span={8} style={{margin:'5px',}}>
-								<Input
-									placeholder={(la=="zh")?"安装地址":"Install Address"}
-									onChange={this.onChangel}
-									value={this.state.iddr}
-									maxlength="16"></Input>
-							</Col>
-							<Col span={6}>
-								<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
-							</Col>
-							<Col span={24} className={styles.center}>
-								<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
-							</Col>
-						</Row>
-						<List 
-							className={styles.lis} 
-							itemLayout="horizontal"
-							dataSource={this.state.list}
-							renderItem={(item,index) => (
-								<List.Item actions={[<ListButton edit={(event) => { this.edit(event, item); }} />]} className={styles.item} key={index} onClick={this.goDevice(item)}>
-									<Col span={22}>
-										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
-											<tbody>
-												<tr>
-													<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
-													<td className="tl" style={{ width: '200px' }}>{item.install_addr}</td>
-												</tr>
-												<tr>
-													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
-														<td className="tl">{item.device_name ? item.device_name : '无'}</td>
-													</Col>
-													<Col span={8}>
-														<a className={styles.text2}><FormattedMessage id="type"/>：</a>
-														<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
-													</Col>	
-												</tr>
-												<tr>
-													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="Device IMEI"/> ：</a>
-														<td className="tl">{item.IMEI}</td>
-													</Col>
-													<Col span={8}>
-														<a className={styles.text2}><FormattedMessage id="RSSI"/>：</a>
-														<td className="tl"><Signal width={item.rssi}/></td>
-													</Col>	
-												</tr>
-												<tr>
-													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="model"/> ：</a>
-														<td className="tl">{modelName[item.device_model]}</td>
-													</Col>
-													<Col span={8}>
-														<a className={styles.text2}><FormattedMessage id="state"/> ：</a>
-														<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
-													</Col>
-												</tr>
-												<tr>
-													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="Module"/> ：</a>
-														<td className="tl">{<FormattedMessage id={module[item.cellular]}/>}</td>
-													</Col>
-												</tr>
-											</tbody>
-										</table>
-									</Col>
-								</List.Item>
-							)}
-						/>
-					</div>
-					<div style={{ backgroundColor: '#fff' }}>
-						<Row className={styles.page}>
-							<Col span={8} style={{margin:'5px',}}>
-								<Input
-									placeholder={(la=="zh")?"设备编号":"IMEI"}
-									onChange={this.onChange}
-									value={this.state.search_info}
-									maxlength="16"></Input>
-							</Col>
-							<Col span={8} style={{margin:'5px',}}>
-								<Input
-									placeholder={(la=="zh")?"安装地址":"Install Address"}
-									onChange={this.onChangel}
-									value={this.state.iddr}
-									maxlength="16"></Input>
-							</Col>
-							<Col span={6}>
-								<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
-							</Col>
-							<Col span={24} className={styles.center}>
-								<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
-							</Col>
-						</Row>
-						<List 
-							className={styles.lis} 
-							itemLayout="horizontal"
-							dataSource={this.state.list}
-							renderItem={(item,index) => (
-								<List.Item className={styles.item} key={index} onClick={this.goDevice(item)}>
-									<Col span={22}>
-										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
-											<tbody>
-												<tr>
-													<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
-													<td className="tl" style={{ width: '200px' }}>{item.install_addr}</td>
-												</tr>
-												<tr>
-													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
-														<td className="tl">{item.device_name ? item.device_name : '无'}</td>
-													</Col>
-													<Col span={8}>	
-														<a className={styles.text}><FormattedMessage id="type"/>：</a>
-														<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
-													</Col>	
-												</tr>
-												<tr>
-													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="Device IMEI"/> ：</a>
-														<td className="tl">{item.IMEI}</td>
-													</Col>
-													<Col span={8}>	
-														<a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
-														<td className="tl"><Signal width={item.rssi}/></td>
-													</Col>	
-												</tr>
-												<tr>
-													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="model"/> ：</a>
-														<td className="tl">{modelName[item.device_model]}</td>
-													</Col>
-												</tr>
-												<tr>
-													<Col span={24}>
-														<a className={styles.text}><FormattedMessage id="state"/> ：</a>
-														<td className="tl">{faultCode[item.code]}</td>
-													</Col>
-												</tr>
-												<tr>
-													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="Module"/> ：</a>
-														<td className="tl">{<FormattedMessage id={module[item.cellular]}/>}</td>
-													</Col>
-												</tr>
-											</tbody>
-										</table>
-									</Col>
-								</List.Item>
-							)}
-						/>
-					</div>
-					<div style={{ backgroundColor: '#fff' }}>
-						<Row className={styles.page}>
-							<Col span={8} style={{margin:'5px',}}>
-								<Input
-									placeholder={(la=="zh")?"设备编号":"IMEI"}
-									onChange={this.onChange}
-									value={this.state.search_info}
-									maxlength="16"></Input>
-							</Col>
-							<Col span={8} style={{margin:'5px',}}>
-								<Input
-									placeholder={(la=="zh")?"安装地址":"Install Address"}
-									onChange={this.onChangel}
-									value={this.state.iddr}
-									maxlength="16"></Input>
-							</Col>
-							<Col span={6}>
-								<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
-							</Col>
-							<Col span={24} className={styles.center}>
-								<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
-							</Col>
-						</Row>
-						<List 
-							className={styles.lis} 
-							itemLayout="horizontal"
-							dataSource={this.state.list}
-							renderItem={(item,index) => (
-								<List.Item actions={[<ListButton edit={(event) => { this.edit(event, item); }} />]} className={styles.item} key={index} onClick={this.goDevice(item)}>
-									<Col span={22}>
-										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
-											<tbody>
-												<tr>
-													<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
-													<td className="tl" style={{ width: '200px' }}>{item.install_addr}</td>
-												</tr>
-												<tr>
-													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
-														<td className="tl">{item.device_name ? item.device_name : '无'}</td>
-													</Col>
-													<Col span={8}>
-														<a className={styles.text}><FormattedMessage id="type"/>：</a>
-														<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
-													</Col>	
-												</tr>
-												<tr>
-													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="Device IMEI"/> ：</a>
-														<td className="tl">{item.IMEI}</td>
-													</Col>
-													<Col span={8}>
-														<a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
-														<td className="tl"><Signal width={item.rssi}/></td>
-													</Col>	
-												</tr>
-												<tr>
-													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="model"/> ：</a>
-														<td className="tl">{modelName[item.device_model]}</td>
-													</Col>
-													<Col span={8}>
-														<a className={styles.text}><FormattedMessage id="state"/> ：</a>
-														<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
-													</Col>
-												</tr>
-												<tr>
-													<Col span={16}>
-														<a className={styles.text}><FormattedMessage id="Module"/> ：</a>
-														<td className="tl">{<FormattedMessage id={module[item.cellular]}/>}</td>
-													</Col>
-												</tr>
-											</tbody>
-										</table>
-									</Col>
-								</List.Item>
-							)}
-						/>
-					</div>
-				</Tabs>
-			</div>
+			<LocaleProvider locale={la}>
+				<div className="content">
+					<Tabs
+						tabs={tabs2}
+						initialPage={this.state.switchIdx}
+						tabBarActiveTextColor="#1E90FF"
+						tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
+						onChange={(tab, index) => { this.goFollowList(tab.device_type,index); }}
+					>
+						<div style={{ backgroundColor: '#fff' }}>
+							<Row className={styles.page}>
+								<Col span={8} style={{margin:'5px',}}>
+									<Input
+										placeholder={(la=="en")?"IMEI":"设备编号"}
+										onChange={this.onChange}
+										value={this.state.search_info}
+										maxlength="16"></Input>
+								</Col>
+								<Col span={8} style={{margin:'5px',}}>
+									<Input
+										placeholder={(la=="en")?"Install Address":"安装地址"}
+										onChange={this.onChangel}
+										value={this.state.iddr}
+										maxlength="16"></Input>
+								</Col>
+								<Col span={6}>
+									<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
+								</Col>
+								<Col span={24} className={styles.center}>
+									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
+								</Col>
+							</Row>
+							<List
+								className={styles.lis}
+								dataSource={list}
+								renderItem={(item,index) => (
+									<List.Item actions={[<ListButton edit={(event) => { this.edit(event, item); }} />]} className={styles.item} key={index} onClick={this.goDevice(item)}>
+										{
+                      la==en?
+                      <Col span={20}>
+                        <table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
+                          <tbody>
+                            <tr>
+                              <a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
+                              <td className={styles.left} style={{width:'220px'}}>{item.install_addr}</td>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className={styles.left}>{item.device_name ? item.device_name : <FormattedMessage id="None"/>}</td>
+                                </Col>
+                              </Col>
+                              <Col span={8}>
+                                <a className={styles.text}><FormattedMessage id="type"/>：</a>
+                                <td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
+                              </Col>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="Device IMEI"/> ：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className={styles.left}>{item.IMEI}</td>
+                                </Col>
+                              </Col>
+                              <Col span={8}>
+                                <a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
+                                <td className="tl"><Signal width={item.rssi}/></td>
+                              </Col>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="model"/> ：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className={styles.left}>{modelName[item.device_model]}</td>
+                                </Col>
+                              </Col>
+                              <Col span={8}>
+                                <a className={styles.text}><FormattedMessage id="state"/></a>
+                                <td className="tl"><FormattedMessage id={state[item.state] ||'None'}/></td>
+                              </Col>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="Module Type"/> ：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className={styles.left}>{<FormattedMessage id={module[item.cellular]}/>}</td>
+                                </Col>
+                              </Col>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </Col>
+                      :
+                      <Col span={20}>
+                        <table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
+                          <tbody>
+                            <tr>
+                              <a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
+                              <td className={styles.left2} style={{width:'200px'}}>{item.install_addr}</td>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className={styles.left}>{item.device_name ? item.device_name : <FormattedMessage id="None"/>}</td>
+                                </Col>
+                              </Col>
+                              <Col span={8}>
+                                <a className={styles.text}><FormattedMessage id="type"/>：</a>
+                                <td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
+                              </Col>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="Device IMEI"/> ：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className={styles.left}>{item.IMEI}</td>
+                                </Col>
+                              </Col>
+                              <Col span={8}>
+                                <a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
+                                <td className="tl"><Signal width={item.rssi}/></td>
+                              </Col>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="model"/> ：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className={styles.left}>{modelName[item.device_model]}</td>
+                                </Col>
+                              </Col>
+                              <Col span={8}>
+                                <a className={styles.text}><FormattedMessage id="state"/></a>
+                                <td className="tl"><FormattedMessage id={state[item.state] ||'None'}/></td>
+                              </Col>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="Module Type"/> ：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className={styles.left}>{<FormattedMessage id={module[item.cellular]}/>}</td>
+                                </Col>
+                              </Col>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </Col>
+                    }
+									</List.Item>
+								)}
+							/>
+						</div>
+						<div style={{ backgroundColor: '#fff' }}>
+							<Row className={styles.page}>
+								<Col span={8} style={{margin:'5px',}}>
+									<Input
+										placeholder={(la=="en")?"IMEI":"设备编号"}
+										onChange={this.onChange}
+										value={this.state.search_info}
+										maxlength="16"></Input>
+								</Col>
+								<Col span={8} style={{margin:'5px',}}>
+									<Input
+										placeholder={(la=="en")?"Install Address":"安装地址"}
+										onChange={this.onChangel}
+										value={this.state.iddr}
+										maxlength="16"></Input>
+								</Col>
+								<Col span={6}>
+									<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
+								</Col>
+								<Col span={24} className={styles.center}>
+									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
+								</Col>
+							</Row>
+							<List
+								className={styles.lis}
+								itemLayout="horizontal"
+								dataSource={list}
+								renderItem={(item,index) => (
+									<List.Item actions={[<ListButton edit={(event) => { this.edit(event, item); }} />]} className={styles.item} key={index} onClick={this.goDevice(item)}>
+										{
+										  la==en?
+										  <Col span={20}>
+										    <table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
+										      <tbody>
+										        <tr>
+										          <a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
+										          <td className={styles.left} style={{width:'220px'}}>{item.install_addr}</td>
+										        </tr>
+										        <tr>
+										          <Col span={16}>
+										            <Col span={10}>
+										              <a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
+										            </Col>
+										            <Col span={14}>
+										              <td className={styles.left}>{item.device_name ? item.device_name : <FormattedMessage id="None"/>}</td>
+										            </Col>
+										          </Col>
+										          <Col span={8}>
+										            <a className={styles.text}><FormattedMessage id="type"/>：</a>
+										            <td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
+										          </Col>
+										        </tr>
+										        <tr>
+										          <Col span={16}>
+										            <Col span={10}>
+										              <a className={styles.text}><FormattedMessage id="Device IMEI"/> ：</a>
+										            </Col>
+										            <Col span={14}>
+										              <td className={styles.left}>{item.IMEI}</td>
+										            </Col>
+										          </Col>
+										          <Col span={8}>
+										            <a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
+										            <td className="tl"><Signal width={item.rssi}/></td>
+										          </Col>
+										        </tr>
+										        <tr>
+										          <Col span={16}>
+										            <Col span={10}>
+										              <a className={styles.text}><FormattedMessage id="model"/> ：</a>
+										            </Col>
+										            <Col span={14}>
+										              <td className={styles.left}>{modelName[item.device_model]}</td>
+										            </Col>
+										          </Col>
+										          <Col span={8}>
+										            <a className={styles.text}><FormattedMessage id="state"/></a>
+										            <td className="tl"><FormattedMessage id={state[item.state] ||'None'}/></td>
+										          </Col>
+										        </tr>
+										        <tr>
+										          <Col span={16}>
+										            <Col span={10}>
+										              <a className={styles.text}><FormattedMessage id="Module Type"/> ：</a>
+										            </Col>
+										            <Col span={14}>
+										              <td className={styles.left}>{<FormattedMessage id={module[item.cellular]}/>}</td>
+										            </Col>
+										          </Col>
+										        </tr>
+										      </tbody>
+										    </table>
+										  </Col>
+										  :
+										  <Col span={20}>
+										    <table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
+										      <tbody>
+										        <tr>
+										          <a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
+										          <td className={styles.left2} style={{width:'200px'}}>{item.install_addr}</td>
+										        </tr>
+										        <tr>
+										          <Col span={16}>
+										            <Col span={10}>
+										              <a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
+										            </Col>
+										            <Col span={14}>
+										              <td className={styles.left}>{item.device_name ? item.device_name : <FormattedMessage id="None"/>}</td>
+										            </Col>
+										          </Col>
+										          <Col span={8}>
+										            <a className={styles.text}><FormattedMessage id="type"/>：</a>
+										            <td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
+										          </Col>
+										        </tr>
+										        <tr>
+										          <Col span={16}>
+										            <Col span={10}>
+										              <a className={styles.text}><FormattedMessage id="Device IMEI"/> ：</a>
+										            </Col>
+										            <Col span={14}>
+										              <td className={styles.left}>{item.IMEI}</td>
+										            </Col>
+										          </Col>
+										          <Col span={8}>
+										            <a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
+										            <td className="tl"><Signal width={item.rssi}/></td>
+										          </Col>
+										        </tr>
+										        <tr>
+										          <Col span={16}>
+										            <Col span={10}>
+										              <a className={styles.text}><FormattedMessage id="model"/> ：</a>
+										            </Col>
+										            <Col span={14}>
+										              <td className={styles.left}>{modelName[item.device_model]}</td>
+										            </Col>
+										          </Col>
+										          <Col span={8}>
+										            <a className={styles.text}><FormattedMessage id="state"/></a>
+										            <td className="tl"><FormattedMessage id={state[item.state] ||'None'}/></td>
+										          </Col>
+										        </tr>
+										        <tr>
+										          <Col span={16}>
+										            <Col span={10}>
+										              <a className={styles.text}><FormattedMessage id="Module Type"/> ：</a>
+										            </Col>
+										            <Col span={14}>
+										              <td className={styles.left}>{<FormattedMessage id={module[item.cellular]}/>}</td>
+										            </Col>
+										          </Col>
+										        </tr>
+										      </tbody>
+										    </table>
+										  </Col>
+										}
+									</List.Item>
+								)}
+							/>
+						</div>
+						<div style={{ backgroundColor: '#fff' }}>
+							<Row className={styles.page}>
+								<Col span={8} style={{margin:'5px',}}>
+									<Input
+										placeholder={(la=="en")?"IMEI":"设备编号"}
+										onChange={this.onChange}
+										value={this.state.search_info}
+										maxlength="16"></Input>
+								</Col>
+								<Col span={8} style={{margin:'5px',}}>
+									<Input
+										placeholder={(la=="en")?"Install Address":"安装地址"}
+										onChange={this.onChangel}
+										value={this.state.iddr}
+										maxlength="16"></Input>
+								</Col>
+								<Col span={6}>
+									<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
+								</Col>
+								<Col span={24} className={styles.center}>
+									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
+								</Col>
+							</Row>
+							<List
+								className={styles.lis}
+								itemLayout="horizontal"
+								dataSource={this.state.codelist}
+								renderItem={(item,index) => (
+									<List.Item className={styles.item} key={index} onClick={this.goDevice(item)}>
+                    {
+                      la==en?
+                      <Col span={22}>
+                        <table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
+                          <tbody>
+                            <tr>
+                              <a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
+                              <td className={styles.left} style={{width:'200px'}}>{item.install_addr}</td>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className={styles.left}>{item.device_name ? item.device_name : <FormattedMessage id="None"/>}</td>
+                                </Col>
+                              </Col>
+                              <Col span={8}>
+                                <a className={styles.text}><FormattedMessage id="type"/>：</a>
+                                <td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
+                              </Col>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="Device IMEI"/> ：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className={styles.left}>{item.IMEI}</td>
+                                </Col>
+                              </Col>
+                              <Col span={8}>
+                                <a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
+                                <td className="tl"><Signal width={item.rssi}/></td>
+                              </Col>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="model"/> ：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className={styles.left}>{modelName[item.device_model]}</td>
+                                </Col>
+                              </Col>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="state"/></a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className={styles.left}><FormattedMessage id={item.code}/></td>
+                                </Col>
+                              </Col>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="Module Type"/> ：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className={styles.left}>{<FormattedMessage id={module[item.cellular]}/>}</td>
+                                </Col>
+                              </Col>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </Col>
+                      :
+                      <Col span={22}>
+                        <table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
+                          <tbody>
+                            <tr>
+                              <a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
+                              <td className={styles.left3} width={{width:'200px'}}>{item.install_addr}</td>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className={styles.left}>{item.device_name ? item.device_name : <FormattedMessage id="None"/>}</td>
+                                </Col>
+                              </Col>
+                              <Col span={8}>
+                                <a className={styles.text}><FormattedMessage id="type"/>：</a>
+                                <td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
+                              </Col>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="Device IMEI"/> ：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className={styles.left}>{item.IMEI}</td>
+                                </Col>
+                              </Col>
+                              <Col span={8}>
+                                <a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
+                                <td className="tl"><Signal width={item.rssi}/></td>
+                              </Col>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="model"/> ：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className={styles.left}>{modelName[item.device_model]}</td>
+                                </Col>
+                              </Col>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="state"/> ：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className={styles.left}><FormattedMessage id={item.code}/></td>
+                                </Col>
+                              </Col>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="Module Type"/> ：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className={styles.left}>{<FormattedMessage id={module[item.cellular]}/>}</td>
+                                </Col>
+                              </Col>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </Col>
+                    }
+									</List.Item>
+								)}
+							/>
+						</div>
+						<div style={{ backgroundColor: '#fff' }}>
+							<Row className={styles.page}>
+								<Col span={8} style={{margin:'5px',}}>
+									<Input
+										placeholder={(la=="en")?"IMEI":"设备编号"}
+										onChange={this.onChange}
+										value={this.state.search_info}
+										maxlength="16"></Input>
+								</Col>
+								<Col span={8} style={{margin:'5px',}}>
+									<Input
+										placeholder={(la=="en")?"Install Address":"安装地址"}
+										onChange={this.onChangel}
+										value={this.state.iddr}
+										maxlength="16"></Input>
+								</Col>
+								<Col span={6}>
+									<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
+								</Col>
+								<Col span={24} className={styles.center}>
+									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
+								</Col>
+							</Row>
+							<List
+								className={styles.lis}
+								itemLayout="horizontal"
+								dataSource={list}
+								renderItem={(item,index) => (
+									<List.Item actions={[<ListButton edit={(event) => { this.edit(event, item); }} />]} className={styles.item} key={index} onClick={this.goDevice(item)}>
+										{
+										  la==en?
+										  <Col span={20}>
+										    <table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
+										      <tbody>
+										        <tr>
+										          <a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
+										          <td className={styles.left} style={{width:'220px'}}>{item.install_addr}</td>
+										        </tr>
+										        <tr>
+										          <Col span={16}>
+										            <Col span={10}>
+										              <a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
+										            </Col>
+										            <Col span={14}>
+										              <td className={styles.left}>{item.device_name ? item.device_name : <FormattedMessage id="None"/>}</td>
+										            </Col>
+										          </Col>
+										          <Col span={8}>
+										            <a className={styles.text}><FormattedMessage id="type"/>：</a>
+										            <td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
+										          </Col>
+										        </tr>
+										        <tr>
+										          <Col span={16}>
+										            <Col span={10}>
+										              <a className={styles.text}><FormattedMessage id="Device IMEI"/> ：</a>
+										            </Col>
+										            <Col span={14}>
+										              <td className={styles.left}>{item.IMEI}</td>
+										            </Col>
+										          </Col>
+										          <Col span={8}>
+										            <a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
+										            <td className="tl"><Signal width={item.rssi}/></td>
+										          </Col>
+										        </tr>
+										        <tr>
+										          <Col span={16}>
+										            <Col span={10}>
+										              <a className={styles.text}><FormattedMessage id="model"/> ：</a>
+										            </Col>
+										            <Col span={14}>
+										              <td className={styles.left}>{modelName[item.device_model]}</td>
+										            </Col>
+										          </Col>
+										          <Col span={8}>
+										            <a className={styles.text}><FormattedMessage id="state"/></a>
+										            <td className="tl"><FormattedMessage id={state[item.state] ||'None'}/></td>
+										          </Col>
+										        </tr>
+										        <tr>
+										          <Col span={16}>
+										            <Col span={10}>
+										              <a className={styles.text}><FormattedMessage id="Module Type"/> ：</a>
+										            </Col>
+										            <Col span={14}>
+										              <td className={styles.left}>{<FormattedMessage id={module[item.cellular]}/>}</td>
+										            </Col>
+										          </Col>
+										        </tr>
+										      </tbody>
+										    </table>
+										  </Col>
+										  :
+										  <Col span={20}>
+										    <table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
+										      <tbody>
+										        <tr>
+										          <a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
+										          <td className={styles.left2} style={{width:'200px'}}>{item.install_addr}</td>
+										        </tr>
+										        <tr>
+										          <Col span={16}>
+										            <Col span={10}>
+										              <a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
+										            </Col>
+										            <Col span={14}>
+										              <td className={styles.left}>{item.device_name ? item.device_name : <FormattedMessage id="None"/>}</td>
+										            </Col>
+										          </Col>
+										          <Col span={8}>
+										            <a className={styles.text}><FormattedMessage id="type"/>：</a>
+										            <td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
+										          </Col>
+										        </tr>
+										        <tr>
+										          <Col span={16}>
+										            <Col span={10}>
+										              <a className={styles.text}><FormattedMessage id="Device IMEI"/> ：</a>
+										            </Col>
+										            <Col span={14}>
+										              <td className={styles.left}>{item.IMEI}</td>
+										            </Col>
+										          </Col>
+										          <Col span={8}>
+										            <a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
+										            <td className="tl"><Signal width={item.rssi}/></td>
+										          </Col>
+										        </tr>
+										        <tr>
+										          <Col span={16}>
+										            <Col span={10}>
+										              <a className={styles.text}><FormattedMessage id="model"/> ：</a>
+										            </Col>
+										            <Col span={14}>
+										              <td className={styles.left}>{modelName[item.device_model]}</td>
+										            </Col>
+										          </Col>
+										          <Col span={8}>
+										            <a className={styles.text}><FormattedMessage id="state"/></a>
+										            <td className="tl"><FormattedMessage id={state[item.state] ||'None'}/></td>
+										          </Col>
+										        </tr>
+										        <tr>
+										          <Col span={16}>
+										            <Col span={10}>
+										              <a className={styles.text}><FormattedMessage id="Module Type"/> ：</a>
+										            </Col>
+										            <Col span={14}>
+										              <td className={styles.left}>{<FormattedMessage id={module[item.cellular]}/>}</td>
+										            </Col>
+										          </Col>
+										        </tr>
+										      </tbody>
+										    </table>
+										  </Col>
+										}
+									</List.Item>
+								)}
+							/>
+						</div>
+					</Tabs>
+				</div>
+			</LocaleProvider>
 		);
 	}
 }

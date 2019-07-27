@@ -40,10 +40,6 @@ export default class Company extends Component {
 		const { history } = this.props;
 		history.push('/company/data/statistics');
 	};
-	showDevice = () => {
-		const { history } = this.props;
-		history.push('/company/device');
-	};
 	logout = () => {
 		this.props.dispatch({ type: 'login/logout' });
 	};

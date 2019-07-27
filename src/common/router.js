@@ -220,16 +220,6 @@ export const getRouterData = (app) => {
 			name2: 'Statistics',
 			component: dynamicWrapper(app, ['company'], () => import('../routes/Company/Statistics')),
 		},
-		'/company/device': {
-			name: '设备关注',
-			name2: 'Follow',
-			component: dynamicWrapper(app, ['company'], () => import('../routes/Company/Device')),
-		},
-		'/company/device': {
-			name: '设备管理',
-			name2: 'Manage Device',
-			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/Device')),
-		},
 		'/company/ladder/all': {
 			name: '电梯管理',
 			name2: 'Manage Elevator',

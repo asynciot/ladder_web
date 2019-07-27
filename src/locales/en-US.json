@@ -1,47 +1,58 @@
-{	
+{
 	"Agree To" : "Agree To",
-	
+
 	"Basic Information" : "Basic Information",
 	"Back":"Back",
-	
+
 	"Confirm password" : "Confirm password",
-	
+	"China Mobile" : "China Mobile",
+  "China Unicom" : "China Unicom",
+	"ctrl" : "Ctrl",
+
+	"Door" : "Door",
+	"door" : "Door",
 	"Devices State" : "Devices State：",
 	"Dashboard" : "Dashboard",
 	"Dispatch List" : "Dispatch List",
 	"Devices Information" : "Devices Information",
-	
+
 	"Examine List" : "Examine List",
-	
+
 	"Forget": "Forget?",
-	
+
 	"Get Code":"Get Code",
-	
+
 	"Lang":"English",
 	"Login":"Login",
-	
+
+	"Module Type" : "Module Type",
+
 	"NBSL" : "Ningbo Shen Ling Management System",
 	"NBSL Elevator QR Code" : "NBSL Elevator QR Code",
-	
+
 	"Operation Monitor" : "Operation Monitor",
 	"Operation" : "Operation",
 	"Operation State" : "Operation State",
 	"Order List" : "Order List",
-	
+
 	"Password":"Password",
-	
+
 	"Register" : "Register",
 	"Remember" : "Remember",
 	"Reset" : "Reset",
-	
+
+	"Stop":"Inactive",
+
 	"Terms of Service":"Terms of Service",
-	
+
 	"Username":"Username",
-	
+
+  "Wifi" : "Wifi",
+
 	"Verification" : "Verification",
-	
+
 	"Work Flow" : "Work Flow",
-	
+
 	"faultdevices" : "Fault Devices",
 	"Firmware Update" : "Firmware Update",
 	"System" : "System",
@@ -93,15 +104,13 @@
 	"install date" : "Install Date",
 	"device" : "Device",
 	"size" : "Size",
-	"Door" : "Door",
-	"ctrl" : "Ctrl",
 	"online" : "Online",
 	"offline" : "Offline",
-	"long offline" : "Long Offline",
+	"long offline" : "Offline",
 	"keyword" : "Keyword",
 	"search" : "Search",
 	"type" : "Type",
-	"state" : "State",
+	"state" : "State：",
 	"Device IMEI" : "Device IMEI",
 	"Device Name" : "Device Name",
 	"Device Type" : "Device Type",
@@ -248,6 +257,7 @@
 	"No Order":"No Order",
 	"No Information":"No Information",
 	"Location clock":"Location clock",
+  "O0":"Fault",
 	"O1":"Fault",
 	"O2":"Maintain",
 	"O3":"Inspection",
@@ -259,7 +269,7 @@
 	"Closing arrival signal":"Closing arrival signal：",
 	"Monitor remaining time":"Monitor remaining time：",
 	"Keep the door close":"Keep the door close",
-	
+
 	"View":"View",
 	"Call":"Call",
 	"Last update time":"Last update time：",
@@ -279,11 +289,9 @@
 	"None":"None",
 	"Shutdown":"Shutdown",
 	"Action":"Action",
-	"Stop":"Stop",
 	"Single Ladder":"Single Ladder",
 	"Parallel Connection":"Parallel Connection",
-	"Stop":"Inactive",
-	
+
 	"Elevator mode":"Elevator mode：",
 	"refresh" : "Refresh",
 	"array": [

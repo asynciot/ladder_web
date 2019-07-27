@@ -8,7 +8,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 
 var sectionStyle = {
 	width:"100%",
-	backgroundImage: `url(${Background})` 
+	backgroundImage: `url(${Background})`
 };
 const FormItem = Form.Item;
 @connect(({ login, loading }) => ({
@@ -125,12 +125,12 @@ export default class Login extends Component {
 													rules: [{
 														required: true, message: <FormattedMessage id="Please input phone number"/>,
 													}, {
-														pattern: /^[1][3,4,5,7,8][0-9]{9}$/, message: <FormattedMessage id="illegal phone number"/>,
+														pattern: /^[1][3,4,5,7,8][0-9]{9}$/, message: <FormattedMessage id="Illegal phone number"/>,
 													}],
 												})(<Input
 													type="text"
 													size="large"
-													suffix={suffix}
+													// suffix={suffix}
 													placeholder={this.state.language=="zh"?"请输入手机号":"Plese input phone"}
 												/>)}
 										</Col>
@@ -171,7 +171,7 @@ export default class Login extends Component {
 										</Col>
 										<Col span={18}>
 											{getFieldDecorator('newpassword', {
-												rules: [{ required: true, 
+												rules: [{ required: true,
 														  message: <FormattedMessage id="Password should not less than 6 characters"/> }],
 														  min:6,
 											})(<Input
@@ -248,5 +248,5 @@ export default class Login extends Component {
 				</div>
 			</div>
 		);
-	}	
+	}
 }

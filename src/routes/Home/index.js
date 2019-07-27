@@ -179,10 +179,6 @@ export default class Home extends Component {
 		const { history } = this.props;
 		history.push('/company/message');
 	}
-	toDevicesStatusPage = () => {
-		const { history } = this.props;
-		history.push('/company/device');
-	}
 	toFollowDevicePage = () => {
 		const { history } = this.props;
 		const vcode = 0;

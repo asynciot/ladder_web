@@ -167,7 +167,7 @@ export default class DoorHistory extends Component {
 		IMEI:'',
 		threshold:40,
 		interval:50,
-		duration:300,
+		duration:30,
 		startTime:'',
 		endTime:'',
 		command:false,
@@ -355,7 +355,7 @@ export default class DoorHistory extends Component {
 					}
 				}
 			});
-			setTimeout(()=>{ 
+			setTimeout(()=>{
 				getCommand({num:1,page:1,IMEI}).then((res)=>{
 					if(res.code==0){
 						timing = setInterval( () => {
@@ -396,7 +396,7 @@ export default class DoorHistory extends Component {
 		const device_id = this.state.id
 		getDoorRuntime({device_id,type:4096,num:1,page:1}).then((res) => {
 			let buffer = []
-			
+
 			buffer = base64url.toBuffer(res.data.list[0].data)				//8位转流
 			show.openIn			 = (buffer[6]&0x80)>>7 						//获取开门输入信号
 			show.closeIn		 = (buffer[6]&0x40)>>6						//获取关门输入信号
@@ -442,7 +442,7 @@ export default class DoorHistory extends Component {
 					command,
 				})
 			}
-			
+
 		})
 		if(this.state.device_model == '1'){
 			getDoorRuntime({device_id,num:1,page:1,type:4100}).then((res) => {
@@ -1183,7 +1183,7 @@ export default class DoorHistory extends Component {
 									</p>
 									<p ><i style={{flexShrink: 0,}}><FormattedMessage id="Order"/></i>
 										{
-											this.state.color ? 
+											this.state.color ?
 											<i className={styles.status} style={{ color:'red'}}>{<FormattedMessage id={this.alertName(show)}/>}</i>
 											:
 											<i className={styles.status}>{<FormattedMessage id={this.alertName(show)}/>}</i>
@@ -1240,7 +1240,7 @@ export default class DoorHistory extends Component {
 										width: '100%',
 									}}><i style={{flexShrink: 0,}}><FormattedMessage id="Order"/> </i>
 										{
-											this.state.color ? 
+											this.state.color ?
 											<i className={styles.status} style={{ color:'red'}}>{<FormattedMessage id={this.alertName(show)}/>}</i>
 											:
 											<i className={styles.status}>{<FormattedMessage id={this.alertName(show)}/>}</i>
@@ -1349,12 +1349,12 @@ export default class DoorHistory extends Component {
 							<Col xs={{ span: 24 }} md={{ span: 48 }}>
 								<div id = "Position" style={{ width: 320 , height: 240 }}></div>
 							</Col>
-						</Row> 
+						</Row>
 						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
 							<Col xs={{ span: 24 }} md={{ span: 48 }}>
 								<div id = "Current" style={{ width: 320 , height: 240 }}></div>
 							</Col>
-						</Row> 
+						</Row>
 						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
 							<Col xs={{ span: 24 }} md={{ span: 48 }}>
 								<div id = "Speed" style={{ width: 320 , height: 240 }}></div>

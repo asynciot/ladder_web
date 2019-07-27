@@ -21,51 +21,6 @@ const typeName = {
 	'door':'door',
 	'ctrl':'ctrl',
 }
-const faultCode = {
-	'1': '过流',
-	'2': '母线过压',
-	'3': '母线欠压',
-	'4': '输入缺相',
-	'5': '输出缺相',
-	'6': '输出过力矩',
-	'7': '编码器故障',
-	'8': '模块过热',
-	'9': '运行接触器故障',
-	'10': '抱闸接触器故障',
-	'11': '封星继电器故障',
-	'12': '抱闸开关故障',
-	'13': '运行中安全回路断开',
-	'14': '运行中门锁断开',
-	'15': '门锁短接故障',
-	'16': '层站召唤通讯故障',
-	'17': '轿厢通讯故障',
-	'18': '并联通讯故障',
-	'19': '开门故障',
-	'20': '关门故障',
-	'21': '开关门到位故障',
-	'22': '平层信号异常',
-	'23': '终端减速开关故障',
-	'24': '下限位信号异常',
-	'25': '上限位信号异常',
-	'26': '打滑故障',
-	'27': '电梯速度异常',
-	'28': '电机反转故障',
-	'31': '停车速度检测',
-	'33': '马达过热故障',
-	'34': '制动力严重不足',
-	'35': '制动力不足警告',
-	'36': 'UCMP故障',
-	'37': 'IPM故障',
-	'38': '再平层开关异常',
-	'40': '驱动保护故障',
-	'41': '平层位置异常',
-	'51': '开关门受阻',
-	'52': '飞车保护',
-	'66': '电机过载',
-	'82': '输出过流',
-	'114': '输入电压过低',
-	'178': '输入电压过高',
-}
 const ListButton = ({ className = '', ...restProps }) => (
 	<div className={`${className} ${styles['list-btn']}`}>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.edit ? restProps.edit:''}>
@@ -189,7 +144,7 @@ export default class extends Component {
 					totalNumber:res.data.totalNumber,
 				})
 			}).catch((e => console.info(e)));
-		}	
+		}
 	}
 	goFault = item => () =>{
 		const id = item.id
@@ -247,7 +202,6 @@ export default class extends Component {
 					tabBarActiveTextColor="#1E90FF"
 					tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
 					onChange={(tab, index) => { this.setState({tab: tab.type, page: 1,total:1},()=>{this.getFault(tab.type);this.init(tab.type);});}}
-				  // onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }}
 				>
 					<div>
 						<List>

@@ -43,7 +43,7 @@
 }
 
 .list-btn {
-	margin-left: -90px;
+  z-index: 50;
 	overflow-x: hidden;
 	.icon {
 		line-height: 12px;
@@ -60,6 +60,7 @@
 	}
 }
 .table {
+  z-index: -1;
 	display: block;
 	width: 100%;
 	margin: 0 auto;
@@ -73,17 +74,27 @@
 		vertical-align: top;
 		padding: 4px 0;
 	}
-	tr td:nth-child(1){
-		width: 40px;
-	}
-	tr td:nth-child(2){
-	}
-	tr td:nth-child(3){
-		width: 40px;
-	}
-	tr td:nth-child(4){
-		width: 90px;
-	}
+  .left {
+    // float: left;
+    margin-left: 5px;
+  }
+  .left2{
+    margin-left: 22px;
+  }
+  .left3{
+    margin-left: 7px;
+  }
+	// tr td:nth-child(1){
+	// 	width: 40px;
+	// }
+	// tr td:nth-child(2){
+	// }
+	// tr td:nth-child(3){
+	// 	width: 40px;
+	// }
+	// tr td:nth-child(4){
+	// 	width: 90px;
+	// }
 	tr > td:nth-child(odd) {
 		color: #333;
 		white-space: nowrap;
@@ -93,13 +104,14 @@
 		width: 90px !important;
 		white-space: nowrap;
 		word-break: break-all;
-		overflow: hidden;   
+		overflow: hidden;
 		text-overflow: ellipsis;
 	}
 	.pass {
 		color: #55BC52;
 	}
 	.text{
+    margin-left: 5px;
 		display: inline-block;
 		color: #999;
 		font-size: 12px;
