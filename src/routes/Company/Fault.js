@@ -10,117 +10,21 @@ import classNames from 'classnames';
 import styles from './Fault.less';
 import { getFault, postFinish, postFault, getFollowDevices, getOrderCode } from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import c1 from '../../assets/fault/c1.png';
-import c2 from '../../assets/fault/c2.png';
-import c3 from '../../assets/fault/c3.png';
-import c4 from '../../assets/fault/c4.png';
-import c5 from '../../assets/fault/c5.png';
-import c6 from '../../assets/fault/c6.png';
-import c7 from '../../assets/fault/c7.png';
-import c8 from '../../assets/fault/c8.png';
-import c9 from '../../assets/fault/c9.png';
-import c10 from '../../assets/fault/c10.png';
-import c11 from '../../assets/fault/c11.png';
-import c12 from '../../assets/fault/c12.png';
-import c13 from '../../assets/fault/c13.png';
-import c14 from '../../assets/fault/c14.png';
-import c15 from '../../assets/fault/c15.png';
-import c16 from '../../assets/fault/c16.png';
-import c17 from '../../assets/fault/c17.png';
-import c18 from '../../assets/fault/c18.png';
-import c19 from '../../assets/fault/c19.png';
-import c20 from '../../assets/fault/c20.png';
-import c21 from '../../assets/fault/c21.png';
-import c22 from '../../assets/fault/c22.png';
-import c23 from '../../assets/fault/c23.png';
-import c24 from '../../assets/fault/c24.png';
-import c25 from '../../assets/fault/c25.png';
-import c26 from '../../assets/fault/c26.png';
-import c27 from '../../assets/fault/c27.png';
-import c28 from '../../assets/fault/c28.png';
-import c29 from '../../assets/fault/c29.png';
-// import c30 from '../../assets/fault/c30.png';
-import c31 from '../../assets/fault/c31.png';
-import c32 from '../../assets/fault/c32.png';
-import c33 from '../../assets/fault/c33.png';
-import c34 from '../../assets/fault/c34.png';
-import c35 from '../../assets/fault/c35.png';
-import c36 from '../../assets/fault/c36.png';
-import c37 from '../../assets/fault/c37.png';
-import c38 from '../../assets/fault/c38.png';
-// import c39 from '../../assets/fault/c39.png';
-import c40 from '../../assets/fault/c40.png';
-import c41 from '../../assets/fault/c41.png';
-import c51 from '../../assets/fault/c51.png';
-import c52 from '../../assets/fault/c52.png';
-import c66 from '../../assets/fault/c66.png';
-import c82 from '../../assets/fault/c82.png';
-import c114 from '../../assets/fault/c114.png';
-import c178 from '../../assets/fault/c178.png';
+
 
 const alert = Modal.alert;
 var _val = ""
-var dispatch_id = 0
 const { TextArea } = Input;
-const desc = {
-	'untreated': '是否接单',
-	'treated': '是否完成',
-};
-const names = {
-	0: '电话报修',
-	1: '人工报修',
-	2: '自动报修',
+const CodeTransform = {
+	'51':'04',
+	'52':'07',
+  '66':'08',
+  '82':'03',
+  '114':'LV',
+  '178':'OV',
+  '229':'MO',
 }
-const typeName = {
-	'door':'控制器',
-	'ctrl':'控制柜',
-}
-const faultCode = {
-	'1': '过流',
-	'2': '母线过压',
-	'3': '母线欠压',
-	'4': '输入缺相',
-	'5': '输出缺相',
-	'6': '输出过力矩',
-	'7': '编码器故障',
-	'8': '模块过热',
-	'9': '运行接触器故障',
-	'10': '抱闸接触器故障',
-	'11': '封星继电器故障',
-	'12': '抱闸开关故障',
-	'13': '运行中安全回路断开',
-	'14': '运行中门锁断开',
-	'15': '门锁短接故障',
-	'16': '层站召唤通讯故障',
-	'17': '轿厢通讯故障',
-	'18': '并联通讯故障',
-	'19': '开门故障',
-	'20': '关门故障',
-	'21': '开关门到位故障',
-	'22': '平层信号异常',
-	'23': '终端减速开关故障',
-	'24': '下限位信号异常',
-	'25': '上限位信号异常',
-	'26': '打滑故障',
-	'27': '电梯速度异常',
-	'28': '电机反转故障',
-	'31': '停车速度检测',
-	'33': '马达过热故障',
-	'34': '制动力严重不足',
-	'35': '制动力不足警告',
-	'36': 'UCMP故障',
-	'37': 'IPM故障',
-	'38': '再平层开关异常',
-	'40': '驱动保护故障',
-	'41': '平层位置异常',
-	'51': '开关门受阻',
-	'52': '飞车保护',
-	'66': '电机过载',
-	'82': '输出过流',
-	'114': '输入电压过低',
-	'178': '输入电压过高',
-}
-export default class DoorHistory extends Component {
+export default class Fault extends Component {
 	state = {
 		list:[],
 		nowTime: new Date().getTime(),
@@ -155,10 +59,10 @@ export default class DoorHistory extends Component {
 				item.minute = parseInt(time%(1000*3600)/(1000*60))
 				item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
 				if(item.device_type=='ctrl'){
-					item.code = res.data.list[res.data.list.length-1].code.toString(16)
+					item.code = "E"+res.data.list[res.data.list.length-1].code.toString(16)
 				}else{
-					item.code = (res.data.list[res.data.list.length-1].code+50)
-				}								
+					item.code = CodeTransform[res.data.list[res.data.list.length-1].code+50]
+				}
 				if(item.state == 'treating'){
 					this.state.disable = true
 				}else if(item.state == 'untreated'){
@@ -182,7 +86,7 @@ export default class DoorHistory extends Component {
 		});
 	}
 	upFault = (e) =>{
-		var file = e.target.files[0]		
+		var file = e.target.files[0]
 		this.state.file1 = new File([file], "before"+new Date().getTime()+".jpg",{type:"image/*"});
 		var reader = new FileReader()
 		reader.onload = function (e) {
@@ -226,7 +130,7 @@ export default class DoorHistory extends Component {
 				headers: {
 					Accept: 'application/json, text/plain, */*',
 				},
-				credentials: 'include',	
+				credentials: 'include',
 				body: formdata
 			}).then(res=> { return res.json()}).then(json=>{
 				if(json.code == 0){
@@ -290,7 +194,7 @@ export default class DoorHistory extends Component {
 									<tbody className={styles.tbody}>
 										<tr>
 											<a className={styles.text}><FormattedMessage id="fault"/> ：</a>
-											<td className="tl" style={{ width: 'auto',color:'red'}} onClick={() => this.info(item)}><FormattedMessage id={'E'+item.code}/></td>
+											<td className="tl" style={{ width: 'auto',color:'red'}} onClick={() => this.info(item)}>{item.code}<FormattedMessage id={item.code}/></td>
 										</tr>
 										<tr>
 											<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
@@ -325,7 +229,7 @@ export default class DoorHistory extends Component {
 										<tr>
 											<div className={styles.ls}>
 												<TextArea
-													// placeholder="50字以内" 
+													// placeholder="50字以内"
 													maxlength={50}
 													// width={100px}
 													value={this.state.remark}

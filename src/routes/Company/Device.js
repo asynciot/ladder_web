@@ -451,7 +451,7 @@ export default class extends Component {
 												<tr>
 													<td className="tr"><FormattedMessage id="model"/> ：</td>
 													<td className="tl">{item.device_model ? item.device_model : ' '}</td>
-													<td className="tr"><FormattedMessage id="state"/> ：</td>
+													<td className="tr"><FormattedMessage id="State"/> ：</td>
 													<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
 												</tr>
 											</tbody>
@@ -493,7 +493,7 @@ export default class extends Component {
 												<tr>
 													<td className="tr"><FormattedMessage id="model"/> ：</td>
 													<td className="tl">{item.device_model ? item.device_model : ' '}</td>
-													<td className="tr"><FormattedMessage id="state"/> ：</td>
+													<td className="tr"><FormattedMessage id="State"/> ：</td>
 													<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
 												</tr>
 											</tbody>
@@ -535,7 +535,7 @@ export default class extends Component {
 												<tr>
 													<td className="tr"><FormattedMessage id="model"/> ：</td>
 													<td className="tl">{item.device_model ? item.device_model : '无'}</td>
-													<td className="tr"><FormattedMessage id="state"/> ：</td>
+													<td className="tr"><FormattedMessage id="State"/> ：</td>
 													<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
 												</tr>
 											</tbody>

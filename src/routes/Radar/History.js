@@ -164,7 +164,7 @@ export default class DoorHistory extends Component {
 			})
 		})
 	}
-	getHistory = () => {		
+	getHistory = () => {
 		const { show, events } = this.state;
 		const device_id = this.state.device_id
 		const id = this.state.id
@@ -175,29 +175,29 @@ export default class DoorHistory extends Component {
 			if (res.code == 0) {
 				let response = res.data.list[0]
 				show.nowtime = response.time
-				if(res.data.list[0].interval !=null ){					
+				if(res.data.list[0].interval !=null ){
 					this.state.interval = res.data.list[0].interval
 				}
 				let buffer = []
 				buffer = base64url.toBuffer(response.data);	//8位转流
 				for(let i=0 ; i<response["length"] ; i++){
-					show.openIn = events.openIn[i] = (buffer[i*8]&0x80)>>7						//获取开门信号
+					show.openIn = events.openIn[i] = (buffer[i*8]&0x80)>>7						  //获取开门信号
 					show.closeIn = events.closeIn[i] = (buffer[i*8]&0x40)>>6						//获取关门信号
 					show.openTo =	events.openTo[i] = (buffer[i*8+0]&0x20)>>5						//获取开到位输入信号
-					show.closeTo = events.closeTo[i] = (buffer[i*8+0]&0x10)>>4						//获取关到位输入信号
-					show.openDecelerate =	events.openDecelerate[i] = (buffer[i*8+0]&0x08)>>3				//开减速输入信号 
+					show.closeTo = events.closeTo[i] = (buffer[i*8+0]&0x10)>>4					//获取关到位输入信号
+					show.openDecelerate =	events.openDecelerate[i] = (buffer[i*8+0]&0x08)>>3				//开减速输入信号
 					show.closeDecelerate = events.closeDecelerate[i] = (buffer[i*8+0]&0x04)>>2			//关减速输入信号
 					show.openToOut = events.openToOut[i] = (buffer[i*8]&0x02)>>1				//获取开到位输出信号
-					show.closeToOut = events.closeToOut[i] = (buffer[i*8]&0x01)			//获取关到位输出信号			
-					show.door	= events.door[i] = (buffer[i*8+1]&0x80)>>7										//门光幕信号
+					show.closeToOut = events.closeToOut[i] = (buffer[i*8]&0x01)			    //获取关到位输出信号
+					show.door	= events.door[i] = (buffer[i*8+1]&0x80)>>7								//门光幕信号
 					show.open	= events.open[i] = (buffer[i*8+1]&0x40)>>6						    //正在开门信号
 					show.close =	events.close[i] = (buffer[i*8+1]&0x20)>>5						  //正在关门信号
 					show.openKeep	= events.openKeep[i] = (buffer[i*8+1]&0x10)>>4				//开门到位维持信号
 					show.closeKeep	= events.closeKeep[i] = (buffer[i*8+1]&0x08)>>3			//关门到位维持信号
 					show.stop	= events.stop[i] = (buffer[i*8+1]&0x04)>>2					      //停止输出信号
 					show.inHigh = events.inHigh[i] = (buffer[i*8+1]&0x02)>>1						//输入电压过高
-					show.inLow = events.inLow[i] = (buffer[i*8+1]&0x01)							//输入电压过低
-					show.outHigh = events.outHigh[i] = (buffer[i*8+2]&0x80)>>7					      //输出过流
+					show.inLow = events.inLow[i] = (buffer[i*8+1]&0x01)							    //输入电压过低
+					show.outHigh = events.outHigh[i] = (buffer[i*8+2]&0x80)>>7					//输出过流
 					show.motorHigh = events.motorHigh[i] = (buffer[i*8+2]&0x40)>>6			//电机过载
 					show.flySafe = events.flySafe[i] = (buffer[i*8+2]&0x20)>>5					//飞车保护
 					show.closeStop = events.closeStop[i] = (buffer[i*8+2]&0x10)>>4			//开关门受阻
@@ -237,7 +237,7 @@ export default class DoorHistory extends Component {
 						const hex = this.buffer2hex(buffer)
 						this.state.doorWidth =parseInt((hex[14] + hex[15]), 16);
 					});
-				}	
+				}
 				this.setState({
 					show,
 					events,
@@ -277,7 +277,7 @@ export default class DoorHistory extends Component {
 			legend: {
 				data:['开门信号','关门信号']
 			},
-			grid: {					
+			grid: {
 				left: '3%',
 				right: '4%',
 				containLabel: true
@@ -308,7 +308,7 @@ export default class DoorHistory extends Component {
 			legend: {
 				data:['开到位输入信号','关到位输入信号']
 			},
-			grid: {					
+			grid: {
 				left: '3%',
 				right: '4%',
 				containLabel: true
@@ -339,7 +339,7 @@ export default class DoorHistory extends Component {
 			legend: {
 				data:['开门到位输出信号','关门到位输出信号']
 			},
-			grid: {					
+			grid: {
 				left: '3%',
 				right: '4%',
 				containLabel: true
@@ -370,7 +370,7 @@ export default class DoorHistory extends Component {
 			legend: {
 				data:['开减速输入信号','关减速输入信号']
 			},
-			grid: {					
+			grid: {
 				left: '3%',
 				right: '4%',
 				containLabel: true
@@ -401,7 +401,7 @@ export default class DoorHistory extends Component {
 			legend: {
 				data:['门坐标']
 			},
-			grid: {					
+			grid: {
 				left: '3%',
 				right: '4%',
 				top: '3%',
@@ -428,7 +428,7 @@ export default class DoorHistory extends Component {
 			legend: {
 				data:['电流']
 			},
-			grid: {					
+			grid: {
 				left: '3%',
 				right: '4%',
 				top: '3%',
@@ -455,7 +455,7 @@ export default class DoorHistory extends Component {
 			legend: {
 				data:['速度']
 			},
-			grid: {					
+			grid: {
 				left: '3%',
 				right: '4%',
 				top: '3%',
@@ -483,7 +483,7 @@ export default class DoorHistory extends Component {
 			show.closeToOut = events.closeToOut[i]			//获取关到位输出信号
 			show.openDecelerate =	events.openDecelerate[i] 		//开减速输入信号
 			show.closeDecelerate = events.closeDecelerate[i]		//关减速输入信号
-			show.closeTo = events.closeTo[i]				//获取关到位输入信号				
+			show.closeTo = events.closeTo[i]				//获取关到位输入信号
 			show.openTo =	events.openTo[i]				//获取开到位输入信号
 			show.door	= events.door[i]					//门光幕信号
 			show.open	= events.open[i]					//正在开门信号
@@ -501,27 +501,27 @@ export default class DoorHistory extends Component {
 			show.current = events.current[i]				//获取电流信号
 			show.speed = events.speed[i]
 		}
-		OpenIn.on('click',function (params){					
+		OpenIn.on('click',function (params){
 			var i = params.name;//横坐标的值
 			ss(i)
 		});
-		OpenTo.on('click',function (params){					
+		OpenTo.on('click',function (params){
 			var i = params.name;//横坐标的值
 			ss(i)
 		});
-		Current.on('click',function (params){					
+		Current.on('click',function (params){
 			var i = params.name;//横坐标的值
 			ss(i)
 		});
-		Decelerate.on('click',function (params){					
+		Decelerate.on('click',function (params){
 			var i = params.name;//横坐标的值
 			ss(i)
 		});
-		CloseIn.on('click',function (params){					
+		CloseIn.on('click',function (params){
 			var i = params.name;//横坐标的值
 			ss(i)
 		});
-		Speed.on('click',function (params){					
+		Speed.on('click',function (params){
 			var i = params.name;//横坐标的值
 			ss(i)
 		});
@@ -542,7 +542,7 @@ export default class DoorHistory extends Component {
 			legend: {
 				data:['Open Signal','Close Signal']
 			},
-			grid: {					
+			grid: {
 				left: '3%',
 				right: '4%',
 				containLabel: true
@@ -573,7 +573,7 @@ export default class DoorHistory extends Component {
 			legend: {
 				data:['Open arrival Input','Close arrival Input']
 			},
-			grid: {					
+			grid: {
 				left: '3%',
 				right: '4%',
 				containLabel: true
@@ -604,7 +604,7 @@ export default class DoorHistory extends Component {
 			legend: {
 				data:['Open arrival Output','Close arrival Output']
 			},
-			grid: {					
+			grid: {
 				left: '3%',
 				right: '4%',
 				containLabel: true
@@ -635,7 +635,7 @@ export default class DoorHistory extends Component {
 			legend: {
 				data:['Open Decelerate Input','Close Decelerate Input']
 			},
-			grid: {					
+			grid: {
 				left: '3%',
 				right: '4%',
 				containLabel: true
@@ -666,7 +666,7 @@ export default class DoorHistory extends Component {
 			legend: {
 				data:["Door Coordinate"]
 			},
-			grid: {					
+			grid: {
 				left: '3%',
 				right: '4%',
 				top: '3%',
@@ -693,7 +693,7 @@ export default class DoorHistory extends Component {
 			legend: {
 				data:['Current']
 			},
-			grid: {					
+			grid: {
 				left: '3%',
 				right: '4%',
 				top: '3%',
@@ -720,7 +720,7 @@ export default class DoorHistory extends Component {
 			legend: {
 				data:['Speed']
 			},
-			grid: {					
+			grid: {
 				left: '3%',
 				right: '4%',
 				top: '3%',
@@ -748,7 +748,7 @@ export default class DoorHistory extends Component {
 			show.closeToOut = events.closeToOut[i]			//获取关到位输出信号
 			show.openDecelerate =	events.openDecelerate[i] 		//开减速输入信号
 			show.closeDecelerate = events.closeDecelerate[i]		//关减速输入信号
-			show.closeTo = events.closeTo[i]				//获取关到位输入信号				
+			show.closeTo = events.closeTo[i]				//获取关到位输入信号
 			show.openTo =	events.openTo[i]				//获取开到位输入信号
 			show.door	= events.door[i]					//门光幕信号
 			show.open	= events.open[i]					//正在开门信号
@@ -766,27 +766,27 @@ export default class DoorHistory extends Component {
 			show.current = events.current[i]				//获取电流信号
 			show.speed = events.speed[i]
 		}
-		OpenIn.on('click',function (params){					
+		OpenIn.on('click',function (params){
 			var i = params.name;//横坐标的值
 			ss(i)
 		});
-		OpenTo.on('click',function (params){					
+		OpenTo.on('click',function (params){
 			var i = params.name;//横坐标的值
 			ss(i)
 		});
-		Current.on('click',function (params){					
+		Current.on('click',function (params){
 			var i = params.name;//横坐标的值
 			ss(i)
 		});
-		Decelerate.on('click',function (params){					
+		Decelerate.on('click',function (params){
 			var i = params.name;//横坐标的值
 			ss(i)
 		});
-		CloseIn.on('click',function (params){					
+		CloseIn.on('click',function (params){
 			var i = params.name;//横坐标的值
 			ss(i)
 		});
-		Speed.on('click',function (params){					
+		Speed.on('click',function (params){
 			var i = params.name;//横坐标的值
 			ss(i)
 		});
@@ -808,14 +808,14 @@ export default class DoorHistory extends Component {
 			const type = res.data.list[0].device_model
 			this.props.history.push(`/door/${id}/params/${type}`);
 		})
-		
+
 	}
 	goQrcode = () => {
 		const id = this.props.match.params.id;
 		this.setState({
 			src: `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=http://server.asynciot.com/company/follow/${id}`,
 			modal: true,
-		});    
+		});
 	}
 	gohistory = () => {
 		const id = this.props.match.params.id;
@@ -1035,41 +1035,41 @@ export default class DoorHistory extends Component {
 						</Row>
 					</div>
 					<div className={classNames(styles.tab, view == 1 ?'tab-active' : 'tab-notactive')}>
-						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>	            
+						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
 							<Col xs={{ span: 24 }} md={{ span: 48 }}>
-								<div id = "OpenIn" style={{ width: 320 , height: 80 }}></div>              
-							</Col>	            	            
-						</Row>
-						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>	            
-							<Col xs={{ span: 24 }} md={{ span: 48 }}>
-								<div id = "OpenTo" style={{ width: 320 , height: 80 }}></div>              
-							</Col>	            	            
+								<div id = "OpenIn" style={{ width: 320 , height: 80 }}></div>
+							</Col>
 						</Row>
 						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
-							<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
+							<Col xs={{ span: 24 }} md={{ span: 48 }}>
+								<div id = "OpenTo" style={{ width: 320 , height: 80 }}></div>
+							</Col>
+						</Row>
+						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
+							<Col xs={{ span: 24 }} md={{ span: 48 }}>
 								<div id = "CloseIn" style={{ width: 320 , height: 80 }}></div>
 							</Col>
 						</Row>
 						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
-							<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
+							<Col xs={{ span: 24 }} md={{ span: 48 }}>
 									<div id = "Decelerate" style={{ width: 320 , height: 80 }}></div>
 							</Col>
 						</Row>
 						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
-							<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
+							<Col xs={{ span: 24 }} md={{ span: 48 }}>
 									<div id = "Position" style={{ width: 320 , height: 240 }}></div>
 							</Col>
 						</Row>
 						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
-						 	<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
+						 	<Col xs={{ span: 24 }} md={{ span: 48 }}>
 						 			<div id = "Current" style={{ width: 320 , height: 240 }}></div>
 						 	</Col>
 						</Row>
 						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
-						 	<Col xs={{ span: 24 }} md={{ span: 48 }}>	              
+						 	<Col xs={{ span: 24 }} md={{ span: 48 }}>
 								<div id = "Speed" style={{ width: 320 , height: 240 }}></div>
 						 	</Col>
-						</Row> 
+						</Row>
 					</div>
 					<div className={styles.btns}>
 						{/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}

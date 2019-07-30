@@ -129,14 +129,17 @@ export default class Login extends Component {
 											{getFieldDecorator('username', {
 													rules: [{
 														required: true,
-														message: <FormattedMessage id="User name should not less than 6 characters"/>,
+														message: <FormattedMessage id="Username should not less than 6 characters"/>,
 														min:6,
-													}],
+													}, {
+                            pattern: /^[0-9a-zA-Z]+$/,
+														message: <FormattedMessage id="Number,Letter,Space"/>,
+                          }],
 												})(<Input
 													type="text"
 													size="large"
 													suffix={suffix}
-													placeholder={this.state.language=="zh"?"请输入用户名":"Plese input username"}
+													placeholder={this.state.language=="zh"?"数字，字母，不允许空格":"Number,Letter,No space"}
 												/>)}
 										</Col>
 									</Row>
@@ -202,11 +205,14 @@ export default class Login extends Component {
 													required: true,
 													message: <FormattedMessage id="Password should not less than 6 characters"/>,
 													min:6,
-												}],
+												}, {
+                          pattern: /^[0-9a-zA-Z]+$/,
+                          message: <FormattedMessage id="Number,Letter,Space"/>,
+                        }],
 											})(<Input
 													type="password"
 													size="large"
-													placeholder={this.state.language=="zh"?"请输入密码":"Plese input password"}
+													placeholder={this.state.language=="zh"?"数字，字母，不允许空格":"Number,Letter,No space"}
 											/>)}
 										</Col>
 									</Row>

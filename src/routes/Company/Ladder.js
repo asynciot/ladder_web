@@ -181,14 +181,14 @@ export default class extends Component {
 								<Row className={styles.page}>
 									<Col span={8} style={{margin:'5px'}}>
 										<Input
-											placeholder={(la=="zh")?"设备编号":"IMEI"}
+											placeholder={(la==en)?"IMEI":"设备编号"}
 											onChange={this.onChange}
 											value={this.state.search_info}
 											maxlength="16"></Input>
 									</Col>
 									<Col span={8} style={{margin:'5px'}}>
 										<Input
-											placeholder={(la=="zh")?"安装地址":"Install Address"}
+											placeholder={(la==en)?"Install Address":"项目名称"}
 											onChange={this.onChangel}
 											value={this.state.iddr}
 											maxlength="16"></Input>
@@ -217,7 +217,7 @@ export default class extends Component {
 															<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
 														</tr>
 														<tr>
-															<Col span={12}>	
+															<Col span={12}>
 																<a className={styles.text}><FormattedMessage id="Ctrl"/> ：</a>
 																<td className="tl">{item.ctrl ||''}</td>
 															</Col>
@@ -227,7 +227,7 @@ export default class extends Component {
 																<a className={styles.text}><FormattedMessage id="Door"/> ：</a>
 																<td className="tl">{item.door1}</td>
 															</Col>
-															<Col span={12}>	
+															<Col span={12}>
 																<a className={styles.text2}><FormattedMessage id="RSSI"/>：</a>
 																<td className="tl"><Signal width={item.rssi}/></td>
 															</Col>
@@ -238,7 +238,7 @@ export default class extends Component {
 																<td className="tl">{item.door2}</td>
 															</Col>
 															<Col span={12}>
-																<a className={styles.text}><FormattedMessage id="state"/> ：</a>
+																<a className={styles.text}><FormattedMessage id="State"/> ：</a>
 																<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
 															</Col>
 														</tr>
@@ -275,7 +275,7 @@ export default class extends Component {
 																<td className="tl">{item.door2}</td>
 															</Col>
 															<Col span={8}>
-																<a className={styles.text}><FormattedMessage id="state"/> ：</a>
+																<a className={styles.text}><FormattedMessage id="State"/> ：</a>
 																<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
 															</Col>
 														</tr>
@@ -292,6 +292,11 @@ export default class extends Component {
 									</table>
 								}
 							</List>
+              <Row className={styles.page}>
+              	<Col span={24} className={styles.center2}>
+              		<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
+              	</Col>
+              </Row>
 						</div>
 					</Tabs>
 				</div>

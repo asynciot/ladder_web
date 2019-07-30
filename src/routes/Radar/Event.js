@@ -25,7 +25,7 @@ export default class DoorHistory extends Component {
 		totalNumber:0,
 	}
 	componentWillMount() {
-		this.getEvent(1)
+		// this.getEvent(1)
 	}
 	onStart = async(val) => {
 		await this.setState({
@@ -76,12 +76,12 @@ export default class DoorHistory extends Component {
 					list: [],
 				});
 			}
-		});		
+		});
 	}
 	pageChange = (val) => {
 		const page = val
 		this.getEvent(val)
-		
+
 	}
 	render(){
 		const { navs, list, switchIdx } = this.state;
@@ -93,48 +93,51 @@ export default class DoorHistory extends Component {
 		}
 		return(
 			<LocaleProvider locale={la}>
-				<div className="content tab-hide">
-					<Row type="flex" justify="center" align="middle">
-						<Col span={12}>
-							<DatePicker title="开始时间" size="large" value={this.state.start} onChange={this.onStart} />
-						</Col>
-						<Col span={12}>
-							<DatePicker title="结束时间" size="large" value={this.state.end} onChange={this.onEnd} />
-						</Col>
-					</Row>
-					<div>
-						<Row className={styles.page}>
-							<Col span={6}>
-							</Col>
-							<Col span={18} >
-								<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
-							</Col>
-						</Row>
-						<List className={styles.table}>
-							{
-								list.map((item, index) => (
-									<List.Item className={styles.item} key={index} onClick={() => this.goHistory(item)}>
-										<table border="0" cellPadding="0" cellSpacing="0">
-											<tbody>
-												<tr>
-													<td className="tr"><FormattedMessage id="Event State"/></td>
-													<td className="tl" style={{ width: '260px' }}>{<FormattedMessage id={item.state}/>}</td>
-												</tr>
-												<tr>
-													<td className="tr"><FormattedMessage id="start time"/> ：</td>
-													<td className="tl">{moment(item.time).format('YYYY-MM-DD HH:mm:ss') }</td>
-												</tr>
-												<tr>
-													<td className="tr"><FormattedMessage id="end time"/> ：</td>
-													<td className="tl">{item.endtime? moment(item.endtime).format('YYYY-MM-DD HH:mm:ss'):<FormattedMessage id="None"/>}</td>					
-												</tr>
-											</tbody>
-										</table>
-									</List.Item>
-								))
-							}
-						</List>
-					</div>
+				<div className="content">
+          <div style={{ backgroundColor: '#fff' }}>
+            <Row type="flex" justify="center" align="middle">
+            	<Col span={12}>
+            		<DatePicker title="开始时间" size="large" value={this.state.start} onChange={this.onStart} />
+            	</Col>
+            	<Col span={12}>
+            		<DatePicker title="结束时间" size="large" value={this.state.end} onChange={this.onEnd} />
+            	</Col>
+            </Row>
+            <div>
+            	<Row className={styles.page}>
+            		<Col span={24} className={styles.center}>
+            			<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
+            		</Col>
+            	</Row>
+            	<List className={styles.table}>
+            		{
+            			list.map((item, index) => (
+            				<List.Item className={styles.item} key={index} onClick={() => this.goHistory(item)}>
+            					<table border="0" cellPadding="0" cellSpacing="0">
+            						<tbody>
+            							<tr>
+                            <a className={styles.text}><FormattedMessage id="Event State"/></a>
+            								<td className="tl" style={{ width: '260px' }}>{<FormattedMessage id={item.state}/>}</td>
+            							</tr>
+            							<tr>
+                            <a className={styles.text}><FormattedMessage id="start time"/> ：</a>
+            								<td className="tl">{moment(item.time).format('YYYY-MM-DD HH:mm:ss') }</td>
+            							</tr>
+            							<tr>
+                            <a className={styles.text}><FormattedMessage id="end time"/> ：</a>
+            								<td className="tl">{item.endtime? moment(item.endtime).format('YYYY-MM-DD HH:mm:ss'):<FormattedMessage id="None"/>}</td>
+            							</tr>
+            						</tbody>
+            					</table>
+            				</List.Item>
+            			))
+            		}
+            	</List>
+              <Col span={24} className={styles.center2}>
+              	<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
+              </Col>
+            </div>
+          </div>
 				</div>
 			</LocaleProvider>
 		);

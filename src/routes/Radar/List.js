@@ -203,7 +203,7 @@ export default class LadderList extends Component {
 										<td>{this.state.device.RSSI}</td>
 									</tr>
 									<tr>
-										<td><FormattedMessage id="state"/>：</td>
+										<td><FormattedMessage id="State"/>：</td>
 										<td>{statusName(this.state.device)}</td>
 									</tr>
 								</tbody>
@@ -233,7 +233,7 @@ export default class LadderList extends Component {
 												<tr>
 													<td className="tr"><FormattedMessage id="model"/> ：</td>
 													<td className="tl">{item.Model?item.Model:' '}</td>                       
-													<td className="tr"><FormattedMessage id="state"/> ：</td>
+													<td className="tr"><FormattedMessage id="State"/> ：</td>
 													<td className={classNames('tl', styles.status, item.Alert == '0' && !item.isLoss ? styles.pass : '')}>{statusName(item)}</td>                         
 												</tr>
 											</tbody>

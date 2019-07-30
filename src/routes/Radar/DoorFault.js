@@ -138,7 +138,7 @@ export default class DoorHistory extends Component {
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goOrder(item)}>
 											<tbody>
 												<tr>
-													<td className="tr"><FormattedMessage id="state"/> ：</td>
+													<td className="tr"><FormattedMessage id="State"/> ：</td>
 													<td className="tl" style={{ width: '100px' }}><FormattedMessage id={item.state}/></td>
 													<td className="tl"><FormattedMessage id="Creator"/> ：</td>
 													<td className="tl" style={{ width: '100px' }}>{item.producer}</td>

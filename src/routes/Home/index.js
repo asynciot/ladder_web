@@ -259,7 +259,7 @@ export default class Home extends Component {
 		const { history } = this.props;
 		history.push('/company/work-order');
 	}
-	render() {		
+	render() {
 		const imgList = [
 			// background1,
 			background2,
@@ -289,7 +289,7 @@ export default class Home extends Component {
 						<Row gutter={20}>
 							<Col span={6}>
 								<Card className={styles.gridcontent} onClick={this.toFollowDoorPage}>
-									<div className={styles.gridright}>													
+									<div className={styles.gridright}>
 										<div className={styles.gridnum4}>
 											{doornum}
 										</div>
@@ -299,7 +299,7 @@ export default class Home extends Component {
 							</Col>
 							<Col span={6}>
 								<Card onClick={this.toFollowDoorOnline}>
-									<div className={styles.gridright}>													
+									<div className={styles.gridright}>
 										<div className={styles.gridnum1}>
 											{devicesStatus.dooronline}
 										</div>
@@ -309,7 +309,7 @@ export default class Home extends Component {
 							</Col>
 							<Col span={6}>
 								<Card onClick={this.toFollowDoorOffline}>
-									<div className={styles.gridright}>													
+									<div className={styles.gridright}>
 										<div className={styles.gridnum2}>
 											{this.state.dooroffline}
 										</div>
@@ -319,7 +319,7 @@ export default class Home extends Component {
 							</Col>
 							<Col span={6}>
 								<Card onClick={this.toFollowDoorLongOffline}>
-									<div className={styles.gridright}>													
+									<div className={styles.gridright}>
 										<div className={styles.gridnum3}>
 											{devicesStatus.doorlongoffline}
 										</div>
@@ -331,7 +331,7 @@ export default class Home extends Component {
 						<Row gutter={20}>
 							<Col span={6}>
 								<Card onClick={this.toFollowCtrlPage}>
-									<div className={styles.gridright}>													
+									<div className={styles.gridright}>
 										<div className={styles.gridnum4}>
 											{ctrlnum}
 										</div>
@@ -341,7 +341,7 @@ export default class Home extends Component {
 							</Col>
 							<Col span={6}>
 								<Card onClick={this.toFollowCtrlOnline}>
-									<div className={styles.gridright}>													
+									<div className={styles.gridright}>
 										<div className={styles.gridnum1}>
 											{devicesStatus.ctrlonline}
 										</div>
@@ -412,7 +412,7 @@ export default class Home extends Component {
 					</List>
 					{/*
 						<Button onClick={this.onpress} type="primary" style={{ width: '100%' }}><FormattedMessage id="Location clock"/></Button>
-					*/}	
+					*/}
 				</div>
 			</div>
 		);

@@ -21,6 +21,7 @@ export default class extends Component {
 		install_addr:'',
 		submitting: false,
 		list:[],
+		la:window.localStorage.getItem("language"),
 	}
 	componentWillMount() {
 		this.getInfo();
@@ -70,11 +71,19 @@ export default class extends Component {
 		if(isNaN(val1)||isNaN(val2)){
 			val1 = _val1
 			val2 = _val2
-			alert("只允许输入数字")
+			if(this.state.la=="zh"){
+				alert("只允许输入数字")
+			}else{
+				alert("Only number!")
+			}
 		}else if(len1>3 || len2>3){
 			val1 = _val1
 			val2 = _val2
-			alert("不可超过三位数字")
+			if(this.state.la=="zh"){
+				alert("不可超过三位数字")
+			}else{
+				alert("No more than three!")
+			}
 		}else{
 			_val1 = val1
 			_val2 = val2
@@ -109,31 +118,69 @@ export default class extends Component {
 			inspection_remind: time2,
 		}).then((res) => {
 			if (res.code === 0) {
-				message.success('修改成功', 1, () => {
-					this.props.history.goBack();
-				});
+				if(this.state.la=="zh"){
+					message.success('修改成功', 1, () => {
+						this.props.history.goBack();
+					});
+				}else{
+					message.success('Success', 1, () => {
+						this.props.history.goBack();
+					});
+				}
 			} else {
-				message.error('修改失败');
+				if(this.state.la=="zh"){
+					message.error('修改失败');
+				}else{
+					message.error('Error');
+				}
 			}
 		});
 	}
 	remove = () => {
 		const { dispatch, location, match } = this.props;
 		const device_id =match.params.id
-		console.log(device_id)
-		alert('提示', '是否取消关注', [
-			{ text: '取消', style: 'default' },
-			{ text: '确认',
-				onPress: () => {
-					deleteFollowInfo({ device_id}).then((res) => {
-						if(res.code==0){
-							alert("成功");
-							this.props.history.goBack();
-						}
-					});
+		if(this.state.la=="zh"){
+			alert('提示', '是否取消关注', [
+				{ text: '取消', style: 'default' },
+				{ text: '确认',
+					onPress: () => {
+						deleteFollowInfo({ device_id}).then((res) => {
+							if(res.code==0){
+								alert("成功");
+								this.props.history.goBack();
+							}else{
+								alert("成功");
+							}
+						});
+					},
 				},
-			},
-		]);
+			]);
+		}else{
+			alert('提示', 'Cancer Follow', [
+				{ text: 'Cancer', style: 'default' },
+				{ text: 'Ok',
+					onPress: () => {
+						deleteFollowInfo({ device_id}).then((res) => {
+							if(res.code==0){
+								if(this.state.la=="zh"){
+									alert("成功");
+								}else{
+									alert("Success");
+								}
+								this.props.history.goBack();
+							}else{
+								if(this.state.la=="zh"){
+									alert("失败");
+								}else{
+									alert("Error");
+								}
+							}
+						});
+					},
+				},
+			]);
+		}
+
 	}
 	onStart = (val) => {
 		this.setState({
@@ -148,7 +195,7 @@ export default class extends Component {
 	render() {
 		const { submitting } = this.state;
 		const list = this.state.list
-		var la 
+		var la
 		if(window.localStorage.getItem("language")=="zh"){
 			la = undefined;
 		}else{
@@ -201,7 +248,7 @@ export default class extends Component {
 						>
 							<FormattedMessage id="early remind Days"/>
 						</InputItem>
-						<Row gutter={5}>	
+						<Row gutter={5}>
 							<Col span={12}>
 								<Button size="large" loading={submitting} style={{ width: '100%' }} type="primary" onClick={() => this.submit()}>
 									<FormattedMessage id="modify"/>

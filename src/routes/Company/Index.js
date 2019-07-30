@@ -21,6 +21,7 @@ export default class Company extends Component {
 	state = {
 		list: [],
 		loading: false,
+    la:window.localStorage.getItem("language"),
 	}
 	componentDidMount() {
 		this.reader = new FileReader();
@@ -59,6 +60,13 @@ export default class Company extends Component {
 	}
 	uploadPicture = (e) =>{
 		var files = e.target.files[0]
+    if(files.type != "image/jpeg"||files.type != "image/jpg"){
+      if(this.state.la=="zh"){
+      	alert("只支持JPG格式！");
+      }else{
+      	alert("Only JPG!");
+      }
+    }
 		var formdata = new FormData()
 		formdata.append("file",files)
 		fetch('http://server.asynciot.com/account/portrait', {
@@ -67,7 +75,15 @@ export default class Company extends Component {
 				Accept: 'application/json, text/plain, */*',
 			},
 			body: formdata
-		})
+		}).then((res)=>{
+      if(res.code ==0){
+        if(this.state.la=="zh"){
+        	alert("成功");
+        }else{
+        	alert("Success");
+        }
+      }
+    })
 	};
 
 	render() {
@@ -82,7 +98,7 @@ export default class Company extends Component {
 							size="large"
 							src={'http://server.asynciot.com/getfile?filePath='+currentUser.portrait}
 						/>
-						<input accept="image/*" className={styles.input} type="file" name='pic' onChange={this.uploadPicture} />
+						<input accept="image/jpg" className={styles.input} type="file" name='pic' onChange={this.uploadPicture} />
 					</div>
 					<p onClick={() => this.goDetail('revise')} className={styles.nickname}>{currentUser.nickname}<Icon className={styles.edit} type="form" /></p>
 				</div>
@@ -115,7 +131,7 @@ export default class Company extends Component {
 					</Row>
 				</div>
 				<Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} className={styles.btn1}>
-					<Button onClick={this.logout} type="primary" style={{ width: '100%' }} ><FormattedMessage id="Logout"/></Button>
+					<Button className={styles.Button} onClick={this.logout} type="primary" style={{ width: '100%' }} ><FormattedMessage id="Logout"/></Button>
 				</Col>
 			</div>
 		);

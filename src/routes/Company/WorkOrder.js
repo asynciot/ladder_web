@@ -21,6 +21,15 @@ const typeName = {
 	'door':'door',
 	'ctrl':'ctrl',
 }
+const CodeTransform = {
+	'51':'04',
+	'52':'07',
+  '66':'08',
+  '82':'03',
+  '114':'LV',
+  '178':'OV',
+  '229':'MO',
+}
 const ListButton = ({ className = '', ...restProps }) => (
 	<div className={`${className} ${styles['list-btn']}`}>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.edit ? restProps.edit:''}>
@@ -90,7 +99,7 @@ export default class extends Component {
 		if(state == 'untreated'){
 			getFault({ num: 10, page, state, islast:1 }).then((res) => {
 				const list = res.data.list.map((item,index) => {
-					const time = this.state.nowTime - item.createTime
+					const time = new Date().getTime() - item.createTime
 					item.hour = parseInt((time)/(1000*3600))
 					item.minute = parseInt(time%(1000*3600)/(1000*60))
 					item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
@@ -107,7 +116,7 @@ export default class extends Component {
 					if(item.device_type=='ctrl'){
 						item.code = 'E'+res.data.list[index].code.toString(16)
 					}else{
-						item.code = parseInt(res.data.list[index].code)+50
+						item.code = CodeTransform[parseInt(res.data.list[index].code)+50]
 					}
 					return item;
 				})
@@ -119,7 +128,7 @@ export default class extends Component {
 			getDispatch({ num: 10, page, follow:'yes', state:'treating', isreg:"True"}).then((res) => {
 				clearInterval(inte)
 				const dispatchList = res.data.list.map((item,index) => {
-					const time = this.state.nowTime - item.create_time
+					const time = new Date().getTime() - item.create_time
 					item.create_time = moment(parseInt(item.create_time)).format('YYYY-MM-DD HH:mm:ss')
 					item.hour = parseInt((time)/(1000*3600))
 					item.minute = parseInt(time%(1000*3600)/(1000*60))
@@ -194,6 +203,7 @@ export default class extends Component {
 	}
 	render() {
 		const { historyEvents, list, dispatchList, device_name} = this.state;
+    const la = window.localStorage.getItem("language");
 		return (
 			<div className="content">
 				<Tabs
@@ -216,32 +226,62 @@ export default class extends Component {
 								list.map((item, index) => (
 									<List.Item className={styles.item} key={index}  extra={<ListButton address={(event) => { this.address(item); }} edit={(event) => { this.deal(event,item,); }} />}>
 										<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault(item)}>
-											<tbody>
-												<tr>
-													<a className={styles.text}><FormattedMessage id="Device Name"/>：</a>
-													<td className="tl">{device_name[index]}</td>
-												</tr>
-												<tr>
-													<a className={styles.text}><FormattedMessage id="fault code"/>：</a>
-													<td className="tl" style={{ width: '200px' }}><FormattedMessage id={item.code}/></td>
-												</tr>
-												<tr>
-													<a className={styles.text}><FormattedMessage id="type"/>：</a>
-													<td className="tl" style={{ width: '80px' }}><FormattedMessage id={'O'+item.type}/></td>
-												</tr>
-												<tr>
-													<a className={styles.text}><FormattedMessage id="Device Type"/>：</a>
-													<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
-												</tr>
-												<tr>
-													<a className={styles.text}><FormattedMessage id="report time"/>：</a>
-													<td className="tl">{moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')}</td>
-												</tr>
-												<tr>
-													<a className={styles.text}><FormattedMessage id="fault duration"/>：</a>
-													<td className="tl">{item.hour}<FormattedMessage id="H"/>{item.minute}<FormattedMessage id="M"/>{item.second}<FormattedMessage id="S"/></td>
-												</tr>
-											</tbody>
+                        {
+                          la=="zh"?
+                          <tbody>
+                            <tr>
+                              <a className={styles.text} style={{ width: '25%'}}><FormattedMessage id="Device Name"/>：</a>
+                              <td className="tl">{device_name[index]}</td>
+                            </tr>
+                            <tr>
+                              <a className={styles.text} style={{ width: '25%'}}><FormattedMessage id="fault code"/>：</a>
+                              <td className="tl" style={{ width: '200px' }}>{item.code}<FormattedMessage id={item.code}/></td>
+                            </tr>
+                            <tr>
+                              <a className={styles.text} style={{ width: '25%'}}><FormattedMessage id="type"/>：</a>
+                              <td className="tl" style={{ width: '80px' }}><FormattedMessage id={'O'+item.type}/></td>
+                            </tr>
+                            <tr>
+                              <a className={styles.text} style={{ width: '25%'}}><FormattedMessage id="Device Type"/>：</a>
+                              <td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
+                            </tr>
+                            <tr>
+                              <a className={styles.text} style={{ width: '25%'}}><FormattedMessage id="report time"/>：</a>
+                              <td className="tl">{moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')}</td>
+                            </tr>
+                            <tr>
+                              <a className={styles.text} style={{ width: '25%'}}><FormattedMessage id="fault duration"/>：</a>
+                              <td className="tl">{item.hour}<FormattedMessage id="H"/>{item.minute}<FormattedMessage id="M"/>{item.second}<FormattedMessage id="S"/></td>
+                            </tr>
+                          </tbody>
+                          :
+                          <tbody>
+                            <tr>
+                              <a className={styles.text} style={{ width: '33%' }}><FormattedMessage id="Device Name"/>：</a>
+                              <td className="tl">{device_name[index]}</td>
+                            </tr>
+                            <tr>
+                              <a className={styles.text} style={{ width: '33%' }}><FormattedMessage id="fault code"/>：</a>
+                              <td className="tl" style={{ width: '200px' }}><FormattedMessage id={item.code}/></td>
+                            </tr>
+                            <tr>
+                              <a className={styles.text} style={{ width: '33%' }}><FormattedMessage id="type"/>：</a>
+                              <td className="tl" style={{ width: '80px' }}><FormattedMessage id={'O'+item.type}/></td>
+                            </tr>
+                            <tr>
+                              <a className={styles.text} style={{ width: '33%' }}><FormattedMessage id="Device Type"/>：</a>
+                              <td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
+                            </tr>
+                            <tr>
+                              <a className={styles.text} style={{ width: '33%' }}><FormattedMessage id="report time"/>：</a>
+                              <td className="tl">{moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')}</td>
+                            </tr>
+                            <tr>
+                              <a className={styles.text} style={{ width: '33%' }}><FormattedMessage id="fault duration"/>：</a>
+                              <td className="tl">{item.hour}<FormattedMessage id="H"/>{item.minute}<FormattedMessage id="M"/>{item.second}<FormattedMessage id="S"/></td>
+                            </tr>
+                          </tbody>
+                        }
 										</table>
 									</List.Item>
 								))

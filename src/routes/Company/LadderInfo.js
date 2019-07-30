@@ -116,14 +116,14 @@ export default class extends Component {
 							value={state[list.state]}
 							disabled="true"
 						>
-							<FormattedMessage id="state"/>
+							<FormattedMessage id="State"/>
 						</InputItem>
 						:
 						<InputItem
 							value={list.state}
 							disabled="true"
 						>
-							<FormattedMessage id="state"/>
+							<FormattedMessage id="State"/>
 						</InputItem>
 					}
 				</Form>

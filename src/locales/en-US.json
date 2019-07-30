@@ -8,6 +8,10 @@
 	"China Mobile" : "China Mobile",
   "China Unicom" : "China Unicom",
 	"ctrl" : "Ctrl",
+  "Ctrl" : "Ctrl",
+	"Close Door":"Close Door",
+  "Confirm" : "Confirm",
+	"check" : "Check",
 
 	"Door" : "Door",
 	"door" : "Door",
@@ -17,6 +21,7 @@
 	"Devices Information" : "Devices Information",
 
 	"Examine List" : "Examine List",
+	"Event State":"Event State：",
 
 	"Forget": "Forget?",
 
@@ -29,6 +34,7 @@
 
 	"NBSL" : "Ningbo Shen Ling Management System",
 	"NBSL Elevator QR Code" : "NBSL Elevator QR Code",
+  "Number,Letter,Space" : "Number,Letter,No Space",
 
 	"Operation Monitor" : "Operation Monitor",
 	"Operation" : "Operation",
@@ -42,10 +48,13 @@
 	"Reset" : "Reset",
 
 	"Stop":"Inactive",
+	"State" : "State",
+	"stored" : "Stored",
 
 	"Terms of Service":"Terms of Service",
 
 	"Username":"Username",
+	"Username should not less than 6 characters":"Username should not less than 6 characters.",
 
   "Wifi" : "Wifi",
 
@@ -93,14 +102,12 @@
 	"examine order" : "Examine Order",
 	"treating" : "Treating",
 	"examine finished" : "Examine Finished",
-	"stored" : "Stored",
 	"finished" : "Finished",
 	"finish" : "Finish",
 	"fault code" : "Fault Code",
 	"fault" : "Fault",
 	"maintain" : "Maintain",
-	"check" : "Check",
-	"Install Address" : "Install Address",
+	"Install Address" : "Item Name",
 	"install date" : "Install Date",
 	"device" : "Device",
 	"size" : "Size",
@@ -110,7 +117,6 @@
 	"keyword" : "Keyword",
 	"search" : "Search",
 	"type" : "Type",
-	"state" : "State：",
 	"Device IMEI" : "Device IMEI",
 	"Device Name" : "Device Name",
 	"Device Type" : "Device Type",
@@ -228,6 +234,15 @@
 	"82": "Output over-current",
 	"114": "Input under-voltage",
 	"178": "Input over-voltage",
+  "229": "Motor overload",
+  "MO" : "Motor overload",
+  "OV" : "Input over-voltage",
+  "LV" : "Input under-voltage",
+  "08" : "Motor overload",
+  "07" : "Galloping protection",
+  "05" : "Switch door blocked",
+  "04" : "Switch door blocked",
+  "03" : "Output over-current",
 	"No install address":"No install address",
 	"follow":"Follow",
 	"Follow Device":"Follow Device",
@@ -302,8 +317,7 @@
 	"S":"S",
 	"Now Event":"Now Event：",
 	"Open Door":"Open Door",
-	"Close Door":"Close Door",
-	"Event State":"Event State：",
 	"Reason":"Reason：",
-	"Answer":"Answer："
+	"Answer":"Answer：",
+  "229" : "Motor Overload"
 }

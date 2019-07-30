@@ -177,7 +177,7 @@ export default class DoorHistory extends Component {
 													<tr>
 														<td className="tr">id ：</td>
 														<td className="tl" style={{ width: '100px' }}>{item.id}</td>
-														<td className="tl"><FormattedMessage id="state"/> ：</td>
+														<td className="tl"><FormattedMessage id="State"/> ：</td>
 														<td className="tl" style={{ width: '260px' }}><FormattedMessage id={item.state}/></td>
 													</tr>
 													<tr>
@@ -196,7 +196,7 @@ export default class DoorHistory extends Component {
 													<tr>
 														<td className="tr">id ：</td>
 														<td className="tl" style={{ width: '100px' }}>{item.id}</td>
-														<td className="tl"><FormattedMessage id="state"/> ：</td>
+														<td className="tl"><FormattedMessage id="State"/> ：</td>
 														<td className="tl" style={{ width: '260px' }}><FormattedMessage id={item.state}/></td>
 													</tr>
 													<tr>

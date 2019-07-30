@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Form, Input, Button, Icon, Checkbox, Row, Col, Modal, Alert } from 'antd';
+import { Form, Input, Button, Icon, Checkbox, Row, Col, Modal, Alert, message } from 'antd';
 import styles from './Resetting.less';
 import logo from '../../assets/logo-title.png';
 import Background from '../../assets/back.png';
 import { injectIntl, FormattedMessage } from 'react-intl';
+import { retrieve } from '../../services/api';
 
 var sectionStyle = {
 	width:"100%",
 	backgroundImage: `url(${Background})`
 };
 const FormItem = Form.Item;
-@connect(({ login, loading }) => ({
-	login,
-	submitting: loading.effects['login/retrieve'],
-}))
+// @connect(({ login, loading }) => ({
+// 	login,
+// 	submitting: loading.effects['login/retrieve'],
+// }))
 @Form.create()
 export default class Login extends Component {
 	state = {
@@ -62,12 +63,25 @@ export default class Login extends Component {
 		this.props.form.validateFields({ force: true },
 			(err, values) => {
 				if (!err) {
-					this.props.dispatch({
-						type: 'login/retrieve',
-						payload: {
-							...values,
-						},
-					});
+          console.log(values.mobile)
+          const mobile = values.mobile
+          const newpassword = values.newpassword
+          const verifyCode = values.verifyCode
+          retrieve({ mobile, newpassword, verifyCode}).then((res)=>{
+            if(res.code==0){
+              if(window.localStorage.getItem("language")=='zh'){
+                message.success('修改成功');
+              }else{
+                message.success('Success');
+              }
+            }else{
+              if(window.localStorage.getItem("language")=='zh'){
+                message.success('修改失败');
+              }else{
+                message.success('Error');
+              }
+            }
+          })
 				}
 			}
 		);
@@ -141,7 +155,7 @@ export default class Login extends Component {
 										<Col span={6}>
 											<div><FormattedMessage id="Verification"/>:</div>
 										</Col>
-										<Col span={13}>
+										<Col span={12}>
 											{getFieldDecorator('verifyCode', {
 												rules: [{
 													required: true, message: <FormattedMessage id="Please input verification code"/>,
@@ -152,7 +166,7 @@ export default class Login extends Component {
 												placeholder={this.state.language=="zh"?"请输入验证码":"input verification code"}
 											/>)}
 										</Col>
-										<Col span={5}>
+										<Col span={6}>
 											<Button
 												disabled={count}
 												className={styles.getCaptcha}
@@ -171,13 +185,18 @@ export default class Login extends Component {
 										</Col>
 										<Col span={18}>
 											{getFieldDecorator('newpassword', {
-												rules: [{ required: true,
-														  message: <FormattedMessage id="Password should not less than 6 characters"/> }],
-														  min:6,
-											})(<Input
+												rules: [{
+                          required: true,
+                          message: <FormattedMessage id="Password should not less than 6 characters"/>,
+                          min:6,
+                        }, {
+                          pattern: /^[0-9a-zA-Z]+$/,
+                          message: <FormattedMessage id="Number,Letter,Space"/>,
+                        }],
+                        })(<Input
 													type="password"
 													size="large"
-													placeholder={this.state.language=="zh"?"请输入密码":"Plese input password"}
+													placeholder={this.state.language=="zh"?"数字，字母，不允许空格":"Number,Letter,No space"}
 											/>)}
 										</Col>
 									</Row>
