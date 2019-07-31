@@ -262,65 +262,73 @@ export default class CtrlRealtime extends Component {
 		console.log("WebSocket已关闭")
 	}
 	onChange = (val) => {
-		this.state.switch = !this.state.switch
 		this.clears()
 		counts = 0
 		ct = 0
-		if(this.state.switch == true){
-			const device_id = this.props.match.params.id
-			if(websock){
-				websock.close()
-				websock=null
-			}
-			this.initWebsocket()
-			const op = 'open';
-			const IMEI = this.state.IMEI;
-			const interval = 500;
-			const threshold = 4;
-			const duration = 300;
-			const device_type = '240';
-			const type = '0';
-			const segment = '00,00,00,00';
-			const address = '00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00';
-			postMonitor({ op, IMEI, interval, threshold, duration, device_type, type, segment, address}).then((res) => {
-				if(res.code == 0){
-					if(la=="zh"){
-						alert("请等待接收数据");
-					}else{
-						alert("Await data");
-					}
-				}else if(res.code == 670){
-					if(la=="zh"){
-						alert("当前设备已被人启动监控");
-					}else{
-						alert("Monitor has been activated");
-					}
-				}
-			});
-			setTimeout(()=>{ 
-				getCommand({num:1,page:1,IMEI}).then((res)=>{
-					if(res.code==0){
-						timing = setInterval( () => {
-							const date = new Date().getTime()
-							const endTime = Math.round(((res.list[0].submit+duration*1000)-date)/1000)
-							if(endTime<0){
-								this.setState({
-									endTime:0,
-								})
-								clearInterval(timing)
-							}else{
-								this.setState({
-									endTime,
-								})
-							}
-							this.forceUpdate()
-						},1000)
-					}
-				})
-			}, 1000);
-		}else{
-			websock.close()
-		}
+    if(this.state.state =="online"){
+      this.state.switch = !this.state.switch
+      if(this.state.switch == true){
+      	const device_id = this.props.match.params.id
+      	if(websock){
+      		websock.close()
+      		websock=null
+      	}
+      	this.initWebsocket()
+      	const op = 'open';
+      	const IMEI = this.state.IMEI;
+      	const interval = 500;
+      	const threshold = 4;
+      	const duration = 300;
+      	const device_type = '240';
+      	const type = '0';
+      	const segment = '00,00,00,00';
+      	const address = '00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00';
+      	postMonitor({ op, IMEI, interval, threshold, duration, device_type, type, segment, address}).then((res) => {
+      		if(res.code == 0){
+      			if(la=="zh"){
+      				alert("请等待接收数据");
+      			}else{
+      				alert("Await data");
+      			}
+      		}else if(res.code == 670){
+      			if(la=="zh"){
+      				alert("当前设备已被人启动监控");
+      			}else{
+      				alert("Monitor has been activated");
+      			}
+      		}
+      	});
+      	setTimeout(()=>{
+      		getCommand({num:1,page:1,IMEI}).then((res)=>{
+      			if(res.code==0){
+      				timing = setInterval( () => {
+      					const date = new Date().getTime()
+      					const endTime = Math.round(((res.list[0].submit+duration*1000)-date)/1000)
+      					if(endTime<0){
+      						this.setState({
+      							endTime:0,
+      						})
+      						clearInterval(timing)
+      					}else{
+      						this.setState({
+      							endTime,
+      						})
+      					}
+      					this.forceUpdate()
+      				},1000)
+      			}
+      		})
+      	}, 1000);
+      }else{
+      	websock.close()
+      }
+    }else{
+      if(la=="zh"){
+      	alert("该设备已离线");
+      }else{
+      	alert("The device is offline.");
+      }
+    }
 	}
 	getBaseData = () => {
 		const { show } = this.state
@@ -356,6 +364,7 @@ export default class CtrlRealtime extends Component {
 					install_addr:res.data.list[0].install_addr,
 					device_name:res.data.list[0].device_name,
 					command,
+          state:res.data.list[0].state,
 				})
 			}
 		})
@@ -397,7 +406,7 @@ export default class CtrlRealtime extends Component {
 					page.status   = buffer[count+2]&0xff						//获取电梯状态
 					page.floor    = buffer[count+27]&0xff						//获取电梯当前楼层
 					page.speed    = ((buffer[count+31]&0xff)<<8)+(buffer[count+32]&0xff)	//获取电梯当前速度
-				
+
 					arr.upCall.push(page.upCall)
 					arr.downCall.push(page.downCall)
 					arr.run.push(page.run)
@@ -1064,7 +1073,7 @@ export default class CtrlRealtime extends Component {
 																className={styles.signal}
 															/>
 														</p>
-													</section> : 
+													</section> :
 													<section>
 														<p ><FormattedMessage id="Main contactor"/>
 															<i
@@ -1136,10 +1145,10 @@ export default class CtrlRealtime extends Component {
 																className={styles.signal}
 															/>
 														</p>
-														
+
 													</section>
 												}
-											</Col> : 
+											</Col> :
 											<Col
 												span={24}
 												className={styles.door}
@@ -1230,7 +1239,7 @@ export default class CtrlRealtime extends Component {
 																className={styles.signal}
 															/>
 														</p>
-													</section> : 
+													</section> :
 													<section>
 														<p ><FormattedMessage id="Up to the station clock"/>
 															<i
@@ -1567,7 +1576,7 @@ export default class CtrlRealtime extends Component {
 																className={styles.signal}
 															/>
 														</p>
-													</section> : 
+													</section> :
 													<section>
 														<p ><FormattedMessage id="Main contactor"/>
 															<i
@@ -1604,7 +1613,7 @@ export default class CtrlRealtime extends Component {
 																className={styles.signal}
 															/>
 														</p>
-														
+
 														<p  className={styles.pd1}><FormattedMessage id="Front door closing"/>
 															<i
 																className={styles.signal}
@@ -1640,10 +1649,10 @@ export default class CtrlRealtime extends Component {
 																className={styles.signal}
 															/>
 														</p>
-														
+
 													</section>
 												}
-											</Col> : 
+											</Col> :
 											<Col
 												span={24}
 												className={styles.door}
@@ -1734,7 +1743,7 @@ export default class CtrlRealtime extends Component {
 																className={styles.signal}
 															/>
 														</p>
-													</section> : 
+													</section> :
 													<section>
 														<p className={styles.pd1}><FormattedMessage id="Up to the station clock"/>
 															<i
@@ -1851,7 +1860,7 @@ export default class CtrlRealtime extends Component {
 							</div>
 						</div>
 						}
-						
+
 					<div className={classNames(styles.tab, view == 1 ?'tab-active' : 'tab-notactive')}>
 						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
 							<Col xs={{ span: 24 }} md={{ span: 48 }}>

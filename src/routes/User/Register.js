@@ -133,13 +133,13 @@ export default class Login extends Component {
 														min:6,
 													}, {
                             pattern: /^[0-9a-zA-Z]+$/,
-														message: <FormattedMessage id="Number,Letter,Space"/>,
+														message: <FormattedMessage id="Number and Letter"/>,
                           }],
 												})(<Input
 													type="text"
 													size="large"
 													suffix={suffix}
-													placeholder={this.state.language=="zh"?"数字，字母，不允许空格":"Number,Letter,No space"}
+													placeholder={this.state.language=="zh"?"数字和字母":"Number and letter."}
 												/>)}
 										</Col>
 									</Row>
@@ -179,7 +179,7 @@ export default class Login extends Component {
 											})(<Input
 												type="text"
 												size="large"
-												placeholder={this.state.language=="zh"?"请输入验证码":"Plese input verification code"}
+												placeholder={this.state.language=="zh"?"请输入验证码":"Input verification code"}
 											/>)}
 										</Col>
 										<Col span={6}>
@@ -207,7 +207,7 @@ export default class Login extends Component {
 													min:6,
 												}, {
                           pattern: /^[0-9a-zA-Z]+$/,
-                          message: <FormattedMessage id="Number,Letter,Space"/>,
+                          message: <FormattedMessage id="Number and Letter"/>,
                         }],
 											})(<Input
 													type="password"

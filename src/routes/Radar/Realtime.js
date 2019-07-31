@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'dva';
 import _ from 'lodash';
 import base64url from 'base64url';
@@ -19,7 +19,7 @@ var showInte =null;
 var dateInte = null;
 var timing = null;
 var websock = '';
-const la = window.localStorage.getItem("language");
+const language = window.localStorage.getItem("language");
 
 const parseState = (event) => {
 	let statusName = 'None';
@@ -322,64 +322,71 @@ export default class DoorHistory extends Component {
 		chart.speed = []
 	}
 	onChange = () => {
-		this.state.switch = !this.state.switch;
 		this.forceUpdate();
 		this.clears();
 		counts = 0;
 		ct = 0;
-		if(this.state.switch == true){
-			if(websock){
-				websock.close();
-				websock=null;
-			}
-			this.initWebsocket()
-			const op = 'open';
-			const IMEI = this.state.IMEI;
-			const interval = this.state.interval;
-			const threshold = this.state.threshold;
-			const duration = this.state.duration;
-			const device_type = '15';
-			const type = '0';
-			postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {
-				if(res.code == 0){
-					if(la=="zh"){
-						alert("请等待接收数据");
-					}else{
-						alert("Await data");
-					}
-				}else if(res.code == 670){
-					if(la=="zh"){
-						alert("当前设备已被人启动监控");
-					}else{
-						alert("Monitor has been activated");
-					}
-				}
-			});
-			setTimeout(()=>{
-				getCommand({num:1,page:1,IMEI}).then((res)=>{
-					if(res.code==0){
-						timing = setInterval( () => {
-							const date = new Date().getTime();
-							const endTime = Math.round(((res.list[0].submit+duration*1000)-date)/1000)
-							if(endTime<0){
-								this.setState({
-									endTime:0,
-								})
-								clearInterval(timing);
-							}else{
-								this.setState({
-									endTime,
-								})
-							}
-							this.forceUpdate();
-						},1000)
-					}
-				})
-			}, 1000);
-		}else{
-			websock.close();
-			this.forceUpdate();
-		}
+    if(this.state.state =="online"){
+      this.state.switch = !this.state.switch;
+      if(this.state.switch == true){
+      	if(websock){
+      		websock.close();
+      		websock=null;
+      	}
+      	this.initWebsocket()
+      	const op = 'open';
+      	const IMEI = this.state.IMEI;
+      	const interval = this.state.interval;
+      	const threshold = this.state.threshold;
+      	const duration = this.state.duration;
+      	const device_type = '15';
+      	const type = '0';
+      	postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {
+      		if(res.code == 0){
+      			if(language=="zh"){
+      				alert("请等待接收数据");
+      			}else{
+      				alert("Await data");
+      			}
+      		}else if(res.code == 670){
+      			if(language=="zh"){
+      				alert("当前设备已被人启动监控");
+      			}else{
+      				alert("Monitor has been activated");
+      			}
+      		}
+      	});
+      	setTimeout(()=>{
+      		getCommand({num:1,page:1,IMEI}).then((res)=>{
+      			if(res.code==0){
+      				timing = setInterval( () => {
+      					const date = new Date().getTime();
+      					const endTime = Math.round(((res.list[0].submit+duration*1000)-date)/1000)
+      					if(endTime<0){
+      						this.setState({
+      							endTime:0,
+      						})
+      						clearInterval(timing);
+      					}else{
+      						this.setState({
+      							endTime,
+      						})
+      					}
+      				},1000)
+      			}
+      		})
+      	}, 1000);
+      }else{
+      	websock.close();
+      	this.forceUpdate();
+      }
+    }else{
+      if(language=="zh"){
+      	alert("该设备已离线");
+      }else{
+      	alert("The device is offline.");
+      }
+    }
 	}
 	buffer2hex = (buffer) => {
 		const unit16array = [];
@@ -439,9 +446,9 @@ export default class DoorHistory extends Component {
 					device_name:res.data.list[0].device_name,
 					device_model:res.data.list[0].device_model,
 					command,
+          state:res.data.list[0].state,
 				})
 			}
-
 		})
 		if(this.state.device_model == '1'){
 			getDoorRuntime({device_id,num:1,page:1,type:4100}).then((res) => {
@@ -467,7 +474,6 @@ export default class DoorHistory extends Component {
 			});
 		}
 		this.setAnimation();
-		this.forceUpdate();
 	}
 	getData = () => {
 		const {page, show, arr, chart} = this.state;
@@ -1088,7 +1094,7 @@ export default class DoorHistory extends Component {
 		if(view == 1 && counts == 1){
 			chartInte = setInterval(() => {
 				if(this.state.pclock==true){
-					if(la=="zh"){
+					if(language=="zh"){
 						this.showChart()
 					}else{
 						this.showChartEn()
@@ -1115,7 +1121,7 @@ export default class DoorHistory extends Component {
 						transparent
 						maskClosable={false}
 						title={<FormattedMessage id="QR Code"/>}
-						footer={la=="en"?[{ text: 'OK', onPress: () => this.setState({modal: false}) }]:[{ text: '确定', onPress: () => this.setState({modal: false}) }]}
+						footer={language=="en"?[{ text: 'OK', onPress: () => this.setState({modal: false}) }]:[{ text: '确定', onPress: () => this.setState({modal: false}) }]}
 						wrapProps={{ onTouchStart: this.onWrapTouchStart }}
 					>
 						<div className="qrcode">
@@ -1150,7 +1156,7 @@ export default class DoorHistory extends Component {
 								className={classNames(styles.door)}
 							>
 							{
-								(la=="zh")?
+								(language=="zh")?
 								<section>
 									<p style={{
 										width: '100%',

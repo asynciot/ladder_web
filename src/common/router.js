@@ -195,6 +195,11 @@ export const getRouterData = (app) => {
 			name2: 'Tech',
 			component: dynamicWrapper(app, ['tech'], () => import('../routes/Tech/Manual')),
 		},
+    '/tech/test': {
+    	name: '技术',
+    	name2: 'Tech',
+    	component: dynamicWrapper(app, ['tech'], () => import('../routes/Tech/Test')),
+    },
 		'/tech/reader/:id': {
 			name: '说明书',
 			name2: 'Instructions',

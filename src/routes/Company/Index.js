@@ -4,7 +4,7 @@ import { ImagePicker } from 'antd-mobile';
 import { connect } from 'dva';
 import { Modal, Accordion, List, Badge, Grid } from 'antd-mobile';
 import styles from './Index.less';
-import { uploadPicture, getFile, } from '../../services/api';
+import { getFile, } from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
 
 var avatar = '';
@@ -21,7 +21,7 @@ export default class Company extends Component {
 	state = {
 		list: [],
 		loading: false,
-    la:window.localStorage.getItem("language"),
+		la:window.localStorage.getItem("language"),
 	}
 	componentDidMount() {
 		this.reader = new FileReader();
@@ -58,17 +58,17 @@ export default class Company extends Component {
 			pathname: '/company/ladder/all',
 		});
 	}
-	uploadPicture = (e) =>{
-		var files = e.target.files[0]
-    if(files.type != "image/jpeg"||files.type != "image/jpg"){
-      if(this.state.la=="zh"){
-      	alert("只支持JPG格式！");
-      }else{
-      	alert("Only JPG!");
-      }
-    }
-		var formdata = new FormData()
-		formdata.append("file",files)
+	uploadPicture = (e) => {
+		var files = e.target.files[0];
+		if(files.type != "image/jpeg"&&files.type != "image/jpg"){
+			if(this.state.la=="zh"){
+				alert("只支持JPG格式！");
+			}else{
+				alert("Only JPG!");
+			}
+		}
+		var formdata = new FormData();
+		formdata.append("file",files);
 		fetch('http://server.asynciot.com/account/portrait', {
 			method: 'POST',
 			headers: {
@@ -76,16 +76,15 @@ export default class Company extends Component {
 			},
 			body: formdata
 		}).then((res)=>{
-      if(res.code ==0){
-        if(this.state.la=="zh"){
-        	alert("成功");
-        }else{
-        	alert("Success");
-        }
-      }
-    })
+			if(res.code ==0){
+				if(this.state.la=="zh"){
+					alert("成功");
+				}else{
+					alert("Success");
+				}
+			}
+		})
 	};
-
 	render() {
 		const { company: { group, unread }, currentUser } = this.props;
 		const imageUrl = this.state.imageUrl;

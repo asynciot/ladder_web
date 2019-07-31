@@ -184,7 +184,7 @@
 	"NBSL Elevator QR Code" : "宁波申菱电梯二维码",
 	"Notification Record" : "通知记录",
 	"Notice" : "发送邮件",
-  "Number,Letter,Space" : "数字，字母，不允许空格",
+  "Number and Letter" : "数字和字母",
 
 	"Opening Limit Output Relay Polarity Setting": "开门限位输出继电器极性设置",
 	"Opening Limit Switch Polarity Setting": "开门限位开关极性设置",

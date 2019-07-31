@@ -38,6 +38,7 @@ export default class Fault extends Component {
 		inspection:true,
 		remark:'',
 		device_name:'',
+    la:window.localStorage.getItem("language"),
 	}
 	componentWillMount() {
 		this.getFault()
@@ -123,7 +124,11 @@ export default class Fault extends Component {
 		formdata.append("remarks",this.state.remark)
 		formdata.append("result",'untransfer')
 		if(!this.state.file1 || !this.state.file2){
-			alert("请上传维修前和维修后的图片！")
+      if(la=="zh"){
+        alert("请上传维修前和维修后的图片！")
+      }else{
+        alert("Please upload pictures before and after maintenance.")
+      }
 		}else {
 			fetch('http://server.asynciot.com/device/Dispatch/finish', {
 				method: 'POST',
@@ -134,14 +139,26 @@ export default class Fault extends Component {
 				body: formdata
 			}).then(res=> { return res.json()}).then(json=>{
 				if(json.code == 0){
-					alert('提示','上传成功',[
-						{ text: '确认',},
-					]);
+          if(la=="zh"){
+            alert('提示','上传成功',[
+            	{ text: '确认',},
+            ]);
+          }else{
+            alert('提示','Success',[
+            	{ text: 'Ok',},
+            ]);
+          }
 					this.props.history.push(`/company/work-order`);
 				}else{
-					alert('提示', '上传失败', [
-						{ text: '确认',},
-					]);
+          if(la=="zh"){
+            alert('提示', '上传失败', [
+            	{ text: '确认',},
+            ]);
+          }else{
+            alert('提示','Error',[
+            	{ text: 'Ok',},
+            ]);
+          }
 				}
 			})
 		}
@@ -161,12 +178,20 @@ export default class Fault extends Component {
 		const order_id = this.props.match.params.id
 		postFault({order_id}).then((res) => {
 			if(res.code == 0){
-				alert("接单成功！")
+        if(la=="zh"){
+          alert("接单成功！")
+        }else{
+          alert("Success")
+        }
 				history.push({
 					pathname: `/company/work-order`,
 				});
 			}else{
-				alert("接单失败！")
+        if(la=="zh"){
+          alert("接单失败！")
+        }else{
+          alert("Error")
+        }
 			}
 		})
 	}

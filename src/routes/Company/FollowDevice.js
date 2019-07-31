@@ -944,7 +944,6 @@ export default class extends Component {
 											</Col>
 										}
 									</List.Item>
-
 								)}
 							/>
 							<Row className={styles.page}>
