@@ -4,12 +4,14 @@ import { connect } from 'dva';
 import _ from 'lodash';
 import base64url from 'base64url';
 import { Debounce } from 'lodash-decorators/debounce';
-import { Row, Col, Button, Spin, DatePicker, Input, } from 'antd';
-import { Picker, List, Tabs,  Card, Modal, } from 'antd-mobile';
+import { Row, Col, Button, Spin, DatePicker, Input, List, LocaleProvider } from 'antd';
+import { Picker,  Tabs,  Card, Modal, } from 'antd-mobile';
 import classNames from 'classnames';
 import styles from './OrderCode.less';
 import { getFollowDevices, getOrderCode } from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
+import zh from 'antd/es/locale-provider/zh_CN';
+import en from 'antd/es/locale-provider/en_GB';
 
 const alert = Modal.alert;
 
@@ -61,52 +63,75 @@ const faultCode = {
 export default class DoorHistory extends Component {
 	state = {
 		list:[],
+    language:window.localStorage.getItem("language"),
 	}
 	componentWillMount() {
 		this.getOrderCode()
 	}
 	getOrderCode = () =>{
-		let code = this.props.match.params.id
-		code = faultCode[code]
-		getOrderCode({code}).then((res)=>{
-			const list = res.list.map((item) => {
-				return item
-			})
-			this.setState({
-				list,
-			})
-		})
+    const { language } = this.state;
+		let code = this.props.match.params.id;
+		code = faultCode[code];
+    if(code!=null){
+      getOrderCode({code}).then((res)=>{
+      	const list = res.list.map((item) => {
+      		return item;
+      	})
+      	this.setState({
+      		list,
+      	})
+      })
+    }else{
+      if(language=="zh"){
+      	alert("暂无该故障的详细信息");
+      }else{
+      	alert("No details are available yet.");
+      }
+    }
 	}
 	render() {
 		const { list } = this.state;
+    var la = window.localStorage.getItem("language");
+    if(la == "zh" ){
+    	la = zh;
+    }else{
+    	la = en;
+    }
 		return (
-			<div className="content tab-hide">
-				<div className={styles.ct}>
-					<List>
-						{list.map((item, index) => (
-							<List.Item className={styles.item} key={index} >
-								<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
-									<tbody className={styles.tbody}>
-										<tr>
-											<a className={styles.text}><FormattedMessage id="fault code"/> ：</a>
-											<td className="tl" style={{ width: 'auto',color:'red'}} ><FormattedMessage id={item.code_id}/></td>
-										</tr>
-										<tr>
-											<a className={styles.text}><FormattedMessage id="Reason"/></a>
-											<td>{item.reason}</td>
-										</tr>
-										<tr>
-											<a className={styles.text}><FormattedMessage id="Answer"/></a>
-											<td><p className={styles.tl}>{item.answer}</p></td>
-										</tr>
-									</tbody>
-								</table>
-								
-							</List.Item>
-						))}
-					</List>
-				</div>
-			</div>
+			<LocaleProvider locale={la}>
+        <div className="content tab-hide">
+          <div>
+            <List
+              className={styles.lis}
+              dataSource={this.state.list}
+              renderItem={(item,index) => (
+                <List.Item className={styles.list} key={index}>
+                  <Row>
+                    <Col span={5}>
+                      <a className={styles.text}><FormattedMessage id="fault code"/>：</a>
+                    </Col>
+                    <Col span={17}>
+                      <div className={styles.text2}><FormattedMessage id={item.code_id}/></div>
+                    </Col>
+                    <Col span={5}>
+                      <a className={styles.text}><FormattedMessage id="Reason"/></a>
+                    </Col>
+                    <Col span={18}>
+                      <div className={styles.text2}><FormattedMessage id={item.reason}/></div>
+                    </Col>
+                    <Col span={5}>
+                      <a className={styles.text}><FormattedMessage id="Answer"/></a>
+                    </Col>
+                    <Col span={18}>
+                      <div className={styles.text2}><FormattedMessage id={item.answer}/></div>
+                    </Col>
+                  </Row>
+                </List.Item>
+              )}
+            />
+          </div>
+        </div>
+      </LocaleProvider>
 		);
 	}
 }

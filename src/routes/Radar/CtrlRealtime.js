@@ -46,7 +46,7 @@ const parseStatus= (event) => {
 		statusName= 'Lock ladder';
 	}
 	if ((event&(0x20))>>5 == 1) {
-		statusName= 'Order';
+		statusName= 'Fault';
 	}
 	if ((event&(0x40))>>6 == 1) {
 		statusName= 'Overload';
@@ -346,7 +346,6 @@ export default class CtrlRealtime extends Component {
 			show.model    = buffer[7]&0xff						//获取电梯模式
 			show.status   = buffer[8]&0xff						//获取电梯状态
 			show.floor    = buffer[9]&0xff           			//获取电梯当前楼层
-			show.updateTime = res.data.list[0].t_update
 		});
 		this.setState({
 			show,
@@ -359,12 +358,16 @@ export default class CtrlRealtime extends Component {
 				}else{
 					command = true
 				}
+        let time = res.data.list[0].device_t_update;
+        time = time.replace(/NOVT/,"");
+        show.updateTime = time;
 				this.setState({
 					IMEI:res.data.list[0].IMEI,
 					install_addr:res.data.list[0].install_addr,
 					device_name:res.data.list[0].device_name,
 					command,
           state:res.data.list[0].state,
+          show,
 				})
 			}
 		})
@@ -777,6 +780,12 @@ export default class CtrlRealtime extends Component {
 		const id = this.props.match.params.id;
 		this.props.history.push(`/company/${id}/call`);
 	}
+  goFault = (val) => {
+    const id = 'E'+this.state.code
+    this.props.history.push({
+    	pathname: `/company/order/code/${id}`,
+    });
+  }
 	changeIo = () => {
 		this.state.isIo = !this.state.isIo
 		if(this.state.isIo==true){
@@ -905,7 +914,7 @@ export default class CtrlRealtime extends Component {
 										</p>
 										<p style={{
 											width: '60%',
-										}}><FormattedMessage id="Order"/><i className={styles.status}>{this.state.code?<FormattedMessage id={'E'+this.state.code}/>:<FormattedMessage id={"None"}/>}</i>
+										}}><FormattedMessage id="Order"/><i onClick={()=>{this.goFault()}} className={styles.status}>{this.state.code?<FormattedMessage id={'E'+this.state.code}/>:<FormattedMessage id={"None"}/>}</i>
 										</p>
 										<p style={{
 											width: '40%',
@@ -1408,7 +1417,7 @@ export default class CtrlRealtime extends Component {
 										</p>
 										<p style={{
 											width: '100%',
-										}}><FormattedMessage id="Order"/><i className={styles.status}>{this.state.code?<FormattedMessage id={'E'+this.state.code}/>:<FormattedMessage id={"None"}/>}</i>
+										}}><FormattedMessage id="Order"/><i onClick={()=>{this.goFault()}} className={styles.status}>{this.state.code?<FormattedMessage id={'E'+this.state.code}/>:<FormattedMessage id={"None"}/>}</i>
 										</p>
 										<p style={{
 											width: '100%',

@@ -254,27 +254,27 @@ export default class DoorHistory extends Component {
 		}
 		let str = '';
 		if (show.inHigh) {
-			str += 'Output under-voltage';
+			str += '178';
 			this.state.color=true
 		}
 		if (show.inLow) {
-			str += 'Input under-voltage';
+			str += '114';
 			this.state.color=true
 		}
 		if (show.outHigh) {
-			str += 'Output over-current';
+			str += '82';
 			this.state.color=true
 		}
 		if (show.motorHigh) {
-			str += 'Motor overload';
+			str += '66';
 			this.state.color=true
 		}
 		if (show.flySafe) {
-			str += 'Galloping protection';
+			str += '55';
 			this.state.color=true
 		}
 		if (show.closeStop) {
-			str += 'Switch door blocked';
+			str += '51';
 			this.state.color=true
 		}
 		if (str === '') {
@@ -430,7 +430,6 @@ export default class DoorHistory extends Component {
 			if(show.speed>32.767){
 				show.speed = show.speed-65.535;
 			}
-			show.updateTime = res.data.list[0].t_update;
 		});
 		getFollowDevices({device_id}).then((res)=>{
 			let command = false;
@@ -440,6 +439,9 @@ export default class DoorHistory extends Component {
 				}else{
 					command = true;
 				}
+        let time = res.data.list[0].device_t_update;
+        time = time.replace(/NOVT/,"");
+        show.updateTime = time;
 				this.setState({
 					IMEI:res.data.list[0].IMEI,
 					install:res.data.list[0].install_addr,
@@ -447,6 +449,7 @@ export default class DoorHistory extends Component {
 					device_model:res.data.list[0].device_model,
 					command,
           state:res.data.list[0].state,
+          show,
 				})
 			}
 		})

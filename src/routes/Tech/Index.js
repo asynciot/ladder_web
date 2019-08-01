@@ -21,9 +21,6 @@ export default class Tech extends Component {
 		},{
 			label: '产品说明书',
 			link: '/tech/manual',
-		}, {
-			label: '其他相关资料',
-			link: '/tech/other',
 		}],
 		name: '',
 		img: true,
@@ -64,55 +61,57 @@ export default class Tech extends Component {
     	la = en;
     }
 		return (
-			<div className="content">
-				<MobileNav
-					active={active}
-					key="nav"
-					navs={this.state.navs}
-				/>
-				<div className={styles.content}>
-          <Row className={styles.page}>
-          	<Col span={17} style={{ margin:'5px' }}>
-          		<Input
-          			placeholder={(la=="en")?"Code":"故障代码"}
-          			onChange={this.onChange}
-          			value={this.state.code}
-          			maxlength="16"></Input>
-          	</Col>
-          	<Col span={6}>
-          		<Button disabled={!this.state.code} onClick={() => this.getData()} className={styles.Button} style={{ width: '100%' }} type="primary" ><FormattedMessage id="search"/></Button>
-          	</Col>
-          </Row>
-          <List
-            className={styles.lis}
-            dataSource={this.state.list}
-            renderItem={(item,index) => (
-              <List.Item key={index}>
-                <Row>
-                  <Col span={5}>
-                    <a><FormattedMessage id="fault code"/>：</a>
-                  </Col>
-                  <Col span={18}>
-                    <div><FormattedMessage id={item.code_id}/></div>
-                  </Col>
-                  <Col span={5}>
-                    <a><FormattedMessage id="Reason"/></a>
-                  </Col>
-                  <Col span={18}>
-                    <div><FormattedMessage id={item.reason}/></div>
-                  </Col>
-                  <Col span={5}>
-                    <a><FormattedMessage id="Answer"/></a>
-                  </Col>
-                  <Col span={18}>
-                    <div><FormattedMessage id={item.answer}/></div>
-                  </Col>
-                </Row>
-              </List.Item>
-            )}
+			<LocaleProvider locale={la}>
+        <div className="content">
+          <MobileNav
+            active={active}
+            key="nav"
+            navs={this.state.navs}
           />
-				</div>
-      </div>
+          <div className={styles.content}>
+            <Row className={styles.page}>
+              <Col span={17} style={{ margin:'5px' }}>
+                <Input
+                  placeholder={(la=="en")?"Code":"故障代码"}
+                  onChange={this.onChange}
+                  value={this.state.code}
+                  maxlength="16"></Input>
+              </Col>
+              <Col span={6}>
+                <Button disabled={!this.state.code} onClick={() => this.getData()} className={styles.Button} style={{ width: '100%' }} type="primary" ><FormattedMessage id="search"/></Button>
+              </Col>
+            </Row>
+            <List
+              className={styles.lis}
+              dataSource={this.state.list}
+              renderItem={(item,index) => (
+                <List.Item className={styles.list} key={index}>
+                  <Row>
+                    <Col span={5}>
+                      <a className={styles.text}><FormattedMessage id="fault code"/>：</a>
+                    </Col>
+                    <Col span={17}>
+                      <div className={styles.text2}><FormattedMessage id={item.code_id}/></div>
+                    </Col>
+                    <Col span={5}>
+                      <a className={styles.text}><FormattedMessage id="Reason"/></a>
+                    </Col>
+                    <Col span={18}>
+                      <div className={styles.text2}><FormattedMessage id={item.reason}/></div>
+                    </Col>
+                    <Col span={5}>
+                      <a className={styles.text}><FormattedMessage id="Answer"/></a>
+                    </Col>
+                    <Col span={18}>
+                      <div className={styles.text2}><FormattedMessage id={item.answer}/></div>
+                    </Col>
+                  </Row>
+                </List.Item>
+              )}
+            />
+          </div>
+        </div>
+      </LocaleProvider>
 		);
 	}
 }

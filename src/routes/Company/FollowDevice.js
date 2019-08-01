@@ -7,12 +7,12 @@ import pathToRegexp from 'path-to-regexp';
 import MobileNav from '../../components/MobileNav';
 import styles from './FollowDevice.less';
 import singalImg from '../../assets/signal.png';
-import { getFollowDevices, getDevicesStatus, getFault } from '../../services/api';
+import { getFollowDevices, getDevicesStatus, getFaultUntreted } from '../../services/api';
 import zh from 'antd/es/locale-provider/zh_CN';
 import en from 'antd/es/locale-provider/en_GB';
 import { injectIntl, FormattedMessage } from 'react-intl';
 
-var switchIdx = 0;
+var switchId = 0;
 const alert = Modal.alert;
 const tabs = [
 	{ title: (window.localStorage.getItem("language")=='en') ? 'All' : '全部', device_type: '' },
@@ -80,7 +80,7 @@ export default class extends Component {
 		list: [],
 		codelist:[],
 		asd:[],
-		switchIdx:0,
+		switchId:0,
 		device_type: 0,
 		type:0,
 		src: '',
@@ -100,35 +100,41 @@ export default class extends Component {
 		const state =match[2]
 		const type = location.state.device_type
 		if(state=="all"){
-			switchIdx = 0
+			switchId = 0
 		}else if(state=="online"){
-			switchIdx = 1
+			switchId = 1
 		}else if(state=="offline"){
-			switchIdx = 2
+			switchId = 2
 		}else if(state=="longoffline"){
-			switchIdx = 3
+			switchId = 3
 		}
-		this.state.switchIdx = switchIdx
-		this.getDevice(type,1,switchIdx);
+		this.state.switchId = switchId
+		this.getDevice(type,1,switchId);
 	}
 	pageChange = (val) => {
 		const { device_type,} =this.state
-		this.getDevice(device_type,val,switchIdx)
+    const page = val
+    console.log(page)
+    if(this.state.search_info != null && this.state.iddr != null){
+      this.search(page)
+    }else{
+      this.getDevice(device_type,val,switchId)
+    }
 	}
 	getDevice = (device_type,val,state) => {
 		let { navs } = this.state;
 		const page = val
-		switchIdx = state
-		if(switchIdx == 0){
+		switchId = state
+		if(switchId == 0){
 			state = ""
-		}else if(switchIdx == 1){
+		}else if(switchId == 1){
 			state = "online"
-		}else if(switchIdx == 2){
+		}else if(switchId == 2){
 			state = "offline"
-		}else if(switchIdx == 3){
+		}else if(switchId == 3){
 			state = "longoffline"
 		}
-		if(switchIdx == 2){
+		if(switchId == 2){
 			this.getFault(page,device_type)
 		}else{
 			this.setState({
@@ -167,7 +173,7 @@ export default class extends Component {
 		}else{
 			device_type='ctrl'
 		}
-		getFault({ num: 10, page:e, islast:1, device_type, state:'untreated', type:1 }).then((res) => {
+		getFaultUntreted({ num: 10, page:e, islast:1, device_type, type:1 }).then((res) => {
 			const pos = res.data.list.map((item,index) => {
 				if(device_type=='ctrl'){
 					item.code = 'E'+res.data.list[index].code.toString(16)
@@ -258,26 +264,36 @@ export default class extends Component {
 			iddr:val,
 		});
 	}
-	search = () =>{
-		const search_info = this.state.search_info
-		const install_addr = this.state.iddr
-		getFollowDevices({ num: 10, page:1, search_info, install_addr, register: 'registered', }).then((res) => {
+	search = (val) =>{
+		const search_info = this.state.search_info;
+		const install_addr = this.state.iddr;
+    const page = val;
+		getFollowDevices({ num: 10, page, search_info, install_addr, register: 'registered', }).then((res) => {
 			if (res.code == 0) {
 				const now = new Date().getTime();
 				const totalNumber = res.data.totalNumber
 				const list = res.data.list.map((item) => {
 					return item;
 				});
-				this.setState({
-					list,
-					totalNumber,
-				});
+        if(totalNumber == 0){
+          this.setState({
+          	list,
+          	totalNumber,
+            page:0,
+          });
+        }else{
+          this.setState({
+          	list,
+          	totalNumber,
+            page,
+          });
+        }
 			}
 		})
 	}
 	render() {
 		const ModelName = { 1: 'NSFC01-01B', 2: 'NSFC01-02T'};
-		const { navs, list, switchIdx } = this.state;
+		const { navs, list, switchId } = this.state;
 		var la = window.localStorage.getItem("language");
 		if(la == "zh" ){
 			la = zh;
@@ -289,7 +305,7 @@ export default class extends Component {
 				<div className="content">
 					<Tabs
 						tabs={tabs2}
-						initialPage={this.state.switchIdx}
+						initialPage={this.state.switchId}
 						tabBarActiveTextColor="#1E90FF"
 						tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
 						onChange={(tab, index) => { this.goFollowList(tab.device_type,index); }}
@@ -311,7 +327,7 @@ export default class extends Component {
 										maxlength="16"></Input>
 								</Col>
 								<Col span={6}>
-									<Button className={styles.Button} onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
+									<Button className={styles.Button} onClick={()=>this.search(1)} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
 								</Col>
 								<Col span={24} className={styles.center}>
 									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
@@ -476,7 +492,7 @@ export default class extends Component {
 										maxlength="16"></Input>
 								</Col>
 								<Col span={6}>
-									<Button className={styles.Button} onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
+									<Button className={styles.Button} onClick={()=>this.search(1)} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
 								</Col>
 								<Col span={24} className={styles.center}>
 									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
@@ -803,7 +819,7 @@ export default class extends Component {
 										maxlength="16"></Input>
 								</Col>
 								<Col span={6}>
-									<Button className={styles.Button} onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
+									<Button className={styles.Button} onClick={()=>this.search(1)} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
 								</Col>
 								<Col span={24} className={styles.center}>
 									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />

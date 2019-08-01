@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Carousel, WingBlank, List, Flex, Card, Modal} from 'antd-mobile';
 import { Row, Col, Button, Spin, DatePicker, Pagination, } from 'antd';
 import styles from './index.less';
-import { getBanners, getMessages, getDevicesStatus, getFault, postLocation } from '../../services/api';
+import { getBanners, getMessages, getDevicesStatus, getFault, postLocation, getFaultUntreted } from '../../services/api';
 import background1 from '../../assets/menu-bg.png';
 import background3 from '../../assets/bg-menu.jpg';
 import background2 from '../../assets/menu-bg1.jpg';
@@ -143,14 +143,14 @@ export default class Home extends Component {
 				}
 			}
 		}).catch((e => console.info(e)));
-		getFault({ num: 10, page:1, islast:1, device_type:'door', state:'untreated' }).then((res) => {
+		getFaultUntreted({ num: 10, page:1, islast:1, device_type:'door' }).then((res) => {
 			const pos = res.data.list.map((item,index) => {
 			})
 			this.setState({
 				dooroffline:res.data.totalNumber,
 			});
 		})
-		getFault({ num: 10, page:1, islast:1, device_type:'ctrl', state:'untreated' }).then((res) => {
+		getFaultUntreted({ num: 10, page:1, islast:1, device_type:'ctrl' }).then((res) => {
 			const pos = res.data.list.map((item,index) => {
 			})
 			this.setState({

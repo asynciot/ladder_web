@@ -196,7 +196,7 @@ export default class Fault extends Component {
 		})
 	}
 	info = () => {
-		const id = "E"+this.state.list[0].code
+		const id = this.state.list[0].code
 		this.props.history.push({
 			pathname: `/company/order/code/${id}`,
 		});

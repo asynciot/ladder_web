@@ -78,7 +78,7 @@ export async function followDevice(IMEI, params) {
 	return request(`/device/Device/ReadMore?${IMEI}?${stringify(params)}`,{
 		method: 'POST',
 		body: params,
-	});  
+	});
 }
 export function postFollowInfo(params) {
 	return request('/device/follow', {
@@ -94,6 +94,9 @@ export function putFollowInfo(params) {
 }
 export function getFault(params) {
 	return request(`/device/Order?${stringify(params)}&follow=yes`);
+}
+export function getFaultUntreted(params) {
+	return request(`/device/Order/Untreted?${stringify(params)}&follow=yes`);
 }
 export function postFault(params) {
 	return request('/device/Order/receipt', {
