@@ -26,7 +26,10 @@ export default class Tech extends Component {
 		{
 			label: (window.localStorage.getItem("language")=='zh')?'产品说明书':'Description',
 			link: '/tech/manual',
-		}, 
+		}, {
+    	label: (window.localStorage.getItem("language")=='zh')?'故障代码查询':'Code Query',
+    	link: '/tech/code',
+    }
 		/* {
 			label: (window.localStorage.getItem("language")=='zh')?'其他相关资料':'Other Data',
 			link: '/tech/other',
@@ -39,7 +42,7 @@ export default class Tech extends Component {
 		this.props.history.push(`/tech/reader/${link}`);
 	}
 	onChange = () => {
-		
+
 	}
 	render() {
 		const { location } = this.props;

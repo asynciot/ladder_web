@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Button, Form, Select, Input, Pagination, List } from 'antd';
+import { Row, Col, Button, Form, Select, Input, Pagination, List, LocaleProvider } from 'antd';
 import pathToRegexp from 'path-to-regexp';
 import styles from './Index.less';
 import MobileNav from '../../components/MobileNav';
@@ -15,13 +15,19 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 @Form.create()
 export default class Tech extends Component {
 	state = {
-		navs: [{
-			label: '故障代码查询',
-			link: '/tech/code',
-		},{
-			label: '产品说明书',
+		navs: [
+		{
+			label: (window.localStorage.getItem("language")=='zh')?'产品说明书':'Description',
 			link: '/tech/manual',
-		}],
+		}, {
+			label: (window.localStorage.getItem("language")=='zh')?'故障代码查询':'Code Query',
+			link: '/tech/code',
+		}
+		/* {
+			label: (window.localStorage.getItem("language")=='zh')?'其他相关资料':'Other Data',
+			link: '/tech/other',
+		} */
+		],
 		name: '',
 		img: true,
     code:'',

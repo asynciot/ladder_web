@@ -11,59 +11,9 @@ import BMap  from 'BMap';
 import { injectIntl, FormattedMessage } from 'react-intl';
 
 const alert = Modal.alert;
-var inte = null;
+var INTE = null;
 const Item = List.Item;
 const Brief = Item.Brief;
-const typeName ={
-  'ctrl':'控制柜',
-  'door':'控制器',
-}
-const faultCode = {
-	'1': '过流',
-	'2': '母线过压',
-	'3': '母线欠压',
-	'4': '输入缺相',
-	'5': '输出缺相',
-	'6': '输出过力矩',
-	'7': '编码器故障',
-	'8': '模块过热',
-	'9': '运行接触器故障',
-	'10': '抱闸接触器故障',
-	'11': '封星继电器故障',
-	'12': '抱闸开关故障',
-	'13': '运行中安全回路断开',
-	'14': '运行中门锁断开',
-	'15': '门锁短接故障',
-	'16': '层站召唤通讯故障',
-	'17': '轿厢通讯故障',
-	'18': '并联通讯故障',
-	'19': '开门故障',
-	'20': '关门故障',
-	'21': '开关门到位故障',
-	'22': '平层信号异常',
-	'23': '终端减速开关故障',
-	'24': '下限位信号异常',
-	'25': '上限位信号异常',
-	'26': '打滑故障',
-	'27': '电梯速度异常',
-	'28': '电机反转故障',
-	'31': '停车速度检测',
-	'33': '马达过热故障',
-	'34': '制动力严重不足',
-	'35': '制动力不足警告',
-	'36': 'UCMP故障',
-	'37': 'IPM故障',
-	'38': '再平层开关异常',
-	'40': '驱动保护故障',
-	'41': '平层位置异常',
-	'51': '开关门受阻',
-	'52': '飞车保护',
-	'66': '电机过载',
-	'82': '输出过流',
-	'114': '输入电压过低',
-	'178': '输入电压过高',
-	'179': '电流过高',
-}
 export default class Home extends Component {
 	state = {
 		data: [],
@@ -86,13 +36,12 @@ export default class Home extends Component {
 	}
 	componentWillMount() {
 		this.getdata();
-		var _this =this
-		inte = setInterval(function () {
-			_this.getdata()
-		}, 60000);
+		INTE = setInterval(()=>{
+			this.getdata()
+		},60000);
 	}
 	componentWillUnmount() {
-		clearInterval(inte)
+		clearInterval(INTE)
 	}
 	getdata = () => {
 		this.getMessages();
@@ -119,7 +68,11 @@ export default class Home extends Component {
 			}
 			let num = parseInt(res.data.dooronline)+parseInt(res.data.dooroffline)+parseInt(res.data.doorlongoffline)+parseInt(res.data.ctrlonline)+parseInt(res.data.ctrloffline)+parseInt(res.data.ctrllongoffline)
 			if(num==0){
-				alert("请在个人界面使用关注设备，或使用微信扫一扫关注设备！")
+        if(window.localStorage.getItem("language")=="zh"){
+          alert("请在个人界面使用关注设备，或使用微信扫一扫关注设备！")
+        }else{
+          alert("Please use the Focus Device in your personal interface, or use Wechat Scan to Focus!")
+        }
 			}
 		}).catch((e => console.info(e)));
 	}
@@ -273,8 +226,9 @@ export default class Home extends Component {
 		return (
 			<div className="content">
 				<Carousel
-					autoplay={false}
+					autoplay={true}
 					infinite
+          autoplayInterval={10000}
 				>
 					{imgList.map((item, index) => {
 						return (

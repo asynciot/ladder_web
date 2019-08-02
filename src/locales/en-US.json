@@ -55,6 +55,7 @@
 
 	"Username":"Username",
 	"Username should not less than 6 characters":"Username should not less than 6 characters.",
+  "Username or phone" : "Username or phone",
 
   "Wifi" : "Wifi",
 

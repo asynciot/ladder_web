@@ -1,16 +1,3 @@
-.item {
-	margin-left: 10px;
-	width: 100%;
-	font-size: 10px;
-	em {
-		color: #999;
-		font-style: normal;
-	}
-}
-.lis{
-	padding-bottom: 40px;
-}
-
 .signal {
 	position: relative;
 	background: #ccc;
@@ -32,49 +19,31 @@
 		z-index: 6;
 	}
 }
-
-.list-btn {
-	margin-left: -90px;
-	overflow-x: hidden;
-	.icon {
-		line-height: 12px;
-		vertical-align: middle;
-	}
-	.edit {
-		color: green;
-	}
-	em {
-		font-size: 10px;
-		color: #444;
-		line-height: 24px;
-		vertical-align: middle;
-	}
-}
 .table {
+  z-index: -1;
 	display: block;
 	width: 100%;
 	margin: 0 auto;
 	td {
 		display: inline-block;
 		color: #999;
-		font-size: 12px;
+		font-size: 14px;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		vertical-align: top;
 		padding: 4px 0;
 	}
-	tr td:nth-child(1){
-		width: 60px;
-	}
-	tr td:nth-child(2){
-	}
-	tr td:nth-child(3){
-		width: 40px;
-	}
-	tr td:nth-child(4){
-		width: 90px;
-	}
+  .left {
+    // float: left;
+    // margin-left: -5px;
+  }
+  .left2{
+    // margin-left: -5px;
+  }
+  .left3{
+    margin-left: -5px;
+  }
 	tr > td:nth-child(odd) {
 		color: #333;
 		white-space: nowrap;
@@ -90,36 +59,47 @@
 	.pass {
 		color: #55BC52;
 	}
-	.text{
-		display: inline-block;
-		color: #999;
-		font-size: 12px;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		vertical-align: top;
-		padding: 4px 0;
-		width: 80px !!important;
-	}
-	.text2{
-		display: inline-block;
-		color: #999;
-		font-size: 12px;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		vertical-align: top;
-		padding: 4px 0;
-	}
 }
 .active {
 	color: #D52B2E;
 }
+.lis{
+  background-color: white;
+}
 .center{
+  background-color: white;
+	margin-top: 5px;
 	text-align: center;
 }
 .center2{
 	text-align: center;
-  margin-top: -30px;
 	margin-bottom: 10px;
+}
+.Button{
+  font-size: 16px;
+}
+.text{
+  margin-left: 10px;
+  display: inline-block;
+  color: #999;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: top;
+  padding: 4px 0;
+  width: 80px !!important;
+}
+.text2{
+  display: inline-block;
+  color: #999;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: top;
+  padding: 4px 0;
+}
+.marginBottom{
+  margin-bottom: 5px;
 }

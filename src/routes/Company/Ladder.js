@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Row, Col, Button, Spin, DatePicker, Pagination, Icon, Input,} from 'antd';
-import { Tabs, Flex, Badge, List, Modal, LocaleProvider } from 'antd-mobile';
+import { Row, Col, Button, Pagination, Input, List, LocaleProvider } from 'antd';
+import { Tabs, Flex, Badge, Modal } from 'antd-mobile';
 import classNames from 'classnames';
 import base64url from 'base64url';
 import pathToRegexp from 'path-to-regexp';
@@ -9,8 +9,9 @@ import styles from './Ladder.less';
 import singalImg from '../../assets/signal.png';
 import { getLadder,} from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import en from 'antd-mobile/lib/locale-provider/en_US';
-var switchIdx = 0;
+import zh from 'antd/es/locale-provider/zh_CN';
+import en from 'antd/es/locale-provider/en_GB';
+var switchId = 0;
 const alert = Modal.alert;
 const tabs2 = [
 	{ title: (window.localStorage.getItem("language")=='zh')?'全部':'All', state: '' },
@@ -39,44 +40,36 @@ const Signal = ({ className = '', ...restProps }) => {
 		</div>
 	)
 };
-const ListButton = ({ className = '', ...restProps }) => (
-	<div className={`${className} ${styles['list-btn']}`}>
-		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.edit ? restProps.edit:''}>
-			<Icon className={`${styles.edit} ${styles.icon}`} type="form" />
-			<em><FormattedMessage id="edit"/></em>
-		</span>
-	</div>
-);
 export default class extends Component {
 	state = {
 		list: [],
-		switchIdx:0,
+		switchId:0,
 		search_info:'',
 		iddr:'',
 	}
 	componentWillMount() {
 		if(state=="all"){
-			switchIdx = 0
+			switchId = 0
 		}else if(state=="online"){
-			switchIdx = 1
+			switchId = 1
 		}else if(state=="longoffline"){
-			switchIdx = 3
+			switchId = 3
 		}
-		this.state.switchIdx = switchIdx
-		this.getDevice(1,switchIdx);
+		this.state.switchId = switchId
+		this.getDevice(1,switchId);
 	}
 	pageChange = (val) => {
-		this.getDevice(val,switchIdx)
+		this.getDevice(val,switchId)
 	}
 	getDevice = (val,state) => {
 		let { navs } = this.state;
 		const page = val
-		switchIdx = state
-		if(switchIdx == 0){
+		switchId = state
+		if(switchId == 0){
 			state = ""
-		}else if(switchIdx == 1){
+		}else if(switchId == 1){
 			state = "online"
-		}else if(switchIdx == 2){
+		}else if(switchId == 2){
 			state = "longoffline"
 		}
 		getLadder({ num: 10, page, state, follow:"yes"}).then((res) => {
@@ -159,10 +152,10 @@ export default class extends Component {
 		});
 	}
 	render() {
-		const { navs, list, switchIdx } = this.state;
-		var la = window.localStorage.getItem("language")
+		const { navs, list, switchId } = this.state;
+		var la = window.localStorage.getItem("language");
 		if(la == "zh" ){
-			la = undefined;
+			la = zh;
 		}else{
 			la = en;
 		}
@@ -170,133 +163,110 @@ export default class extends Component {
 			<LocaleProvider locale={la}>
 				<div className="content">
 					<Tabs
-					  tabs={tabs2}
-					  initialPage={this.state.switchIdx}
-					  tabBarActiveTextColor="#1E90FF"
-					  tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
-					  onChange={(tab, index) => { this.goFollowList(index); }}
+						tabs={tabs2}
+						initialPage={this.state.switchId}
+						tabBarActiveTextColor="#1E90FF"
+						tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
+						onChange={(tab, index) => { this.goFollowList(index); }}
 					>
 						<div style={{ backgroundColor: '#fff' }}>
-							<List className={styles.lis}>
-								<Row className={styles.page}>
-									<Col span={8} style={{margin:'5px'}}>
-										<Input
-											placeholder={(la==en)?"IMEI":"设备编号"}
-											onChange={this.onChange}
-											value={this.state.search_info}
-											maxlength="16"></Input>
-									</Col>
-									<Col span={8} style={{margin:'5px'}}>
-										<Input
-											placeholder={(la==en)?"Install Address":"项目名称"}
-											onChange={this.onChangel}
-											value={this.state.iddr}
-											maxlength="16"></Input>
-									</Col>
-									<Col span={6}>
-										<Button onClick={()=>this.search()} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
-									</Col>
-									<Col span={24} className={styles.center}>
-										<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
-									</Col>
-								</Row>
-								{
-									list.length ?
-									list.map((item, index) => (
-										<List.Item className={styles.item} key={index} onClick={()=>this.goLadder(item)} extra={<ListButton edit={(event) => { this.edit(event, item); }} />}>
-											<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
-												{
-													la=="zh"?
-													<tbody>
-														<tr>
-															<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
-															<td className="tl">{item.name ? item.name : <FormattedMessage id="None"/>}</td>
-														</tr>
-														<tr>
-															<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
-															<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
-														</tr>
-														<tr>
-															<Col span={12}>
-																<a className={styles.text}><FormattedMessage id="Ctrl"/> ：</a>
-																<td className="tl">{item.ctrl ||''}</td>
-															</Col>
-														</tr>
-														<tr>
-															<Col span={12}>
-																<a className={styles.text}><FormattedMessage id="Door"/> ：</a>
-																<td className="tl">{item.door1}</td>
-															</Col>
-															<Col span={12}>
-																<a className={styles.text2}><FormattedMessage id="RSSI"/>：</a>
-																<td className="tl"><Signal width={item.rssi}/></td>
-															</Col>
-														</tr>
-														<tr>
-															<Col span={12}>
-																<a className={styles.text}><FormattedMessage id="Door"/> ：</a>
-																<td className="tl">{item.door2}</td>
-															</Col>
-															<Col span={12}>
-																<a className={styles.text}><FormattedMessage id="State"/> ：</a>
-																<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
-															</Col>
-														</tr>
-													</tbody>
-													:
-													<tbody>
-														<tr>
-															<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
-															<td className="tl">{item.name ? item.name : <FormattedMessage id="None"/>}</td>
-														</tr>
-														<tr>
-															<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
-															<td className="tl" style={{ width: '260px' }}>{item.install_addr}</td>
-														</tr>
-														<tr>
-															<Col span={16}>
-																<a className={styles.text}><FormattedMessage id="Ctrl"/> ：</a>
-																<td className="tl" style={{ width: '260px' }}>{item.ctrl ||''}</td>
-															</Col>
-														</tr>
-														<tr>
-															<Col span={16}>
-																<a className={styles.text}><FormattedMessage id="Door"/> ：</a>
-																<td className="tl">{item.door1}</td>
-															</Col>
-															<Col span={8}>
-																<a className={styles.text2}><FormattedMessage id="RSSI"/>：</a>
-																<td className="tl"><Signal width={item.rssi}/></td>
-															</Col>
-														</tr>
-														<tr>
-															<Col span={16}>
-																<a className={styles.text}><FormattedMessage id="Door"/> ：</a>
-																<td className="tl">{item.door2}</td>
-															</Col>
-															<Col span={8}>
-																<a className={styles.text}><FormattedMessage id="State"/> ：</a>
-																<td className="tl"><FormattedMessage id={state[item.state] ||''}/></td>
-															</Col>
-														</tr>
-													</tbody>
-												}
-											</table>
-										</List.Item>
-									)):
-									<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
-										<Col span={24} className={styles.center}>
-											<td></td>
-											<td className="tl" style={{margin:'5px',}}><FormattedMessage id="No Information"/></td>
-										</Col>
-									</table>
-								}
-							</List>
-              <Row className={styles.page}>
-              	<Col span={24} className={styles.center2}>
-              		<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
-              	</Col>
-              </Row>
+							<Row className={styles.page}>
+								<Col span={8} style={{ margin:'5px' }}>
+									<Input
+										placeholder={(la==en)?"IMEI":"设备编号"}
+										onChange={this.onChange}
+										value={this.state.search_info}
+										maxlength="16"></Input>
+								</Col>
+								<Col span={8} style={{ margin:'5px' }}>
+									<Input
+										placeholder={(la==en)?"Install Address":"项目名称"}
+										onChange={this.onChangel}
+										value={this.state.iddr}
+										maxlength="16"></Input>
+								</Col>
+								<Col span={6}>
+									<Button className={styles.Button} onClick={()=>this.search(1)} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
+								</Col>
+								<Col span={24} className={styles.center}>
+									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
+								</Col>
+							</Row>
+							<List
+								className={styles.lis}
+								dataSource={list}
+								renderItem={(item,index) => (
+									<List.Item className={styles.item} key={index} onClick={()=>{this.goLadder(item)}}>
+                    <Col span={24}>
+                      <table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
+                        <tbody>
+                          <tr>
+                            <Col span={16}>
+                            	<Col span={10}>
+                                <a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
+                              </Col>
+                              <Col span={14}>
+                                <td className={styles.left2} style={{width:'220px'}}>{item.install_addr}</td>
+                              </Col>
+                            </Col>
+                          </tr>
+                          <tr>
+                            <Col span={16}>
+                            	<Col span={10}>
+                            		<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
+                            	</Col>
+                            	<Col span={14}>
+                            		<td className={styles.left}>{item.name ? item.name : <FormattedMessage id="None"/>}</td>
+                            	</Col>
+                            </Col>
+                          </tr>
+                          <tr>
+                            <Col span={16}>
+                            	<Col span={10}>
+                                <a className={styles.text}><FormattedMessage id="Ctrl"/> ：</a>
+                              </Col>
+                              <Col span={14}>
+                                <td className={styles.left}>{item.ctrl ||''}</td>
+                              </Col>
+                            </Col>
+                            <Col span={8}>
+                            	<Col span={18}>
+                                <a className={styles.text2}><FormattedMessage id="RSSI"/> ：</a>
+                              </Col>
+                              <Col span={6}>
+                                <td className={styles.left3}><Signal width={item.rssi}/></td>
+                              </Col>
+                            </Col>
+                          </tr>
+                          <tr>
+                            <Col span={16}>
+                            	<Col span={10}>
+                                <a className={styles.text}><FormattedMessage id="Door"/> ：</a>
+                              </Col>
+                              <Col span={14}>
+                                <td className="tl">{item.door1}</td>
+                              </Col>
+                            </Col>
+                            <Col span={8}>
+                            	<Col span={18}>
+                                <a className={styles.text2}><FormattedMessage id="State"/> ：</a>
+                              </Col>
+                              <Col span={6}>
+                                <td className={styles.left3}><FormattedMessage id={state[item.state] ||'None'}/></td>
+                              </Col>
+                            </Col>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </Col>
+									</List.Item>
+								)}
+							/>
+							<Row className={styles.page}>
+								<Col span={24} className={styles.center2}>
+									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
+								</Col>
+							</Row>
 						</div>
 					</Tabs>
 				</div>

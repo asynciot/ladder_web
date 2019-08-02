@@ -120,6 +120,12 @@ export default class extends Component {
 					}
 					return item;
 				})
+        if(res.data.totalNumber==0){
+          this.setState({
+            totalNumber:0,
+          	page:0,
+          })
+        }
 				this.setState({
 					list,
 				})
@@ -140,7 +146,11 @@ export default class extends Component {
 							device_name,
 						})
 					})
-					item.code = 'E'+res.data.list[index].code.toString(16)
+          if(item.device_type=='ctrl'){
+          	item.code = 'E'+res.data.list[index].code.toString(16)
+          }else{
+          	item.code = CodeTransform[parseInt(res.data.list[index].code)+50]
+          }
 					return item;
 				})
 				if(res.data.totalPage==0){
@@ -262,7 +272,7 @@ export default class extends Component {
                             </tr>
                             <tr>
                               <a className={styles.text} style={{ width: '33%' }}><FormattedMessage id="fault code"/>：</a>
-                              <td className="tl" style={{ width: '200px' }}><FormattedMessage id={item.code}/></td>
+                              <td className="tl" style={{ width: '200px' }}>{item.code}<FormattedMessage id={item.code}/></td>
                             </tr>
                             <tr>
                               <a className={styles.text} style={{ width: '33%' }}><FormattedMessage id="type"/>：</a>
@@ -308,7 +318,7 @@ export default class extends Component {
 												</tr>
 												<tr>
 													<a className={styles.text}><FormattedMessage id="fault code"/>：</a>
-													<td className="tl" style={{ width: '200px' }}><FormattedMessage id={item.code}/></td>
+													<td className="tl" style={{ width: '200px' }}>{item.code}<FormattedMessage id={item.code}/></td>
 												</tr>
 												<tr>
 													<a className={styles.text}><FormattedMessage id="Accept Time"/> ：</a>

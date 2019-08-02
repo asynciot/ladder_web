@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Button, Spin, DatePicker, Pagination, Icon, Input, List, LocaleProvider} from 'antd';
+import { Row, Col, Button, Spin, DatePicker, Pagination, Icon, Input, List, LocaleProvider } from 'antd';
 import { Tabs, Flex, Badge, Modal,} from 'antd-mobile';
 import classNames from 'classnames';
 import base64url from 'base64url';
@@ -114,11 +114,10 @@ export default class extends Component {
 	pageChange = (val) => {
 		const { device_type,} =this.state
     const page = val
-    console.log(page)
-    if(this.state.search_info != null && this.state.iddr != null){
+    if(this.state.search_info != "" && this.state.iddr != ""){
       this.search(page)
     }else{
-      this.getDevice(device_type,val,switchId)
+      this.getDevice(device_type,val,this.state.switchId)
     }
 	}
 	getDevice = (device_type,val,state) => {
@@ -264,10 +263,9 @@ export default class extends Component {
 			iddr:val,
 		});
 	}
-	search = (val) =>{
+	search = (page) =>{
 		const search_info = this.state.search_info;
 		const install_addr = this.state.iddr;
-    const page = val;
 		getFollowDevices({ num: 10, page, search_info, install_addr, register: 'registered', }).then((res) => {
 			if (res.code == 0) {
 				const now = new Date().getTime();
@@ -407,9 +405,15 @@ export default class extends Component {
 												<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 													<tbody>
 														<tr>
-															<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
-															<td className={styles.left2} style={{width:'200px'}}>{item.install_addr}</td>
-														</tr>
+															<Col span={16}>
+																<Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className={styles.left2} style={{width:'220px'}}>{item.install_addr}</td>
+                                </Col>
+                              </Col>
+                            </tr>
 														<tr>
 															<Col span={16}>
 																<Col span={10}>
@@ -573,9 +577,15 @@ export default class extends Component {
 												<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 													<tbody>
 														<tr>
-															<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
-															<td className={styles.left2} style={{width:'200px'}}>{item.install_addr}</td>
-														</tr>
+															<Col span={16}>
+																<Col span={10}>
+															    <a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
+															  </Col>
+															  <Col span={14}>
+															    <td className={styles.left2} style={{width:'220px'}}>{item.install_addr}</td>
+															  </Col>
+															</Col>
+                            </tr>
 														<tr>
 															<Col span={16}>
 																<Col span={10}>
@@ -728,8 +738,14 @@ export default class extends Component {
 												<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 													<tbody>
 														<tr>
-															<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
-															<td className={styles.left3} width={{width:'200px'}}>{item.install_addr}</td>
+															<Col span={16}>
+																<Col span={10}>
+															    <a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
+															  </Col>
+															  <Col span={14}>
+															    <td className={styles.left2} style={{width:'220px'}}>{item.install_addr}</td>
+															  </Col>
+															</Col>
 														</tr>
 														<tr>
 															<Col span={16}>
@@ -900,8 +916,14 @@ export default class extends Component {
 												<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 													<tbody>
 														<tr>
-															<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
-															<td className={styles.left2} style={{width:'200px'}}>{item.install_addr}</td>
+															<Col span={16}>
+																<Col span={10}>
+															    <a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
+															  </Col>
+															  <Col span={14}>
+															    <td className={styles.left2} style={{width:'220px'}}>{item.install_addr}</td>
+															  </Col>
+															</Col>
 														</tr>
 														<tr>
 															<Col span={16}>
@@ -928,7 +950,7 @@ export default class extends Component {
 															</Col>
 															<Col span={8}>
 																<a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
-																<td className="tl"><Signal width={0}/></td>
+																<td className={styles.marginBottom}><Signal width={0}/></td>
 															</Col>
 														</tr>
 														<tr>
