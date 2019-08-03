@@ -45,7 +45,7 @@ export default class extends Component {
 			if(res.code == 0){
 				let buffer = [];
 				let arr = [];
-				
+
 				buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
 				buffer.forEach((item) => {
 					arr.push(String.fromCharCode(item))
@@ -55,7 +55,7 @@ export default class extends Component {
 					label:'',
 					value:'',
 				}]
-				
+
 				for(let i=0; i<high;i++){
 					if(i==0){
 						floor[0].label=arr[i*3]+arr[i*3+1]+arr[i*3+2]
@@ -100,7 +100,7 @@ export default class extends Component {
 	}
 	render() {
 		const { submitting } = this.props;
-		var la 
+		var la
 		if(window.localStorage.getItem("language")=="zh"){
 			la = undefined;
 		}else{
@@ -138,7 +138,7 @@ export default class extends Component {
 								</Picker>
 								<List.Item>
 									<Button disabled={!this.state.from} size="large" loading={submitting} style={{ width: '100%' }} type="primary" onClick={() => this.submit()}>
-										<FormattedMessage id="Destination Floor"/>
+										<FormattedMessage id="OK"/>
 									</Button>
 								</List.Item>
 							</List>

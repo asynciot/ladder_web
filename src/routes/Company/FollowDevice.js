@@ -137,7 +137,8 @@ export default class extends Component {
 			this.getFault(page,device_type)
 		}else{
 			this.setState({
-				device_type
+				device_type,
+        state,
 			});
 			getFollowDevices({ num: 10, page, device_type, state, register:'registered',}).then((res) => {
 				if (res.code === 0) {
@@ -264,9 +265,11 @@ export default class extends Component {
 		});
 	}
 	search = (page) =>{
-		const search_info = this.state.search_info;
-		const install_addr = this.state.iddr;
-		getFollowDevices({ num: 10, page, search_info, install_addr, register: 'registered', }).then((res) => {
+		const search_info = this.state.search_info,
+          install_addr = this.state.iddr,
+          device_type = this.state.device_type,
+          state = this.state.state;
+		getFollowDevices({ num: 10, page, search_info, install_addr, register: 'registered', device_type, state }).then((res) => {
 			if (res.code == 0) {
 				const now = new Date().getTime();
 				const totalNumber = res.data.totalNumber
@@ -300,7 +303,7 @@ export default class extends Component {
 		}
 		return (
 			<LocaleProvider locale={la}>
-				<div className="content">
+				<div className={styles.content}>
 					<Tabs
 						tabs={tabs2}
 						initialPage={this.state.switchId}
@@ -310,14 +313,14 @@ export default class extends Component {
 					>
 						<div style={{ backgroundColor: '#fff' }}>
 							<Row className={styles.page}>
-								<Col span={8} style={{ margin:'5px' }}>
+								<Col span={7} className={styles.Input}>
 									<Input
 										placeholder={(la==en)?"IMEI":"设备编号"}
 										onChange={this.onChange}
 										value={this.state.search_info}
 										maxlength="16"></Input>
 								</Col>
-								<Col span={8} style={{ margin:'5px' }}>
+								<Col span={7} className={styles.Input}>
 									<Input
 										placeholder={(la==en)?"Install Address":"项目名称"}
 										onChange={this.onChangel}
@@ -481,14 +484,14 @@ export default class extends Component {
 						</div>
 						<div style={{ backgroundColor: '#fff' }}>
 							<Row className={styles.page}>
-								<Col span={8} style={{margin:'5px',}}>
+								<Col span={7} className={styles.Input}>
 									<Input
 										placeholder={(la==en)?"IMEI":"设备编号"}
 										onChange={this.onChange}
 										value={this.state.search_info}
 										maxlength="16"></Input>
 								</Col>
-								<Col span={8} style={{margin:'5px',}}>
+								<Col span={7} className={styles.Input}>
 									<Input
 										placeholder={(la==en)?"Install Address":"项目名称"}
 										onChange={this.onChangel}
@@ -820,14 +823,14 @@ export default class extends Component {
 						</div>
 						<div style={{ backgroundColor: '#fff' }}>
 							<Row className={styles.page}>
-								<Col span={8} style={{margin:'5px',}}>
+								<Col span={7} className={styles.Input}>
 									<Input
 										placeholder={(la==en)?"IMEI":"设备编号"}
 										onChange={this.onChange}
 										value={this.state.search_info}
 										maxlength="16"></Input>
 								</Col>
-								<Col span={8} style={{margin:'5px',}}>
+								<Col span={7} className={styles.Input}>
 									<Input
 										placeholder={(la==en)?"Install Address":"项目名称"}
 										onChange={this.onChangel}

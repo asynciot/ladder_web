@@ -46,8 +46,8 @@ export default class DoorHistory extends Component {
 	}
 	componentWillMount() {
 		const {location, currentUser, match} = this.props;
-		this.state.device_id = match.params.id
-		this.getFault(1)
+		this.state.device_id = match.params.id;
+    this.state.page = 0;
 	}
 	getFault = (val) => {
 		let page = val

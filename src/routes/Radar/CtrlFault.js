@@ -75,14 +75,18 @@ export default class DoorHistory extends Component {
 		totalNumber:0,
 		start:'',
 		end:'',
+    device_id:'',
 	}
 	componentWillMount() {
 		const {location, currentUser } = this.props;
 		const match = pathToRegexp('/ctrl/:id/fault').exec(location.pathname);
-		device_id = match[1];
-		this.getFault(1)
+    this.setState({
+      device_id:match[1],
+      page:0,
+    })
 	}
 	getFault = (val) => {
+    const device_id = this.state.device_id;
 		let page = val
 		let starttime = ''
 		let endtime = ''
