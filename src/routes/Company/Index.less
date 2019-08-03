@@ -1,74 +1,167 @@
-.content {
-  position: absolute;
-  top: 44px;
-  width: 100%;
-  bottom: 0;
-  z-index: 2;
-  padding: 20px 0 10px;
-}
-.header {
-  text-align: center;
-  padding: 20px;
-  background: white;
-}
-.avatar {
-  width: 100px;
-  height: 100px;
-  line-height: 100px;
-  border-radius: 50%;
+/* 必要布局样式css */
+
+.aui_flexView {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
 }
 
-.nickname {
-  margin: 8px;
-  font-size: 16px;
+.aui_scrollView {
+    width: 100%;
+    height: 100%;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
 }
-.edit {
-  display: inline-block;
-  margin-left: 8px;
+
+.aui_head_body{
+    width:100%;
+    height:auto;
+    position:relative;
 }
-.back{
-	background: #fff;
+
+.aui_head_body img{
+    width:100%;
+    height:auto;
+    display:block;
+    border:none;
 }
 .icon {
-	font-size: 12px;
-	margin-left: 15px;
-	padding: 5px;
-	width: 60%;
-}
-.upload {
-  width: 140px;
-  height: 135px;
-  padding: 30px 20px;
-  position: relative;
-  // border: 1px solid #ccc;
-  border-radius: 5px;
-  margin: 10px auto;
-  img {
-    width: 100px;
-    height: auto;
+    width: 20px;
+    height: 20px;
     display: block;
-  }
-  .input {
-    position: absolute;
-		height:100%;
-		width: 100%;
-    top: 0;
-    left: 0;
-    opacity: 0;
-  }
+    border: none;
+    float: left;
+    background-size: 20px;
+    background-repeat: no-repeat;
 }
-.avatar-uploader > .ant-upload {
-  width: 128px;
-  height: 128px;
+.icon_news{
+    background-image:url('../../assets/icon/bell.png');
+    position:absolute;
+    right:1rem;
+    top:1rem;
 }
-.btn > .ant-upload {
-	width: 50px;
-	height: 200px;
-	opacity: 0;
+.icon_edit{
+		background-image: url('../../assets/icon/edit.png');
+		position:  relative;
+		float: right;
+		padding-top:0.5rem;
+		margin-top: -30px;
 }
-.btn1 {
-  margin: 0 auto;
+.aui_user_item{
+    position:absolute;
+    left:50%;
+    width:110px;
+    margin-left:-55px;
+		top: 10px;
 }
-.Button{
-  font-size: 16px;
+.aui_mine_user{
+    width:100px;
+    height:100px;
+    margin:0 auto;
+		.input {
+		  position: absolute;
+			height:100px;
+			width: 100px;
+			border-radius: 50%;
+		  top: 0;
+		  left: 0;
+		  opacity: 0;
+		}
+}
+
+.aui_mine_user img{
+    width:100px;
+    height:100px;
+    border-radius:100%;
+    border:3px solid rgba(255,255,255,0.4);
+}
+.aui_mine_name{
+	text-align: center;
+}
+.aui_mine_name h2{
+    color:#fff;
+		overflow:hidden;
+		text-overflow:ellipsis;
+		white-space:nowrap;
+		width: 90px;
+    font-size:1rem;
+    padding-top:0.5rem;
+}
+.aui_palace {
+    padding: 0.9rem 0;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    width: 90%;
+    margin:1rem  auto 0;
+    box-shadow: 0 0 11px #f1f2f5;
+    border-radius:5px;
+}
+.aui_palace_grid {
+    position: relative;
+    float: left;
+    padding: 1px;
+    width: 33.333%;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    margin-top:10px;
+}
+.aui_palace_grid_icon {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto;
+}
+.aui_palace_grid_icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.aui_palace_grid_text {
+    display: block;
+    text-align: center;
+    color: #333;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding-top: 0.2rem;
+}
+
+.aui_palace_grid_text h2 {
+    font-size: 0.85rem;
+    font-weight: normal;
+    color: #2b2f32;
+}
+.aui_landlady{
+    padding: 0.9rem 0;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    width: 90%;
+    margin: 1rem auto 0;
+    box-shadow: 0 0 11px #f1f2f5;
+    border-radius: 5px;
+    text-align:center;
+}
+
+.aui_landlady h2{
+    font-size:1rem;
+    color:#16bd87;
 }

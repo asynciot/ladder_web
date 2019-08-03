@@ -6,59 +6,32 @@ import { Modal, Accordion, List, Badge, Grid } from 'antd-mobile';
 import styles from './Index.less';
 import { getFile, } from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
+import headimg from '../../assets/icon/head.png'
 
-var avatar = '';
-const { alert } = Modal;
-const typeName ={
-	'ctrl':'ctrl',
-	'door':'door',
-}
 @connect(({ user, company }) => ({
 	currentUser: user.currentUser,
 	company,
 }))
-export default class Company extends Component {
-	state = {
-		list: [],
-		loading: false,
-		la:window.localStorage.getItem("language"),
-	}
-	componentDidMount() {
-		this.reader = new FileReader();
-	}
-	companyId = localStorage.getItem('companyId');
-	joincompanyId = localStorage.getItem('joinCompanyId');
 
-	showProfile = () => {
-		const { history } = this.props;
-		history.push('/company/profile');
-	};
-	showMessage = () => {
-		const { history } = this.props;
-		history.push('/message');
-	};
-	showData = () => {
-		const { history } = this.props;
-		history.push('/company/data/statistics');
-	};
-	logout = () => {
+export default class Company extends Component {
+		logout = () => {
 		this.props.dispatch({ type: 'login/logout' });
-	};
-	goDetail = (link) => {
+		};
+		toFollow = () => {
+		const { history } = this.props;
+		history.push({
+			pathname: '/company/ladder/all',
+		});
+		}
+		goDetail = (link) => {
 		const { history } = this.props;
 		if (link.indexOf('/') === 0) {
 			history.push(link);
 		} else {
 			history.push(`/company/${link}`);
 		}
-	};
-	toFollow = () => {
-		const { history } = this.props;
-		history.push({
-			pathname: '/company/ladder/all',
-		});
-	}
-	uploadPicture = (e) => {
+		};
+		uploadPicture = (e) => {
 		var files = e.target.files[0];
 		if(files.type != "image/jpeg"&&files.type != "image/jpg"){
 			if(this.state.la=="zh"){
@@ -84,55 +57,84 @@ export default class Company extends Component {
 				}
 			}
 		})
-	};
+		};
 	render() {
 		const { company: { group, unread }, currentUser } = this.props;
-		const imageUrl = this.state.imageUrl;
 		return (
-			<div className="content">
-				<div className={styles.header}>
-					<div className={styles.upload}>
-						<Avatar
-							className={styles.avatar}
-							size="large"
-							src={'http://server.asynciot.com/getfile?filePath='+currentUser.portrait}
-						/>
-						<input accept="image/jpg" className={styles.input} type="file" name='pic' onChange={this.uploadPicture} />
+			<section className={styles.aui_flexView}>
+				<section className={styles.aui_scrollView}>
+					<div className={styles.aui_head_body}>
+						<i className={`${styles.icon} ${styles.icon_news}`} onClick={() => this.goDetail('message')}></i>
+						<img src={headimg } />
+						<div className={styles.aui_user_item}>
+							<div className={styles.aui_mine_user}>
+								<Avatar
+									className={styles.aui_mine_user}
+									size="large"
+									src={'http://server.asynciot.com/getfile?filePath='+currentUser.portrait}
+								/>
+								<input accept="image/jpg" className={styles.input} type="file" name='pic' onChange={this.uploadPicture} />
+							</div>
+							<div className={styles.aui_mine_name}>
+								<h2>{currentUser.nickname}</h2><i className={`${styles.icon} ${styles.icon_edit}`} onClick={() => this.goDetail('revise')}></i>
+							</div>
+						</div>
 					</div>
-					<p onClick={() => this.goDetail('revise')} className={styles.nickname}>{currentUser.nickname}<Icon className={styles.edit} type="form" /></p>
-				</div>
-				<div className={styles.back}>
-					<Row>
-						<Col span={6} onClick={() => this.toFollow()}>
-							<img className={styles.icon}  src={require('../../assets/icon/电梯.png')} />
-							<a className={styles.icon}><FormattedMessage id="Manage Elevator"/></a>
-						</Col>
-						<Col span={6} onClick={() => this.goDetail('message')}>
-							<img className={styles.icon}  src={require('../../assets/icon/信息.png')} />
-							<a className={styles.icon}><FormattedMessage id="Read Notice"/></a>
-						</Col>
-						<Col span={6} onClick={() => this.goDetail('work-order')}>
-							<img className={styles.icon}  src={require('../../assets/icon/工单.png')} />
-							<a className={styles.icon}><FormattedMessage id="Treat Order"/></a>
-						</Col>
-						<Col span={6} onClick={() => this.goDetail('follow/new')}>
-							<img className={styles.icon}  src={require('../../assets/icon/关注.png')} />
-							<a className={styles.icon}><FormattedMessage id="Follow Device"/></a>
-						</Col>
-						<Col span={6} onClick={() => this.goDetail('/tech/manual')}>
-							<img className={styles.icon}  src={require('../../assets/icon/文档.png')} />
-							<a className={styles.icon}><FormattedMessage id="Instructions"/></a>
-						</Col>
-						<Col span={6} onClick={() => this.goDetail('/company/add')}>
-							<img className={styles.icon}  src={require('../../assets/icon/群组.png')} />
-							<a className={styles.icon}><FormattedMessage id="Add Group"/></a>
-						</Col>
-					</Row>
-				</div>
-				<Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} className={styles.btn1}>
-					<Button className={styles.Button} onClick={this.logout} type="primary" style={{ width: '100%' }} ><FormattedMessage id="Logout"/></Button>
-				</Col>
-			</div>
+					<div className={styles.aui_palace}>
+						<a className={styles.aui_palace_grid} onClick={() => this.toFollow()}>
+							<div className={styles.aui_palace_grid_icon}>
+								<img src={require('../../assets/icon/Elevator.png')} />
+							</div>
+							<div className={styles.aui_palace_grid_text}>
+								<h2><FormattedMessage id="Manage Elevator"/></h2>
+							</div>
+						</a>
+						<a className={styles.aui_palace_grid} onClick={() => this.goDetail('message')}>
+							<div className={styles.aui_palace_grid_icon}>
+								<img src={require('../../assets/icon/message.png')} />
+							</div>
+							<div className={styles.aui_palace_grid_text}>
+								<h2><FormattedMessage id="Read Notice"/></h2>
+							</div>
+						</a>
+						<a className={styles.aui_palace_grid} onClick={() => this.goDetail('work-order')}>
+							<div className={styles.aui_palace_grid_icon}>
+								<img src={require('../../assets/icon/workorder.png')} />
+							</div>
+							<div className={styles.aui_palace_grid_text}>
+								<h2><FormattedMessage id="Treat Order"/></h2>
+							</div>
+						</a>
+						<a className={styles.aui_palace_grid} onClick={() => this.goDetail('follow/new')}>
+							<div className={styles.aui_palace_grid_icon}>
+								<img src={require('../../assets/icon/follow.png')} />
+							</div>
+							<div className={styles.aui_palace_grid_text}>
+								<h2><FormattedMessage id="Follow Device"/></h2>
+							</div>
+						</a>
+						<a className={styles.aui_palace_grid} onClick={() => this.goDetail('/tech/manual')}>
+							<div className={styles.aui_palace_grid_icon}>
+								<img src={require('../../assets/icon/explain.png')} />
+							</div>
+							<div className={styles.aui_palace_grid_text}>
+								<h2><FormattedMessage id="Instructions"/></h2>
+							</div>
+						</a>
+						<a className={styles.aui_palace_grid} onClick={() => this.goDetail('/company/add')}>
+							<div className={styles.aui_palace_grid_icon}>
+								<img src={require('../../assets/icon/group.png')} />
+							</div>
+							<div className={styles.aui_palace_grid_text}>
+								<h2><FormattedMessage id="Add Group"/></h2>
+							</div>
+						</a>
+					</div>
+					<div className={styles.aui_landlady}>
+						<h2 onClick={() => this.logout()}><FormattedMessage id="Logout"/></h2>
+					</div>
+				</section>
+			</section>
 		);
 	}
 }
