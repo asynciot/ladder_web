@@ -24,6 +24,7 @@ export default class extends Component {
 		deviceNo: '',
 		qrcodeNo: '',
 		view: 0,
+		language:window.localStorage.getItem("language"),
 	}
 	componentWillMount() {
 		const IMEI = this.props.match.params.IMEI;
@@ -67,20 +68,20 @@ export default class extends Component {
 			imei: this.state.deviceNo,
 		}).then((res) => {
 			if (res.code === 0) {
-				if(window.localStorage.getItem("language")=='zh'){
+				if(this.state.language=='zh'){
 					message.success('关注成功');
 				}else{
 					message.success('Follow Success');
 				}
 				this.props.history.push(`/home`);
 			} else if (res.code === 855) {
-				if(window.localStorage.getItem("language")=='zh'){
+				if(this.state.language=='zh'){
 					return message.error('您已经关注此设备');
 				}else{
 					return message.error('Attention has been paid to it');
 				}
 			} else {
-				if(window.localStorage.getItem("language")=='zh'){
+				if(this.state.language=='zh'){
 					return message.error('关注失败');
 				}else{
 					return message.error('Follow Failed');
@@ -138,6 +139,7 @@ export default class extends Component {
 							<InputItem
 								onChange={this.onChange}
 								value={this.state.deviceNo}
+								placeholder={this.state.language=="zh"? "请输入IMEI" : "Input IMEI"}
 							>
 								<FormattedMessage id="Device IMEI"/>:
 							</InputItem>

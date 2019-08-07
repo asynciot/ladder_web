@@ -25,6 +25,7 @@ export default class extends Component {
 	state = {
 		number:'',
 		view: 0,
+		language:window.localStorage.getItem("language"),
 	}
 	onChange = (value) => {
 		this.setState({
@@ -36,10 +37,18 @@ export default class extends Component {
 			number: this.state.number,
 		}).then((res) => {
 			if (res.code === 0) {
-				message.success('加入成功');
+				if(this.state.language=="zh"){
+					message.success('加入成功');
+				}else{
+					message.success('Success');
+				}
 				this.props.history.push(`/home`);
 			}else {
-				return message.error('加入失败');
+				if(this.state.language=="zh"){
+					return message.error('加入失败');
+				}else{
+					return message.error('Error');
+				}
 			}
 		});
 	}
@@ -64,12 +73,13 @@ export default class extends Component {
 							<InputItem
 								onChange={this.onChange}
 								value={this.state.number}
+								placeholder={this.state.language=="zh"? "请输入群组号" : "Input Group Number"}
 							>
-								群组号:
+								<FormattedMessage id="Group Number"/>
 							</InputItem>
 							<List.Item>
 								<Button disabled={!this.state.number} size="large" loading={submitting} style={{ width: '100%' }} type="primary" onClick={() => this.submit()}>
-									加入
+									<FormattedMessage id="OK"/>
 								</Button>
 							</List.Item>
 						</List>

@@ -4,9 +4,9 @@ import { Row, Col, Button, Spin, DatePicker, Pagination, } from 'antd';
 import styles from './index.less';
 import { getBanners, getMessages, getDevicesStatus, getFault, postLocation, getFaultUntreted } from '../../services/api';
 import background1 from '../../assets/menu-bg.png';
-import background3 from '../../assets/bg-menu.jpg';
-import background2 from '../../assets/menu-bg1.jpg';
-import background4 from '../../assets/service-img4.jpg';
+import background3 from '../../assets/bg2.jpg';
+import background2 from '../../assets/bg1.jpg';
+import background4 from '../../assets/bg3.jpg';
 import BMap  from 'BMap';
 import { injectIntl, FormattedMessage } from 'react-intl';
 
@@ -16,7 +16,7 @@ const Item = List.Item;
 const Brief = Item.Brief;
 export default class Home extends Component {
 	state = {
-		data: [],
+    data: [],
 		imgHeight: 176,
 		messages: [],
 		doornum:0,
@@ -32,7 +32,7 @@ export default class Home extends Component {
 			ctrllongoffline:0,
 		},
 		historyEvents: [],
-		code:'',
+    code:'',
 	}
 	componentWillMount() {
 		this.getdata();
@@ -324,7 +324,7 @@ export default class Home extends Component {
 								</Card>
 							</Col>
 						</Row>
-						<Item
+						{/* <Item
 							arrow="horizontal"
 							multipleLine
 							onClick={this.toMessagesPage}
@@ -334,7 +334,7 @@ export default class Home extends Component {
 									<span><FormattedMessage id="Hot News"/> <Brief>{this.state.messages[0].content}</Brief></span> :
 									<span><FormattedMessage id="No News"/></span>
 							}
-						</Item>
+						</Item> */}
 						<Item
 							arrow="horizontal"
 							multipleLine

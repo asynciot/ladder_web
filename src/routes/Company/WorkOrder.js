@@ -67,6 +67,7 @@ export default class extends Component {
 		type:'',
 		totalNumber:0,
 		device_name:'',
+		language:window.localStorage.getItem("language"),
 	}
 	tabs = [
 		{ title: (window.localStorage.getItem("language")=='en') ? 'untreated' : '待接单', type:"untreated"},
@@ -180,17 +181,30 @@ export default class extends Component {
 		});
 	}
 	deal = (e, detail) => {
-		const order_id = detail.id
-		alert('提示', desc[detail.state], [
-			{ text: '取消', style: 'default' },
-			{ text: '确认',
-				onPress: () => {
-				  postFault({order_id}).then(() => {
-					this.getFault(detail.state)
-				  });
+		const order_id = detail.id;
+		if(this.state.language=="zh"){
+			alert('提示', desc[detail.state], [
+				{ text: '取消', style: 'default' },
+				{ text: '确认',
+					onPress: () => {
+					  postFault({order_id}).then(() => {
+						this.getFault(detail.state)
+					  });
+					},
 				},
-			},
-		]);
+			]);
+		}else{
+			alert('提示', desc[detail.state], [
+				{ text: 'cancel', style: 'default' },
+				{ text: 'ok',
+					onPress: () => {
+					  postFault({order_id}).then(() => {
+						this.getFault(detail.state)
+					  });
+					},
+				},
+			]);
+		}
 	}
 	address = (item) =>{
 		const id = item.device_id
@@ -200,16 +214,29 @@ export default class extends Component {
 		});
 	}
 	remove = (e,detail) => {
-		alert('提示', '是否完成', [
-			{ text: '取消', style: 'default' },
-			{ text: '确认',
-				onPress: () => {
-					postFinish({ id: detail.id,result:'transfer' }).then((res) => {
-						this.getFault("")
-					});
+		if(this.state.language=="zh"){
+			alert('提示', '是否完成', [
+				{ text: '取消', style: 'default' },
+				{ text: '确认',
+					onPress: () => {
+						postFinish({ id: detail.id,result:'transfer' }).then((res) => {
+							this.getFault("")
+						});
+					},
 				},
-			},
-		]);
+			]);
+		}else{
+			alert('提示', 'Finish?', [
+				{ text: 'cancel', style: 'default' },
+				{ text: 'ok',
+					onPress: () => {
+						postFinish({ id: detail.id,result:'transfer' }).then((res) => {
+							this.getFault("")
+						});
+					},
+				},
+			]);
+		}
 	}
 	render() {
 		const { historyEvents, list, dispatchList, device_name} = this.state;

@@ -326,67 +326,67 @@ export default class DoorHistory extends Component {
 		this.clears();
 		counts = 0;
 		ct = 0;
-    if(this.state.state =="online"){
-      this.state.switch = !this.state.switch;
-      if(this.state.switch == true){
-      	if(websock){
-      		websock.close();
-      		websock=null;
-      	}
-      	this.initWebsocket()
-      	const op = 'open';
-      	const IMEI = this.state.IMEI;
-      	const interval = this.state.interval;
-      	const threshold = this.state.threshold;
-      	const duration = this.state.duration;
-      	const device_type = '15';
-      	const type = '0';
-      	postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {
-      		if(res.code == 0){
-      			if(language=="zh"){
-      				alert("请等待接收数据");
-      			}else{
-      				alert("Await data");
-      			}
-      		}else if(res.code == 670){
-      			if(language=="zh"){
-      				alert("当前设备已被人启动监控");
-      			}else{
-      				alert("Monitor has been activated");
-      			}
-      		}
-      	});
-      	setTimeout(()=>{
-      		getCommand({num:1,page:1,IMEI}).then((res)=>{
-      			if(res.code==0){
-      				timing = setInterval( () => {
-      					const date = new Date().getTime();
-      					const endTime = Math.round(((res.list[0].submit+duration*1000)-date)/1000)
-      					if(endTime<0){
-      						this.setState({
-      							endTime:0,
-      						})
-      						clearInterval(timing);
-      					}else{
-      						this.setState({
-      							endTime,
-      						})
-      					}
-      				},1000)
-      			}
-      		})
-      	}, 1000);
-      }else{
-      	websock.close();
-      	this.forceUpdate();
-      }
-    }else{
-      if(language=="zh"){
-      	alert("该设备已离线");
-      }else{
-      	alert("The device is offline.");
-      }
-    }
+		if(this.state.state =="online"){
+			this.state.switch = !this.state.switch;
+			if(this.state.switch == true){
+				if(websock){
+					websock.close();
+					websock=null;
+				}
+				this.initWebsocket()
+				const op = 'open';
+				const IMEI = this.state.IMEI;
+				const interval = this.state.interval;
+				const threshold = this.state.threshold;
+				const duration = this.state.duration;
+				const device_type = '15';
+				const type = '0';
+				postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {
+					// if(res.code == 0){
+					// 	if(language=="zh"){
+					// 		alert("请等待接收数据");
+					// 	}else{
+					// 		alert("Await data");
+					// 	}
+					// }else if(res.code == 670){
+					// 	if(language=="zh"){
+					// 		alert("当前设备已被人启动监控");
+					// 	}else{
+					// 		alert("Monitor has been activated");
+					// 	}
+					// }
+				});
+				setTimeout(()=>{
+					getCommand({num:1,page:1,IMEI}).then((res)=>{
+						if(res.code==0){
+							timing = setInterval( () => {
+								const date = new Date().getTime();
+								const endTime = Math.round(((res.list[0].submit+duration*1000)-date)/1000)
+								if(endTime<0){
+									this.setState({
+										endTime:0,
+									})
+									clearInterval(timing);
+								}else{
+									this.setState({
+										endTime,
+									})
+								}
+							},1000)
+						}
+					})
+				}, 1000);
+			}else{
+				websock.close();
+				this.forceUpdate();
+			}
+		}else{
+			if(language=="zh"){
+				alert("该设备已离线");
+			}else{
+				alert("The device is offline.");
+			}
+		}
 	}
 	buffer2hex = (buffer) => {
 		const unit16array = [];
@@ -439,17 +439,17 @@ export default class DoorHistory extends Component {
 				}else{
 					command = true;
 				}
-        let time = res.data.list[0].device_t_update;
-        time = time.replace(/NOVT/,"");
-        show.updateTime = time;
+				let time = res.data.list[0].device_t_update;
+				time = time.replace(/NOVT/,"CST");
+				show.updateTime = moment(time).subtract('hours',13).format('YYYY-MM-DD HH:mm:ss');
 				this.setState({
 					IMEI:res.data.list[0].IMEI,
 					install:res.data.list[0].install_addr,
 					device_name:res.data.list[0].device_name,
 					device_model:res.data.list[0].device_model,
 					command,
-          state:res.data.list[0].state,
-          show,
+					state:res.data.list[0].state,
+					show,
 				})
 			}
 		})
@@ -1203,7 +1203,7 @@ export default class DoorHistory extends Component {
 											justifyContent: 'flex-start',
 										}}
 									>
-										<FormattedMessage id="Last update time"/> ：<i className={styles.status}>{moment(show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
+										<FormattedMessage id="Last update time"/> ：<i className={styles.status}>{show.updateTime}</i>
 									</p>
 								</section>
 								:
@@ -1260,7 +1260,7 @@ export default class DoorHistory extends Component {
 									</p>
 									<p style={{
 											width: '100%',
-										}}><FormattedMessage id="Last update time"/><i className={styles.status}>{moment(show.updateTime).format('YYYY-MM-DD HH:mm:ss')}</i>
+										}}><FormattedMessage id="Last update time"/><i className={styles.status}>{show.updateTime}</i>
 									</p>
 								</section>
 							}

@@ -48,6 +48,7 @@ export default class extends Component {
 		done:0,
 		unread:0,
 		total: 0,
+		language:window.localStorage.getItem("language"),
 	}
 	componentDidMount() {
 		page = 1
@@ -136,16 +137,29 @@ export default class extends Component {
 	}
 	delete = (e, detail) => {
 		const id = detail.id
-		alert('提示', '是否确定', [
-			{ text: '取消', style: 'default' },
-			{ text: '确认',
-				onPress: () => {
-					deleteMessage({id}).then(() => {
-						this.getMessages(0)
-					});
+		if(this.state.language =="zh"){
+			alert('提示', '是否确定', [
+				{ text: '取消', style: 'default' },
+				{ text: '确认',
+					onPress: () => {
+						deleteMessage({id}).then(() => {
+							this.getMessages(0)
+						});
+					},
 				},
-			},
-		]);
+			]);
+		}else{
+			alert('提示', 'Are you sure?', [
+				{ text: 'cancel', style: 'default' },
+				{ text: 'ok',
+					onPress: () => {
+						deleteMessage({id}).then(() => {
+							this.getMessages(0)
+						});
+					},
+				},
+			]);
+		}
 	}
 	render() {
 		const { type } = this.props.match.params

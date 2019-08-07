@@ -312,7 +312,7 @@ export default class extends Component {
 						onChange={(tab, index) => { this.goFollowList(tab.device_type,index); }}
 					>
 						<div style={{ backgroundColor: '#fff' }}>
-							<Row className={styles.page}>
+							<Row>
 								<Col span={7} className={styles.Input}>
 									<Input
 										placeholder={(la==en)?"IMEI":"设备编号"}
@@ -329,9 +329,6 @@ export default class extends Component {
 								</Col>
 								<Col span={6}>
 									<Button className={styles.Button} onClick={()=>this.search(1)} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
-								</Col>
-								<Col span={24} className={styles.center}>
-									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
 								</Col>
 							</Row>
 							<List
@@ -410,13 +407,13 @@ export default class extends Component {
 														<tr>
 															<Col span={16}>
 																<Col span={10}>
-                                  <a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
-                                </Col>
-                                <Col span={14}>
-                                  <td className={styles.left2} style={{width:'220px'}}>{item.install_addr}</td>
-                                </Col>
-                              </Col>
-                            </tr>
+																	<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
+																</Col>
+																<Col span={14}>
+																	<td className={styles.left2} style={{width:'220px'}}>{item.install_addr}</td>
+																</Col>
+															</Col>
+														</tr>
 														<tr>
 															<Col span={16}>
 																<Col span={10}>
@@ -483,7 +480,7 @@ export default class extends Component {
 							</Row>
 						</div>
 						<div style={{ backgroundColor: '#fff' }}>
-							<Row className={styles.page}>
+							<Row>
 								<Col span={7} className={styles.Input}>
 									<Input
 										placeholder={(la==en)?"IMEI":"设备编号"}
@@ -500,9 +497,6 @@ export default class extends Component {
 								</Col>
 								<Col span={6}>
 									<Button className={styles.Button} onClick={()=>this.search(1)} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
-								</Col>
-								<Col span={24} className={styles.center}>
-									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
 								</Col>
 							</Row>
 							<List
@@ -582,13 +576,13 @@ export default class extends Component {
 														<tr>
 															<Col span={16}>
 																<Col span={10}>
-															    <a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
-															  </Col>
-															  <Col span={14}>
-															    <td className={styles.left2} style={{width:'220px'}}>{item.install_addr}</td>
-															  </Col>
+																	<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
+																</Col>
+																<Col span={14}>
+																	<td className={styles.left2} style={{width:'220px'}}>{item.install_addr}</td>
+																</Col>
 															</Col>
-                            </tr>
+														</tr>
 														<tr>
 															<Col span={16}>
 																<Col span={10}>
@@ -655,11 +649,6 @@ export default class extends Component {
 							</Row>
 						</div>
 						<div style={{ backgroundColor: '#fff' }}>
-							<Row className={styles.page}>
-								<Col span={24} className={styles.center}>
-									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
-								</Col>
-							</Row>
 							<List
 								className={styles.lis}
 								itemLayout="horizontal"
@@ -822,7 +811,7 @@ export default class extends Component {
 							</Row>
 						</div>
 						<div style={{ backgroundColor: '#fff' }}>
-							<Row className={styles.page}>
+							<Row>
 								<Col span={7} className={styles.Input}>
 									<Input
 										placeholder={(la==en)?"IMEI":"设备编号"}
@@ -839,9 +828,6 @@ export default class extends Component {
 								</Col>
 								<Col span={6}>
 									<Button className={styles.Button} onClick={()=>this.search(1)} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
-								</Col>
-								<Col span={24} className={styles.center}>
-									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
 								</Col>
 							</Row>
 							<List
