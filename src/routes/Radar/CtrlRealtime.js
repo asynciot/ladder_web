@@ -178,6 +178,7 @@ export default class CtrlRealtime extends Component {
 		startTime:'',
 		endTime:'',
 		command:false,
+		loading:false,
 	}
 	componentWillMount() {
 		if(window.localStorage.getItem("language")=="en"){
@@ -225,7 +226,6 @@ export default class CtrlRealtime extends Component {
 		const device_id = this.props.match.params.id
 		const userId = currentUser.id
 		const wsurl = 'ws://47.96.162.192:9006/device/Monitor/socket?deviceId='+device_id+'&userId='+userId;
-		this.state.command = true
 		websock = new WebSocket(wsurl);
 		websock.onopen = this.websocketonopen;
 		websock.onerror = this.websocketonerror;
@@ -265,8 +265,19 @@ export default class CtrlRealtime extends Component {
 		this.clears()
 		counts = 0
 		ct = 0
+		var loading = true;
+		this.setState({
+			loading,
+		})
+		setTimeout(()=>{
+			loading = false;
+			this.setState({
+				loading,
+			})
+		},1000)
 		if(this.state.state =="online"){
-			this.state.switch = !this.state.switch
+			this.state.switch = !this.state.switch;
+			this.forceUpdate();
 			if(this.state.switch == true){
 				const device_id = this.props.match.params.id
 				if(websock){
@@ -283,42 +294,31 @@ export default class CtrlRealtime extends Component {
 				const type = '0';
 				const segment = '00,00,00,00';
 				const address = '00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00';
-				postMonitor({ op, IMEI, interval, threshold, duration, device_type, type, segment, address}).then((res) => {
-					// if(res.code == 0){
-					// 	if(la=="zh"){
-					// 		alert("请等待接收数据");
-					// 	}else{
-					// 		alert("Await data");
-					// 	}
-					// }else if(res.code == 670){
-					// 	if(la=="zh"){
-					// 		alert("当前设备已被人启动监控");
-					// 	}else{
-					// 		alert("Monitor has been activated");
-					// 	}
-					// }
-				});
-				setTimeout(()=>{
-					getCommand({num:1,page:1,IMEI}).then((res)=>{
-						if(res.code==0){
-							timing = setInterval( () => {
-								const date = new Date().getTime()
-								const endTime = Math.round(((res.list[0].submit+duration*1000)-date)/1000)
-								if(endTime<0){
-									this.setState({
-										endTime:0,
-									})
-									clearInterval(timing)
-								}else{
-									this.setState({
-										endTime,
-									})
-								}
-								this.forceUpdate()
-							},1000)
-						}
-					})
-				}, 1000);
+				if(this.state.endTime==0){
+					postMonitor({ op, IMEI, interval, threshold, duration, device_type, type, segment, address}).then((res) => {
+					});
+					setTimeout(()=>{
+						getCommand({num:1,page:1,IMEI}).then((res)=>{
+							if(res.code==0){
+								timing = setInterval( () => {
+									const date = new Date().getTime()
+									const endTime = Math.round(((res.list[0].submit+duration*1000)-date)/1000)
+									if(endTime<0){
+										this.setState({
+											endTime:0,
+										})
+										clearInterval(timing)
+									}else{
+										this.setState({
+											endTime,
+										})
+									}
+									this.forceUpdate()
+								},1000)
+							}
+						})
+					}, 1000);
+				}
 			}else{
 				websock.close()
 			}
@@ -850,12 +850,13 @@ export default class CtrlRealtime extends Component {
 						</Col>
 						<Col span={6}>
 							<Switch
-							  checkedChildren=<FormattedMessage id="Open"/>
-							  unCheckedChildren=<FormattedMessage id="Close"/>
+							  checkedChildren={<FormattedMessage id="Open"/>}
+							  unCheckedChildren={<FormattedMessage id="Close"/>}
 							  onChange={this.onChange}
 							  checked={this.state.switch}
 							  disabled={this.state.command}
 							  defaultChecked={this.state.switch}
+							  loading={this.state.loading}
 							/>
 						</Col>
 					</Row>

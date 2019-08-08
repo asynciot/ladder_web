@@ -171,6 +171,7 @@ export default class DoorHistory extends Component {
 		startTime:'',
 		endTime:'',
 		command:false,
+		loading:false,
 	}
 	componentWillMount() {
 		this.state.id = this.props.match.params.id
@@ -326,8 +327,19 @@ export default class DoorHistory extends Component {
 		this.clears();
 		counts = 0;
 		ct = 0;
+		var loading = true;
+		this.setState({
+			loading,
+		})
+		setTimeout(()=>{
+			loading = false;
+			this.setState({
+				loading,
+			})
+		},1000)
 		if(this.state.state =="online"){
 			this.state.switch = !this.state.switch;
+			this.forceUpdate();
 			if(this.state.switch == true){
 				if(websock){
 					websock.close();
@@ -342,19 +354,6 @@ export default class DoorHistory extends Component {
 				const device_type = '15';
 				const type = '0';
 				postMonitor({ op, IMEI, interval, threshold, duration, device_type, type,}).then((res) => {
-					// if(res.code == 0){
-					// 	if(language=="zh"){
-					// 		alert("请等待接收数据");
-					// 	}else{
-					// 		alert("Await data");
-					// 	}
-					// }else if(res.code == 670){
-					// 	if(language=="zh"){
-					// 		alert("当前设备已被人启动监控");
-					// 	}else{
-					// 		alert("Monitor has been activated");
-					// 	}
-					// }
 				});
 				setTimeout(()=>{
 					getCommand({num:1,page:1,IMEI}).then((res)=>{
@@ -1141,9 +1140,9 @@ export default class DoorHistory extends Component {
 								checkedChildren={<FormattedMessage id="Open"/>}
 								unCheckedChildren={<FormattedMessage id="Close"/>}
 								onChange={this.onChange}
-								disabled={this.state.command}
 								checked={this.state.switch}
 								defaultChecked={this.state.switch}
+								loading={this.state.loading}
 							/>
 						</Col>
 					</Row>
