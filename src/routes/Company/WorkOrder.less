@@ -1,43 +1,80 @@
-.placeholder {
-	text-align: center;
-	height: 50px;
-	line-height: 50px;
-}
 .item {
-	font-size: 14px;
+	margin-left: 10px;
+	margin-right: 10px;
+	width: 100%;
+	font-size: 10px;
+	background-color: white;
 	em {
 		color: #999;
 		font-style: normal;
 	}
 }
-.deal {
-	color: #1E90FF !important;
+.lis{
+	margin-right: 10px;
+	// margin-bottom: 30px;
+}
+.center2{
+	text-align: center;
+	margin-bottom: 10px;
+}
+.signal {
+	position: relative;
+	background: #ccc;
+	height: 19px;
+	width: 19px;
+	overflow: hidden;
+	.cover {
+		position: absolute;
+		height: 19px;
+		width: 19px;
+		z-index: 4;
+		background: #55BC52;
+	}
+	img {
+		position: absolute;
+		width: auto;
+		display: block;
+		height: 19px;
+		z-index: 6;
+	}
+}
+.list-btn {
+	z-index: 50;
+	// margin-top: -65px;
+	margin-left: -40px;
+	overflow-x: hidden;
+	.icon {
+		line-height: 12px;
+		vertical-align: middle;
+	}
+	.edit {
+		color: green;
+	}
+	em {
+		font-size: 10px;
+		color: #444;
+		line-height: 24px;
+		vertical-align: middle;
+	}
 }
 .table {
+	z-index: -1;
 	display: block;
 	width: 100%;
 	margin: 0 auto;
 	td {
 		display: inline-block;
 		color: #999;
-		font-size: 13px;
+		font-size: 12px;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		vertical-align: top;
 		padding: 4px 0;
 	}
-	tr td:nth-child(1){
-		width: 70px;
-	}
-	tr td:nth-child(2){
-		width: 120px;
-	}
-	tr td:nth-child(3){
-		width: 70px;
-	}
-	tr td:nth-child(4){
-		width: 90px;
+	.left {
+		// float: left;
+		margin-left: 16px;
 	}
 	tr > td:nth-child(odd) {
 		color: #333;
@@ -55,6 +92,7 @@
 		color: #55BC52;
 	}
 	.text{
+		margin-left: 5px;
 		display: inline-block;
 		color: #999;
 		font-size: 12px;
@@ -76,47 +114,14 @@
 		padding: 4px 0;
 	}
 }
-.list-btn {
-  margin-left: 5px;
-	overflow-x: hidden;
-	.icon {
-		line-height: 24px;
-		vertical-align: middle;
-	}
-	.qrcode {
-		color: black;
-		font-size: 22px;
-	}
-	.edit {
-		color: green;
-	}
-	.delete {
-		color: red;
-	}
-	em {
-		font-size: 13px;
-		color: #444;
-		margin-left: 6px;
-		line-height: 24px;
-		vertical-align: middle;
-	}
+.content{
+  overflow-x: hidden;
+  width: device-width;
+  initial-scale:1;
+  maximum-scale:1;
+  user-scalable:no;
+
 }
-:global {
-	.order-list {
-		span {
-			font-size: 13px;
-			color: #999;
-			margin-left: 4px;
-		}
-		div {
-			font-size: 13px;
-			margin: 1px 0;
-			color: #666;
-		}
-		.am-list-header {
-			padding: 6px 15px 6px 15px;
-			font-size: 14px;
-			color: #333;
-		}
-	}
+.page {
+	// margin-bottom: 55px;
 }

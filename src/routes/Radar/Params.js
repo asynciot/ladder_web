@@ -30,18 +30,6 @@ export default class Params extends Component {
 	state = {
 		dis:false,
 	}
-	submit = (val,item) => {
-		const { device: { menu }} = this.props;
-		Modal.info({
-			title: '参数详情',
-			content: (
-				<div>
-					{val}
-				</div>
-			),
-			onOk() {},
-		});
-	}
 	render() {
 		const { device: { menu }, location } = this.props;
 		return (

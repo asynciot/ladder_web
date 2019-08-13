@@ -1159,7 +1159,7 @@ export default class DoorHistory extends Component {
 							>
 							{
 								(language=="zh")?
-								<section>
+								<section className={styles.left}>
 									<p style={{
 										width: '100%',
 										justifyContent: 'flex-start',

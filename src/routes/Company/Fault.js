@@ -38,7 +38,7 @@ export default class Fault extends Component {
 		inspection:true,
 		remark:'',
 		device_name:'',
-    la:window.localStorage.getItem("language"),
+		language:window.localStorage.getItem("language"),
 	}
 	componentWillMount() {
 		this.getFault()
@@ -108,6 +108,7 @@ export default class Fault extends Component {
 	}
 	uploadPicture = (e) =>{
 		const { dispatch, location } = this.props;
+		const { language } = this.state
 		const match = pathToRegexp('/company/order/:id').exec(location.pathname);
 		let id = match[2];
 		var formdata = new FormData()
@@ -124,11 +125,11 @@ export default class Fault extends Component {
 		formdata.append("remarks",this.state.remark)
 		formdata.append("result",'untransfer')
 		if(!this.state.file1 || !this.state.file2){
-      if(la=="zh"){
-        alert("请上传维修前和维修后的图片！")
-      }else{
-        alert("Please upload pictures before and after maintenance.")
-      }
+			if(language=="zh"){
+				alert("请上传维修前和维修后的图片！")
+			}else{
+				alert("Please upload pictures before and after maintenance.")
+			}
 		}else {
 			fetch('http://server.asynciot.com/device/Dispatch/finish', {
 				method: 'POST',
@@ -139,26 +140,26 @@ export default class Fault extends Component {
 				body: formdata
 			}).then(res=> { return res.json()}).then(json=>{
 				if(json.code == 0){
-          if(la=="zh"){
-            alert('提示','上传成功',[
-            	{ text: '确认',},
-            ]);
-          }else{
-            alert('提示','Success',[
-            	{ text: 'Ok',},
-            ]);
-          }
+					if(language=="zh"){
+						alert('提示','上传成功',[
+							{ text: '确认',},
+						]);
+					}else{
+						alert('提示','Success',[
+							{ text: 'Ok',},
+						]);
+					}
 					this.props.history.push(`/company/work-order`);
 				}else{
-          if(la=="zh"){
-            alert('提示', '上传失败', [
-            	{ text: '确认',},
-            ]);
-          }else{
-            alert('提示','Error',[
-            	{ text: 'Ok',},
-            ]);
-          }
+					if(language=="zh"){
+						alert('提示', '上传失败', [
+							{ text: '确认',},
+						]);
+					}else{
+						alert('提示','Error',[
+							{ text: 'Ok',},
+						]);
+					}
 				}
 			})
 		}
@@ -175,23 +176,24 @@ export default class Fault extends Component {
 	}
 	postFault = () =>{
 		const { history } = this.props;
+		const { language } = this.state;
 		const order_id = this.props.match.params.id
 		postFault({order_id}).then((res) => {
 			if(res.code == 0){
-        if(la=="zh"){
-          alert("接单成功！")
-        }else{
-          alert("Success")
-        }
+				if(language=="zh"){
+					alert("接单成功！")
+				}else{
+					alert("Success")
+				}
 				history.push({
 					pathname: `/company/work-order`,
 				});
 			}else{
-        if(la=="zh"){
-          alert("接单失败！")
-        }else{
-          alert("Error")
-        }
+				if(language=="zh"){
+					alert("接单失败！")
+				}else{
+					alert("Error")
+				}
 			}
 		})
 	}
@@ -219,7 +221,7 @@ export default class Fault extends Component {
 									<tbody className={styles.tbody}>
 										<tr>
 											<a className={styles.text}><FormattedMessage id="fault"/> ：</a>
-											<td className="tl" style={{ width: 'auto',color:'red'}} onClick={() => this.info(item)}>{item.code}<FormattedMessage id={item.code}/></td>
+											<td className={styles.left} style={{ width: 'auto',color:'red'}} onClick={() => this.info(item)}>{item.code}<FormattedMessage id={item.code}/></td>
 										</tr>
 										<tr>
 											<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
@@ -228,6 +230,10 @@ export default class Fault extends Component {
 										<tr>
 											<a className={styles.text}><FormattedMessage id="fault"/><FormattedMessage id="type"/> ：</a>
 											<td className="tl" style={{ width: '100px' }}><FormattedMessage id={'O'+item.type}/></td>
+										</tr>
+										<tr>
+											<a className={styles.text}><FormattedMessage id="State"/> ：</a>
+											<td className={styles.left} style={{ width: '100px' }}><FormattedMessage id={item.state}/></td>
 										</tr>
 										<tr>
 											<a className={styles.text}><FormattedMessage id="Device Type"/> ：</a>

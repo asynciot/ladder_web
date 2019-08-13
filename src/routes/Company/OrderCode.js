@@ -59,6 +59,12 @@ const faultCode = {
 	'E82': '03',
 	'E114': 'LV',
 	'E178': 'OV',
+	'04': '04',
+	'07': '07',
+	'08': '08',
+	'03': '03',
+	'LV': 'LV',
+	'OV': 'OV',
 }
 export default class DoorHistory extends Component {
 	state = {

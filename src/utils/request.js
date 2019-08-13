@@ -39,7 +39,8 @@ function checkStatus(response) {
 window.notLogin = null;
 function checkCode(response) {
 	if (response.code === 611 && notLogin == null) {
-		window.notLogin = notification.error({
+		window.location.reload();
+		/* window.notLogin = notification.error({
 			message: '登录信息已过期，请重新登录',
 			duration: 1,
 			onClose: () => {
@@ -48,7 +49,7 @@ function checkCode(response) {
 				window.location.reload();
 				return response;
 			},
-		});
+		}); */
 	}
 	return response;
 }

@@ -342,7 +342,7 @@ export const getRouterData = (app) => {
 		'/resetting/': {
 			name: '忘记密码',
 			name2: 'Resetting',
-			component: dynamicWrapper(app, ['login'], () => import('../routes/User/Resetting')),
+			component: dynamicWrapper(app, [], () => import('../routes/User/Resetting')),
 		},
 		'/user': {
 			component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),

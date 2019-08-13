@@ -174,7 +174,7 @@
 	"Light Curtain connection selection": "光幕连接选择",
 	"Low speed torque lifting":"低速力矩提升",
 	"Language" : "语言",
-	"Lang":"简体中文",
+	"Lang":"English",
 	"Login" : "登录",
 	"Logout" : "退出",
 
@@ -374,7 +374,7 @@
 
 	"Work Flow" : "工作流",
 	"WeChat Follow" : "出厂设置",
-  "Wifi" : "Wifi版",
+	"Wifi" : "Wifi版",
 
 	"untreated" : "等待接单",
 	"treated" : "已完成",

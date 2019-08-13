@@ -14,6 +14,16 @@ const alert = Modal.alert;
 var INTE = null;
 const Item = List.Item;
 const Brief = Item.Brief;
+const CodeTransform = {
+	'51':'04',
+	'52':'07',
+	'66':'08',
+	'82':'03',
+	'114':'LV',
+	'178':'OV',
+	'229':'MO',
+}
+
 export default class Home extends Component {
 	state = {
     data: [],
@@ -32,7 +42,7 @@ export default class Home extends Component {
 			ctrllongoffline:0,
 		},
 		historyEvents: [],
-    code:'',
+		code:'',
 	}
 	componentWillMount() {
 		this.getdata();
@@ -111,23 +121,23 @@ export default class Home extends Component {
 			});
 		})
 	}
-	onpress = () =>{
-		var geolocation = new BMap.Geolocation();
-		geolocation.getCurrentPosition(function(r){
-			if(this.getStatus() == BMAP_STATUS_SUCCESS){
-				console.log('您的位置：'+r.point.lng+','+r.point.lat);
-				const lat = r.point.lat
-				const lon = r.point.lng
-				if (window.localStorage.getItem("language")=='en'){alert("Getting the current location")}
-				if (window.localStorage.getItem("language")=='zh'){alert("正在获取当前位置")}
-				postLocation({ lat, lon,}).then((res) => {
-				})
-			}
-			else {
-				alert('failed'+this.getStatus());
-			}
-		});
-	}
+	// onpress = () =>{
+	// 	var geolocation = new BMap.Geolocation();
+	// 	geolocation.getCurrentPosition(function(r){
+	// 		if(this.getStatus() == BMAP_STATUS_SUCCESS){
+	// 			console.log('您的位置：'+r.point.lng+','+r.point.lat);
+	// 			const lat = r.point.lat
+	// 			const lon = r.point.lng
+	// 			if (window.localStorage.getItem("language")=='en'){alert("Getting the current location")}
+	// 			if (window.localStorage.getItem("language")=='zh'){alert("正在获取当前位置")}
+	// 			postLocation({ lat, lon,}).then((res) => {
+	// 			})
+	// 		}
+	// 		else {
+	// 			alert('failed'+this.getStatus());
+	// 		}
+	// 	});
+	// }
 	toMessagesPage = () => {
 		const { history } = this.props;
 		history.push('/company/message');
@@ -228,7 +238,7 @@ export default class Home extends Component {
 				<Carousel
 					autoplay={true}
 					infinite
-          autoplayInterval={10000}
+					autoplayInterval={10000}
 				>
 					{imgList.map((item, index) => {
 						return (
@@ -353,7 +363,7 @@ export default class Home extends Component {
 												<Flex.Item><FormattedMessage id="model"/>:<span className={styles.tips}><FormattedMessage id={item.device_type}/></span></Flex.Item>
 											</Flex>
 										</Brief>
-										<Brief><FormattedMessage id="fault"/>:<span className={styles.tips}><FormattedMessage id={this.state.code}/></span></Brief>
+										<Brief><FormattedMessage id="fault"/>:<span className={styles.tips}>{CodeTransform[this.state.code]}<FormattedMessage id={this.state.code}/></span></Brief>
 									</span>
 								)) : (
 									<span>

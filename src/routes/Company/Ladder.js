@@ -188,77 +188,74 @@ export default class extends Component {
 								<Col span={6}>
 									<Button className={styles.Button} onClick={()=>this.search(1)} type="primary" style={{margin:'5px',width:'100%'}} ><FormattedMessage id="search"/></Button>
 								</Col>
-								<Col span={24} className={styles.center}>
-									<Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
-								</Col>
 							</Row>
 							<List
 								className={styles.lis}
 								dataSource={list}
 								renderItem={(item,index) => (
 									<List.Item className={styles.item} key={index} onClick={()=>{this.goLadder(item)}}>
-                    <Col span={24}>
-                      <table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
-                        <tbody>
-                          <tr>
-                            <Col span={16}>
-                            	<Col span={10}>
-                                <a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
-                              </Col>
-                              <Col span={14}>
-                                <td className={styles.left2} style={{width:'220px'}}>{item.install_addr}</td>
-                              </Col>
-                            </Col>
-                          </tr>
-                          <tr>
-                            <Col span={16}>
-                            	<Col span={10}>
-                            		<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
-                            	</Col>
-                            	<Col span={14}>
-                            		<td className={styles.left}>{item.name ? item.name : <FormattedMessage id="None"/>}</td>
-                            	</Col>
-                            </Col>
-                          </tr>
-                          <tr>
-                            <Col span={16}>
-                            	<Col span={10}>
-                                <a className={styles.text}><FormattedMessage id="Ctrl"/> ：</a>
-                              </Col>
-                              <Col span={14}>
-                                <td className={styles.left}>{item.ctrl ||''}</td>
-                              </Col>
-                            </Col>
-                            <Col span={8}>
-                            	<Col span={18}>
-                                <a className={styles.text2}><FormattedMessage id="RSSI"/> ：</a>
-                              </Col>
-                              <Col span={6}>
-                                <td className={styles.left3}><Signal width={item.rssi}/></td>
-                              </Col>
-                            </Col>
-                          </tr>
-                          <tr>
-                            <Col span={16}>
-                            	<Col span={10}>
-                                <a className={styles.text}><FormattedMessage id="Door"/> ：</a>
-                              </Col>
-                              <Col span={14}>
-                                <td className="tl">{item.door1}</td>
-                              </Col>
-                            </Col>
-                            <Col span={8}>
-                            	<Col span={18}>
-                                <a className={styles.text2}><FormattedMessage id="State"/> ：</a>
-                              </Col>
-                              <Col span={6}>
-                                <td className={styles.left3}><FormattedMessage id={state[item.state] ||'None'}/></td>
-                              </Col>
-                            </Col>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </Col>
+										<Col span={24}>
+											<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
+												<tbody>
+													<tr>
+														<Col span={16}>
+															<Col span={10}>
+																<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
+															</Col>
+															<Col span={14}>
+																<td className={styles.left2} style={{width:'220px'}}>{item.install_addr}</td>
+															</Col>
+														</Col>
+													</tr>
+													<tr>
+														<Col span={16}>
+															<Col span={10}>
+																<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
+															</Col>
+															<Col span={14}>
+																<td className={styles.left}>{item.name ? item.name : <FormattedMessage id="None"/>}</td>
+															</Col>
+														</Col>
+													</tr>
+													<tr>
+														<Col span={16}>
+															<Col span={10}>
+																<a className={styles.text}><FormattedMessage id="Ctrl"/> ：</a>
+															</Col>
+															<Col span={14}>
+																<td className={styles.left}>{item.ctrl ||''}</td>
+															</Col>
+														</Col>
+														<Col span={8}>
+															<Col span={18}>
+																<a className={styles.text2}><FormattedMessage id="RSSI"/> ：</a>
+															</Col>
+															<Col span={6}>
+																<td className={styles.left3}><Signal width={item.rssi}/></td>
+															</Col>
+														</Col>
+													</tr>
+													<tr>
+														<Col span={16}>
+															<Col span={10}>
+																<a className={styles.text}><FormattedMessage id="Door"/> ：</a>
+															</Col>
+															<Col span={14}>
+																<td className="tl">{item.door1}</td>
+															</Col>
+														</Col>
+														<Col span={8}>
+															<Col span={18}>
+																<a className={styles.text2}><FormattedMessage id="State"/> ：</a>
+															</Col>
+															<Col span={6}>
+																<td className={styles.left3}><FormattedMessage id={state[item.state] ||'None'}/></td>
+															</Col>
+														</Col>
+													</tr>
+												</tbody>
+											</table>
+										</Col>
 									</List.Item>
 								)}
 							/>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Row, Col, Button, Spin, DatePicker, Pagination, Icon, Input, List, LocaleProvider } from 'antd';
-import { Tabs, Flex, Badge, Modal,} from 'antd-mobile';
+import { Row, Col, Button, Pagination, Icon, Input, List, LocaleProvider } from 'antd';
+import { Tabs, Modal,} from 'antd-mobile';
 import classNames from 'classnames';
 import base64url from 'base64url';
 import pathToRegexp from 'path-to-regexp';
@@ -15,11 +15,6 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 var switchId = 0;
 const alert = Modal.alert;
 const tabs = [
-	{ title: (window.localStorage.getItem("language")=='en') ? 'All' : '全部', device_type: '' },
-	{ title: (window.localStorage.getItem("language")=='en') ? 'Door' : '门机', device_type: '15' },
-	{ title: (window.localStorage.getItem("language")=='en') ? 'Ctrl' : '控制柜', device_type: '240' },
-];
-const tabs2 = [
 	{ title: (window.localStorage.getItem("language")=='en') ? 'All' : '全部', state: '' },
 	{ title: (window.localStorage.getItem("language")=='en') ? 'Online' : '在线', state: 'online' },
 	{ title: (window.localStorage.getItem("language")=='en') ? 'Fault' : '故障', state: 'offline' },
@@ -122,29 +117,32 @@ export default class extends Component {
 	}
 	getDevice = (device_type,val,state) => {
 		let { navs } = this.state;
-		const page = val
-		switchId = state
+		const page = val;
+		switchId = state;
 		if(switchId == 0){
-			state = ""
+			state = "";
 		}else if(switchId == 1){
-			state = "online"
+			state = "online";
 		}else if(switchId == 2){
-			state = "offline"
+			state = "offline";
 		}else if(switchId == 3){
-			state = "longoffline"
+			state = "longoffline";
 		}
 		if(switchId == 2){
-			this.getFault(page,device_type)
+			this.getFault(page,device_type);
 		}else{
 			this.setState({
 				device_type,
-        state,
+				state,
 			});
 			getFollowDevices({ num: 10, page, device_type, state, register:'registered',}).then((res) => {
 				if (res.code === 0) {
 					const now = new Date().getTime();
 					const totalNumber = res.data.totalNumber
 					const list = res.data.list.map((item) => {
+						if(item.state=="longoffline"){
+							item.rssi=0;
+						}
 						return item;
 					});
 					if(totalNumber==0){
@@ -266,29 +264,33 @@ export default class extends Component {
 	}
 	search = (page) =>{
 		const search_info = this.state.search_info,
-          install_addr = this.state.iddr,
-          device_type = this.state.device_type,
-          state = this.state.state;
+		install_addr = this.state.iddr,
+		device_type = this.state.device_type,
+		state = this.state.state;
 		getFollowDevices({ num: 10, page, search_info, install_addr, register: 'registered', device_type, state }).then((res) => {
 			if (res.code == 0) {
 				const now = new Date().getTime();
 				const totalNumber = res.data.totalNumber
 				const list = res.data.list.map((item) => {
+					if(item.state=="longoffline"){
+						item.rssi=0;
+					}
 					return item;
 				});
-        if(totalNumber == 0){
-          this.setState({
-          	list,
-          	totalNumber,
-            page:0,
-          });
-        }else{
-          this.setState({
-          	list,
-          	totalNumber,
-            page,
-          });
-        }
+				if(totalNumber == 0){
+					this.setState({
+						list,
+						totalNumber,
+						page:0,
+					});
+				}else{
+					this.setState({
+						list,
+						totalNumber,
+						page,
+					});
+				}
+				console.log(this.state.list)
 			}
 		})
 	}
@@ -305,7 +307,8 @@ export default class extends Component {
 			<LocaleProvider locale={la}>
 				<div className={styles.content}>
 					<Tabs
-						tabs={tabs2}
+						tabs={tabs}
+						swipeable={false}
 						initialPage={this.state.switchId}
 						tabBarActiveTextColor="#1E90FF"
 						tabBarUnderlineStyle={{ borderColor: '#1E90FF' }}
