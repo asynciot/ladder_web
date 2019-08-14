@@ -13,8 +13,17 @@ const options = [
 		label: 'NSFC01-02T',
 		link: 'NSFC01-02T',
 	},{
+		label: 'NSFC01-02T_EN',
+		link: 'NSFC01-02T_EN',
+	},{
 		label: (window.localStorage.getItem("language")=='zh')?'控制柜故障代码':'Ctrl Fault Code',
 		link: 'CtrlCode',
+	},{
+		label: 'HPC181',
+		link: 'HPC181',
+	},{
+		label: 'HPC181_EN',
+		link: 'HPC181_EN',
 	},
 ];
 @connect(({ tech }) => ({
@@ -27,9 +36,9 @@ export default class Tech extends Component {
 			label: (window.localStorage.getItem("language")=='zh')?'产品说明书':'Description',
 			link: '/tech/manual',
 		}, {
-    	label: (window.localStorage.getItem("language")=='zh')?'故障代码查询':'Code Query',
-    	link: '/tech/code',
-    }
+			label: (window.localStorage.getItem("language")=='zh')?'故障代码查询':'Code Query',
+			link: '/tech/code',
+		}
 		/* {
 			label: (window.localStorage.getItem("language")=='zh')?'其他相关资料':'Other Data',
 			link: '/tech/other',

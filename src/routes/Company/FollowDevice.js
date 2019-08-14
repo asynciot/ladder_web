@@ -23,7 +23,7 @@ const tabs = [
 const modelName = {
 	'0':'HPC181',
 	"1":'NSFC01-01B',
-	"2":'NSFC01 -02T',
+	"2":'NSFC01-02T',
 }
 const typeName ={
 	'240':'ctrl',
