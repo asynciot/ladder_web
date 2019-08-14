@@ -8,7 +8,7 @@ import classNames from 'classnames';
 import TweenOne from 'rc-tween-one';
 import styles from './Realtime.less';
 import echarts from 'echarts';
-import {getEvent, postMonitor, getFollowDevices, getDeviceList, getDoorRuntime, getCommand} from '../../services/api';
+import { postMonitor, getFollowDevices, getDeviceList, getDoorRuntime, getCommand } from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
 
 var counts=0;
@@ -172,6 +172,7 @@ export default class DoorHistory extends Component {
 		endTime:'',
 		command:false,
 		loading:false,
+		list:[],
 	}
 	componentWillMount() {
 		this.state.id = this.props.match.params.id
@@ -365,6 +366,11 @@ export default class DoorHistory extends Component {
 									this.setState({
 										endTime:0,
 									})
+									if(language=="zh"){
+										alert("监控结束");
+									}else{
+										alert("End of monitoring.");
+									}
 									clearInterval(timing);
 								}else{
 									this.setState({
@@ -449,6 +455,7 @@ export default class DoorHistory extends Component {
 					command,
 					state:res.data.list[0].state,
 					show,
+					list:res.data.list[0],
 				})
 			}
 		})
@@ -1052,10 +1059,9 @@ export default class DoorHistory extends Component {
 		const id = this.state.id;
 		history.push(`/events/door/${item.id}/`);
 	}
-	timeTicket = null;
-	goDetail = link => () => {
+	goDetail = () => {
 		const id = this.state.id;
-		const type = this.props.location.state.type
+		const type = this.state.list.device_model;
 		this.props.history.push(`/door/${id}/params/${type}`);
 	}
 	goQrcode = () => {
@@ -1370,7 +1376,7 @@ export default class DoorHistory extends Component {
 					</div>
 					<div className={styles.btns}>
 						{/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}
-						<section onClick={this.goDetail(type == 2 ? 'params/2': 'params/1')}><FormattedMessage id="Menu"/></section>
+						<section onClick={()=>this.goDetail(type == 2 ? 'params/2': 'params/1')}><FormattedMessage id="Menu"/></section>
 						<section onClick={this.goQrcode}><FormattedMessage id="QR Code"/></section>
 						<section onClick={this.gohistory}><FormattedMessage id="History fault"/></section>
 					</div>

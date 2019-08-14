@@ -39,17 +39,16 @@ function checkStatus(response) {
 window.notLogin = null;
 function checkCode(response) {
 	if (response.code === 611 && notLogin == null) {
-		window.location.reload();
-		/* window.notLogin = notification.error({
+		window.notLogin = notification.error({
 			message: '登录信息已过期，请重新登录',
 			duration: 1,
 			onClose: () => {
-//      localStorage.removeItem('companyId');
+//				localStorage.removeItem('companyId');
 				localStorage.setItem('role', 'guest');
 				window.location.reload();
 				return response;
 			},
-		}); */
+		});
 	}
 	return response;
 }

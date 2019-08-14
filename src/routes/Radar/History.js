@@ -181,26 +181,26 @@ export default class DoorHistory extends Component {
 				let buffer = []
 				buffer = base64url.toBuffer(response.data);	//8位转流
 				for(let i=0 ; i<response["length"] ; i++){
-					show.openIn = events.openIn[i] = (buffer[i*8]&0x80)>>7						  //获取开门信号
-					show.closeIn = events.closeIn[i] = (buffer[i*8]&0x40)>>6						//获取关门信号
-					show.openTo =	events.openTo[i] = (buffer[i*8+0]&0x20)>>5						//获取开到位输入信号
+					show.openIn = events.openIn[i] = (buffer[i*8]&0x80)>>7						//获取开门信号
+					show.closeIn = events.closeIn[i] = (buffer[i*8]&0x40)>>6					//获取关门信号
+					show.openTo =	events.openTo[i] = (buffer[i*8+0]&0x20)>>5					//获取开到位输入信号
 					show.closeTo = events.closeTo[i] = (buffer[i*8+0]&0x10)>>4					//获取关到位输入信号
-					show.openDecelerate =	events.openDecelerate[i] = (buffer[i*8+0]&0x08)>>3				//开减速输入信号
-					show.closeDecelerate = events.closeDecelerate[i] = (buffer[i*8+0]&0x04)>>2			//关减速输入信号
+					show.openDecelerate =	events.openDecelerate[i] = (buffer[i*8+0]&0x08)>>3	//开减速输入信号
+					show.closeDecelerate = events.closeDecelerate[i] = (buffer[i*8+0]&0x04)>>2	//关减速输入信号
 					show.openToOut = events.openToOut[i] = (buffer[i*8]&0x02)>>1				//获取开到位输出信号
-					show.closeToOut = events.closeToOut[i] = (buffer[i*8]&0x01)			    //获取关到位输出信号
-					show.door	= events.door[i] = (buffer[i*8+1]&0x80)>>7								//门光幕信号
-					show.open	= events.open[i] = (buffer[i*8+1]&0x40)>>6						    //正在开门信号
-					show.close =	events.close[i] = (buffer[i*8+1]&0x20)>>5						  //正在关门信号
+					show.closeToOut = events.closeToOut[i] = (buffer[i*8]&0x01)					//获取关到位输出信号
+					show.door	= events.door[i] = (buffer[i*8+1]&0x80)>>7						//门光幕信号
+					show.open	= events.open[i] = (buffer[i*8+1]&0x40)>>6						//正在开门信号
+					show.close =	events.close[i] = (buffer[i*8+1]&0x20)>>5					//正在关门信号
 					show.openKeep	= events.openKeep[i] = (buffer[i*8+1]&0x10)>>4				//开门到位维持信号
-					show.closeKeep	= events.closeKeep[i] = (buffer[i*8+1]&0x08)>>3			//关门到位维持信号
-					show.stop	= events.stop[i] = (buffer[i*8+1]&0x04)>>2					      //停止输出信号
-					show.inHigh = events.inHigh[i] = (buffer[i*8+1]&0x02)>>1						//输入电压过高
-					show.inLow = events.inLow[i] = (buffer[i*8+1]&0x01)							    //输入电压过低
+					show.closeKeep	= events.closeKeep[i] = (buffer[i*8+1]&0x08)>>3				//关门到位维持信号
+					show.stop	= events.stop[i] = (buffer[i*8+1]&0x04)>>2						//停止输出信号
+					show.inHigh = events.inHigh[i] = (buffer[i*8+1]&0x02)>>1					//输入电压过高
+					show.inLow = events.inLow[i] = (buffer[i*8+1]&0x01)							//输入电压过低
 					show.outHigh = events.outHigh[i] = (buffer[i*8+2]&0x80)>>7					//输出过流
-					show.motorHigh = events.motorHigh[i] = (buffer[i*8+2]&0x40)>>6			//电机过载
+					show.motorHigh = events.motorHigh[i] = (buffer[i*8+2]&0x40)>>6				//电机过载
 					show.flySafe = events.flySafe[i] = (buffer[i*8+2]&0x20)>>5					//飞车保护
-					show.closeStop = events.closeStop[i] = (buffer[i*8+2]&0x10)>>4			//开关门受阻
+					show.closeStop = events.closeStop[i] = (buffer[i*8+2]&0x10)>>4				//开关门受阻
 					show.position	= events.position[i] = ((buffer[i*8+2]&0x0f)<<8)+(buffer[i*8+3]&0xff)					//获取位置信号
 					show.current = events.current[i] = (((buffer[i*8+4]&0xff)<<8)+(buffer[i*8+5]&0xff))/1000		//获取电流信号
 					events.speed[i] = (((buffer[i*8+6]&0xff)<<8)+(buffer[i*8+7]&0xff))/1000
@@ -879,18 +879,21 @@ export default class DoorHistory extends Component {
 										justifyContent: 'flex-start',
 									}}><FormattedMessage id="Device Name"/>：<i className={styles.status}>{this.state.device_name}</i>
 									</p>
-									<p><FormattedMessage id="Door Current"/><i className={styles.status}>{`${show.current} A`}</i>
+									<p style={{
+										width: '50%',
+									}}><FormattedMessage id="Door State"/><i className={styles.status}>{<FormattedMessage id={parseState(show)}/>}</i>
 									</p>
-									<p><FormattedMessage id="Number of opening:"/><i className={styles.status}>{show.times || <FormattedMessage id="None"/>}</i>
+									<p><FormattedMessage id="Door Current"/><i className={styles.status}>{`${show.current} A`}</i>
 									</p>
 									<p><FormattedMessage id="Opening signal"/><i className={styles.status}>{show.openIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
 									<p><FormattedMessage id="Closing signal"/><i className={styles.status}>{show.closeIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
-									<p style={{
-										width: '50%',
-									}}><FormattedMessage id="Door State"/><i className={styles.status}>{<FormattedMessage id={parseState(show)}/>}</i>
+									<p ><FormattedMessage id="Opening arrival signal"/><i className={styles.status}>{show.openTo ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
+									<p ><FormattedMessage id="Closing arrival signal"/><i className={styles.status}>{show.closeTo ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									</p>
+									
 									<p style={{
 										width: '50%',
 									}}><FormattedMessage id="Now Event"/><i className={styles.status}>{<FormattedMessage id={this.state.event}/> || <FormattedMessage id="None"/>}</i>
@@ -934,11 +937,17 @@ export default class DoorHistory extends Component {
 									</p>
 									<p><FormattedMessage id="Door Current"/><i className={styles.status}>{`${show.current} A`}</i>
 									</p>
-									<p><FormattedMessage id="Number of opening"/><i className={styles.status}>{show.times || <FormattedMessage id="None"/>}</i>
-									</p>
 									<p><FormattedMessage id="Opening signal"/><i className={styles.status}>{show.openIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
 									<p><FormattedMessage id="Closing signal"/><i className={styles.status}>{show.closeIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									</p>
+									<p style={{
+										width: '100%',
+									}}><FormattedMessage id="Opening arrival signal"/><i className={styles.status}>{show.openTo ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									</p>
+									<p style={{
+										width: '100%',
+									}}><FormattedMessage id="Closing arrival signal"/><i className={styles.status}>{show.closeTo ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
 									<p style={{
 										width: '100%',
@@ -950,10 +959,6 @@ export default class DoorHistory extends Component {
 										justifyContent: 'flex-start',
 									}}><FormattedMessage id="Now Event"/><i className={styles.status}>{<FormattedMessage id={this.state.event}/> || <FormattedMessage id="None"/>} </i>
 									</p>
-									{/*<p><FormattedMessage id="Opening arrival signal"/><i className={styles.status}>{show.openToOut ? '开' : '关'}</i>
-									</p>
-									<p><FormattedMessage id="Closing arrival signal:"/><i className={styles.status}>{show.closeToOut ? '开' : '关'}</i>
-									</p>*/}
 									<p style={{
 										width: '100%',
 										justifyContent: 'flex-start',

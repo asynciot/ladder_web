@@ -75,33 +75,46 @@ export default class extends Component {
 					>
 						<FormattedMessage id="Install Address"/>
 					</InputItem>
-					<div onClick={()=>this.goDevice(0,list.ctrl_id)}>
-						<InputItem
-							value={list.ctrl}
-							disabled="true"
-							style={{color:'red'}}
-						>
-							<FormattedMessage id="Ctrl"/>
-						</InputItem>
-					</div>
-					<div onClick={()=>this.goDevice(1,list.door1)}>
-						<InputItem
-							value={list.door1}
-							disabled="true"
-							style={{color:'red'}}
-						>
-							<FormattedMessage id="Door"/>
-						</InputItem>
-					</div>
-					<div onClick={()=>this.goDevice(1,list.door2)}>
-						<InputItem
-							value={list.door2}
-							disabled="true"
-							style={{color:'red'}}
-						>
-							<FormattedMessage id="Door"/>
-						</InputItem>
-					</div>
+					{
+					list.ctrl?
+						<div onClick={()=>this.goDevice(0,list.ctrl_id)}>
+							<InputItem
+								value={list.ctrl}
+								disabled="true"
+								style={{color:'red'}}
+							>
+								<FormattedMessage id="Ctrl"/>
+							</InputItem>
+						</div>
+						:
+						<div></div>
+					}
+					{list.door1?
+						<div onClick={()=>this.goDevice(1,list.door1)}>
+							<InputItem
+								value={list.door1}
+								disabled="true"
+								style={{color:'red'}}
+							>
+								<FormattedMessage id="Door"/>
+							</InputItem>
+						</div>
+						:
+						<div></div>
+					}
+					{list.door2 ?
+						<div onClick={()=>this.goDevice(1,list.door2)}>
+							<InputItem
+								value={list.door2}
+								disabled="true"
+								style={{color:'red'}}
+							>
+								<FormattedMessage id="Door"/>
+							</InputItem>
+						</div>
+						:
+						<div></div>
+					}
 					{/* <div onClick={()=>this.goLadder()}>
 						<InputItem
 							disabled="true"

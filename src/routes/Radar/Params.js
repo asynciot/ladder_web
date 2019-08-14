@@ -19,8 +19,14 @@ const Panel = Collapse.Panel;
 const { SubMenu } = Menu;
 const Menus = (item) => (
 	<Menu>
-		<p className={styles.explain}><FormattedMessage id={item.explain}/></p>
-		{/* <Menu.Item><FormattedMessage id={item.label}/></Menu.Item> */}
+		<Row>
+			<Col span={4}>
+				<p><FormattedMessage id={item.label}/></p>
+			</Col>
+			<Col span={20}>
+				<p className={styles.explain}><FormattedMessage id={item.explain}/></p>
+			</Col>
+		</Row>
 	</Menu>
 );
 @connect(({ device, global }) => ({
