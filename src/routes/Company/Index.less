@@ -29,17 +29,19 @@
 }
 
 .aui_head_body{
+	background-image: url('../../assets/icon/head.png');
+	background-size: 100% 100%;
     width:100%;
     height:auto;
     position:relative;
 }
 
-.aui_head_body img{
-    width:100%;
-    height:auto;
-    display:block;
-    border:none;
-}
+// .aui_head_body img{
+//     width:100%;
+//     height:auto;
+//     display:block;
+//     border:none;
+// }
 .icon {
     width: 20px;
     height: 20px;
@@ -63,11 +65,12 @@
 		margin-top: -30px;
 }
 .aui_user_item{
-    position:absolute;
-    left:50%;
+    position:static;
+	margin: 0 auto;
+	left: 0;
+    right: 0;
     width:110px;
-    margin-left:-55px;
-		top: 10px;
+	top: 10px;
 }
 .aui_mine_user{
     width:100px;
@@ -78,8 +81,10 @@
 			height:100px;
 			width: 100px;
 			border-radius: 50%;
+			margin: 0 auto;
 		  top: 0;
 		  left: 0;
+		  right: 0;
 		  opacity: 0;
 		}
 }
@@ -100,7 +105,7 @@
 		white-space:nowrap;
 		width: 90px;
     font-size:1rem;
-    padding-top:0.5rem;
+    padding-top:0.1rem;
 }
 .aui_palace {
     padding: 0.9rem 0;
@@ -153,7 +158,6 @@
     padding: 0.9rem 0;
     position: relative;
     overflow: hidden;
-    background: #fff;
     width: 90%;
     margin: 1rem auto 0;
     box-shadow: 0 0 11px #f1f2f5;
@@ -161,7 +165,7 @@
     text-align:center;
 }
 
-.aui_landlady h2{
-    font-size:1rem;
-    color:#16bd87;
+.aui_landlady .button{
+	width: 100%;
+	font-size: 1rem;
 }

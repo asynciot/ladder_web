@@ -10,7 +10,16 @@ import styles from './CtrlRealtime.less';
 import echarts from 'echarts';
 import { getEvent, postMonitor, getFollowDevices, getFault, getFloorData, getCtrlRuntime, getCommand } from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
+import mfb from './mfb.css';
 
+const Watch = {
+	label: 'Watch',
+	view: 0,
+};
+const Line={
+	label: 'Line',
+	view: 1,
+};
 var counts=0;
 var ct=0;
 var chartInte =null;
@@ -81,6 +90,21 @@ const data = [{
 
 export default class CtrlRealtime extends Component {
 	state = {
+		dateSelected:false,
+		closedate:false,
+		outButton:'',
+		outtarget:'',
+		clickOpt : 'click',
+		toggleMethod : 'data-mfb-toggle',
+		menuState : 'data-mfb-state',
+		isOpen : 'open',
+		isClosed : 'closed',
+		mainButtonClass : 'mfb__mfb_component__button__main___3WV7w',
+		elemsToClick:'',
+		outelemsToClick:'',
+		mainButton:'',
+		target:'',
+		currentState:'',
 		pclock:true,
 		clock:true,
 		active:true,
@@ -219,6 +243,49 @@ export default class CtrlRealtime extends Component {
 			websock.close()
 			websock=null
 		}
+	}
+	
+	myattachEvt=()=>{
+		this.state.outButton=document.querySelector('#mymask');
+		if(this.state.outButton!=null)
+		{
+			this.state.outButton.addEventListener("click",this.handleMask,false);
+		}
+	}
+	handleMask=(evt)=>{
+		this.state.outtarget=evt.target;
+		if(this.state.outtarget.id!="mybutton"&&this.state.target!=""){
+			
+			this.state.currentState = this.state.target.getAttribute( this.state.menuState ) === this.state.isClosed ;
+			this.state.target.setAttribute(this.state.menuState, this.state.currentState);
+			this.setState({
+				dateSelected:this.state.closedate
+			})
+		}
+		
+	}
+	
+	attachEvt=( elems, evt )=>{
+	  for( var i = 0, len = elems.length; i < len; i++ ){
+	    this.state.mainButton = elems[i].querySelector('.' + this.state.mainButtonClass);
+	    this.state.mainButton.addEventListener( evt , this.toggleButton, false);
+	  }
+	}
+	getElemsByToggleMethod=( selector )=>{
+	  return document.querySelectorAll('[' + this.state.toggleMethod + '="' + selector + '"]');
+	}
+	toggleButton=( evt )=>{
+		
+	  this.state.target = evt.target;
+	  while ( this.state.target && !this.state.target.getAttribute( this.state.toggleMethod ) ){
+	    this.state.target = this.state.target.parentNode;
+	    if(!this.state.target) { return; }
+	  }
+	  this.state.currentState = this.state.target.getAttribute( this.state.menuState ) === this.state.isOpen ? this.state.isClosed : this.state.isOpen;
+	  this.state.target.setAttribute(this.state.menuState, this.state.currentState);
+      this.setState({
+	  	dateSelected:!this.state.dateSelected
+	  })
 	}
 	initWebsocket = () =>{ //初始化weosocket
 		const { currentUser } = this.props;
@@ -807,8 +874,18 @@ export default class CtrlRealtime extends Component {
 		this.state.switch1 = !this.state.switch1
 		this.forceUpdate()
 	}
+	changeView = (item) => {
+		this.props.dispatch({
+			type: 'ctrl/changeView',
+			payload: item.view,
+		});
+	}
 	render() {
-		let { ctrl: { event, view, device, floors, property, } } = this.props
+		this.state.elemsToClick = this.getElemsByToggleMethod( this.state.clickOpt );
+		this.attachEvt( this.state.elemsToClick, 'click' );
+		this.myattachEvt();
+		
+		const { ctrl: { event, view, device, floors, property, } } = this.props
 		const { floor, markFloor, markList, show} = this.state
 		const id = this.props.match.params.id;
 		if(view == 1 && counts == 1){
@@ -831,6 +908,7 @@ export default class CtrlRealtime extends Component {
 		return (
 			<div className="content tab-hide">
 				<div className={styles.content}>
+					<div id="mymask" className={`${styles.selectMask_box} ${this.state.dateSelected ? styles.mask : ""}`}>
 					<Modal
 						visible={this.state.modal}
 						transparent
@@ -1354,14 +1432,14 @@ export default class CtrlRealtime extends Component {
 									</div>
 								</Col>
 							</div>
-							<div className={styles.btns}>
-								{/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}
+							{/* <div className={styles.btns}>
+								<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>
 								<section onClick={this.goDetail('params')}><FormattedMessage id="Menu"/></section>
 								<section onClick={this.goQrcode}><FormattedMessage id="QR Code"/></section>
 								<section onClick={this.goDebug}><FormattedMessage id="watch"/></section>
 								<section onClick={this.gohistory}><FormattedMessage id="History fault"/></section>
 								<section onClick={this.gocall}><FormattedMessage id="Call"/></section>
-							</div>
+							</div> */} 
 						</div>
 						:
 						<div className={classNames(styles.tab, view == 0 ?'tab-active' : 'tab-notactive')}>
@@ -1858,14 +1936,13 @@ export default class CtrlRealtime extends Component {
 									</div>
 								</Col>
 							</div>
-							<div className={styles.btns}>
-								{/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}
+							{/* <div className={styles.btns}>
 								<section onClick={this.goDetail('params')}><FormattedMessage id="Menu"/></section>
 								<section onClick={this.goQrcode}><FormattedMessage id="QR Code"/></section>
 								<section onClick={this.goDebug}><FormattedMessage id="watch"/></section>
 								<section onClick={this.gohistory}><FormattedMessage id="History fault"/></section>
 								<section onClick={this.gocall}><FormattedMessage id="Call"/></section>
-							</div>
+							</div> */}
 						</div>
 					}
 					<div className={classNames(styles.tab, view == 1 ?'tab-active' : 'tab-notactive')}>
@@ -1884,6 +1961,47 @@ export default class CtrlRealtime extends Component {
 									<div id = "close" style={{ width: 320 , height: 240 }}></div>
 							</Col>
 						</Row>
+					</div>
+					<ul ref='mybtn' id="menu" className={`${mfb.mfb_component__br} ${mfb.mfb_zoomin}`} data-mfb-toggle="click">
+					  <li className={mfb.mfb_component__wrap}>
+						<a  className={mfb.mfb_component__button__main}>
+						  <i className={`${mfb.mfb_component__main_icon__resting} ${mfb.icon_plus}`}></i>
+						  <i id="mybutton" className={`${mfb.mfb_component__main_icon__active} ${mfb.icon_close}`}></i>
+						</a>
+						<ul className={mfb.mfb_component__list}>
+						  <li>
+							<a  data-mfb-label={(la=="zh")?"菜单":"Menu"} className={mfb.mfb_component__button__child}>
+							  <i className={`${mfb.mfb_component__child_icon} ${mfb.icon_menu}`} onClick={this.goDetail('params')}></i>
+							</a>
+						  </li>
+						  <li>
+							<a data-mfb-label={(la=="zh")?"二维码":"QR code"} className={mfb.mfb_component__button__child}>
+							  <i className={`${mfb.mfb_component__child_icon} ${mfb.icon_qrcode}`} onClick={this.goQrcode}></i>
+							</a>
+						  </li>
+						  <li>
+							<a data-mfb-label={(la=="zh")?"内存查看":"Memory View"} className={mfb.mfb_component__button__child}>
+							  <i className={`${mfb.mfb_component__child_icon} ${mfb.icon_watch}`} onClick={this.goDebug}></i>
+							</a>
+						  </li>
+						  <li>
+							<a data-mfb-label={(la=="zh")?"历史故障":"Historical fault"} className={mfb.mfb_component__button__child}>
+							  <i className={`${mfb.mfb_component__child_icon} ${mfb.icon_fault}`} onClick={this.gohistory}></i>
+							</a>
+						  </li>
+						  <li>
+						  	<a data-mfb-label={(la=="zh")?"呼梯":"Call"} className={mfb.mfb_component__button__child}>
+						  	<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_call}`} onClick={this.gocall}></i>
+						  	</a>
+						  </li>
+						  <li>
+						  	<a data-mfb-label={(la=="zh")?"实时":"Real time"} className={mfb.mfb_component__button__child}>
+						  	<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_event}`}></i>
+						  	</a>
+						  </li>
+						</ul>
+					  </li>
+					</ul>
 					</div>
 				</div>
 			</div>

@@ -3,14 +3,23 @@ import { connect } from 'dva';
 import _ from 'lodash';
 import base64url from 'base64url';
 import { Row, Col, Button, Spin, DatePicker, Switch, } from 'antd';
-import { Picker, List, Tabs, Modal } from 'antd-mobile';
+import { Picker, List, Tabs, Modal,Popover, NavBar, Icon } from 'antd-mobile';
 import classNames from 'classnames';
 import TweenOne from 'rc-tween-one';
 import styles from './Realtime.less';
 import echarts from 'echarts';
 import { postMonitor, getFollowDevices, getDeviceList, getDoorRuntime, getCommand } from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
+import mfb from './mfb.css';
 
+const Watch = {
+	label: 'Watch',
+	view: 0,
+};
+const Line={
+	label: 'Line',
+	view: 1,
+};
 var counts=0;
 var ct=0;
 const alert = Modal.alert;
@@ -46,6 +55,21 @@ const parseState = (event) => {
 }))
 export default class DoorHistory extends Component {
 	state = {
+		dateSelected:false,
+		closedate:false,
+		outButton:'',
+		outtarget:'',
+		clickOpt : 'click',
+		toggleMethod : 'data-mfb-toggle',
+		menuState : 'data-mfb-state',
+		isOpen : 'open',
+		isClosed : 'closed',
+		mainButtonClass : 'mfb__mfb_component__button__main___3WV7w',
+		elemsToClick:'',
+		outelemsToClick:'',
+		mainButton:'',
+		target:'',
+		currentState:'',
 		pclock:true,
 		clock:true,
 		active:true,
@@ -172,6 +196,7 @@ export default class DoorHistory extends Component {
 		endTime:'',
 		command:false,
 		loading:false,
+		device_model:'',
 		list:[],
 	}
 	componentWillMount() {
@@ -208,6 +233,47 @@ export default class DoorHistory extends Component {
 			websock.close()
 			websock=null
 		}
+	}
+	myattachEvt=()=>{
+		this.state.outButton=document.querySelector('#mymask');
+		if(this.state.outButton!=null)
+		{
+			this.state.outButton.addEventListener("click",this.handleMask,false);
+		}
+	}
+	handleMask=(evt)=>{
+		this.state.outtarget=evt.target;
+		if(this.state.outtarget.id!="mybutton"&&this.state.target!=""){
+			
+			this.state.currentState = this.state.target.getAttribute( this.state.menuState ) === this.state.isClosed ;
+			this.state.target.setAttribute(this.state.menuState, this.state.currentState);
+			this.setState({
+				dateSelected:this.state.closedate
+			})
+		}
+	}
+	attachEvt=( elems, evt )=>{
+	  for( var i = 0, len = elems.length; i < len; i++ ){
+	    this.state.mainButton = elems[i].querySelector('.' + this.state.mainButtonClass);
+	    this.state.mainButton.addEventListener( evt , this.toggleButton, false);
+	  }
+	  
+	}
+	getElemsByToggleMethod=( selector )=>{
+	  return document.querySelectorAll('[' + this.state.toggleMethod + '="' + selector + '"]');
+	}
+	toggleButton=( evt )=>{
+	  this.state.target = evt.target;
+	  while ( this.state.target && !this.state.target.getAttribute( this.state.toggleMethod ) ){
+	    this.state.target = this.state.target.parentNode;
+	    if(!this.state.target) { return; }
+	  }
+	  this.state.currentState = this.state.target.getAttribute( this.state.menuState ) === this.state.isOpen ? this.state.isClosed : this.state.isOpen;
+	  this.state.target.setAttribute(this.state.menuState, this.state.currentState);
+	  this.setState({
+	  	dateSelected:!this.state.dateSelected
+	  })
+	
 	}
 	initWebsocket (){ //初始化weosocket
 		const { currentUser } = this.props;
@@ -455,6 +521,7 @@ export default class DoorHistory extends Component {
 					command,
 					state:res.data.list[0].state,
 					show,
+					device_model:res.data.list[0].device_model,
 					list:res.data.list[0],
 				})
 			}
@@ -1054,14 +1121,13 @@ export default class DoorHistory extends Component {
 			}]
 		})
 	}
-	goEvent = item => () => {
-		const { history } = this.props;
+	goEvent = () => {
 		const id = this.state.id;
-		history.push(`/events/door/${item.id}/`);
+		this.props.history.push(`/events/door/${id}/`);
 	}
-	goDetail = () => {
+	goDetail = link => () => {
 		const id = this.state.id;
-		const type = this.state.list.device_model;
+		const type = this.state.device_model;
 		this.props.history.push(`/door/${id}/params/${type}`);
 	}
 	goQrcode = () => {
@@ -1094,7 +1160,21 @@ export default class DoorHistory extends Component {
 		}
 		this.forceUpdate()
 	}
+	changeView = (item) => {
+		const { dispatch, match } = this.props;
+		if(item.view==2){
+			dispatch(routerRedux.replace(`/events/door/${match.params.id}`));
+		}
+		dispatch({
+			type: 'device/changeView',
+			payload: item.view,
+		});
+	}
 	render() {
+		this.state.elemsToClick = this.getElemsByToggleMethod( this.state.clickOpt );
+		this.attachEvt( this.state.elemsToClick, 'click' );
+		this.myattachEvt();
+		
 		const { device: { events, view, property, updateTime, }} = this.props;
 		const { show, id } = this.state;
 		const width = parseInt((window.innerWidth - 100) / 2);
@@ -1124,6 +1204,7 @@ export default class DoorHistory extends Component {
 		return (
 			<div className="content tab-hide">
 				<div className={styles.content}>
+					<div id="mymask" className={`${styles.selectMask_box} ${this.state.dateSelected ? styles.mask : ""}`}>
 					<Modal
 						visible={this.state.modal}
 						transparent
@@ -1374,11 +1455,37 @@ export default class DoorHistory extends Component {
 							</Col>
 						</Row>
 					</div>
-					<div className={styles.btns}>
-						{/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}
-						<section onClick={()=>this.goDetail(type == 2 ? 'params/2': 'params/1')}><FormattedMessage id="Menu"/></section>
-						<section onClick={this.goQrcode}><FormattedMessage id="QR Code"/></section>
-						<section onClick={this.gohistory}><FormattedMessage id="History fault"/></section>
+
+					<ul ref='mybtn' id="menu" className={`${mfb.mfb_component__br} ${mfb.mfb_zoomin}`} data-mfb-toggle="click">
+					  <li className={mfb.mfb_component__wrap}>
+						<a  className={mfb.mfb_component__button__main}>
+						  <i className={`${mfb.mfb_component__main_icon__resting} ${mfb.icon_plus}`}></i>
+						  <i id="mybutton" className={`${mfb.mfb_component__main_icon__active} ${mfb.icon_close}`}></i>
+						</a>
+						<ul className={mfb.mfb_component__list}>
+						  <li>
+							<a  data-mfb-label={(language=="zh")?"菜单":"Menu"} className={mfb.mfb_component__button__child} onClick={this.goDetail(type == 2 ? 'params/2': 'params/1')}>
+							  <i className={`${mfb.mfb_component__child_icon} ${mfb.icon_menu}`}></i>
+							</a>
+						  </li>
+						  <li>
+							<a data-mfb-label={(language=="zh")?"二维码":"QR code"} className={mfb.mfb_component__button__child} onClick={this.goQrcode}>
+							  <i className={`${mfb.mfb_component__child_icon} ${mfb.icon_qrcode}`}></i>
+							</a>
+						  </li>
+						  <li>
+							<a data-mfb-label={(language=="zh")?"历史故障":"Historical faults"} className={mfb.mfb_component__button__child} onClick={this.gohistory}>
+							  <i className={`${mfb.mfb_component__child_icon} ${mfb.icon_fault}`}></i>
+							</a>
+						  </li>
+						  <li>
+							<a data-mfb-label={(language=="zh")?"历史事件":"Historical events"} className={mfb.mfb_component__button__child} onClick={this.goEvent}>
+							  <i className={`${mfb.mfb_component__child_icon} ${mfb.icon_event}`}></i>
+							</a>
+						  </li>
+						</ul>
+					  </li>
+					</ul>
 					</div>
 				</div>
 			</div>

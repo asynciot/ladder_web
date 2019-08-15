@@ -102,11 +102,11 @@ export default class Device extends Component {
 				{
 					pathName[2] !== 'params' && (
 						<div className={classNames(styles.menu)}>
-							<Dropdown overlay={menuList} placement="bottomCenter" trigger={['click']}>
+							{/* <Dropdown overlay={menuList} placement="bottomCenter" trigger={['click']}>
 								<a className={styles.dropdown} href="#">
 									<FormattedMessage id={this.state.menuName}/> <Icon type="down" />
 								</a>
-							</Dropdown>
+							</Dropdown> */}
 							{
 								menu.map(item => (
 									<section

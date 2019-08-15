@@ -75,6 +75,12 @@ export default class Device extends Component {
 			type: 'ctrl/changeView',
 			payload: item.view,
 		});
+		
+		{/* const { dispatch, match } = this.props;
+		dispatch({
+			type: 'device/changeView',
+			payload: item.view,
+		}); */}
 	}
 	render() {
 		const { isMobile, match, routerData, ctrl: { view } } = this.props;
@@ -103,11 +109,11 @@ export default class Device extends Component {
 				{
 					pathName[2] !== 'params' && pathName[2] !== 'fault'  && (
 						<div className={classNames(styles.menu)}>
-							<Dropdown overlay={menuList} placement="bottomCenter" trigger={['click']}>
+							{/* <Dropdown overlay={menuList} placement="bottomCenter" trigger={['click']}>
 								<a className={styles.dropdown} href="#">
 									{<FormattedMessage id={this.state.menuName}/>}
 								</a>
-							</Dropdown>
+							</Dropdown> */}
 							{
 								menu.map(item => (
 									<section

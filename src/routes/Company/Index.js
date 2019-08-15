@@ -6,7 +6,19 @@ import { Modal, Accordion, List, Badge, Grid } from 'antd-mobile';
 import styles from './Index.less';
 import { getFile, } from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import headimg from '../../assets/icon/head.png'
+import ReactDOM from 'react-dom';
+import Mbutton from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(theme => ({
+  button: {
+    margin: theme.spacing(1),
+  },
+  input: {
+    display: 'none',
+  },
+}));
+
 
 @connect(({ user, company }) => ({
 	currentUser: user.currentUser,
@@ -14,6 +26,12 @@ import headimg from '../../assets/icon/head.png'
 }))
 
 export default class Company extends Component {
+		state = {
+		list: [],
+		loading: false,
+		la:window.localStorage.getItem("language"),
+		}
+	
 		logout = () => {
 		this.props.dispatch({ type: 'login/logout' });
 		};
@@ -59,13 +77,14 @@ export default class Company extends Component {
 		})
 		};
 	render() {
+		const classes = useStyles;
 		const { company: { group, unread }, currentUser } = this.props;
 		return (
 			<section className={styles.aui_flexView}>
 				<section className={styles.aui_scrollView}>
 					<div className={styles.aui_head_body}>
 						<i className={`${styles.icon} ${styles.icon_news}`} onClick={() => this.goDetail('message')}></i>
-						<img src={headimg } />
+						
 						<div className={styles.aui_user_item}>
 							<div className={styles.aui_mine_user}>
 								<Avatar
@@ -131,7 +150,9 @@ export default class Company extends Component {
 						</a>
 					</div>
 					<div className={styles.aui_landlady}>
-						<h2 onClick={() => this.logout()}><FormattedMessage id="Logout"/></h2>
+						<Mbutton onClick={() => this.logout()} variant="contained"  color="secondary" className={styles.button}>
+							<FormattedMessage id="Logout"/>
+						</Mbutton>
 					</div>
 				</section>
 			</section>
