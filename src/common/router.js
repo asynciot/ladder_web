@@ -78,12 +78,12 @@ export const getRouterData = (app) => {
 		'/home': {
 			name: '首页',
 			name2: 'Home',
-			component: dynamicWrapper(app, [], () => import('../routes/NewHome')),
+			component: dynamicWrapper(app, [], () => import('../routes/Home')),
 		},
 		'/newhome': {
 			name: '首页',
 			name2: 'NewHome',
-			component: dynamicWrapper(app, [], () => import('../routes/Home')),
+			component: dynamicWrapper(app, [], () => import('../routes/NewHome')),
 		},
 		'/radar/map': {
 			name: '地图列表',
