@@ -16,14 +16,14 @@ const options = [
 		label: 'NSFC01-02T_EN',
 		link: 'NSFC01-02T_EN',
 	},{
-		label: (window.localStorage.getItem("language")=='zh')?'控制柜故障代码':'Ctrl Fault Code',
-		link: 'CtrlCode',
-	},{
 		label: 'HPC181',
 		link: 'HPC181',
 	},{
 		label: 'HPC181_EN',
 		link: 'HPC181_EN',
+	},{
+		label: (window.localStorage.getItem("language")=='zh')?'控制柜故障代码':'Ctrl Fault Code',
+		link: 'CtrlCode',
 	},
 ];
 @connect(({ tech }) => ({

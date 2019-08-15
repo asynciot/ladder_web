@@ -19,11 +19,11 @@ const Panel = Collapse.Panel;
 const { SubMenu } = Menu;
 const Menus = (item) => (
 	<Menu>
-		<Row>
-			<Col span={4}>
-				<p><FormattedMessage id={item.label}/></p>
+		<Row className={styles.border}>
+			<Col span={4} >
+				<div><p><FormattedMessage id={item.label}/></p></div>
 			</Col>
-			<Col span={20}>
+			<Col span={20} className={styles.borderleft}>
 				<p className={styles.explain}><FormattedMessage id={item.explain}/></p>
 			</Col>
 		</Row>
