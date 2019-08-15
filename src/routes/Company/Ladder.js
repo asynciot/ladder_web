@@ -59,7 +59,13 @@ export default class extends Component {
 		this.getDevice(1,switchId);
 	}
 	pageChange = (val) => {
-		this.getDevice(val,switchId)
+		const page = val
+		if(this.state.search_info != "" || this.state.iddr != ""){
+			this.search(page)
+		}else{
+			this.getDevice(val,switchId);
+		}
+		
 	}
 	getDevice = (val,state) => {
 		let { navs } = this.state;
@@ -72,6 +78,9 @@ export default class extends Component {
 		}else if(switchId == 2){
 			state = "longoffline"
 		}
+		this.setState({
+			state,
+		});
 		getLadder({ num: 10, page, state, follow:"yes"}).then((res) => {
 			if (res.code === 0) {
 				const list = res.data.list.map((item) => {
@@ -131,23 +140,29 @@ export default class extends Component {
 			iddr:e.target.value,
 		});
 	}
-	search = () =>{
-		const search_info = this.state.search_info
-		const install_addr = this.state.iddr
-		getLadder({ num: 10, page:1, search_info, install_addr,}).then((res) => {
+	search = (page) =>{
+		const search_info = this.state.search_info;
+		const install_addr = this.state.iddr;
+		const state = this.state.state;
+		getLadder({ num: 10, page, search_info, install_addr, state, }).then((res) => {
 			if (res.code === 0) {
-				const totalNumber = res.data.totalNumber
+				const totalNumber = res.data.totalNumber;
 				const list = res.data.list.map((item) => {
 					return item;
 				});
-				this.setState({
-					list,
-					totalNumber,
-				});
-			} else {
-				this.setState({
-					list: [],
-				});
+				if(totalNumber == 0){
+					this.setState({
+						list,
+						totalNumber,
+						page:0,
+					});
+				}else{
+					this.setState({
+						list,
+						totalNumber,
+						page,
+					});
+				}
 			}
 		});
 	}

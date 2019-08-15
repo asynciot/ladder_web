@@ -108,12 +108,12 @@ export default class extends Component {
 	}
 	pageChange = (val) => {
 		const { device_type,} =this.state
-    const page = val
-    if(this.state.search_info != "" && this.state.iddr != ""){
-      this.search(page)
-    }else{
-      this.getDevice(device_type,val,this.state.switchId)
-    }
+		const page = val
+		if(this.state.search_info != "" || this.state.iddr != ""){
+			this.search(page)
+		}else{
+			this.getDevice(device_type,val,this.state.switchId)
+		}
 	}
 	getDevice = (device_type,val,state) => {
 		let { navs } = this.state;
@@ -290,7 +290,6 @@ export default class extends Component {
 						page,
 					});
 				}
-				console.log(this.state.list)
 			}
 		})
 	}
