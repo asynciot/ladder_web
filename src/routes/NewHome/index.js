@@ -133,14 +133,14 @@ export default class Home extends Component {
 				}
 			}
 		}).catch((e => console.info(e)));
-		getFaultUntreted({ num: 10, page:1, islast:1, device_type:'door' }).then((res) => {
+		getFaultUntreted({ num: 10, page:1, islast:1, device_type:'door',type:1 }).then((res) => {
 			const pos = res.data.list.map((item,index) => {
 			})
 			this.setState({
 				dooroffline:res.data.totalNumber,
 			});
 		})
-		getFaultUntreted({ num: 10, page:1, islast:1, device_type:'ctrl' }).then((res) => {
+		getFaultUntreted({ num: 10, page:1, islast:1, device_type:'ctrl',type:1 }).then((res) => {
 			const pos = res.data.list.map((item,index) => {
 			})
 			this.setState({
