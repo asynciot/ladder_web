@@ -108,12 +108,12 @@ export default class extends Component {
 	}
 	pageChange = (val) => {
 		const { device_type,} =this.state
-    const page = val
-    if(this.state.search_info != "" && this.state.iddr != ""){
-      this.search(page)
-    }else{
-      this.getDevice(device_type,val,this.state.switchId)
-    }
+		const page = val
+		if(this.state.search_info != "" || this.state.iddr != ""){
+			this.search(page)
+		}else{
+			this.getDevice(device_type,val,this.state.switchId)
+		}
 	}
 	getDevice = (device_type,val,state) => {
 		let { navs } = this.state;
@@ -248,7 +248,6 @@ export default class extends Component {
 			pathname: `/company/follow${this.state.device}/${state}`,
 			state: { device_type }
 		});
-		this.getDevice(device_type,1,val)
 	}
 	onChange = (e) =>{
 		let val = e.target.value
@@ -290,7 +289,6 @@ export default class extends Component {
 						page,
 					});
 				}
-				console.log(this.state.list)
 			}
 		})
 	}
@@ -336,6 +334,7 @@ export default class extends Component {
 							</Row>
 							<List
 								className={styles.lis}
+								itemLayout="horizontal"
 								dataSource={list}
 								renderItem={(item,index) => (
 									<List.Item actions={[<ListButton edit={(event) => { this.edit(event, item); }} />]} className={styles.item} key={index} onClick={this.goDevice(item)}>
@@ -346,7 +345,7 @@ export default class extends Component {
 													<tbody>
 														<tr>
 															<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
-															<td className={styles.left} style={{ width:'220px' }}>{item.install_addr}</td>
+															<td className={styles.left} style={{width:'220px'}}>{item.install_addr}</td>
 														</tr>
 														<tr>
 															<Col span={16}>
@@ -873,7 +872,7 @@ export default class extends Component {
 															</Col>
 															<Col span={8}>
 																<a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
-																<td className="tl"><Signal width={0}/></td>
+																<td className="tl"><Signal width={item.rssi}/></td>
 															</Col>
 														</tr>
 														<tr>
@@ -910,11 +909,11 @@ export default class extends Component {
 														<tr>
 															<Col span={16}>
 																<Col span={10}>
-															    <a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
-															  </Col>
-															  <Col span={14}>
-															    <td className={styles.left2} style={{width:'220px'}}>{item.install_addr}</td>
-															  </Col>
+																	<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
+																</Col>
+																<Col span={14}>
+																	<td className={styles.left2} style={{width:'220px'}}>{item.install_addr}</td>
+																</Col>
 															</Col>
 														</tr>
 														<tr>
@@ -942,7 +941,7 @@ export default class extends Component {
 															</Col>
 															<Col span={8}>
 																<a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
-																<td className={styles.marginBottom}><Signal width={0}/></td>
+																<td className="tl"><Signal width={item.rssi}/></td>
 															</Col>
 														</tr>
 														<tr>

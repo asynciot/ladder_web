@@ -111,11 +111,9 @@ export default class extends Component {
 					this.setState({
 						totalNumber:res.data.totalNumber,
 					})
-					getFollowDevices({num:1,page:1,device_id}).then((ind) => {
-						device_name[index] = ind.data.list[0].device_name
-						this.setState({
-							device_name,
-						});
+					const data = getFollowDevices({num:1,page:1,device_id}).then((ind) => {
+						item.device_name = ind.data.list[0].device_name
+						return item;
 					})
 					if(item.device_type=='ctrl'){
 						item.code = 'E'+res.data.list[index].code.toString(16)
@@ -145,29 +143,29 @@ export default class extends Component {
 					item.minute = parseInt(time%(1000*3600)/(1000*60))
 					item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
 					const device_id = item.device_id
-					getFollowDevices({num:1,page:1,device_id}).then((ind) => {
-						device_name[index] = ind.data.list[0].device_name
-						this.setState({
-							device_name,
-						})
+					const data = getFollowDevices({num:1,page:1,device_id}).then((ind) => {
+						item.device_name = ind.data.list[0].device_name
+						item.device_type = ind.data.list[0].device_type
+						if(item.device_type == '240'){
+							item.code = 'E'+res.data.list[index].code.toString(16)
+						}else{
+							item.code = CodeTransform[parseInt(res.data.list[index].code)+50]
+						}
+						return item;
 					})
-					if(item.device_type=='ctrl'){
-						item.code = 'E'+res.data.list[index].code.toString(16)
-					}else{
-						item.code = CodeTransform[parseInt(res.data.list[index].code)+50]
-					}
 					return item;
 				})
+				console.log(dispatchList)
 				if(res.data.totalPage==0){
 					this.setState({
 						page:0,
 					})
 				}
-				 this.setState({
-/* 					dispatchList, */
-/* 					totalNumber:res.data.totalNumber, */
-				}) 
-			}).catch((e => console.info(e)));
+				this.setState({
+					dispatchList,
+					totalNumber:res.data.totalNumber,
+				})
+			})
 		}
 	}
 	goFault = item => () =>{
@@ -285,7 +283,7 @@ export default class extends Component {
 												<tbody>
 													<tr>
 														<a className={styles.text}><FormattedMessage id="fault code"/>：</a>
-														<td className={styles.left} style={{ width: '210px' }}>{item.code}<FormattedMessage id={item.code}/></td>
+														<td className={styles.left} style={{ width: '210px' }}><FormattedMessage id={item.code}/></td>
 													</tr>
 													<tr>
 														<Col span={16}>
@@ -293,7 +291,7 @@ export default class extends Component {
 																<a className={styles.text}><FormattedMessage id="Device Name"/>：</a>
 															</Col>
 															<Col span={14}>
-																<td className="tl">{device_name[index]}</td>
+																<td className="tl">{item.device_name}</td>
 															</Col>
 														</Col>
 													</tr>
@@ -360,16 +358,14 @@ export default class extends Component {
 												<tbody>
 													<tr>
 														<a className={styles.text}><FormattedMessage id="fault code"/>：</a>
-														<td className="tl" style={{ width: '200px' }}>{item.code}<FormattedMessage id={item.code}/></td>
+														<td className="tl" style={{ width: '200px' }}>{item.code}</td>
 													</tr>
 													<tr>
 														<Col span={16}>
 															<Col span={10}>
 																<a className={styles.text}><FormattedMessage id="Device Name"/>：</a>
 															</Col>
-															<Col span={14}>
-																<td className="tl">{device_name[index]}</td>
-															</Col>
+															<td className="tl">{item.device_name}</td>
 														</Col>
 													</tr>
 													<tr>

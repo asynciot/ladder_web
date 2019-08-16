@@ -244,7 +244,6 @@ export default class DoorHistory extends Component {
 	handleMask=(evt)=>{
 		this.state.outtarget=evt.target;
 		if(this.state.outtarget.id!="mybutton"&&this.state.target!=""){
-			
 			this.state.currentState = this.state.target.getAttribute( this.state.menuState ) === this.state.isClosed ;
 			this.state.target.setAttribute(this.state.menuState, this.state.currentState);
 			this.setState({
@@ -255,7 +254,8 @@ export default class DoorHistory extends Component {
 	attachEvt=( elems, evt )=>{
 	  for( var i = 0, len = elems.length; i < len; i++ ){
 	    this.state.mainButton = elems[i].querySelector('.' + this.state.mainButtonClass);
-		if(this.state.mainButton!=null){
+		if(this.state.mainButton!=null)
+		{
 			this.state.mainButton.addEventListener( evt , this.toggleButton, false);
 		}
 	  }
@@ -324,27 +324,27 @@ export default class DoorHistory extends Component {
 		}
 		let str = '';
 		if (show.inHigh) {
-			str += '178';
+			str = '178';
 			this.state.color=true
 		}
 		if (show.inLow) {
-			str += '114';
+			str = '114';
 			this.state.color=true
 		}
 		if (show.outHigh) {
-			str += '82';
+			str = '82';
 			this.state.color=true
 		}
 		if (show.motorHigh) {
-			str += '66';
+			str= '66';
 			this.state.color=true
 		}
 		if (show.flySafe) {
-			str += '55';
+			str = '55';
 			this.state.color=true
 		}
 		if (show.closeStop) {
-			str += '51';
+			str = '51';
 			this.state.color=true
 		}
 		if (str === '') {
