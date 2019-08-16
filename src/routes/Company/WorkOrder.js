@@ -62,6 +62,7 @@ export default class extends Component {
 		historyEvents: [],
 		list:[],
 		dispatchList:[],
+		code:[],
 		nowTime: new Date().getTime(),
 		tab: 0,
 		page: 1,
@@ -100,6 +101,7 @@ export default class extends Component {
 		let {page, total, historyEvents} = this.state;
 		this.state.type = state
 		let device_name = []
+		let type = []
 		if(state == 'untreated'){
 			getFault({ num: 10, page, state, islast:1 }).then((res) => {
 				const list = res.data.list.map((item,index) => {
@@ -111,9 +113,11 @@ export default class extends Component {
 					this.setState({
 						totalNumber:res.data.totalNumber,
 					})
-					const data = getFollowDevices({num:1,page:1,device_id}).then((ind) => {
-						item.device_name = ind.data.list[0].device_name
-						return item;
+					getFollowDevices({num:1,page:1,device_id}).then((ind) => {
+						device_name[index] = ind.data.list[0].device_name
+						this.setState({
+							device_name,
+						});
 					})
 					if(item.device_type=='ctrl'){
 						item.code = 'E'+res.data.list[index].code.toString(16)
@@ -122,12 +126,12 @@ export default class extends Component {
 					}
 					return item;
 				})
-        if(res.data.totalNumber==0){
-          this.setState({
-            totalNumber:0,
-          	page:0,
-          })
-        }
+				if(res.data.totalNumber==0){
+					this.setState({
+						totalNumber:0,
+						page:0,
+					})
+				}
 				this.setState({
 					list,
 				})
@@ -138,23 +142,21 @@ export default class extends Component {
 				const dispatchList = res.data.list.map((item,index) => {
 					const time = new Date().getTime() - item.create_time
 					item.create_time = moment(parseInt(item.create_time)).format('YYYY-MM-DD HH:mm:ss')
-					item.hour = parseInt((time)/(1000*3600))
-					item.minute = parseInt(time%(1000*3600)/(1000*60))
-					item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
-					const device_id = item.device_id
-					const data = getFollowDevices({num:1,page:1,device_id}).then((ind) => {
-						item.device_name = ind.data.list[0].device_name
-						item.device_type = ind.data.list[0].device_type
-						if(item.device_type == '240'){
-							item.code = 'E'+res.data.list[index].code.toString(16)
-						}else{
-							item.code = CodeTransform[parseInt(res.data.list[index].code)+50]
-						}
-						return item;
+					item.hour = parseInt((time)/(1000*3600));
+					item.minute = parseInt(time%(1000*3600)/(1000*60));
+					item.second = parseInt(time%(1000*3600)%(1000*60)/1000);
+					const device_id = item.device_id;
+					getFollowDevices({num:1,page:1,device_id}).then((ind) => {
+						device_name[index] = ind.data.list[0].device_name
+						type[index] = ind.data.list[0].device_type
+						this.setState({
+							device_name,
+							type,
+						})
 					})
+					
 					return item;
 				})
-				console.log(dispatchList)
 				if(res.data.totalPage==0){
 					this.setState({
 						page:0,
@@ -255,12 +257,21 @@ export default class extends Component {
 		}
 	}
 	render() {
-		const { historyEvents, list, dispatchList, device_name, language} = this.state;
+		const { historyEvents, list, dispatchList, device_name, code, language} = this.state;
 		var la;
 		if(language == "zh" ){
 			la = zh;
 		}else{
 			la = en;
+		}
+		if(dispatchList.length!=0){
+			dispatchList.map((item,index)=>{
+				if(this.state.type[index] == '240'){
+					code[index] = 'E'+item.code.toString(16)
+				}else{
+					code[index] = CodeTransform[parseInt(item.code)+50]
+				}
+			})
 		}
 		return (
 			<LocaleProvider locale={la}>
@@ -356,16 +367,25 @@ export default class extends Component {
 										<Col span={20}>	
 											<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" >
 												<tbody>
-													<tr>
-														<a className={styles.text}><FormattedMessage id="fault code"/>：</a>
-														<td className="tl" style={{ width: '200px' }}>{item.code}</td>
-													</tr>
+												{
+													code[index]?
+													(	
+														<tr>
+															<a className={styles.text}><FormattedMessage id="fault code"/>：</a>
+															<td className={styles.left} style={{ width: '200px' }}><FormattedMessage id={code[index]}/></td>
+														</tr>
+													):(
+														<div></div>
+													)
+												}
 													<tr>
 														<Col span={16}>
 															<Col span={10}>
 																<a className={styles.text}><FormattedMessage id="Device Name"/>：</a>
 															</Col>
-															<td className="tl">{item.device_name}</td>
+															<Col span={14}>
+																<td className="tl">{device_name[index]}</td>
+															</Col>
 														</Col>
 													</tr>
 													<tr>

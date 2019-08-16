@@ -528,6 +528,7 @@
 	"Information on this device has been reset" : "此设备的信息已重置",
 	"Faul to reset" : "重置失败",
 	"Reset" : "重置",
+	"E0" : "无",
 	"E01" : "E01过流",
 	"E02" : "E02母线过压",
 	"E03" : "E03母线欠压",

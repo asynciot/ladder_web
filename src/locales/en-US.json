@@ -332,6 +332,7 @@
 	"last yearly check": "Last yearly Check",
 	"next yearly check": "Next yearly check",
 	"System": "System",
+	"E0" : "None",
 	"E1": "over-current",
 	"E2": "Bus over-voltage",
 	"E3": "Bus under-voltage",
