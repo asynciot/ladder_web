@@ -221,7 +221,7 @@ export default class Fault extends Component {
 									<tbody className={styles.tbody}>
 										<tr>
 											<a className={styles.text}><FormattedMessage id="fault"/> ：</a>
-											<td className={styles.left} style={{ width: 'auto',color:'red'}} onClick={() => this.info(item)}>{item.code}<FormattedMessage id={item.code}/></td>
+											<td className={styles.left} style={{ width: 'auto',color:'red'}} onClick={() => this.info(item)}><FormattedMessage id={item.code}/></td>
 										</tr>
 										<tr>
 											<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>

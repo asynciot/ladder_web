@@ -264,28 +264,29 @@ export default class CtrlRealtime extends Component {
 		}
 		
 	}
-	
 	attachEvt=( elems, evt )=>{
-	  for( var i = 0, len = elems.length; i < len; i++ ){
-	    this.state.mainButton = elems[i].querySelector('.' + this.state.mainButtonClass);
-	    this.state.mainButton.addEventListener( evt , this.toggleButton, false);
-	  }
+		for( var i = 0, len = elems.length; i < len; i++ ){
+			this.state.mainButton = elems[i].querySelector('.' + this.state.mainButtonClass);
+			if(this.state.mainButton!=null){
+				this.state.mainButton.addEventListener( evt , this.toggleButton, false);
+			}
+		}
 	}
 	getElemsByToggleMethod=( selector )=>{
-	  return document.querySelectorAll('[' + this.state.toggleMethod + '="' + selector + '"]');
+		return document.querySelectorAll('[' + this.state.toggleMethod + '="' + selector + '"]');
 	}
 	toggleButton=( evt )=>{
 		
-	  this.state.target = evt.target;
-	  while ( this.state.target && !this.state.target.getAttribute( this.state.toggleMethod ) ){
-	    this.state.target = this.state.target.parentNode;
-	    if(!this.state.target) { return; }
-	  }
-	  this.state.currentState = this.state.target.getAttribute( this.state.menuState ) === this.state.isOpen ? this.state.isClosed : this.state.isOpen;
-	  this.state.target.setAttribute(this.state.menuState, this.state.currentState);
-      this.setState({
-	  	dateSelected:!this.state.dateSelected
-	  })
+		this.state.target = evt.target;
+		while ( this.state.target && !this.state.target.getAttribute( this.state.toggleMethod ) ){
+			this.state.target = this.state.target.parentNode;
+			if(!this.state.target) { return; }
+		}
+		this.state.currentState = this.state.target.getAttribute( this.state.menuState ) === this.state.isOpen ? this.state.isClosed : this.state.isOpen;
+		this.state.target.setAttribute(this.state.menuState, this.state.currentState);
+			this.setState({
+			dateSelected:!this.state.dateSelected
+		})
 	}
 	initWebsocket = () =>{ //初始化weosocket
 		const { currentUser } = this.props;
@@ -928,13 +929,13 @@ export default class CtrlRealtime extends Component {
 						</Col>
 						<Col span={6}>
 							<Switch
-							  checkedChildren={<FormattedMessage id="Open"/>}
-							  unCheckedChildren={<FormattedMessage id="Close"/>}
-							  onChange={this.onChange}
-							  checked={this.state.switch}
-							  disabled={this.state.command}
-							  defaultChecked={this.state.switch}
-							  loading={this.state.loading}
+								checkedChildren={<FormattedMessage id="Open"/>}
+								unCheckedChildren={<FormattedMessage id="Close"/>}
+								onChange={this.onChange}
+								checked={this.state.switch}
+								disabled={this.state.command}
+								defaultChecked={this.state.switch}
+								loading={this.state.loading}
 							/>
 						</Col>
 					</Row>
@@ -1963,44 +1964,44 @@ export default class CtrlRealtime extends Component {
 						</Row>
 					</div>
 					<ul ref='mybtn' id="menu" className={`${mfb.mfb_component__br} ${mfb.mfb_zoomin}`} data-mfb-toggle="click">
-					  <li className={mfb.mfb_component__wrap}>
+						<li className={mfb.mfb_component__wrap}>
 						<a  className={mfb.mfb_component__button__main}>
-						  <i className={`${mfb.mfb_component__main_icon__resting} ${mfb.icon_plus}`}></i>
-						  <i id="mybutton" className={`${mfb.mfb_component__main_icon__active} ${mfb.icon_close}`}></i>
+							<i className={`${mfb.mfb_component__main_icon__resting} ${mfb.icon_plus}`}></i>
+							<i id="mybutton" className={`${mfb.mfb_component__main_icon__active} ${mfb.icon_close}`}></i>
 						</a>
 						<ul className={mfb.mfb_component__list}>
-						  <li>
+							<li>
 							<a  data-mfb-label={(la=="zh")?"菜单":"Menu"} className={mfb.mfb_component__button__child}>
-							  <i className={`${mfb.mfb_component__child_icon} ${mfb.icon_menu}`} onClick={this.goDetail('params')}></i>
+								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_menu}`} onClick={this.goDetail('params')}></i>
 							</a>
-						  </li>
-						  <li>
+							</li>
+							<li>
 							<a data-mfb-label={(la=="zh")?"二维码":"QR code"} className={mfb.mfb_component__button__child}>
-							  <i className={`${mfb.mfb_component__child_icon} ${mfb.icon_qrcode}`} onClick={this.goQrcode}></i>
+								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_qrcode}`} onClick={this.goQrcode}></i>
 							</a>
-						  </li>
-						  <li>
+							</li>
+							<li>
 							<a data-mfb-label={(la=="zh")?"内存查看":"Memory View"} className={mfb.mfb_component__button__child}>
-							  <i className={`${mfb.mfb_component__child_icon} ${mfb.icon_watch}`} onClick={this.goDebug}></i>
+								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_watch}`} onClick={this.goDebug}></i>
 							</a>
-						  </li>
-						  <li>
+							</li>
+							<li>
 							<a data-mfb-label={(la=="zh")?"历史故障":"Historical fault"} className={mfb.mfb_component__button__child}>
-							  <i className={`${mfb.mfb_component__child_icon} ${mfb.icon_fault}`} onClick={this.gohistory}></i>
+								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_fault}`} onClick={this.gohistory}></i>
 							</a>
-						  </li>
-						  <li>
-						  	<a data-mfb-label={(la=="zh")?"呼梯":"Call"} className={mfb.mfb_component__button__child}>
-						  	<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_call}`} onClick={this.gocall}></i>
-						  	</a>
-						  </li>
-						  <li>
-						  	<a data-mfb-label={(la=="zh")?"实时":"Real time"} className={mfb.mfb_component__button__child}>
-						  	<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_event}`}></i>
-						  	</a>
-						  </li>
+							</li>
+							<li>
+								<a data-mfb-label={(la=="zh")?"呼梯":"Call"} className={mfb.mfb_component__button__child}>
+								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_call}`} onClick={this.gocall}></i>
+								</a>
+							</li>
+							<li>
+								<a data-mfb-label={(la=="zh")?"实时":"Real time"} className={mfb.mfb_component__button__child}>
+								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_event}`}></i>
+								</a>
+							</li>
 						</ul>
-					  </li>
+						</li>
 					</ul>
 					</div>
 				</div>
