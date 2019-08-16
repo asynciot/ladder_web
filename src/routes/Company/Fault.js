@@ -44,10 +44,12 @@ export default class Fault extends Component {
 		this.getFault()
 	}
 	getFault = () =>{
+		console.log(this.props);
 		const { dispatch, location } = this.props;
 		const match = pathToRegexp('/company/order/:id').exec(location.pathname);
 		const id = match[1];
 		getFault({ id, page:1, num:1, }).then((res) => {
+			console.log(res);
 			const list = res.data.list.map((item) => {
 				if(item.type == "2"){
 					this.state.maintenance = false
@@ -108,7 +110,7 @@ export default class Fault extends Component {
 	}
 	uploadPicture = (e) =>{
 		const { dispatch, location } = this.props;
-		const { language } = this.state
+		const { language } = this.state;
 		const match = pathToRegexp('/company/order/:id').exec(location.pathname);
 		let id = match[2];
 		var formdata = new FormData()

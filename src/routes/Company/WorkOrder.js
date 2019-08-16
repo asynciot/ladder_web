@@ -136,6 +136,7 @@ export default class extends Component {
 			}).catch((e => console.info(e)));
 		}else{
 			getDispatch({ num: 10, page, follow:'yes', state:'treating', isreg:"True"}).then((res) => {
+				console.log(res);
 				clearInterval(inte)
 				const dispatchList = res.data.list.map((item,index) => {
 					const time = new Date().getTime() - item.create_time
@@ -162,10 +163,10 @@ export default class extends Component {
 						page:0,
 					})
 				}
-				this.setState({
-					dispatchList,
-					totalNumber:res.data.totalNumber,
-				})
+				 this.setState({
+/* 					dispatchList, */
+/* 					totalNumber:res.data.totalNumber, */
+				}) 
 			}).catch((e => console.info(e)));
 		}
 	}

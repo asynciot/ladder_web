@@ -268,7 +268,9 @@ export default class CtrlRealtime extends Component {
 	attachEvt=( elems, evt )=>{
 	  for( var i = 0, len = elems.length; i < len; i++ ){
 	    this.state.mainButton = elems[i].querySelector('.' + this.state.mainButtonClass);
-	    this.state.mainButton.addEventListener( evt , this.toggleButton, false);
+		if(this.state.mainButton!=null){
+			this.state.mainButton.addEventListener( evt , this.toggleButton, false);
+		}
 	  }
 	}
 	getElemsByToggleMethod=( selector )=>{

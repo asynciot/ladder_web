@@ -14,6 +14,7 @@ import echarts from 'echarts';
 import ReactEcharts from 'echarts-for-react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import {getEvent, getDeviceList, getFollowDevices, getDoorRuntime } from '../../services/api';
+import mfb from './mfb.css';
 
 const alertName = (show) => {
 	if (show.isLoss) {
@@ -72,6 +73,21 @@ const data = [{
 }))
 export default class DoorHistory extends Component {
 	state = {
+		dateSelected:false,
+		closedate:false,
+		outButton:'',
+		outtarget:'',
+		clickOpt : 'click',
+		toggleMethod : 'data-mfb-toggle',
+		menuState : 'data-mfb-state',
+		isOpen : 'open',
+		isClosed : 'closed',
+		mainButtonClass : 'mfb__mfb_component__button__main___3WV7w',
+		elemsToClick:'',
+		outelemsToClick:'',
+		mainButton:'',
+		target:'',
+		currentState:'',
 		leftAnimation: {
 			left: '0%',
 			duration: 1000,
@@ -152,6 +168,49 @@ export default class DoorHistory extends Component {
 		this.state.id = match[2];
 		this.getHistory()
 		this.getType()
+	}
+	myattachEvt=()=>{
+		this.state.outButton=document.querySelector('#mymask');
+		if(this.state.outButton!=null)
+		{
+			this.state.outButton.addEventListener("click",this.handleMask,false);
+		}
+	}
+	handleMask=(evt)=>{
+		this.state.outtarget=evt.target;
+		if(this.state.outtarget.id!="mybutton"&&this.state.target!=""){
+			
+			this.state.currentState = this.state.target.getAttribute( this.state.menuState ) === this.state.isClosed ;
+			this.state.target.setAttribute(this.state.menuState, this.state.currentState);
+			this.setState({
+				dateSelected:this.state.closedate
+			})
+		}
+	}
+	attachEvt=( elems, evt )=>{
+	  for( var i = 0, len = elems.length; i < len; i++ ){
+	    this.state.mainButton = elems[i].querySelector('.' + this.state.mainButtonClass);
+		if(this.state.mainButton!=null){
+			this.state.mainButton.addEventListener( evt , this.toggleButton, false);
+		}
+	  }
+	  
+	}
+	getElemsByToggleMethod=( selector )=>{
+	  return document.querySelectorAll('[' + this.state.toggleMethod + '="' + selector + '"]');
+	}
+	toggleButton=( evt )=>{
+	  this.state.target = evt.target;
+	  while ( this.state.target && !this.state.target.getAttribute( this.state.toggleMethod ) ){
+	    this.state.target = this.state.target.parentNode;
+	    if(!this.state.target) { return; }
+	  }
+	  this.state.currentState = this.state.target.getAttribute( this.state.menuState ) === this.state.isOpen ? this.state.isClosed : this.state.isOpen;
+	  this.state.target.setAttribute(this.state.menuState, this.state.currentState);
+	  this.setState({
+	  	dateSelected:!this.state.dateSelected
+	  })
+	
 	}
 	getType = () =>{
 		const device_id = this.state.device_id
@@ -822,6 +881,10 @@ export default class DoorHistory extends Component {
 		this.props.history.push(`/company/door/${id}`);
 	}
 	render() {
+		this.state.elemsToClick = this.getElemsByToggleMethod( this.state.clickOpt );
+		this.attachEvt( this.state.elemsToClick, 'click' );
+		this.myattachEvt();
+		
 		const { device: { events, view, property }} = this.props;
 		const { show } = this.state
 		const id = this.props.match.params.id;
@@ -836,6 +899,7 @@ export default class DoorHistory extends Component {
 		return (
 			<div className="content tab-hide">
 				<div className={styles.content}>
+				<div id="mymask" className={`${styles.selectMask_box} ${this.state.dateSelected ? styles.mask : ""}`}>
 					<Modal
 						visible={this.state.modal}
 						transparent
@@ -849,13 +913,13 @@ export default class DoorHistory extends Component {
 							<img src={this.state.src} alt="code"/>
 						</div>
 					</Modal>
-					<Row type="flex" justify="center" align="middle">
+ 					{/* <Row type="flex" justify="center" align="middle">
 						<Col span={24}>
 							<List style={{ backgroundColor: 'white' }} className="picker-list" onClick={() => this.props.history.push(`/events/door/${id}`)}>
 								<List.Item arrow="horizontal" onClick={() => this.props.history.push(`/events/door/${id}`)}>历史事件</List.Item>
 							</List>
 						</Col>
-					</Row>
+					</Row> */}
 					<div className={classNames(styles.tab, view == 0 ?'tab-active' : 'tab-notactive')}>
 						<Row
 							type="flex"
@@ -1076,12 +1140,37 @@ export default class DoorHistory extends Component {
 						 	</Col>
 						</Row>
 					</div>
-					<div className={styles.btns}>
-						{/*<section onClick={() => this.props.history.push(`/company/statistics/details/${id}`)}>统计</section>*/}
-						<section onClick={this.goDetail(type == 2 ? 'params/2': 'params/1')}><FormattedMessage id="Menu"/></section>
-						<section onClick={this.goQrcode}><FormattedMessage id="QR Code"/></section>
-						<section onClick={this.gohistory}><FormattedMessage id="History fault"/></section>
-					</div>
+					<ul ref='mybtn' id="menu" className={`${mfb.mfb_component__br} ${mfb.mfb_zoomin}`} data-mfb-toggle="click">
+					  <li className={mfb.mfb_component__wrap}>
+						<a  className={mfb.mfb_component__button__main}>
+						  <i className={`${mfb.mfb_component__main_icon__resting} ${mfb.icon_plus}`}></i>
+						  <i id="mybutton" className={`${mfb.mfb_component__main_icon__active} ${mfb.icon_close}`}></i>
+						</a>
+						<ul className={mfb.mfb_component__list}>
+						  <li>
+							<a  data-mfb-label={(la=="zh")?"菜单":"Menu"} className={mfb.mfb_component__button__child}>
+							  <i className={`${mfb.mfb_component__child_icon} ${mfb.icon_menu}`} onClick={this.goDetail(type == 2 ? 'params/2': 'params/1')}></i>
+							</a>
+						  </li>
+						  <li>
+							<a data-mfb-label={(la=="zh")?"二维码":"QR code"} className={mfb.mfb_component__button__child}>
+							  <i className={`${mfb.mfb_component__child_icon} ${mfb.icon_qrcode}`} onClick={this.goQrcode}></i>
+							</a>
+						  </li>
+						  <li>
+							<a data-mfb-label={(la=="zh")?"历史故障":"Historical faults"} className={mfb.mfb_component__button__child}>
+							  <i className={`${mfb.mfb_component__child_icon} ${mfb.icon_fault}`} onClick={this.gohistory}></i>
+							</a>
+						  </li>
+						  <li>
+						  	<a data-mfb-label={(la=="zh")?"历史事件":"Historical events"} className={mfb.mfb_component__button__child}>
+								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_event}`} onClick={() => this.props.history.push(`/events/door/${id}`)}></i>
+						  	</a>
+						  </li>
+						</ul>
+					  </li>
+					</ul>
+				</div>
 				</div>
 			</div>
 		);
