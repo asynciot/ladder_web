@@ -134,7 +134,6 @@ export default class extends Component {
 			}).catch((e => console.info(e)));
 		}else{
 			getDispatch({ num: 10, page, follow:'yes', state:'treating', isreg:"True"}).then((res) => {
-				console.log(res);
 				clearInterval(inte)
 				const dispatchList = res.data.list.map((item,index) => {
 					const time = new Date().getTime() - item.create_time
@@ -143,19 +142,22 @@ export default class extends Component {
 					item.minute = parseInt(time%(1000*3600)/(1000*60))
 					item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
 					const device_id = item.device_id
-					const data = getFollowDevices({num:1,page:1,device_id}).then((ind) => {
+					getFollowDevices({num:1,page:1,device_id}).then((ind) => {
+						const DevicesData=ind.data.list.map((data,index2)=>{
+							data.device_name=ind.data.list[0].device_name
+							return data
+						})
 						item.device_name = ind.data.list[0].device_name
-						item.device_type = ind.data.list[0].device_type
-						if(item.device_type == '240'){
+						
+						/* if(item.device_type == '240'){
 							item.code = 'E'+res.data.list[index].code.toString(16)
 						}else{
 							item.code = CodeTransform[parseInt(res.data.list[index].code)+50]
-						}
-						return item;
+						} */
 					})
-					return item;
+					console.log(DevicesData[0].device_name)
+					return item
 				})
-				console.log(dispatchList)
 				if(res.data.totalPage==0){
 					this.setState({
 						page:0,
