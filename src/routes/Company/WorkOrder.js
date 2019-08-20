@@ -302,7 +302,7 @@ export default class extends Component {
 																<a className={styles.text}><FormattedMessage id="Device Name"/>：</a>
 															</Col>
 															<Col span={14}>
-																<td className="tl">{item.device_name}</td>
+																<td className="tl">{device_name[index]}</td>
 															</Col>
 														</Col>
 													</tr>

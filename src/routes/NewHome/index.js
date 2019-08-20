@@ -53,6 +53,7 @@ export default class Home extends Component {
 		},
 		historyEvents: [],
 		code:'',
+		language:window.localStorage.getItem("language"),
 	}
 	componentWillMount() {
 		echarts.registerTheme('myTheme',echartTheme);
@@ -93,11 +94,11 @@ export default class Home extends Component {
 			}
 			let num = parseInt(res.data.dooronline)+parseInt(res.data.dooroffline)+parseInt(res.data.doorlongoffline)+parseInt(res.data.ctrlonline)+parseInt(res.data.ctrloffline)+parseInt(res.data.ctrllongoffline)
 			if(num==0){
-        if(window.localStorage.getItem("language")=="zh"){
-          alert("请在个人界面使用关注设备，或使用微信扫一扫关注设备！")
-        }else{
-          alert("Please use the Focus Device in your personal interface, or use Wechat Scan to Focus!")
-        }
+				if(this.state.language=="zh"){
+					alert("请在个人界面使用关注设备，或使用微信扫一扫关注设备！")
+				}else{
+					alert("Please use the Focus Device in your personal interface, or use Wechat Scan to Focus!")
+				}
 			}
 		}).catch((e => console.info(e)));
 	}
@@ -197,11 +198,10 @@ export default class Home extends Component {
 		var geolocation = new BMap.Geolocation();
 		geolocation.getCurrentPosition(function(r){
 			if(this.getStatus() == BMAP_STATUS_SUCCESS){
-				console.log('您的位置：'+r.point.lng+','+r.point.lat);
 				const lat = r.point.lat
 				const lon = r.point.lng
-				if (window.localStorage.getItem("language")=='en'){alert("Getting the current location")}
-				if (window.localStorage.getItem("language")=='zh'){alert("正在获取当前位置")}
+				if (this.state.language=='en'){alert("Getting the current location")}
+				if (this.state.language=='zh'){alert("正在获取当前位置")}
 				postLocation({ lat, lon,}).then((res) => {
 				})
 			}
@@ -299,10 +299,9 @@ export default class Home extends Component {
 		let option={};
 		if(devicenum!=0){
 		option={
-
 			title: {
 				text: devicenum,
-				subtext: '电梯总量',
+				subtext: this.state.language=="zh"? "电梯总量":"Ladder Number",
 				x: '29%',
 				y: 'center',
 				textAlign:'center',
@@ -337,13 +336,12 @@ export default class Home extends Component {
 			radiusAxis: {
 				type: 'category',
 				show: false,
-				data: ["在线", "离线", "故障"]
+				data: this.state.language=="zh"?["在线", "离线", "故障"]:["online", "offline", "fault"]
 			},
 			series: [
-
 				{
 					type: "bar",
-					name: "在线 "+deviceonline+"个",
+					name: (this.state.language=="zh"?"在线：":"online：")+deviceonline,
 					coordinateSystem: "polar",
 					barWidth: 20, //宽度
 					barCategoryGap: "40%",
@@ -352,7 +350,7 @@ export default class Home extends Component {
 				},
 				{
 					type: "bar",
-					name: "离线 "+devicelongoffline+"个",
+					name: (this.state.language=="zh"?"离线：":"offline：")+devicelongoffline,
 					coordinateSystem: "polar",
 					barWidth: 20,
 					barCategoryGap: "40%",
@@ -361,7 +359,7 @@ export default class Home extends Component {
 				},
 				{
 					type: "bar",
-					name: "故障 "+deviceoffline+"个",
+					name: (this.state.language=="zh"?"故障：":"fault   ：")+deviceoffline,
 					coordinateSystem: "polar",
 					barWidth: 20,
 					barCategoryGap: "40%",
@@ -390,7 +388,7 @@ export default class Home extends Component {
 				<Carousel
 					autoplay={true}
 					infinite
-          autoplayInterval={10000}
+					autoplayInterval={10000}
 				>
 					{imgList.map((item, index) => {
 						return (
@@ -402,7 +400,7 @@ export default class Home extends Component {
 				</Carousel>
 				<div className={styles.aui_title}>
 					<div className={styles.title}>
-						器件列表
+						<FormattedMessage id="Device List"/>
 					</div>
 				</div>
 				
@@ -421,15 +419,15 @@ export default class Home extends Component {
 									</div>
 									<div className={styles.aui_palace1_grid_main_bottom}>
 										<div className={styles.aui_palace1_grid_main_bottom_left}>
-											信号
+											<FormattedMessage id="Sign"/>
 										</div>
 										<div className={styles.aui_palace1_grid_main_bottom_right}>
 											<div className={styles.aui_palace1_grid_main_bottom_right1}>
-												正常
+												<FormattedMessage id="State"/>
 											</div>
 										</div>
 										<div className={styles.aui_palace1_grid_main_bottom_left}>
-											数量
+											<FormattedMessage id="Number"/>
 										</div>
 										<div className={styles.aui_palace1_grid_main_bottom_right}>
 											{doornum}
@@ -453,15 +451,15 @@ export default class Home extends Component {
 									</div>
 									<div className={styles.aui_palace1_grid_main_bottom}>
 										<div className={styles.aui_palace1_grid_main_bottom_left}>
-											信号
+											<FormattedMessage id="Sign"/>
 										</div>
 										<div className={styles.aui_palace1_grid_main_bottom_right}>
 											<div className={styles.aui_palace1_grid_main_bottom_right1}>
-												正常
+												<FormattedMessage id="State"/>
 											</div>
 										</div>
 										<div className={styles.aui_palace1_grid_main_bottom_left}>
-											数量
+											<FormattedMessage id="Number"/>
 										</div>
 										<div className={styles.aui_palace1_grid_main_bottom_right}>
 											{ctrlnum}
@@ -471,209 +469,10 @@ export default class Home extends Component {
 							</div>							
 						</div>
 					</Flex.Item>
-				</Flex>
-				{/* <Flex className={styles.aui_flex}>
-					<Flex.Item onClick={this.toFollowDoorOnline}>
-						<div className={styles.aui_palace1}>
-							<div className={styles.aui_palace1_left}>
-								<div className={styles.aui_palace1_grid_icon}>
-									<img src={require('../../assets/icon/door.jpg')} />
-								</div>
-							</div>
-							<div className={styles.aui_palace1_right}>
-								<div className={styles.aui_palace1_grid_main}>
-									<div className={styles.aui_palace1_grid_main_top}>
-										<FormattedMessage id="Door"/>
-									</div>
-									<div className={styles.aui_palace1_grid_main_bottom}>
-										<div className={styles.aui_palace1_grid_main_bottom_left}>
-											状态
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_right}>
-											<div className={styles.aui_palace1_grid_main_bottom_right2}>
-												<FormattedMessage id="online"/>
-											</div>
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_left}>
-											数量
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_right}>
-											{devicesStatus.dooronline}
-										</div>
-									</div>
-								</div>
-							</div>						
-						</div>
-					</Flex.Item>
-					<Flex.Item onClick={this.toFollowCtrlOnline}>
-						<div className={styles.aui_palace1}>
-							<div className={styles.aui_palace1_left}>
-								<div className={styles.aui_palace1_grid_icon}>
-									<img src={require('../../assets/icon/ctrl.jpg')} />
-								</div>
-							</div>
-							<div className={styles.aui_palace1_right}>
-								<div className={styles.aui_palace1_grid_main}>
-									<div className={styles.aui_palace1_grid_main_top}>
-										<FormattedMessage id="Ctrl"/>
-									</div>
-									<div className={styles.aui_palace1_grid_main_bottom}>
-										<div className={styles.aui_palace1_grid_main_bottom_left}>
-											状态
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_right}>
-											<div className={styles.aui_palace1_grid_main_bottom_right2}>
-												<FormattedMessage id="online"/>
-											</div>
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_left}>
-											数量
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_right}>
-											{devicesStatus.ctrlonline}
-										</div>
-									</div>
-								</div>
-							</div>						
-						</div>
-					</Flex.Item>
-				</Flex> */}
-				{/* <Flex className={styles.aui_flex}>
-					<Flex.Item onClick={this.toFollowDoorOffline}>
-						<div className={styles.aui_palace1}>
-							<div className={styles.aui_palace1_left}>
-								<div className={styles.aui_palace1_grid_icon}>
-									<img src={require('../../assets/icon/door.jpg')} />
-								</div>
-							</div>
-							<div className={styles.aui_palace1_right}>
-								<div className={styles.aui_palace1_grid_main}>
-									<div className={styles.aui_palace1_grid_main_top}>
-										<FormattedMessage id="Door"/>
-									</div>
-									<div className={styles.aui_palace1_grid_main_bottom}>
-										<div className={styles.aui_palace1_grid_main_bottom_left}>
-											状态
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_right}>
-											<div className={styles.aui_palace1_grid_main_bottom_right3}>
-												<FormattedMessage id="fault"/>
-											</div>
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_left}>
-											数量
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_right}>
-											{this.state.dooroffline}
-										</div>
-									</div>
-								</div>
-							</div>						
-						</div>
-					</Flex.Item>
-					<Flex.Item onClick={this.toFollowCtrlOffline}>
-						<div className={styles.aui_palace1}>
-							<div className={styles.aui_palace1_left}>
-								<div className={styles.aui_palace1_grid_icon}>
-									<img src={require('../../assets/icon/ctrl.jpg')} />
-								</div>
-							</div>
-							<div className={styles.aui_palace1_right}>
-								<div className={styles.aui_palace1_grid_main}>
-									<div className={styles.aui_palace1_grid_main_top}>
-										<FormattedMessage id="Ctrl"/>
-									</div>
-									<div className={styles.aui_palace1_grid_main_bottom}>
-										<div className={styles.aui_palace1_grid_main_bottom_left}>
-											状态
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_right}>
-											<div className={styles.aui_palace1_grid_main_bottom_right3}>
-												<FormattedMessage id="fault"/>
-											</div>
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_left}>
-											数量
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_right}>
-											{this.state.ctrloffline}
-										</div>
-									</div>
-								</div>
-							</div>						
-						</div>
-					</Flex.Item>
-				</Flex> */}
-				{/* <Flex className={styles.aui_flex}>
-					<Flex.Item onClick={this.toFollowDoorLongOffline}>
-						<div className={styles.aui_palace1}>
-							<div className={styles.aui_palace1_left}>
-								<div className={styles.aui_palace1_grid_icon}>
-									<img src={require('../../assets/icon/door.jpg')} />
-								</div>
-							</div>
-							<div className={styles.aui_palace1_right}>
-								<div className={styles.aui_palace1_grid_main}>
-									<div className={styles.aui_palace1_grid_main_top}>
-										<FormattedMessage id="Door"/>
-									</div>
-									<div className={styles.aui_palace1_grid_main_bottom}>
-										<div className={styles.aui_palace1_grid_main_bottom_left}>
-											状态
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_right}>
-											<div className={styles.aui_palace1_grid_main_bottom_right4}>
-												<FormattedMessage id="offline"/>
-											</div>
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_left}>
-											数量
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_right}>
-											{devicesStatus.doorlongoffline}
-										</div>
-									</div>
-								</div>
-							</div>						
-						</div>
-					</Flex.Item>
-					<Flex.Item onClick={this.toFollowCtrlLongOffline}>
-						<div className={styles.aui_palace1}>
-							<div className={styles.aui_palace1_left}>
-								<div className={styles.aui_palace1_grid_icon}>
-									<img src={require('../../assets/icon/ctrl.jpg')} />
-								</div>
-							</div>
-							<div className={styles.aui_palace1_right}>
-								<div className={styles.aui_palace1_grid_main}>
-									<div className={styles.aui_palace1_grid_main_top}>
-										<FormattedMessage id="Ctrl"/>
-									</div>
-									<div className={styles.aui_palace1_grid_main_bottom}>
-										<div className={styles.aui_palace1_grid_main_bottom_left}>
-											状态
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_right}>
-											<div className={styles.aui_palace1_grid_main_bottom_right4}>
-												<FormattedMessage id="offline"/>
-											</div>
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_left}>
-											数量
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_right}>
-											{devicesStatus.ctrllongoffline}
-										</div>
-									</div>
-								</div>
-							</div>						
-						</div>
-					</Flex.Item>
-				</Flex> */}
-				
+				</Flex>	
 				<div className={styles.aui_title}>
 					<div className={styles.title}>
-						设备状态
+						<FormattedMessage id="Device State"/>
 					</div>
 				</div>
 				
