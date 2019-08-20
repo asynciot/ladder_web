@@ -44,6 +44,7 @@
 	"Operation": "Operation",
 	"Operation State": "Operation State",
 	"Order List": "Order List",
+	"order duration" : "Order Duration",
 
 	"Password": "Password",
 	"parameter(Closing Start-up Speed)":"This parameter is used to set the starting speed when closing the door, mainly to eliminate the impact of the door opening. When the door machine drives the synchronous door, in order to improve the door opening efficiency, the speed can be appropriately increased (about 4HZ, about 1HZ for the asynchronous door)",
