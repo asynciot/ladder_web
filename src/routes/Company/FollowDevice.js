@@ -143,6 +143,9 @@ export default class extends Component {
 						if(item.state=="longoffline"){
 							item.rssi=0;
 						}
+						if(item.cellular==1){
+							item.IMEI = item.IMEI.substr(0,12);
+						}
 						return item;
 					});
 					if(totalNumber==0){
@@ -399,6 +402,10 @@ export default class extends Component {
 																</Col>
 															</Col>
 														</tr>
+															<Col span={6}>
+																<a className={styles.text}><FormattedMessage id="Base Station"/> ：</a>
+															</Col>
+																<p className={styles.text2}>{item.cell_address}</p>
 													</tbody>
 												</table>
 											</Col>
@@ -572,6 +579,10 @@ export default class extends Component {
 																</Col>
 															</Col>
 														</tr>
+															<Col span={6}>
+																<a className={styles.text}><FormattedMessage id="Base Station"/> ：</a>
+															</Col>
+																<p className={styles.text2}>{item.cell_address}</p>
 													</tbody>
 												</table>
 											</Col>
@@ -641,6 +652,10 @@ export default class extends Component {
 																</Col>
 															</Col>
 														</tr>
+															<Col span={6}>
+																<a className={styles.text}><FormattedMessage id="Base Station"/> ：</a>
+															</Col>
+																<p className={styles.text2}>{item.cell_address}</p>
 													</tbody>
 												</table>
 											</Col>
@@ -728,6 +743,10 @@ export default class extends Component {
 																</Col>
 															</Col>
 														</tr>
+															<Col span={6}>
+																<a className={styles.text}><FormattedMessage id="Base Station"/> ：</a>
+															</Col>
+																<p className={styles.text2}>{item.cell_address}</p>
 													</tbody>
 												</table>
 											</Col>
@@ -803,6 +822,10 @@ export default class extends Component {
 																</Col>
 															</Col>
 														</tr>
+															<Col span={6}>
+																<a className={styles.text}><FormattedMessage id="Base Station"/> ：</a>
+															</Col>
+																<p className={styles.text2}>{item.cell_address}</p>
 													</tbody>
 												</table>
 											</Col>
@@ -903,6 +926,10 @@ export default class extends Component {
 																</Col>
 															</Col>
 														</tr>
+															<Col span={6}>
+																<a className={styles.text}><FormattedMessage id="Base Station"/> ：</a>
+															</Col>
+																<p className={styles.text2}>{item.cell_address}</p>
 													</tbody>
 												</table>
 											</Col>
@@ -972,6 +999,10 @@ export default class extends Component {
 																</Col>
 															</Col>
 														</tr>
+															<Col span={6}>
+																<a className={styles.text}><FormattedMessage id="Base Station"/> ：</a>
+															</Col>
+																<p className={styles.text2}>{item.cell_address}</p>
 													</tbody>
 												</table>
 											</Col>

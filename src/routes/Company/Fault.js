@@ -141,6 +141,15 @@ export default class Fault extends Component {
 				credentials: 'include',
 				body: formdata
 			}).then((res)=> { return res.json()}).then((json)=>{
+				if(language=="zh"){
+					alert('提示', '图片上传中，请等待！', [
+						{ text: '确认',},
+					]);
+				}else{
+					alert('提示','Picture upload, please wait!',[
+						{ text: 'Ok',},
+					]);
+				}
 				if(json.code == 0){
 					if(language=="zh"){
 						alert('提示','上传成功',[

@@ -99,7 +99,7 @@ export default class CtrlRealtime extends Component {
 		menuState : 'data-mfb-state',
 		isOpen : 'open',
 		isClosed : 'closed',
-		mainButtonClass : 'mfb__mfb_component__button__main___3WV7w',
+		mainButtonClass : 'mfb_component__button__main___3WV7w',
 		elemsToClick:'',
 		outelemsToClick:'',
 		mainButton:'',
@@ -255,7 +255,6 @@ export default class CtrlRealtime extends Component {
 	handleMask=(evt)=>{
 		this.state.outtarget=evt.target;
 		if(this.state.outtarget.id!="mybutton"&&this.state.target!=""){
-			
 			this.state.currentState = this.state.target.getAttribute( this.state.menuState ) === this.state.isClosed ;
 			this.state.target.setAttribute(this.state.menuState, this.state.currentState);
 			this.setState({
@@ -276,7 +275,6 @@ export default class CtrlRealtime extends Component {
 		return document.querySelectorAll('[' + this.state.toggleMethod + '="' + selector + '"]');
 	}
 	toggleButton=( evt )=>{
-		
 		this.state.target = evt.target;
 		while ( this.state.target && !this.state.target.getAttribute( this.state.toggleMethod ) ){
 			this.state.target = this.state.target.parentNode;
@@ -354,7 +352,12 @@ export default class CtrlRealtime extends Component {
 				}
 				this.initWebsocket()
 				const op = 'open';
-				const IMEI = this.state.IMEI;
+				let IMEI;
+				if(this.state.list.cellular==1){
+					IMEI = this.state.IMEI.substr(0,12);
+				}else{
+					IMEI = this.state.IMEI
+				}
 				const interval = 500;
 				const threshold = 4;
 				const duration = 300;
@@ -374,8 +377,14 @@ export default class CtrlRealtime extends Component {
 									if(endTime<0){
 										this.setState({
 											endTime:0,
+											switch:false,
 										})
 										clearInterval(timing)
+										if(this.state.language=="zh"){
+											alert("监控结束");
+										}else{
+											alert("End of monitoring.");
+										}
 									}else{
 										this.setState({
 											endTime,
@@ -392,7 +401,7 @@ export default class CtrlRealtime extends Component {
 			}
 		}else{
 			if(la=="zh"){
-				lert("该设备已离线");
+				alert("该设备已离线");
 			}else{
 				alert("The device is offline.");
 			}
@@ -430,6 +439,7 @@ export default class CtrlRealtime extends Component {
 				time = time.replace(/NOVT/,"CST");
 				show.updateTime = moment(time).subtract('hours',13).format('YYYY-MM-DD HH:mm:ss');
 				this.setState({
+					list:res.data.list[0],
 					IMEI:res.data.list[0].IMEI,
 					install_addr:res.data.list[0].install_addr,
 					device_name:res.data.list[0].device_name,

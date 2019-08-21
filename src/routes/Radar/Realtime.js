@@ -55,7 +55,7 @@ export default class DoorHistory extends Component {
 		menuState : 'data-mfb-state',
 		isOpen : 'open',
 		isClosed : 'closed',
-		mainButtonClass : 'mfb__mfb_component__button__main___3WV7w',
+		mainButtonClass : 'mfb_component__button__main___3WV7w',
 		elemsToClick:'',
 		outelemsToClick:'',
 		mainButton:'',
@@ -180,8 +180,8 @@ export default class DoorHistory extends Component {
 		install:'',
 		device_name:'',
 		IMEI:'',
-		threshold:100,
-		interval:10,
+		threshold:40,
+		interval:50,
 		duration:300,
 		startTime:'',
 		endTime:'',
@@ -406,7 +406,12 @@ export default class DoorHistory extends Component {
 				}
 				this.initWebsocket()
 				const op = 'open';
-				const IMEI = this.state.IMEI;
+				let IMEI;
+				if(this.state.list.cellular==1){
+					IMEI = this.state.IMEI.substr(0,12);
+				}else{
+					IMEI = this.state.IMEI
+				}
 				const interval = this.state.interval;
 				const threshold = this.state.threshold;
 				const duration = this.state.duration;
@@ -423,13 +428,14 @@ export default class DoorHistory extends Component {
 								if(endTime<0){
 									this.setState({
 										endTime:0,
+										switch:false,
 									})
+									clearInterval(timing);
 									if(this.state.language=="zh"){
 										alert("监控结束");
 									}else{
 										alert("End of monitoring.");
 									}
-									clearInterval(timing);
 								}else{
 									this.setState({
 										endTime,
@@ -513,7 +519,6 @@ export default class DoorHistory extends Component {
 					command,
 					state:res.data.list[0].state,
 					show,
-					device_model:res.data.list[0].device_model,
 					list:res.data.list[0],
 				})
 			}

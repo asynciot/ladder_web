@@ -423,7 +423,7 @@ export default class Home extends Component {
 										</div>
 										<div className={styles.aui_palace1_grid_main_bottom_right}>
 											<div className={styles.aui_palace1_grid_main_bottom_right1}>
-												<FormattedMessage id="State"/>
+												正常
 											</div>
 										</div>
 										<div className={styles.aui_palace1_grid_main_bottom_left}>
@@ -455,7 +455,7 @@ export default class Home extends Component {
 										</div>
 										<div className={styles.aui_palace1_grid_main_bottom_right}>
 											<div className={styles.aui_palace1_grid_main_bottom_right1}>
-												<FormattedMessage id="State"/>
+												正常
 											</div>
 										</div>
 										<div className={styles.aui_palace1_grid_main_bottom_left}>
