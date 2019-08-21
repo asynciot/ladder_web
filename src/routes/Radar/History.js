@@ -83,7 +83,6 @@ export default class DoorHistory extends Component {
 		isOpen : 'open',
 		isClosed : 'closed',
 		mainButtonClass : 'mfb_component__button__main___3WV7w',
-/* 		mainButtonClass : 'mfb__mfb_component__button__main___3WV7w', */
 		elemsToClick:'',
 		outelemsToClick:'',
 		mainButton:'',

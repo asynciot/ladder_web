@@ -154,7 +154,6 @@ export default class extends Component {
 							type,
 						})
 					})
-					
 					return item;
 				})
 				if(res.data.totalPage==0){
@@ -290,62 +289,122 @@ export default class extends Component {
 									<List.Item actions={[<ListButton address={(event) => { this.address(item); }} edit={(event) => { this.deal(event,item,); }} />]} className={styles.item} key={index} onClick={this.goFault(item)}>
 										<Col span={20}>	
 											<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" >
-												<tbody>
-													<tr>
-														<a className={styles.text}><FormattedMessage id="fault code"/>：</a>
-														<td className={styles.left} style={{ width: '210px' }}><FormattedMessage id={item.code}/></td>
-													</tr>
-													<tr>
-														<Col span={16}>
-															<Col span={10}>
-																<a className={styles.text}><FormattedMessage id="Device Name"/>：</a>
+												{
+													language=="zh"?
+													<tbody>
+														<tr>
+															<a className={styles.text}><FormattedMessage id="fault code"/>：</a>
+															<td className={styles.left2} style={{ width: '210px' }}><FormattedMessage id={item.code}/></td>
+														</tr>
+														<tr>
+															<Col span={16}>
+																<Col span={10}>
+																	<a className={styles.text}><FormattedMessage id="Device Name"/>：</a>
+																</Col>
+																<Col span={14}>
+																	<td className="tl">{device_name[index]}</td>
+																</Col>
 															</Col>
-															<Col span={14}>
-																<td className="tl">{item.device_name}</td>
+														</tr>
+														<tr>
+															<Col span={16}>
+																<Col span={10}>
+																	<a className={styles.text}><FormattedMessage id="type"/>：</a>
+																</Col>
+																<Col span={14}>
+																	<td className="tl" style={{ width: '80px' }}><FormattedMessage id={'O'+item.type}/></td>
+																</Col>
 															</Col>
-														</Col>
-													</tr>
-													<tr>
-														<Col span={16}>
-															<Col span={10}>
-																<a className={styles.text}><FormattedMessage id="type"/>：</a>
+														</tr>
+														<tr>
+															<Col span={16}>
+																<Col span={10}>
+																	<a className={styles.text}><FormattedMessage id="Device Type"/>：</a>
+																</Col>
+																<Col span={14}>
+																	<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
+																</Col>
 															</Col>
-															<Col span={14}>
-																<td className="tl" style={{ width: '80px' }}><FormattedMessage id={'O'+item.type}/></td>
+														</tr>
+														<tr>
+															<Col span={16}>
+																<Col span={10}>
+																	<a className={styles.text}><FormattedMessage id="report time"/>：</a>
+																</Col>
+																<Col span={14}>
+																	<td className="tl">{moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')}</td>
+																</Col>
 															</Col>
-														</Col>
-													</tr>
-													<tr>
-														<Col span={16}>
-															<Col span={10}>
-																<a className={styles.text}><FormattedMessage id="Device Type"/>：</a>
+														</tr>
+														<tr>
+															<Col span={16}>
+																<Col span={10}>
+																	<a className={styles.text}><FormattedMessage id="fault duration"/>：</a>
+																</Col>
+																<Col span={14}>
+																	<td className="tl">{item.hour}<FormattedMessage id="H"/>{item.minute}<FormattedMessage id="M"/>{item.second}<FormattedMessage id="S"/></td>
+																</Col>
 															</Col>
-															<Col span={14}>
-																<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
+														</tr>
+													</tbody>
+													:
+													<tbody>
+														<tr>
+															<a className={styles.text}><FormattedMessage id="fault code"/>：</a>
+															<td className={styles.left} style={{ width: '210px' }}><FormattedMessage id={item.code}/></td>
+														</tr>
+														<tr>
+															<Col span={18}>
+																<Col span={10}>
+																	<a className={styles.text}><FormattedMessage id="Device Name"/>：</a>
+																</Col>
+																<Col span={14}>
+																	<td className="tl">{device_name[index]}</td>
+																</Col>
 															</Col>
-														</Col>
-													</tr>
-													<tr>
-														<Col span={16}>
-															<Col span={10}>
-																<a className={styles.text}><FormattedMessage id="report time"/>：</a>
+														</tr>
+														<tr>
+															<Col span={18}>
+																<Col span={10}>
+																	<a className={styles.text}><FormattedMessage id="type"/>：</a>
+																</Col>
+																<Col span={14}>
+																	<td className="tl" style={{ width: '80px' }}><FormattedMessage id={'O'+item.type}/></td>
+																</Col>
 															</Col>
-															<Col span={14}>
-																<td className="tl">{moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')}</td>
+														</tr>
+														<tr>
+															<Col span={18}>
+																<Col span={10}>
+																	<a className={styles.text}><FormattedMessage id="Device Type"/>：</a>
+																</Col>
+																<Col span={14}>
+																	<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
+																</Col>
 															</Col>
-														</Col>
-													</tr>
-													<tr>
-														<Col span={16}>
-															<Col span={10}>
-																<a className={styles.text}><FormattedMessage id="fault duration"/>：</a>
+														</tr>
+														<tr>
+															<Col span={18}>
+																<Col span={10}>
+																	<a className={styles.text}><FormattedMessage id="report time"/>：</a>
+																</Col>
+																<Col span={14}>
+																	<td className="tl">{moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')}</td>
+																</Col>
 															</Col>
-															<Col span={14}>
-																<td className="tl">{item.hour}<FormattedMessage id="H"/>{item.minute}<FormattedMessage id="M"/>{item.second}<FormattedMessage id="S"/></td>
+														</tr>
+														<tr>
+															<Col span={18}>
+																<Col span={10}>
+																	<a className={styles.text}><FormattedMessage id="fault duration"/>：</a>
+																</Col>
+																<Col span={14}>
+																	<td className="tl">{item.hour}<FormattedMessage id="H"/>{item.minute}<FormattedMessage id="M"/>{item.second}<FormattedMessage id="S"/></td>
+																</Col>
 															</Col>
-														</Col>
-													</tr>
-												</tbody>
+														</tr>
+													</tbody>
+												}
 											</table>
 										</Col>
 									</List.Item>
@@ -365,49 +424,96 @@ export default class extends Component {
 									<List.Item actions={[<Finish address={(event) => { this.address(item) }} remove={(event) => { this.remove(event, item); }} />]} className={styles.item} key={index} onClick={this.goFault1(item)}>
 										<Col span={20}>	
 											<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" >
-												<tbody>
 												{
-													code[index]?
-													(	
+													language=="zh"?
+													<tbody>
+													{
+														code[index]?
+														(	
+															<tr>
+																<a className={styles.text}><FormattedMessage id="fault code"/>：</a>
+																<td className={styles.left} style={{ width: '200px' }}><FormattedMessage id={code[index]}/></td>
+															</tr>
+														):(
+															<div></div>
+														)
+													}
 														<tr>
-															<a className={styles.text}><FormattedMessage id="fault code"/>：</a>
-															<td className={styles.left} style={{ width: '200px' }}><FormattedMessage id={code[index]}/></td>
+															<Col span={16}>
+																<Col span={10}>
+																	<a className={styles.text}><FormattedMessage id="Device Name"/>：</a>
+																</Col>
+																<Col span={14}>
+																	<td className="tl">{device_name[index]}</td>
+																</Col>
+															</Col>
 														</tr>
-													):(
-														<div></div>
-													)
+														<tr>
+															<Col span={16}>
+																<Col span={10}>
+																	<a className={styles.text}><FormattedMessage id="Accept Time"/> ：</a>
+																</Col>
+																<Col span={14}>
+																	<td className="tl">{item.create_time}</td>
+																</Col>
+															</Col>
+														</tr>
+														<tr>
+															<Col span={16}>
+																<Col span={10}>
+																	<a className={styles.text}><FormattedMessage id="order duration"/> ：</a>
+																</Col>
+																<Col span={14}>
+																	<td className="tl">{item.hour}<FormattedMessage id="H"/>{item.minute}<FormattedMessage id="M"/>{item.second}<FormattedMessage id="S"/></td>
+																</Col>
+															</Col>
+														</tr>
+													</tbody>
+													:
+													<tbody>
+													{
+														code[index]?
+														(	
+															<tr>
+																<a className={styles.text}><FormattedMessage id="fault code"/>：</a>
+																<td className={styles.left} style={{ width: '200px' }}><FormattedMessage id={code[index]}/></td>
+															</tr>
+														):(
+															<div></div>
+														)
+													}
+														<tr>
+															<Col span={16}>
+																<Col span={12}>
+																	<a className={styles.text}><FormattedMessage id="Device Name"/>：</a>
+																</Col>
+																<Col span={12}>
+																	<td className="tl">{device_name[index]}</td>
+																</Col>
+															</Col>
+														</tr>
+														<tr>
+															<Col span={16}>
+																<Col span={12}>
+																	<a className={styles.text}><FormattedMessage id="Accept Time"/> ：</a>
+																</Col>
+																<Col span={12}>
+																	<td className="tl">{item.create_time}</td>
+																</Col>
+															</Col>
+														</tr>
+														<tr>
+															<Col span={16}>
+																<Col span={12}>
+																	<a className={styles.text}><FormattedMessage id="order duration"/> ：</a>
+																</Col>
+																<Col span={12}>
+																	<td className="tl">{item.hour}<FormattedMessage id="H"/>{item.minute}<FormattedMessage id="M"/>{item.second}<FormattedMessage id="S"/></td>
+																</Col>
+															</Col>
+														</tr>
+													</tbody>
 												}
-													<tr>
-														<Col span={16}>
-															<Col span={10}>
-																<a className={styles.text}><FormattedMessage id="Device Name"/>：</a>
-															</Col>
-															<Col span={14}>
-																<td className="tl">{device_name[index]}</td>
-															</Col>
-														</Col>
-													</tr>
-													<tr>
-														<Col span={16}>
-															<Col span={10}>
-																<a className={styles.text}><FormattedMessage id="Accept Time"/> ：</a>
-															</Col>
-															<Col span={14}>
-																<td className="tl">{item.create_time}</td>
-															</Col>
-														</Col>
-													</tr>
-													<tr>
-														<Col span={16}>
-															<Col span={10}>
-																<a className={styles.text}><FormattedMessage id="order duration"/> ：</a>
-															</Col>
-															<Col span={14}>
-																<td className="tl">{item.hour}<FormattedMessage id="H"/>{item.minute}<FormattedMessage id="M"/>{item.second}<FormattedMessage id="S"/></td>
-															</Col>
-														</Col>
-													</tr>
-												</tbody>
 											</table>
 										</Col>
 									</List.Item>

@@ -14,6 +14,10 @@ import {getEvent} from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import zh from 'antd/lib/locale-provider/zh_CN';
 import en from 'antd/lib/locale-provider/en_US';
+import moment from 'moment';
+import 'moment/locale/zh-cn';
+
+moment.locale("zh");
 export default class DoorHistory extends Component {
 	state = {
 		totalList: [],
@@ -26,7 +30,6 @@ export default class DoorHistory extends Component {
 		page:0,
 	}
 	componentWillMount() {
-		// this.getEvent(1)
 	}
 	onStart = async(val) => {
 		await this.setState({
@@ -51,10 +54,11 @@ export default class DoorHistory extends Component {
 	getEvent = (val) => {
 		const { match } = this.props;
 		const device_id = match.params.id
+		console.log(this.state.start)
 		const starttime = window.localStorage.getItem('starttime')
 		const endtime = window.localStorage.getItem('endtime')
 		const page = val
-		getEvent({ device_id, num: 10, page, starttime, endtime, }).then((res) => {
+		getEvent({ device_id, num: 10, page, starttime, endtime }).then((res) => {
 			if (res.code === 0) {
 				const list = res.data.list.map((item)=>{
 					if(item.interval!=null){
@@ -82,7 +86,6 @@ export default class DoorHistory extends Component {
 		});
 	}
 	pageChange = (val) => {
-		const page = val
 		this.getEvent(val)
 	}
 	render(){
@@ -95,16 +98,16 @@ export default class DoorHistory extends Component {
 		}
 		return(
 			<LocaleProvider locale={la}>
-				<div className="content">
+				<div className="content tab-hide">
+					<Row type="flex" justify="center" align="middle">
+						<Col span={12}>
+							<DatePicker size="large" onChange={this.onStart}/>
+						</Col>
+						<Col span={12}>
+							<DatePicker size="large" onChange={this.onEnd}/>
+						</Col>
+					</Row>
 					<div style={{ backgroundColor: '#fff' }}>
-						<Row type="flex" justify="center" align="middle">
-							<Col span={12}>
-								<DatePicker  size="large" value={this.state.start} onChange={this.onStart}/>
-							</Col>
-							<Col span={12}>
-								<DatePicker  size="large" value={this.state.end} onChange={this.onEnd}/>
-							</Col>
-						</Row>
 						<div>
 							<List
 								className={styles.lis}

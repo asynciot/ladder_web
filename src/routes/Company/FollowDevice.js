@@ -135,13 +135,16 @@ export default class extends Component {
 				device_type,
 				state,
 			});
-			getFollowDevices({ num: 10, page, device_type, state, register:'registered',}).then((res) => {
+			getFollowDevices({ num: 10, page, device_type, state,}).then((res) => {
 				if (res.code === 0) {
 					const now = new Date().getTime();
 					const totalNumber = res.data.totalNumber
 					const list = res.data.list.map((item) => {
 						if(item.state=="longoffline"){
 							item.rssi=0;
+						}
+						if(item.cellular==1){
+							item.IMEI = item.IMEI.substr(0,12);
 						}
 						return item;
 					});
@@ -399,6 +402,10 @@ export default class extends Component {
 																</Col>
 															</Col>
 														</tr>
+															<Col span={6}>
+																<a className={styles.text}><FormattedMessage id="Base Station"/> ：</a>
+															</Col>
+																<p className={styles.text2}>{item.cell_address}</p>
 													</tbody>
 												</table>
 											</Col>
@@ -468,6 +475,10 @@ export default class extends Component {
 																</Col>
 															</Col>
 														</tr>
+															<Col span={6}>
+																<a className={styles.text}><FormattedMessage id="Base Station"/> ：</a>
+															</Col>
+																<p className={styles.text2}>{item.cell_address}</p>
 													</tbody>
 												</table>
 											</Col>
@@ -568,6 +579,10 @@ export default class extends Component {
 																</Col>
 															</Col>
 														</tr>
+															<Col span={6}>
+																<a className={styles.text}><FormattedMessage id="Base Station"/> ：</a>
+															</Col>
+																<p className={styles.text2}>{item.cell_address}</p>
 													</tbody>
 												</table>
 											</Col>
@@ -637,6 +652,10 @@ export default class extends Component {
 																</Col>
 															</Col>
 														</tr>
+															<Col span={6}>
+																<a className={styles.text}><FormattedMessage id="Base Station"/> ：</a>
+															</Col>
+																<p className={styles.text2}>{item.cell_address}</p>
 													</tbody>
 												</table>
 											</Col>
@@ -724,6 +743,10 @@ export default class extends Component {
 																</Col>
 															</Col>
 														</tr>
+															<Col span={6}>
+																<a className={styles.text}><FormattedMessage id="Base Station"/> ：</a>
+															</Col>
+																<p className={styles.text2}>{item.cell_address}</p>
 													</tbody>
 												</table>
 											</Col>
@@ -799,6 +822,10 @@ export default class extends Component {
 																</Col>
 															</Col>
 														</tr>
+															<Col span={6}>
+																<a className={styles.text}><FormattedMessage id="Base Station"/> ：</a>
+															</Col>
+																<p className={styles.text2}>{item.cell_address}</p>
 													</tbody>
 												</table>
 											</Col>
@@ -899,6 +926,10 @@ export default class extends Component {
 																</Col>
 															</Col>
 														</tr>
+															<Col span={6}>
+																<a className={styles.text}><FormattedMessage id="Base Station"/> ：</a>
+															</Col>
+																<p className={styles.text2}>{item.cell_address}</p>
 													</tbody>
 												</table>
 											</Col>
@@ -968,6 +999,10 @@ export default class extends Component {
 																</Col>
 															</Col>
 														</tr>
+															<Col span={6}>
+																<a className={styles.text}><FormattedMessage id="Base Station"/> ：</a>
+															</Col>
+																<p className={styles.text2}>{item.cell_address}</p>
 													</tbody>
 												</table>
 											</Col>

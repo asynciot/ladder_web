@@ -12,23 +12,14 @@ import { postMonitor, getFollowDevices, getDeviceList, getDoorRuntime, getComman
 import { injectIntl, FormattedMessage } from 'react-intl';
 import mfb from './mfb.css';
 
-const Watch = {
-	label: 'Watch',
-	view: 0,
-};
-const Line={
-	label: 'Line',
-	view: 1,
-};
-var counts=0;
-var ct=0;
 const alert = Modal.alert;
+var COUNTS=0;
+var CT=0;
 var chartInte =null;
 var showInte =null;
 var dateInte = null;
 var timing = null;
 var websock = '';
-const language = window.localStorage.getItem("language");
 
 const parseState = (event) => {
 	let statusName = 'None';
@@ -64,7 +55,6 @@ export default class DoorHistory extends Component {
 		menuState : 'data-mfb-state',
 		isOpen : 'open',
 		isClosed : 'closed',
-		/* mainButtonClass : 'mfb_component__button__main___3WV7w', */
 		mainButtonClass : 'mfb_component__button__main___3WV7w',
 		elemsToClick:'',
 		outelemsToClick:'',
@@ -199,6 +189,7 @@ export default class DoorHistory extends Component {
 		loading:false,
 		device_model:'',
 		list:[],
+		language:window.localStorage.getItem("language"),
 	}
 	componentWillMount() {
 		this.state.id = this.props.match.params.id
@@ -298,13 +289,13 @@ export default class DoorHistory extends Component {
 			}else{
 				var redata = JSON.parse(e.data)
 				this.pushData(redata)
-				if(counts==0){
+				if(COUNTS==0){
 					dateInte = setInterval( () => {
 						if(this.state.clock==true){
 							this.getData()
 						}
 					},100)
-					counts=counts+1;
+					COUNTS=COUNTS+1;
 				}
 			}
 		}
@@ -395,16 +386,14 @@ export default class DoorHistory extends Component {
 	onChange = () => {
 		this.forceUpdate();
 		this.clears();
-		counts = 0;
-		ct = 0;
-		var loading = true;
+		COUNTS = 0;
+		CT = 0;
 		this.setState({
-			loading,
+			loading:true,
 		})
 		setTimeout(()=>{
-			loading = false;
 			this.setState({
-				loading,
+				loading:false,
 			})
 		},1000)
 		if(this.state.state =="online"){
@@ -417,7 +406,12 @@ export default class DoorHistory extends Component {
 				}
 				this.initWebsocket()
 				const op = 'open';
-				const IMEI = this.state.IMEI;
+				let IMEI;
+				if(this.state.list.cellular==1){
+					IMEI = this.state.IMEI.substr(0,12);
+				}else{
+					IMEI = this.state.IMEI
+				}
 				const interval = this.state.interval;
 				const threshold = this.state.threshold;
 				const duration = this.state.duration;
@@ -434,13 +428,14 @@ export default class DoorHistory extends Component {
 								if(endTime<0){
 									this.setState({
 										endTime:0,
+										switch:false,
 									})
-									if(language=="zh"){
+									clearInterval(timing);
+									if(this.state.language=="zh"){
 										alert("监控结束");
 									}else{
 										alert("End of monitoring.");
 									}
-									clearInterval(timing);
 								}else{
 									this.setState({
 										endTime,
@@ -455,7 +450,7 @@ export default class DoorHistory extends Component {
 				this.forceUpdate();
 			}
 		}else{
-			if(language=="zh"){
+			if(this.state.language=="zh"){
 				alert("该设备已离线");
 			}else{
 				alert("The device is offline.");
@@ -524,7 +519,6 @@ export default class DoorHistory extends Component {
 					command,
 					state:res.data.list[0].state,
 					show,
-					device_model:res.data.list[0].device_model,
 					list:res.data.list[0],
 				})
 			}
@@ -632,8 +626,8 @@ export default class DoorHistory extends Component {
 			}
 			this.state.buffer.shift();
 			this.state.clock=true;
-			if(ct==0){
-				ct = ct+1;
+			if(CT==0){
+				CT = CT+1;
 				showInte = setInterval(() => {
 					if(this.state.pclock==true){
 						this.showData();
@@ -1174,6 +1168,7 @@ export default class DoorHistory extends Component {
 		});
 	}
 	render() {
+		const { language } =this.state;
 		this.state.elemsToClick = this.getElemsByToggleMethod( this.state.clickOpt );
 		this.attachEvt( this.state.elemsToClick, 'click' );
 		this.myattachEvt();
@@ -1182,7 +1177,7 @@ export default class DoorHistory extends Component {
 		const { show, id } = this.state;
 		const width = parseInt((window.innerWidth - 100) / 2);
 		let type = null;
-		if(view == 1 && counts == 1){
+		if(view == 1 && COUNTS == 1){
 			chartInte = setInterval(() => {
 				if(this.state.pclock==true){
 					if(language=="zh"){
@@ -1193,11 +1188,11 @@ export default class DoorHistory extends Component {
 					this.forceUpdate()
 				}
 			},450)
-			counts = 2;
+			COUNTS = 2;
 		}
-		if(view == 0 && counts == 2){
+		if(view == 0 && COUNTS == 2){
 			clearInterval(chartInte);
-			counts = 1;
+			COUNTS = 1;
 		}
 		if (property.Model) {
 			property.Model.value == "NSFC01-02T" ? type = 1 : type = 2;

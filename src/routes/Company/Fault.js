@@ -113,24 +113,24 @@ export default class Fault extends Component {
 		const { language } = this.state;
 		const match = pathToRegexp('/company/order/:id').exec(location.pathname);
 		let id = match[2];
-		var formdata = new FormData()
-		formdata = new window.FormData()
-		formdata.append("file1",this.state.file1)
-		formdata.append("file2",this.state.file2)
+		var formdata = new FormData();
+		formdata = new window.FormData();
+		formdata.append("file1",this.state.file1);
+		formdata.append("file2",this.state.file2);
 		if(this.state.maintenance_nexttime !='' & this.state.maintenance_nexttime != null){
-			formdata.append("maintenance_nexttime",this.state.maintenance_nexttime)
+			formdata.append("maintenance_nexttime",this.state.maintenance_nexttime);
 		}
 		if(this.state.inspection_nexttime !='' & this.state.inspection_nexttime != null){
-			formdata.append("inspection_nexttime",this.state.inspection_nexttime)
+			formdata.append("inspection_nexttime",this.state.inspection_nexttime);
 		}
-		formdata.append("id",this.props.location.state.id)
-		formdata.append("remarks",this.state.remark)
-		formdata.append("result",'untransfer')
+		formdata.append("id",this.props.location.state.id);
+		formdata.append("remarks",this.state.remark);
+		formdata.append("result",'untransfer');
 		if(!this.state.file1 || !this.state.file2){
 			if(language=="zh"){
-				alert("请上传维修前和维修后的图片！")
+				alert("请上传维修前和维修后的图片！");
 			}else{
-				alert("Please upload pictures before and after maintenance.")
+				alert("Please upload pictures before and after maintenance.");
 			}
 		}else {
 			fetch('http://server.asynciot.com/device/Dispatch/finish', {
@@ -140,7 +140,16 @@ export default class Fault extends Component {
 				},
 				credentials: 'include',
 				body: formdata
-			}).then(res=> { return res.json()}).then(json=>{
+			}).then((res)=> { return res.json()}).then((json)=>{
+				if(language=="zh"){
+					alert('提示', '图片上传中，请等待！', [
+						{ text: '确认',},
+					]);
+				}else{
+					alert('提示','Picture upload, please wait!',[
+						{ text: 'Ok',},
+					]);
+				}
 				if(json.code == 0){
 					if(language=="zh"){
 						alert('提示','上传成功',[
