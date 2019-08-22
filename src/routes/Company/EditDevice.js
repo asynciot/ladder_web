@@ -180,7 +180,6 @@ export default class extends Component {
 				},
 			]);
 		}
-
 	}
 	onStart = (val) => {
 		this.setState({

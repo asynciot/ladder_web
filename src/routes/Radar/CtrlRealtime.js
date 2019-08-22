@@ -29,7 +29,6 @@ var timing = null;
 var charts = true;
 var websock = '';
 const alert = Modal.alert;
-const la = window.localStorage.getItem("language");
 
 const direction = {
 	'01': 'arrow-up',
@@ -99,7 +98,7 @@ export default class CtrlRealtime extends Component {
 		menuState : 'data-mfb-state',
 		isOpen : 'open',
 		isClosed : 'closed',
-		mainButtonClass : 'mfb_component__button__main___3WV7w',
+		mainButtonClass : process.env.NODE_ENV === 'production'?'mfb_component__button__main___3WV7w':'mfb__mfb_component__button__main___3WV7w',
 		elemsToClick:'',
 		outelemsToClick:'',
 		mainButton:'',
@@ -194,7 +193,6 @@ export default class CtrlRealtime extends Component {
 		isCar:true,
 		IoInfo1:'Io Input Watch:',
 		IoInfo:'Car Input Watch:',
-		la:true,
 		IMEI:'',
 		code:'',
 		install_addr:'',
@@ -203,13 +201,9 @@ export default class CtrlRealtime extends Component {
 		endTime:'',
 		command:false,
 		loading:false,
+		language:window.localStorage.getItem("language"),
 	}
 	componentWillMount() {
-		if(window.localStorage.getItem("language")=="en"){
-			this.setState({
-				la:false,
-			})
-		}
 		this.getBaseData()
 		this.getfloor()
 		document.addEventListener('visibilitychange', () => {
@@ -371,6 +365,7 @@ export default class CtrlRealtime extends Component {
 					setTimeout(()=>{
 						getCommand({num:1,page:1,IMEI}).then((res)=>{
 							if(res.code==0){
+								let controll = 0;
 								timing = setInterval( () => {
 									const date = new Date().getTime()
 									const endTime = Math.round(((res.list[0].submit+duration*1000)-date)/1000)
@@ -380,8 +375,9 @@ export default class CtrlRealtime extends Component {
 											switch:false,
 										})
 										clearInterval(timing)
-										if(this.state.language=="zh"){
-											alert("监控结束");
+										if(this.state.language =="zh"&&controll==0){
+											controll = 1;
+											alert("监控结束,请稍后再监控。");
 										}else{
 											alert("End of monitoring.");
 										}
@@ -400,7 +396,7 @@ export default class CtrlRealtime extends Component {
 				websock.close()
 			}
 		}else{
-			if(la=="zh"){
+			if(this.state.language=="zh"){
 				alert("该设备已离线");
 			}else{
 				alert("The device is offline.");
@@ -902,7 +898,7 @@ export default class CtrlRealtime extends Component {
 		if(view == 1 && counts == 1){
 			chartInte = setInterval(() => {
 				if(this.state.pclock==true){
-					if(la=="zh"){
+					if(this.state.language=="zh"){
 						this.showChart()
 					}else{
 						this.showChartEn()
@@ -925,7 +921,7 @@ export default class CtrlRealtime extends Component {
 						transparent
 						maskClosable={false}
 						title="二维码"
-						footer={la=="en"?[{ text: 'OK', onPress: () => this.setState({modal: false}) }]:[{ text: '确定', onPress: () => this.setState({modal: false}) }]}
+						footer={this.state.language=="en"?[{ text: 'OK', onPress: () => this.setState({modal: false}) }]:[{ text: '确定', onPress: () => this.setState({modal: false}) }]}
 						wrapProps={{ onTouchStart: this.onWrapTouchStart }}
 					>
 						<div className="qrcode">
@@ -950,7 +946,7 @@ export default class CtrlRealtime extends Component {
 						</Col>
 					</Row>
 					{
-						(la=="zh") ?
+						(this.state.language=="zh") ?
 						<div className={classNames(styles.tab, view == 0 ?'tab-active' : 'tab-notactive')}>
 							<Row
 								type="flex"
@@ -1981,32 +1977,32 @@ export default class CtrlRealtime extends Component {
 						</a>
 						<ul className={mfb.mfb_component__list}>
 							<li>
-							<a  data-mfb-label={(la=="zh")?"菜单":"Menu"} className={mfb.mfb_component__button__child}>
+							<a  data-mfb-label={(this.state.language=="zh")?"菜单":"Menu"} className={mfb.mfb_component__button__child}>
 								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_menu}`} onClick={this.goDetail('params')}></i>
 							</a>
 							</li>
 							<li>
-							<a data-mfb-label={(la=="zh")?"二维码":"QR code"} className={mfb.mfb_component__button__child}>
+							<a data-mfb-label={(this.state.language=="zh")?"二维码":"QR code"} className={mfb.mfb_component__button__child}>
 								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_qrcode}`} onClick={this.goQrcode}></i>
 							</a>
 							</li>
 							<li>
-							<a data-mfb-label={(la=="zh")?"内存查看":"Memory View"} className={mfb.mfb_component__button__child}>
+							<a data-mfb-label={(this.state.language=="zh")?"内存查看":"Memory View"} className={mfb.mfb_component__button__child}>
 								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_watch}`} onClick={this.goDebug}></i>
 							</a>
 							</li>
 							<li>
-							<a data-mfb-label={(la=="zh")?"历史故障":"Historical fault"} className={mfb.mfb_component__button__child}>
+							<a data-mfb-label={(this.state.language=="zh")?"历史故障":"Historical fault"} className={mfb.mfb_component__button__child}>
 								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_fault}`} onClick={this.gohistory}></i>
 							</a>
 							</li>
 							<li>
-								<a data-mfb-label={(la=="zh")?"呼梯":"Call"} className={mfb.mfb_component__button__child}>
+								<a data-mfb-label={(this.state.language=="zh")?"呼梯":"Call"} className={mfb.mfb_component__button__child}>
 								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_call}`} onClick={this.gocall}></i>
 								</a>
 							</li>
 							<li>
-								<a data-mfb-label={(la=="zh")?"实时":"Real time"} className={mfb.mfb_component__button__child}>
+								<a data-mfb-label={(this.state.language=="zh")?"实时":"Real time"} className={mfb.mfb_component__button__child}>
 								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_event}`}></i>
 								</a>
 							</li>

@@ -1,21 +1,39 @@
 import React, { Component } from 'react';
 import pathToRegexp from 'path-to-regexp';
 import { connect } from 'dva';
-import { Row, Col, Collapse } from 'antd';
-import { List, Accordion } from 'antd-mobile';
-import styles from './Params.less';
+import { Row, Col, Collapse, Dropdown, Menu } from 'antd';
+import { List, Accordion, Flex } from 'antd-mobile';
+import styles from './CtrlParams.less';
 import { injectIntl, FormattedMessage } from 'react-intl';
+
 const Panel = Collapse.Panel;
+const { SubMenu } = Menu;
+const Menus = (item) => (
+	<Menu>
+		<Flex>
+			<Flex.Item className={styles.border}><FormattedMessage id="Max"/></Flex.Item>
+			<Flex.Item className={styles.border}><FormattedMessage id="Min"/></Flex.Item>
+		</Flex>
+		<Flex>
+			<Flex.Item className={styles.border}><div><p>{item.max}</p></div></Flex.Item>
+			<Flex.Item className={styles.border}><div><p>{item.min}</p></div></Flex.Item>
+		</Flex>
+	</Menu>
+);
+const Explain = (item) => (
+	<Menu>
+		<Flex>
+			<Flex.Item className={styles.border}><div><p>{item.explain}</p></div></Flex.Item>
+		</Flex>
+	</Menu>
+);
+
 @connect(({ ctrl, global }) => ({
 	ctrl, global,
 }))
 export default class Params extends Component {
 	render() {
 		const { ctrl: { menu }, location } = this.props;
-		const { isMobile } = this.props.global;
-		// const match = pathToRegexp('/door/:id/:name?').exec(location.pathname);
-		// const id = match[1];
-		// const name = match[2];
 		return (
 			<div className="content">
 				<div className={styles.content}>
@@ -27,11 +45,20 @@ export default class Params extends Component {
 										<Accordion.Panel className={styles.panel} header={data.label} key={data.label}>
 											<List key={data.label}>
 												{
-													data.children.map((item, index) =>
-														<List.Item key={`${item.label}${index}`} extra={item.value}>
-															{`${+index+1}`.length == 2?`${+index+1}`:`0${+index+1}`}. <FormattedMessage id={item.label}/>
-														</List.Item>
-													)
+													data.children.map((item, index) =>(
+														item.max ?
+														<Dropdown overlay={Menus(item)} trigger={['click']}>
+															<List.Item key={`${item.label}${index}`} extra={item.value}>
+																{`${+index+1}`.length == 2?`${+index+1}`:`0${+index+1}`}. <FormattedMessage id={item.label}/>
+															</List.Item>
+														</Dropdown>
+														:
+														<Dropdown overlay={Explain(item)} trigger={['click']}>
+															<List.Item key={`${item.label}${index}`} extra={item.value}>
+																{`${+index+1}`.length == 2?`${+index+1}`:`0${+index+1}`}. <FormattedMessage id={item.label}/>
+															</List.Item>
+														</Dropdown>
+													))
 												}
 											</List>
 										</Accordion.Panel>

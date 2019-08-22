@@ -109,7 +109,6 @@ class BasicLayout extends React.PureComponent {
 			if(window.localStorage.getItem("language")=="en"){
 				title = routerData[pathname].name2;
 			}
-			
 		} else {
 			const match = pathToRegexp('/:name/:id/:sub?/:end?').exec(pathname);
 			if (match && match[3]) {
@@ -158,6 +157,9 @@ class BasicLayout extends React.PureComponent {
 				}
 				if(match[2] === "edit-device") {
 					path = `/company/edit-device/:id/`
+				}
+				if(match[2] === "groupinfo") {
+					path = `/company/groupinfo/:id`
 				}
 				if (routerData[path]) {
 					title = routerData[path].name;
