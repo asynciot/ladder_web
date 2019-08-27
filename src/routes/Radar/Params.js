@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import pathToRegexp from 'path-to-regexp';
 import { connect } from 'dva';
-import { Row, Col, Collapse, Modal, Dropdown, Menu } from 'antd';
+import { Row, Col, Collapse, Dropdown, Menu } from 'antd';
 import { List, Accordion, } from 'antd-mobile';
 import styles from './Params.less';
 import { injectIntl, FormattedMessage } from 'react-intl';
@@ -33,9 +33,6 @@ const Menus = (item) => (
 	device, global,
 }))
 export default class Params extends Component {
-	state = {
-		dis:false,
-	}
 	render() {
 		const { device: { menu }, location } = this.props;
 		return (

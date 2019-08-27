@@ -49,7 +49,7 @@ export const menuB=[{
 		{num:1,label:'Relay Y function setting',value:'',visible: true,
 			explain:"parameter(Relay Y function setting)"},
 		{num:1,label:'Door operator testing run automatically',value:'',visible: true,
-			explain:"parameter(Door operator testing run automatically)"},
+			explain:"P24"},
 		{num:1,label:'Retined',value:'',visible: true,
 			explain:"parameter(Retined)"},
 		{num:1,label:'Weight empty current of motor',value:'',visible: true,
@@ -86,9 +86,9 @@ export const menuB=[{
 	num:1,label: (window.localStorage.getItem("language")=='en') ? 'D Params':'D组参数',
 	children:[
 		{num:10,label:'Closing start speed',value:'',visible: true,
-			explain:"parameter(Closing start speed)"},
+			explain:"D1"},
 		{num:10,label:'Closing High Speed',value:'',visible: true,
-			explain:"parameter(Closing High speed)"},
+			explain:"D2"},
 		{num:10,label:'Closing Low Speed 1',value:'',visible: true,
 			explain:"parameter(Closing Low speed 1)"},
 		{num:10,label:'Closing Low Speed 2',value:'',visible: true,
@@ -629,7 +629,7 @@ export const menuT = [
 			}, {
 				num:1,label: 'Fire-fighting Input Signal Terminal Selection',
 				value:'',visible: true,
-				explain:"parameter(Fire-fighting Input Signal Terminal Selection)"
+				explain:"F12-31"
 			}, {
 				num:1,label: 'Setting for front and rear door',
 				value:'',visible: true,

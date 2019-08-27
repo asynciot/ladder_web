@@ -11,14 +11,13 @@ import Mbutton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
-  button: {
-    margin: theme.spacing(1),
-  },
-  input: {
-    display: 'none',
-  },
+	button: {
+		margin: theme.spacing(1),
+	},
+	input: {
+		display: 'none',
+	},
 }));
-
 
 @connect(({ user, company }) => ({
 	currentUser: user.currentUser,
@@ -26,30 +25,29 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default class Company extends Component {
-		state = {
+	state = {
 		list: [],
 		loading: false,
 		la:window.localStorage.getItem("language"),
-		}
-	
-		logout = () => {
-		this.props.dispatch({ type: 'login/logout' });
-		};
-		toFollow = () => {
-		const { history } = this.props;
-		history.push({
-			pathname: '/company/ladder/all',
-		});
-		}
-		goDetail = (link) => {
+	}
+	logout = () => {
+	this.props.dispatch({ type: 'login/logout' });
+	};
+	toFollow = () => {
+	const { history } = this.props;
+	history.push({
+		pathname: '/company/ladder/all',
+	});
+	}
+	goDetail = (link) => {
 		const { history } = this.props;
 		if (link.indexOf('/') === 0) {
 			history.push(link);
 		} else {
 			history.push(`/company/${link}`);
 		}
-		};
-		uploadPicture = (e) => {
+	};
+	uploadPicture = (e) => {
 		var files = e.target.files[0];
 		if(files.type != "image/jpeg"&&files.type != "image/jpg"){
 			if(this.state.la=="zh"){
@@ -75,7 +73,7 @@ export default class Company extends Component {
 				}
 			}
 		})
-		};
+	};
 	render() {
 		const classes = useStyles;
 		const { company: { group, unread }, currentUser } = this.props;
@@ -108,12 +106,12 @@ export default class Company extends Component {
 								<h2><FormattedMessage id="Manage Elevator"/></h2>
 							</div>
 						</a>
-						<a className={styles.aui_palace_grid} onClick={() => this.goDetail('message')}>
+						<a className={styles.aui_palace_grid} onClick={() => this.goDetail('group')}>
 							<div className={styles.aui_palace_grid_icon}>
-								<img src={require('../../assets/icon/message.png')} />
+								<img src={require('../../assets/icon/group.png')} />
 							</div>
 							<div className={styles.aui_palace_grid_text}>
-								<h2><FormattedMessage id="Read Notice"/></h2>
+								<h2><FormattedMessage id="Group Manager"/></h2>
 							</div>
 						</a>
 						<a className={styles.aui_palace_grid} onClick={() => this.goDetail('work-order')}>
@@ -142,7 +140,7 @@ export default class Company extends Component {
 						</a>
 						<a className={styles.aui_palace_grid} onClick={() => this.goDetail('/company/add')}>
 							<div className={styles.aui_palace_grid_icon}>
-								<img src={require('../../assets/icon/group.png')} />
+								<img src={require('../../assets/icon/group_add.png')} />
 							</div>
 							<div className={styles.aui_palace_grid_text}>
 								<h2><FormattedMessage id="Add Group"/></h2>

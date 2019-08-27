@@ -158,7 +158,7 @@
 	"parameter(Closing Input Signal Terminal Selection)":"This parameter selects the close input signal terminal:0: Select terminal OP.1: Select terminal CL.2: Select the terminal OPI.3: Select terminal CLI.4: Select terminal F1.5: Select terminal F2.",
 	"parameter(Opening Limit Input Signal Terminal Selection)":"This parameter selects the door open limit input signal terminal:0: Select terminal OP.1: Select terminal CL.2: Select the terminal OPI.3: Select terminal CLI.4: Select terminal F1.5: Select terminal F2.",
 	"parameter(Closing Limit Input Signal Terminal Selection)":"This parameter selects the door close limit input signal terminal:0: Select terminal OP.1: Select terminal CL.2: Select the terminal OPI.3: Select terminal CLI.4: Select terminal F1.5: Select terminal F2.",
-	"parameter(Fire-fighting Input Signal Terminal Selection)":"This parameter selects the fire input signal terminal:0: Select terminal OP.1: Select terminal CL.2: Select the terminal OPI.3: Select terminal CLI.4: Select terminal F1.5: Select terminal F2.",
+	"F12-31":"This parameter selects the fire input signal terminal:0: Select terminal OP.1: Select terminal CL.2: Select the terminal OPI.3: Select terminal CLI.4: Select terminal F1.5: Select terminal F2.",
 	"parameter(Setting for front and rear door)":"This parameter is for cars with front and rear doors. If there is only one door, you do not need to set this bit.0: Front door.1: Back door.",
 	"parameter(Closing Auto Detection Stop Position Setting)":"When this parameter is set to non-zero data (generally set to 2), the controller will automatically detect the door closing limit position and participate in the next opening and closing operation. When this parameter is set to 0, this function is invalid. The closing limit position is determined by parameter F0904.",
 	"parameter(Operation enable setting)":"When this parameter is 0，function parameter can not changeWhen this parameter is 1, function parameter can change, if power off and not saved, it will back to 0",
@@ -229,7 +229,10 @@
 	"parameter(Opening accelerate 1 period speed)":"Open the door to accelerate the speed of 1 section",
 	"parameter(Closing accelerate 1 period speed)":"Close the door to accelerate the acceleration speed of 1 segment",
 	"parameter(Closing overtime reverse opening delay)":"Close timeout delay",
-
+	"P24":"set this dimension as0： Car door operator is in controlling condition1：when door operator is in opening or closing automatically, used for testing running or demonstration running, if don’t keep after power off, then it will recover to 0",
+	"D1" : "This parameter set start speed when closing door",
+	"D2" : "This parameter set the highest speed when closing door",
+	
 	"Register": "Register",
 	"Remember": "Remember",
 	"Reset": "Reset",

@@ -203,7 +203,7 @@ export async function newGroup(params) {
 	});
 }
 export async function readCompany(params) {
-	return request(`/documents/company?${stringify(params)}`);
+	return request(`/device/Organization?${stringify(params)}`);
 }
 export async function readGroup() {
 	return request('/account/company');

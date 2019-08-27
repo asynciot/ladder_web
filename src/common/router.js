@@ -200,11 +200,11 @@ export const getRouterData = (app) => {
 			name2: 'Tech',
 			component: dynamicWrapper(app, ['tech'], () => import('../routes/Tech/Manual')),
 		},
-    '/tech/test': {
-    	name: '技术',
-    	name2: 'Tech',
-    	component: dynamicWrapper(app, ['tech'], () => import('../routes/Tech/Test')),
-    },
+		'/tech/test': {
+			name: '技术',
+			name2: 'Tech',
+			component: dynamicWrapper(app, ['tech'], () => import('../routes/Tech/Test')),
+		},
 		'/tech/reader/:id': {
 			name: '说明书',
 			name2: 'Instructions',
@@ -224,6 +224,16 @@ export const getRouterData = (app) => {
 			name: '修改信息',
 			name2: 'Revise',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/Revise')),
+		},
+		'/company/group': {
+			name: '群组',
+			name2: 'Group',
+			component: dynamicWrapper(app, [], () => import('../routes/Company/Group')),
+		},
+		'/company/groupinfo/:id': {
+			name: '群组信息',
+			name2: 'GroupInfo',
+			component: dynamicWrapper(app, [], () => import('../routes/Company/GroupInfo')),
 		},
 		'/company/statistics/:id': {
 			name: '数据统计',
