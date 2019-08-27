@@ -12,13 +12,14 @@ import zh from 'antd/es/locale-provider/zh_CN';
 import en from 'antd/es/locale-provider/en_GB';
 import { injectIntl, FormattedMessage } from 'react-intl';
 
+const LANGUAGE = window.localStorage.getItem("language");
 var switchId = 0;
 const alert = Modal.alert;
 const tabs = [
-	{ title: (window.localStorage.getItem("language")=='en') ? 'All' : '全部', state: '' },
-	{ title: (window.localStorage.getItem("language")=='en') ? 'Online' : '在线', state: 'online' },
-	{ title: (window.localStorage.getItem("language")=='en') ? 'Fault' : '故障', state: 'offline' },
-	{ title: (window.localStorage.getItem("language")=='en') ? 'Offline' : '离线', state: 'longoffline' },
+	{ title: (LANGUAGE=='en') ? 'All' : '全部', state: '' },
+	{ title: (LANGUAGE=='en') ? 'Online' : '在线', state: 'online' },
+	{ title: (LANGUAGE=='en') ? 'Fault' : '故障', state: 'offline' },
+	{ title: (LANGUAGE=='en') ? 'Offline' : '离线', state: 'longoffline' },
 ];
 const modelName = {
 	'0':'HPC181',
@@ -298,8 +299,8 @@ export default class extends Component {
 	render() {
 		const ModelName = { 1: 'NSFC01-01B', 2: 'NSFC01-02T'};
 		const { navs, list, switchId } = this.state;
-		var la = window.localStorage.getItem("language");
-		if(la == "zh" ){
+		var la;
+ 		if(LANGUAGE == "zh" ){
 			la = zh;
 		}else{
 			la = en;

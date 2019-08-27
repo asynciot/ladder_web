@@ -39,6 +39,7 @@
     "enquire-js": "^0.1.1",
     "f2react": "^1.0.7",
     "fastclick": "^1.0.6",
+    "jquery": "^3.4.1",
     "lazy-load-img": "^3.0.6",
     "lodash": "^4.17.4",
     "lodash-decorators": "^4.4.1",

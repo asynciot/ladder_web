@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import pathToRegexp from 'path-to-regexp';
 import { connect } from 'dva';
+import $ from 'jquery';
 import { Row, Col, Collapse, Dropdown, Menu } from 'antd';
 import { List, Accordion, Flex } from 'antd-mobile';
 import styles from './CtrlParams.less';
@@ -11,19 +12,10 @@ const { SubMenu } = Menu;
 const Menus = (item) => (
 	<Menu>
 		<Flex>
-			<Flex.Item className={styles.border}><FormattedMessage id="Max"/></Flex.Item>
-			<Flex.Item className={styles.border}><FormattedMessage id="Min"/></Flex.Item>
+			<Flex.Item className={styles.border}><FormattedMessage id="Range"/></Flex.Item>
 		</Flex>
 		<Flex>
-			<Flex.Item className={styles.border}><div><p>{item.max}</p></div></Flex.Item>
-			<Flex.Item className={styles.border}><div><p>{item.min}</p></div></Flex.Item>
-		</Flex>
-	</Menu>
-);
-const Explain = (item) => (
-	<Menu>
-		<Flex>
-			<Flex.Item className={styles.border}><div><p>{item.explain}</p></div></Flex.Item>
+			<Flex.Item className={styles.border}><div><p>{item.range}</p></div></Flex.Item>
 		</Flex>
 	</Menu>
 );
@@ -32,6 +24,10 @@ const Explain = (item) => (
 	ctrl, global,
 }))
 export default class Params extends Component {
+	state ={
+	}
+	componentWillMount(){
+	}
 	render() {
 		const { ctrl: { menu }, location } = this.props;
 		return (
@@ -46,18 +42,16 @@ export default class Params extends Component {
 											<List key={data.label}>
 												{
 													data.children.map((item, index) =>(
-														item.max ?
+														item.range ?
 														<Dropdown overlay={Menus(item)} trigger={['click']}>
 															<List.Item key={`${item.label}${index}`} extra={item.value}>
 																{`${+index+1}`.length == 2?`${+index+1}`:`0${+index+1}`}. <FormattedMessage id={item.label}/>
 															</List.Item>
 														</Dropdown>
 														:
-														<Dropdown overlay={Explain(item)} trigger={['click']}>
-															<List.Item key={`${item.label}${index}`} extra={item.value}>
-																{`${+index+1}`.length == 2?`${+index+1}`:`0${+index+1}`}. <FormattedMessage id={item.label}/>
-															</List.Item>
-														</Dropdown>
+														<List.Item key={`${item.label}${index}`} extra={item.value}>
+															{`${+index+1}`.length == 2?`${+index+1}`:`0${+index+1}`}. <FormattedMessage id={item.label}/>
+														</List.Item>
 													))
 												}
 											</List>
