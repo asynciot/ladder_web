@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import pathToRegexp from 'path-to-regexp';
 import { connect } from 'dva';
-import $ from 'jquery';
 import { Row, Col, Collapse, Dropdown, Menu } from 'antd';
 import { List, Accordion, Flex } from 'antd-mobile';
 import styles from './CtrlParams.less';

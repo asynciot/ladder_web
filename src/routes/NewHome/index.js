@@ -319,13 +319,13 @@ export default class Home extends Component {
 				show:true,
 				orient: 'vertical',
 				top: "middle",
-				right: "10%",
+				right: "0%",
 				icon: 'circle'
 
 			},
 			polar: {
 				center: ['30%', '50%'],
-				radius: '400%' //图形大小
+				radius: '350%' //图形大小
 			},
 			angleAxis: {
 				show: false,
@@ -345,8 +345,7 @@ export default class Home extends Component {
 					coordinateSystem: "polar",
 					barWidth: 20, //宽度
 					barCategoryGap: "40%",
-					// data: ["76.25","47.09","22.09"],
-					data: ["100"],
+					data: [deviceonline/devicenum*100],
 				},
 				{
 					type: "bar",
@@ -354,8 +353,7 @@ export default class Home extends Component {
 					coordinateSystem: "polar",
 					barWidth: 20,
 					barCategoryGap: "40%",
-					// data: ["14.09","55.09","27.09"]
-					data: ["0"]
+					data: [devicelongoffline/devicenum*100]
 				},
 				{
 					type: "bar",
@@ -363,8 +361,7 @@ export default class Home extends Component {
 					coordinateSystem: "polar",
 					barWidth: 20,
 					barCategoryGap: "40%",
-					// data: ["9.66","23.09","53.09"]
-					data: ["0"]
+					data: [deviceoffline/devicenum*100]
 				}
 			]
 		}
