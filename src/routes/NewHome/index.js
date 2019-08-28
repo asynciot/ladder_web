@@ -81,7 +81,7 @@ export default class Home extends Component {
 					messages: res.data.list,
 				});
 			}
-		}).catch((e => console.info(e)));
+		});
 	}
 	getDevicesStatus = () => {
 		getDevicesStatus().then((res) => {
@@ -100,7 +100,7 @@ export default class Home extends Component {
 					alert("Please use the Focus Device in your personal interface, or use Wechat Scan to Focus!")
 				}
 			}
-		}).catch((e => console.info(e)));
+		});
 	}
 	getFault = () => {
 		getFault({ num: 1, page: 1, state:"untreated", islast:1}).then((res) => {
@@ -133,7 +133,7 @@ export default class Home extends Component {
 					});
 				}
 			}
-		}).catch((e => console.info(e)));
+		});
 		getFaultUntreted({ num: 10, page:1, islast:1, device_type:'door',type:1 }).then((res) => {
 			const pos = res.data.list.map((item,index) => {
 			})

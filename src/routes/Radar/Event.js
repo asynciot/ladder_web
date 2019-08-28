@@ -54,7 +54,6 @@ export default class DoorHistory extends Component {
 	getEvent = (val) => {
 		const { match } = this.props;
 		const device_id = match.params.id
-		console.log(this.state.start)
 		const starttime = window.localStorage.getItem('starttime')
 		const endtime = window.localStorage.getItem('endtime')
 		const page = val

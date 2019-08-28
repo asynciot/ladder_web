@@ -11,6 +11,8 @@ import echarts from 'echarts';
 import { getEvent, postMonitor, getFollowDevices, getFault, getFloorData, getCtrlRuntime, getCommand } from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import mfb from './mfb.css';
+import { IOMenu, Board} from '../../ctrlMenu.js';
+import CtrlMenu from './CtrlMenu.js'; 
 
 const Watch = {
 	label: 'Watch',
@@ -238,7 +240,7 @@ export default class CtrlRealtime extends Component {
 			websock=null
 		}
 	}
-	
+
 	myattachEvt=()=>{
 		this.state.outButton=document.querySelector('#mymask');
 		if(this.state.outButton!=null)
@@ -255,7 +257,7 @@ export default class CtrlRealtime extends Component {
 				dateSelected:this.state.closedate
 			})
 		}
-		
+
 	}
 	attachEvt=( elems, evt )=>{
 		for( var i = 0, len = elems.length; i < len; i++ ){
@@ -891,7 +893,7 @@ export default class CtrlRealtime extends Component {
 		this.state.elemsToClick = this.getElemsByToggleMethod( this.state.clickOpt );
 		this.attachEvt( this.state.elemsToClick, 'click' );
 		this.myattachEvt();
-		
+
 		const { ctrl: { event, view, device, floors, property, } } = this.props
 		const { floor, markFloor, markList, show} = this.state
 		const id = this.props.match.params.id;
@@ -1029,7 +1031,7 @@ export default class CtrlRealtime extends Component {
 							</Row>
 							<div>
 								<Col span={18}>
-									<p className={styles.shishi}>I\O板监控</p>
+									<CtrlMenu/>
 								</Col>
 								<Col span={6}>
 									<div className={styles.info}>
@@ -1134,7 +1136,7 @@ export default class CtrlRealtime extends Component {
 							</Row>
 							<div>
 								<Col span={18}>
-								
+									<CtrlMenu/>
 								</Col>
 								<Col span={6}>
 									<div className={styles.info}>

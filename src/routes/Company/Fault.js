@@ -44,12 +44,10 @@ export default class Fault extends Component {
 		this.getFault()
 	}
 	getFault = () =>{
-		console.log(this.props);
 		const { dispatch, location } = this.props;
 		const match = pathToRegexp('/company/order/:id').exec(location.pathname);
 		const id = match[1];
 		getFault({ id, page:1, num:1, }).then((res) => {
-			console.log(res);
 			const list = res.data.list.map((item) => {
 				if(item.type == "2"){
 					this.state.maintenance = false

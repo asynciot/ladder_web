@@ -307,7 +307,7 @@ export default class DoorHistory extends Component {
 					this.showChartEn()
 				}
 			}
-		}).catch((e => console.info(e)));
+		});
 		this.forceUpdate();
 	}
 	buffer2hex = (buffer) => {

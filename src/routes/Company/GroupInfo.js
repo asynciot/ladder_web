@@ -76,7 +76,6 @@ export default class extends Component {
 	}
 	render() {
 		const { language, list, submitting } = this.state;
-		console.log(list)
 		var la
 		if(language=="zh"){
 			la = undefined;
