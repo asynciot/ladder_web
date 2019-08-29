@@ -302,7 +302,7 @@ export default class Home extends Component {
 			title: {
 				text: devicenum,
 				subtext: this.state.language=="zh"? "电梯总量":"Ladder Number",
-				x: '29%',
+				x: '34%',
 				y: 'center',
 				textAlign:'center',
 				textStyle: {
@@ -311,7 +311,7 @@ export default class Home extends Component {
 					color: ['#333']
 				},
 				subtextStyle: {
-					fontSize:14,
+					fontSize:12,
 					color: '#666',
 				},
 			},
@@ -324,8 +324,8 @@ export default class Home extends Component {
 
 			},
 			polar: {
-				center: ['30%', '50%'],
-				radius: '350%' //图形大小
+				center: ['35%', '50%'],
+				radius: '290%' //图形大小
 			},
 			angleAxis: {
 				show: false,
