@@ -278,13 +278,12 @@ export default class Debug extends Component {
 								message.error('内存诊断正在使用中');
 								ws.close()
 							}else if (JSON.parse(msg.data).data) {
-								console.log(JSON.parse(msg.data))
 								this.debugMs(JSON.parse(msg.data))						
 							}
 						} catch (e) {
 							console.error(e);
 						}
-					}				
+					}
 					debugWs.onopen = () => {
 						play = setInterval(() => {
 							this.playData();

@@ -135,7 +135,7 @@ export default class extends Component {
 				this.setState({
 					list,
 				})
-			}).catch((e => console.info(e)));
+			});
 		}else{
 			getDispatch({ num: 10, page, state:'treating', isreg:"True"}).then((res) => {
 				clearInterval(inte)

@@ -31,7 +31,7 @@
 	position: relative;
 	border: 1px solid #eaeaea;
 	margin-bottom: 8px;
-	box-shadow: 0 0 6px rgba(0, 0, 0, .08); 
+	box-shadow: 0 0 6px rgba(0, 0, 0, .08);
 }
 .view {
 	position: absolute;
@@ -104,7 +104,7 @@
 		width: 14px;
 		height: 14px;
 		margin-right: 7px;
-		margin-top: 6px;
+		margin-bottom: 5px;
 		background: #828081;
 		vertical-align: middle;
 		border-radius: 50%;
@@ -173,15 +173,12 @@
 		padding: 0;
 		list-style: none;
 		width: 101%;
-		// height: 184px;
 		display: flex;
 		flex-flow: row wrap;
 		li {
 			font-size: 12px;
 			margin: 0;
 			padding: 0;
-			// height: 22px;
-			// line-height: 22px;
 			width: 50%;
 			text-align: center;
 			color: #999;
@@ -232,18 +229,22 @@
 	margin: 5px;
 }
 .mask{
-  background: rgba(0,0,0,0.4) !important;
+	background: rgba(0,0,0,0.4) !important;
 	z-index: 10;
-  position: absolute;
+	position: absolute;
 	width: 100%;
 	height: 100%;
 	margin-bottom: 56px;
 }
 .selectMask_box{
-  background: rgba(0,0,0,0);
-  position: absolute;
+	background: rgba(0,0,0,0);
+	position: absolute;
 	height:100%;
 	width:100%;
 	margin-bottom: 56px;
-  transition: all .2s linear
+	transition: all .2s linear
+}
+.Menu{
+	height: 300px;
+	overflow: auto;
 }
