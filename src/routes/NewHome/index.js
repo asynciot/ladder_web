@@ -306,7 +306,7 @@ export default class Home extends Component {
 				y: 'center',
 				textAlign:'center',
 				textStyle: {
-					fontSize:30,
+					fontSize:24,
 					fontWeight:'bold',
 					color: ['#333']
 				},
@@ -343,7 +343,7 @@ export default class Home extends Component {
 					type: "bar",
 					name: (this.state.language=="zh"?"在线：":"online：")+deviceonline,
 					coordinateSystem: "polar",
-					barWidth: 20, //宽度
+					barWidth: 15, //宽度
 					barCategoryGap: "40%",
 					data: [deviceonline/devicenum*100],
 				},
@@ -351,7 +351,7 @@ export default class Home extends Component {
 					type: "bar",
 					name: (this.state.language=="zh"?"离线：":"offline：")+devicelongoffline,
 					coordinateSystem: "polar",
-					barWidth: 20,
+					barWidth: 15,
 					barCategoryGap: "40%",
 					data: [devicelongoffline/devicenum*100]
 				},
@@ -359,7 +359,7 @@ export default class Home extends Component {
 					type: "bar",
 					name: (this.state.language=="zh"?"故障：":"fault   ：")+deviceoffline,
 					coordinateSystem: "polar",
-					barWidth: 20,
+					barWidth: 15,
 					barCategoryGap: "40%",
 					data: [deviceoffline/devicenum*100]
 				}
