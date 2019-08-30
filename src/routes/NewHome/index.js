@@ -416,18 +416,12 @@ export default class Home extends Component {
 									</div>
 									<div className={styles.aui_palace1_grid_main_bottom}>
 										<div className={styles.aui_palace1_grid_main_bottom_left}>
-											<FormattedMessage id="Sign"/>
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_right}>
-											<div className={styles.aui_palace1_grid_main_bottom_right1}>
-												正常
-											</div>
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_left}>
 											<FormattedMessage id="Number"/>
 										</div>
 										<div className={styles.aui_palace1_grid_main_bottom_right}>
-											{doornum}
+											<div className={styles.aui_palace1_grid_main_bottom_right1}>
+												{doornum}
+											</div>
 										</div>
 									</div>
 								</div>
@@ -448,18 +442,12 @@ export default class Home extends Component {
 									</div>
 									<div className={styles.aui_palace1_grid_main_bottom}>
 										<div className={styles.aui_palace1_grid_main_bottom_left}>
-											<FormattedMessage id="Sign"/>
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_right}>
-											<div className={styles.aui_palace1_grid_main_bottom_right1}>
-												正常
-											</div>
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_left}>
 											<FormattedMessage id="Number"/>
 										</div>
 										<div className={styles.aui_palace1_grid_main_bottom_right}>
-											{ctrlnum}
+											<div className={styles.aui_palace1_grid_main_bottom_right1}>
+												{ctrlnum}
+											</div>
 										</div>
 									</div>
 								</div>
