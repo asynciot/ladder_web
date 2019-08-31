@@ -302,16 +302,16 @@ export default class Home extends Component {
 			title: {
 				text: devicenum,
 				subtext: this.state.language=="zh"? "电梯总量":"Ladder Number",
-				x: '29%',
+				x: '34%',
 				y: 'center',
 				textAlign:'center',
 				textStyle: {
-					fontSize:30,
+					fontSize:24,
 					fontWeight:'bold',
 					color: ['#333']
 				},
 				subtextStyle: {
-					fontSize:14,
+					fontSize:12,
 					color: '#666',
 				},
 			},
@@ -324,8 +324,8 @@ export default class Home extends Component {
 
 			},
 			polar: {
-				center: ['30%', '50%'],
-				radius: '350%' //图形大小
+				center: ['35%', '50%'],
+				radius: '290%' //图形大小
 			},
 			angleAxis: {
 				show: false,
@@ -343,7 +343,7 @@ export default class Home extends Component {
 					type: "bar",
 					name: (this.state.language=="zh"?"在线：":"online：")+deviceonline,
 					coordinateSystem: "polar",
-					barWidth: 20, //宽度
+					barWidth: 15, //宽度
 					barCategoryGap: "40%",
 					data: [deviceonline/devicenum*100],
 				},
@@ -351,7 +351,7 @@ export default class Home extends Component {
 					type: "bar",
 					name: (this.state.language=="zh"?"离线：":"offline：")+devicelongoffline,
 					coordinateSystem: "polar",
-					barWidth: 20,
+					barWidth: 15,
 					barCategoryGap: "40%",
 					data: [devicelongoffline/devicenum*100]
 				},
@@ -359,7 +359,7 @@ export default class Home extends Component {
 					type: "bar",
 					name: (this.state.language=="zh"?"故障：":"fault   ：")+deviceoffline,
 					coordinateSystem: "polar",
-					barWidth: 20,
+					barWidth: 15,
 					barCategoryGap: "40%",
 					data: [deviceoffline/devicenum*100]
 				}
@@ -416,18 +416,12 @@ export default class Home extends Component {
 									</div>
 									<div className={styles.aui_palace1_grid_main_bottom}>
 										<div className={styles.aui_palace1_grid_main_bottom_left}>
-											<FormattedMessage id="Sign"/>
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_right}>
-											<div className={styles.aui_palace1_grid_main_bottom_right1}>
-												正常
-											</div>
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_left}>
 											<FormattedMessage id="Number"/>
 										</div>
 										<div className={styles.aui_palace1_grid_main_bottom_right}>
-											{doornum}
+											<div className={styles.aui_palace1_grid_main_bottom_right1}>
+												{doornum}
+											</div>
 										</div>
 									</div>
 								</div>
@@ -448,18 +442,12 @@ export default class Home extends Component {
 									</div>
 									<div className={styles.aui_palace1_grid_main_bottom}>
 										<div className={styles.aui_palace1_grid_main_bottom_left}>
-											<FormattedMessage id="Sign"/>
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_right}>
-											<div className={styles.aui_palace1_grid_main_bottom_right1}>
-												正常
-											</div>
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom_left}>
 											<FormattedMessage id="Number"/>
 										</div>
 										<div className={styles.aui_palace1_grid_main_bottom_right}>
-											{ctrlnum}
+											<div className={styles.aui_palace1_grid_main_bottom_right1}>
+												{ctrlnum}
+											</div>
 										</div>
 									</div>
 								</div>
