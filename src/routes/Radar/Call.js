@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { connect } from 'dva';
 import { Tabs, Flex, ImagePicker, List, InputItem, Picker, LocaleProvider } from 'antd-mobile';
 import { Button, message,  } from 'antd';
 import base64url from 'base64url';
-import qrcode from 'qrcode.js';
-import pathToRegexp from 'path-to-regexp';
 import styles from './Call.less';
 import { postCall, getFollowDevices, getFloorData } from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
@@ -45,7 +42,6 @@ export default class extends Component {
 			if(res.code == 0){
 				let buffer = [];
 				let arr = [];
-
 				buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
 				buffer.forEach((item) => {
 					arr.push(String.fromCharCode(item))

@@ -1,20 +1,23 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Button, message, Form, Col, Row, } from 'antd';
-import { List, InputItem, DatePicker, Modal} from 'antd-mobile';
+import { List, InputItem, DatePicker, Modal, Tabs} from 'antd-mobile';
 import styles from './EditDevice.less';
-import { getLadder, getFollowDevices } from '../../services/api';
+import { getLadder, getFollowDevices, getFloorData, Picker } from '../../services/api';
 import pathToRegexp from 'path-to-regexp';
 import { injectIntl, FormattedMessage, } from 'react-intl';
-var _val1 = '';
-var _val2 = '';
 
-const alert = Modal.alert;
 const state ={
 	'online':'在线',
 	'offline':'offline',
 	'longoffline':'长期离线',
 }
+const tabs = [
+	// { title:'事件列表', key:'t1'},
+	{ title:'电梯信息', key:'t2'},
+	// { title:'电梯故障', key:'t3'},
+	{ title:'呼梯', key:'t4'},
+]
 export default class extends Component {
 	state = {
 		ladder_name: '',
@@ -61,85 +64,90 @@ export default class extends Component {
 		const list = this.state.list
 		const la = window.localStorage.getItem("language")
 		return (
-			<div >
-				<Form labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
-					<InputItem
-						value={list.name}
-						disabled="true"
-					>
-						<FormattedMessage id="Device Name"/>
-					</InputItem>
-					<InputItem
-						value={list.install_addr}
-						disabled="true"
-					>
-						<FormattedMessage id="Install Address"/>
-					</InputItem>
-					{
-					list.ctrl?
-						<div onClick={()=>this.goDevice(0,list.ctrl_id)}>
+			<div>
+				<Tabs tabs={tabs}
+					initialPage={'t2'}
+
+				>
+					<Form labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
+						<InputItem
+							value={list.name}
+							disabled="true"
+						>
+							<FormattedMessage id="Device Name"/>
+						</InputItem>
+						<InputItem
+							value={list.install_addr}
+							disabled="true"
+						>
+							<FormattedMessage id="Install Address"/>
+						</InputItem>
+						{
+						list.ctrl?
+							<div onClick={()=>this.goDevice(0,list.ctrl_id)}>
+								<InputItem
+									value={list.ctrl}
+									disabled="true"
+									style={{color:'red'}}
+								>
+									<FormattedMessage id="Ctrl"/>
+								</InputItem>
+							</div>
+							:
+							<div></div>
+						}
+						{list.door1?
+							<div onClick={()=>this.goDevice(1,list.door1)}>
+								<InputItem
+									value={list.door1}
+									disabled="true"
+									style={{color:'red'}}
+								>
+									<FormattedMessage id="Door"/>
+								</InputItem>
+							</div>
+							:
+							<div></div>
+						}
+						{list.door2 ?
+							<div onClick={()=>this.goDevice(1,list.door2)}>
+								<InputItem
+									value={list.door2}
+									disabled="true"
+									style={{color:'red'}}
+								>
+									<FormattedMessage id="Door"/>
+								</InputItem>
+							</div>
+							:
+							<div></div>
+						}
+						{/* <div onClick={()=>this.goLadder()}>
 							<InputItem
-								value={list.ctrl}
 								disabled="true"
 								style={{color:'red'}}
 							>
-								<FormattedMessage id="Ctrl"/>
+								电梯
 							</InputItem>
-						</div>
-						:
-						<div></div>
-					}
-					{list.door1?
-						<div onClick={()=>this.goDevice(1,list.door1)}>
+						</div> */}
+						{
+							(this.state.la=="zh")?
 							<InputItem
-								value={list.door1}
+								value={state[list.state]}
 								disabled="true"
-								style={{color:'red'}}
 							>
-								<FormattedMessage id="Door"/>
+								<FormattedMessage id="State"/>
 							</InputItem>
-						</div>
-						:
-						<div></div>
-					}
-					{list.door2 ?
-						<div onClick={()=>this.goDevice(1,list.door2)}>
+							:
 							<InputItem
-								value={list.door2}
+								value={list.state}
 								disabled="true"
-								style={{color:'red'}}
 							>
-								<FormattedMessage id="Door"/>
+								<FormattedMessage id="State"/>
 							</InputItem>
-						</div>
-						:
-						<div></div>
-					}
-					{/* <div onClick={()=>this.goLadder()}>
-						<InputItem
-							disabled="true"
-							style={{color:'red'}}
-						>
-							电梯
-						</InputItem>
-					</div> */}
-					{
-						(this.state.la=="zh")?
-						<InputItem
-							value={state[list.state]}
-							disabled="true"
-						>
-							<FormattedMessage id="State"/>
-						</InputItem>
-						:
-						<InputItem
-							value={list.state}
-							disabled="true"
-						>
-							<FormattedMessage id="State"/>
-						</InputItem>
-					}
-				</Form>
+						}
+					</Form>
+				</Tabs>
 			</div>
 		);
 	}

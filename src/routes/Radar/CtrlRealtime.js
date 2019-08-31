@@ -195,10 +195,7 @@ export default class CtrlRealtime extends Component {
 		isCar:true,
 		IoInfo1:'Io Input Watch:',
 		IoInfo:'Car Input Watch:',
-		IMEI:'',
 		code:'',
-		install_addr:'',
-		device_name:'',
 		startTime:'',
 		endTime:'',
 		command:false,
@@ -284,7 +281,6 @@ export default class CtrlRealtime extends Component {
 	}
 	initWebsocket = () =>{ //初始化weosocket
 		const { currentUser } = this.props;
-		const { pick } = this.state
 		const device_id = this.props.match.params.id
 		const userId = currentUser.id
 		const wsurl = 'ws://47.96.162.192:9006/device/Monitor/socket?deviceId='+device_id+'&userId='+userId;
@@ -332,9 +328,8 @@ export default class CtrlRealtime extends Component {
 			loading,
 		})
 		setTimeout(()=>{
-			loading = false;
 			this.setState({
-				loading,
+				loading:false,
 			})
 		},1000)
 		if(this.state.state =="online"){
@@ -350,9 +345,9 @@ export default class CtrlRealtime extends Component {
 				const op = 'open';
 				let IMEI;
 				if(this.state.list.cellular==1){
-					IMEI = this.state.IMEI.substr(0,12);
+					IMEI = this.state.list.IMEI.substr(0,12);
 				}else{
-					IMEI = this.state.IMEI
+					IMEI = this.state.list.IMEI
 				}
 				const interval = 500;
 				const threshold = 4;
@@ -362,9 +357,7 @@ export default class CtrlRealtime extends Component {
 				const segment = '00,00,00,00';
 				const address = '00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00';
 				if(this.state.endTime==0){
-					postMonitor({ op, IMEI, interval, threshold, duration, device_type, type, segment, address}).then((res) => {
-					});
-					setTimeout(()=>{
+					postMonitor({ op, IMEI, interval, threshold, duration, device_type, type, segment, address }).then((pos) => {
 						getCommand({num:1,page:1,IMEI}).then((res)=>{
 							if(res.code==0){
 								let controll = 0;
@@ -392,7 +385,7 @@ export default class CtrlRealtime extends Component {
 								},1000)
 							}
 						})
-					}, 1000);
+					});
 				}
 			}else{
 				websock.close()
@@ -438,11 +431,8 @@ export default class CtrlRealtime extends Component {
 				show.updateTime = moment(time).subtract('hours',13).format('YYYY-MM-DD HH:mm:ss');
 				this.setState({
 					list:res.data.list[0],
-					IMEI:res.data.list[0].IMEI,
-					install_addr:res.data.list[0].install_addr,
-					device_name:res.data.list[0].device_name,
-					command,
 					state:res.data.list[0].state,
+					command,
 					show,
 				})
 			}
@@ -625,7 +615,6 @@ export default class CtrlRealtime extends Component {
 	getfloor = (val) => {
 		const { show, } = this.state
 		const {location } = this.props;
-		const {pick} = this.state;
 		const match = pathToRegexp('/ctrl/:id/realtime').exec(location.pathname);
 		const device_id = match[1];
 		getFloorData({device_id}).then((res) => {
@@ -837,7 +826,7 @@ export default class CtrlRealtime extends Component {
 		this.props.history.push(`/ctrl/${id}/${link}`);
 	}
 	goQrcode = () => {
-		const id = this.state.IMEI
+		const id = this.state.list.IMEI
 		this.setState({
 			src: `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=http://server.asynciot.com/company/follow/${id}`,
 			modal: true,
@@ -895,7 +884,7 @@ export default class CtrlRealtime extends Component {
 		this.myattachEvt();
 
 		const { ctrl: { event, view, device, floors, property, } } = this.props
-		const { floor, markFloor, markList, show} = this.state
+		const { floor, markFloor, markList, show, list } = this.state
 		const id = this.props.match.params.id;
 		if(view == 1 && counts == 1){
 			chartInte = setInterval(() => {
@@ -964,12 +953,12 @@ export default class CtrlRealtime extends Component {
 										<p style={{
 											width: '100%',
 											justifyContent: 'flex-start',
-										}}><FormattedMessage id="Install Address"/>：<i className={styles.status}>{this.state.install_addr}</i>
+										}}><FormattedMessage id="Install Address"/>：<i className={styles.status}>{list.install_addr}</i>
 										</p>
 										<p style={{
 											width: '100%',
 											justifyContent: 'flex-start',
-										}}><FormattedMessage id="Device Name"/>：<i className={styles.status}>{this.state.device_name}</i>
+										}}><FormattedMessage id="Device Name"/>：<i className={styles.status}>{list.device_name}</i>
 										</p>
 										<p style={{
 											width: '40%',
@@ -1001,7 +990,13 @@ export default class CtrlRealtime extends Component {
 										</p>
 										<p style={{
 											width: '60%',
-										}}><FormattedMessage id="Order"/><i onClick={()=>{this.goFault()}} className={styles.status}>{this.state.code?<FormattedMessage id={'E'+this.state.code}/>:<FormattedMessage id={"None"}/>}</i>
+										}}><FormattedMessage id="Order"/>
+											<i onClick={()=>{this.goFault()}} className={styles.status}>{
+												this.state.code?
+												<div>{'E'+this.state.code}<FormattedMessage id={'E'+this.state.code}/></div>
+												:
+												<FormattedMessage id={"None"}/>}
+											</i>
 										</p>
 										<p style={{
 											width: '40%',
@@ -1069,12 +1064,12 @@ export default class CtrlRealtime extends Component {
 										<p style={{
 											width: '100%',
 											justifyContent: 'flex-start',
-										}}><FormattedMessage id="Install Address"/>：<i className={styles.status}>{this.state.install_addr}</i>
+										}}><FormattedMessage id="Install Address"/>：<i className={styles.status}>{list.install_addr}</i>
 										</p>
 										<p style={{
 											width: '100%',
 											justifyContent: 'flex-start',
-										}}><FormattedMessage id="Device Name"/>：<i className={styles.status}>{this.state.device_name}</i>
+										}}><FormattedMessage id="Device Name"/>：<i className={styles.status}>{list.device_name}</i>
 										</p>
 										<p style={{
 											width: '100%',
@@ -1106,7 +1101,13 @@ export default class CtrlRealtime extends Component {
 										</p>
 										<p style={{
 											width: '100%',
-										}}><FormattedMessage id="Order"/><i onClick={()=>{this.goFault()}} className={styles.status}>{this.state.code?<FormattedMessage id={'E'+this.state.code}/>:<FormattedMessage id={"None"}/>}</i>
+										}}><FormattedMessage id="Order"/>
+											<i onClick={()=>{this.goFault()}} className={styles.status}>{
+												this.state.code?
+												<div>{'E'+this.state.code}<FormattedMessage id={'E'+this.state.code}/></div>
+												:
+												<FormattedMessage id={"None"}/>}
+											</i>
 										</p>
 										<p style={{
 											width: '100%',

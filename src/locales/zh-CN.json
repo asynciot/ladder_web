@@ -104,6 +104,8 @@
 	"Current Sensor U-phase Zero Current Offset": "电流传感器 U 相零点电流偏移",
 	"Current Sensor V-phase Zero Current Offset": "电流传感器 V 相零点电流偏移",
 	"Current Proportion of Current Sensor": "电流传感器电流比例",
+	"Closing-end Torque torque boost":"关门末端转矩提升",	
+	"Closing speed reduction position":"关门减速位置",
 	"Complete" : "完成工单",
 	"Creator" : "发起人",
 	"Create Time" : "创建时间",
@@ -160,11 +162,10 @@
 	"Data Write-protected Setting": "数据写保护设置",
 	"DC brake voltage":"直流制动电压",
 	"Door operator testing run automatically":"门机测试自动运行及门宽自学习",
-	"Weight empty current of motor":"电机空载电流",
-	"Closing-end Torque torque boost":"关门末端转矩提升",
-	"The sign of Control mode":"控制方式标志",
-	"Closing speed reduction position":"关门减速位置",
-	"Opening speed reduction position":"开门减速位置",
+	"D1":"此参数设置门机关门时的启动速度。",
+	"D2":"此参数设置门机关门时的最高速度。",
+	
+
 
 	"Excitation Current Ring P Parameter": "励磁电流环 P 参数",
 	"Excitation Current Ring I Parameter": "励磁电流环 I 参数",
@@ -256,8 +257,11 @@
 	"Opening Stop Protection Time": "开门停止保护时间",
 	"Opening/Closing Overload Protection Current": "开、关门过载保护电流",
 	"Oepning decelerate input switch pole setting":"开门减速输入开关极性设置",
+	"Opening speed reduction position":"开门减速位置",
 	"Online Devices" : "在线设备",
-
+	"online" : "在线",
+	"offline" : "离线",
+	
 	"Permission Assignment" : "权限管理",
 	"Print QR Code" : "打印二维码",
 	"print" : "打印",
@@ -444,8 +448,8 @@
 	"parameter(Opening accelerate 1 period speed)":"开门加速1段运行速度",
 	"parameter(Closing accelerate 1 period speed)":"关门加速1段运行速度",
 	"parameter(Closing overtime reverse opening delay)":"当P15=55时，关门总时间超过d39参数设置值时，将做开门超时反开处理",
-	"D1":"此参数设置门机关门时的启动速度。",
-	"D2":"此参数设置门机关门时的最高速度。",
+	
+	
 	"P24":"此参数设置为0：门机处于正常受控状态。1：门机作开/关门自动运行，用于测试运行或演示运行，断电后不保存，恢复为0。2：门宽自学习功能，当使用编码器功能时有效（PP29=1），当使用门宽自学习时，门机控制器的自学习时间由D30进行控制（开门持续时间=关门持续时间=D30设置值）。门机先执行一次关门，检测到关门到位开关动作以后，门机执行开门动作。开到位后门宽自学习结束。门宽自学习成功标志位P24参数会自动恢复为0。（编码器控制方式时有效）   注：900开门宽的中分门机门宽推荐值为336。门宽数据保存在P32菜单。",
 	"F12-31":"此参数选择消防输入信号端子：0：选择端子OP。1：选择端子CL。2：选择端子OPI。3：选择端子CLI。4：选择端子F1。5：选择端子F2。",
 
@@ -480,23 +484,23 @@
 	"Torque Current Ring I Parameter": "力矩电流环 I 参数",
 	"Treating Progress" : "故障处理进程",
 	"Tasks Completed Today" : "今日完成任务",
-
+	"The sign of Control mode":"控制方式标志",
+	
 	"User Management" : "用户管理",
 	"Username or phone" : "用户名和手机",
+	"untreated" : "等待接单",
 
 	"Verification" : "验证码",
 
 	"Work Flow" : "工作流",
 	"WeChat Follow" : "出厂设置",
 	"Wifi" : "Wifi版",
+	"Weight empty current of motor":"电机空载电流",
 
-	"untreated" : "等待接单",
+	
+	
+	
 
-	"treated" : "已完成",
-	"treating" : "处理中",
-	"title" : "标题",
-	"times" : "次数",
-	"tip" : "提示",
 
 	"examined" : "审核中",
 	"examine order" : "等待批准工单",
@@ -506,83 +510,102 @@
 	"event id" : "事件序号",
 	"Event Record" : "事件记录",
 
-	"maintain" : "保养",
-	"Install Address" : "项目名称",
-	"no content" : "没有内容",
 	"from date" : "起始日期",
-	"Map" : "地图",
+	"finish time" : "完成时间",
+	
+	"Install Address" : "项目名称",
+	"IP location" : "IP定位",
+
+
 	"List" : "列表",
-	"online" : "在线",
-	"offline" : "离线",
 	"long offline" : "离线",
+
+	"maintain" : "保养",
+	"Map" : "地图",
+	"model" : "型号",
+	"Menu" : "菜单",
+	"Monitoring Duration" : "监控时长",
+	"Memory Debugging" : "内存调试",
+	
+	"no content" : "没有内容",
+	
 	"keyword" : "关键词",
 	"type" : "类型",
 
-	"IP location" : "IP定位",
-	"warning" : "警告",
-	"try keyword within 15 bytes" : "关键词请不要超过15字",
-	"success" : "成功",
-	"RSSI" : "信号强度",
-	"model" : "型号",
-	"start time" : "开始时间",
-	"total" : "共",
-	"Menu" : "菜单",
-	"query" : "查询",
-	"Monitoring Duration" : "监控时长",
-	"Sampling Period" : "采样周期",
-	"Status Monitoring" : "状态监控",
-	"Realtime:" : "实时监控：",
-	"Real" : "实时",
-	"History":"历史",
-	"Memory Debugging" : "内存调试",
-	"Segment Address" : "段地址",
 	"Offset Address" : "偏移地址",
-	"maintenance type" : "维保类型",
-	"submission time" : "提交时间",
-	"OK" : "确定",
-	"remarks" : "说明",
-	"handle" : "操作",
-	"watch" : "查看",
-	"to read" : "查看",
-	"have read" : "查看",
-	"edit" : "编辑",
-	"Search by device ID" : "按设备ID查询",
-	"Show the last order for each device" : "只显示每个设备最后一个工单",
-	"reprieve" : "搁置",
-	"transfer" : "取消订单",
 	"order ID" : "工单编号",
 	"order duration" : "接单时长",
-	"receive the order successfully" : "接单成功",
-	"receive" : "接单",
+	
 	"phone number" : "联系电话",
-	"introduction" : "备注",
-	"finish time" : "完成时间",
-
 	"photo before treating" : "处理前照片",
 	"photo after treating" : "处理后照片",
 	"Parameter" : "参数信息",
-	"report time" : "报告时间",
-	"fualt duration" : "故障时长",
-	"last event" : "最新事件",
-	"event number in cache" : "缓存中的事件数",
-	"history fault" : "查看历史故障",
-	"History fault" : "历史故障",
-	"operating time" : "累计运行时间",
-	"usage count" : "累计运行次数",
-	"recent fault floor" : "最近故障楼层",
-	"Maintenance Remind" : "维保提醒",
+	
+	"query" : "查询",
+	
+	"RSSI" : "信号强度",
+	"Realtime:" : "实时监控：",
+	"Real" : "实时",
+	"Reset" : "重置",	
 	"Report" : "报告",
-	"next maintenance" : "下次维保时间",
+	"reprieve" : "搁置",
+	"receive the order successfully" : "接单成功",
+	"receive" : "接单",
+	"report time" : "报告时间",
+	"recent fault floor" : "最近故障楼层",
+	"remarks" : "说明",
+
+	"success" : "成功",
+	"start time" : "开始时间",
+	"Sampling Period" : "采样周期",
+	"Status Monitoring" : "状态监控",
+	"Segment Address" : "段地址",
+	"Search by device ID" : "按设备ID查询",
+	"Show the last order for each device" : "只显示每个设备最后一个工单",
+	"submission time" : "提交时间",
+
+	"treated" : "已完成",
+	"treating" : "处理中",
+	"title" : "标题",
+	"times" : "次数",
+	"tip" : "提示",	
+	"total" : "共",
+	"to read" : "查看",
+	"transfer" : "取消订单",
+	"try keyword within 15 bytes" : "关键词请不要超过15字",
+	
+	"warning" : "警告",
+	"watch" : "查看",
+
+	"maintenance type" : "维保类型",
+	
+	"edit" : "编辑",
+	"event number in cache" : "缓存中的事件数",
 	"early remind Days" : "提前多少天提醒",
+	
+	"fualt duration" : "故障时长",
+	
+	"handle" : "操作",
+	"have read" : "查看",
+
+	"introduction" : "备注",
+	
+	"last event" : "最新事件",
 	"last maintenance" : "上次维保时间",
 	"last yearly check" : "上次年检时间",
+	
+	"History":"历史",
+	"history fault" : "查看历史故障",
+	"History fault" : "历史故障",
+	
+	"operating time" : "累计运行时间",	
+	"OK" : "确定",
+	
+	"usage count" : "累计运行次数",
+	"Maintenance Remind" : "维保提醒",
+	"next maintenance" : "下次维保时间",
 	"next yearly check" : "下次年检时间",
-	"Fail to register,but it marked as registered" : "注册异常，但已将该设备标为注册",
-	"Fail to register!" : "清除失败！",
-	"Fail to register,but it marked as unregistered" : "清除异常，但已将该设备标为未注册",
-	"Information on this device has been reset" : "此设备的信息已重置",
-	"Faul to reset" : "重置失败",
-	"Reset" : "重置",
+
 	"E0" : "无",
 	"E01" : "E01过流",
 	"E02" : "E02母线过压",
