@@ -885,7 +885,8 @@ export default class CtrlRealtime extends Component {
 		this.myattachEvt();
 
 		const { ctrl: { event, view, device, floors, property, } } = this.props
-		const { floor, markFloor, markList, show, list } = this.state
+		const { floor, markFloor, markList, show, list } = this.state;
+		console.log(list)
 		const id = this.props.match.params.id;
 		if(view == 1 && counts == 1){
 			chartInte = setInterval(() => {
