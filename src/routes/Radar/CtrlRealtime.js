@@ -201,6 +201,7 @@ export default class CtrlRealtime extends Component {
 		command:false,
 		loading:false,
 		language:window.localStorage.getItem("language"),
+		list:[],
 	}
 	componentWillMount() {
 		this.getBaseData()
