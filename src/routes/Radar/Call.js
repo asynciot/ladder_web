@@ -86,8 +86,7 @@ export default class extends Component {
 	submit = () => {
 		const from = this.state.from[0]
 		const to = this.state.to[0]
-		postCall({IMEI: this.state.IMEI, from, to}).then((res) => {
-		});
+		postCall({IMEI: this.state.IMEI, from, to});
 	}
 	tabChange = (tab, index) => {
 		this.setState({
