@@ -39,6 +39,7 @@ export default class extends Component {
 	}
 	getFloor(val){
 		getFloorData({device_id:val,}).then((res) => {
+			console.log(res.data)
 			if(res.code == 0){
 				let buffer = [];
 				let arr = [];
