@@ -163,6 +163,9 @@ export async function postCall(params) {
 export function getLadder(params) {
 	return request(`/device/Ladder/ReadMore?${stringify(params)}`);
 }
+export function getLadderFault(params) {
+	return request(`/device/Ladder?${stringify(params)}`);
+}
 
 // message
 export async function queryMessage(params) {

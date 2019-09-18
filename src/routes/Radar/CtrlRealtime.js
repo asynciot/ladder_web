@@ -12,7 +12,7 @@ import { getEvent, postMonitor, getFollowDevices, getFault, getFloorData, getCtr
 import { injectIntl, FormattedMessage } from 'react-intl';
 import mfb from './mfb.css';
 import { IOMenu, Board} from '../../ctrlMenu.js';
-import CtrlMenu from './CtrlMenu.js'; 
+import CtrlMenu from './CtrlMenu.js';
 
 const Watch = {
 	label: 'Watch',
@@ -885,13 +885,13 @@ export default class CtrlRealtime extends Component {
 		this.myattachEvt();
 
 		const { ctrl: { event, view, device, floors, property, } } = this.props
-		const { floor, markFloor, markList, show, list } = this.state;
+		const { floor, markFloor, markList, show, list, language } = this.state;
 		console.log(list)
 		const id = this.props.match.params.id;
 		if(view == 1 && counts == 1){
 			chartInte = setInterval(() => {
 				if(this.state.pclock==true){
-					if(this.state.language=="zh"){
+					if(language=="zh"){
 						this.showChart()
 					}else{
 						this.showChartEn()
@@ -909,37 +909,37 @@ export default class CtrlRealtime extends Component {
 			<div className="content tab-hide">
 				<div className={styles.content}>
 					<div id="mymask" className={`${styles.selectMask_box} ${this.state.dateSelected ? styles.mask : ""}`}>
-					<Modal
-						visible={this.state.modal}
-						transparent
-						maskClosable={false}
-						title="二维码"
-						footer={this.state.language=="en"?[{ text: 'OK', onPress: () => this.setState({modal: false}) }]:[{ text: '确定', onPress: () => this.setState({modal: false}) }]}
-						wrapProps={{ onTouchStart: this.onWrapTouchStart }}
-					>
-						<div className="qrcode">
-							<Spin className="qrcode-loading"/>
-							<img src={this.state.src} alt="code"/>
-						</div>
-					</Modal>
-					<Row type="flex" justify="center" align="middle">
-						<Col span={18}>
-							<p className={styles.shishi}><FormattedMessage id="Realtime:"/></p>
-						</Col>
-						<Col span={6}>
-							<Switch
-								checkedChildren={<FormattedMessage id="Open"/>}
-								unCheckedChildren={<FormattedMessage id="Close"/>}
-								onChange={this.onChange}
-								checked={this.state.switch}
-								disabled={this.state.command}
-								defaultChecked={this.state.switch}
-								loading={this.state.loading}
-							/>
-						</Col>
-					</Row>
-					{
-						(this.state.language=="zh") ?
+						<Modal
+							visible={this.state.modal}
+							transparent
+							maskClosable={false}
+							title="二维码"
+							footer={language=="en"?[{ text: 'OK', onPress: () => this.setState({modal: false}) }]:[{ text: '确定', onPress: () => this.setState({modal: false}) }]}
+							wrapProps={{ onTouchStart: this.onWrapTouchStart }}
+						>
+							<div className="qrcode">
+								<Spin className="qrcode-loading"/>
+								<img src={this.state.src} alt="code"/>
+							</div>
+						</Modal>
+						<Row type="flex" justify="center" align="middle">
+							<Col span={18}>
+								<p className={styles.shishi}><FormattedMessage id="Realtime:"/></p>
+							</Col>
+							<Col span={6}>
+								<Switch
+									checkedChildren={<FormattedMessage id="Open"/>}
+									unCheckedChildren={<FormattedMessage id="Close"/>}
+									onChange={this.onChange}
+									checked={this.state.switch}
+									disabled={this.state.command}
+									defaultChecked={this.state.switch}
+									loading={this.state.loading}
+								/>
+							</Col>
+						</Row>
+						{
+						(language=="zh") ?
 						<div className={classNames(styles.tab, view == 0 ?'tab-active' : 'tab-notactive')}>
 							<Row
 								type="flex"
@@ -964,11 +964,11 @@ export default class CtrlRealtime extends Component {
 										</p>
 										<p style={{
 											width: '40%',
-										}}><FormattedMessage id="Realtime:"/> <i className={styles.status}>{show.run ? <FormattedMessage id={"Operation"}/>:<FormattedMessage id={"Shutdown"}/>}</i>
+										}}><FormattedMessage id="Realtime:"/> <i className={styles.status}>{show.run ? <FormattedMessage id="Operation"/>:<FormattedMessage id="Shutdown"/>}</i>
 										</p>
 										<p  style={{
 											width: '60%',
-										}}><FormattedMessage id="Opening arrival signal"/><i className={styles.status}>{show.open ? <FormattedMessage id="Action"/>:<FormattedMessage id={"Stop"}/>}</i>
+										}}><FormattedMessage id="Opening arrival signal"/><FormattedMessage id="Normally closed"/>{show.open?<i style={{background:"#21B923"}} className={styles.signal1}/>:<i className={styles.signal1}/>}
 										</p>
 										<p style={{
 											width: '40%',
@@ -976,11 +976,11 @@ export default class CtrlRealtime extends Component {
 										</p>
 										<p style={{
 											width: '60%',
-										}}><FormattedMessage id="Closing arrival signal"/><i className={styles.status}>{show.close ? <FormattedMessage id="Action"/>:<FormattedMessage id="Stop"/>}</i>
+										}}><FormattedMessage id="Closing arrival signal"/><FormattedMessage id="Normally closed"/>{show.close?<i style={{background:"#21B923"}} className={styles.signal1}/>:<i className={styles.signal1}/>}
 										</p>
 										<p style={{
 											width: '40%',
-										}}><FormattedMessage id="Door lock circuit:"/><i className={styles.status}>{show.lock ? <FormattedMessage id={"Through"}/>:<FormattedMessage id={"Break"}/>}</i>
+										}}><FormattedMessage id="Door lock circuit:"/><i className={styles.status}>{show.lock ? <FormattedMessage id="Through"/>:<FormattedMessage id="Break"/>}</i>
 										</p>
 										<p style={{
 											width: '60%',
@@ -1010,18 +1010,6 @@ export default class CtrlRealtime extends Component {
 										}}>
 											<FormattedMessage id="Last update time"/> ：
 											<i className={styles.status}>{show.updateTime}</i>
-										</p>
-										<p style={{
-											width: '20%',
-											justifyContent: 'flex-start',
-										}}>
-											<Switch
-												checkedChildren="I\O"
-												unCheckedChildren={<FormattedMessage id="Car"/>}
-												onChange={this.onChange1}
-												checked={this.state.switch1}
-												defaultChecked={this.state.switch1}
-											/>
 										</p>
 									</section>
 								</Col>
@@ -1075,11 +1063,11 @@ export default class CtrlRealtime extends Component {
 										</p>
 										<p style={{
 											width: '100%',
-										}}><FormattedMessage id="Realtime:"/> <i className={styles.status}>{show.run ? <FormattedMessage id={"Operation"}/>:<FormattedMessage id={"Shutdown"}/>}</i>
+										}}><FormattedMessage id="Realtime:"/> <i className={styles.status}>{show.run ? <FormattedMessage id="Operation"/>:<FormattedMessage id="Shutdown"/>}</i>
 										</p>
 										<p  style={{
 											width: '100%',
-										}}><FormattedMessage id="Opening arrival signal"/><i className={styles.status}>{show.open ? <FormattedMessage id={"Action"}/>:<FormattedMessage id={"Stop"}/>}</i>
+										}}><FormattedMessage id="Opening arrival signal"/><FormattedMessage id="Normally closed"/>{show.open?<i style={{background:"#21B923"}} className={styles.signal1}/>:<i className={styles.signal1}/>}
 										</p>
 										<p style={{
 											width: '100%',
@@ -1087,11 +1075,11 @@ export default class CtrlRealtime extends Component {
 										</p>
 										<p style={{
 											width: '100%',
-										}}><FormattedMessage id="Closing arrival signal"/><i className={styles.status}>{show.close ? <FormattedMessage id={"Action"}/>:<FormattedMessage id={"Stop"}/>}</i>
+										}}><FormattedMessage id="Closing arrival signal"/><FormattedMessage id="Normally closed"/>{show.close?<i style={{background:"#21B923"}} className={styles.signal1}/>:<i className={styles.signal1}/>}
 										</p>
 										<p style={{
 											width: '100%',
-										}}><FormattedMessage id="Door lock circuit:"/><i className={styles.status}>{show.lock ? <FormattedMessage id={"Through"}/>:<FormattedMessage id={"Break"}/>}</i>
+										}}><FormattedMessage id="Door lock circuit:"/><i className={styles.status}>{show.lock ? <FormattedMessage id="Through"/>:<FormattedMessage id="Break"/>}</i>
 										</p>
 										<p style={{
 											width: '100%',
@@ -1121,18 +1109,6 @@ export default class CtrlRealtime extends Component {
 										}}>
 											<FormattedMessage id="Last update time"/> ：
 											<i className={styles.status}>{show.updateTime}</i>
-										</p>
-										<p style={{
-											width: '20%',
-											justifyContent: 'flex-start',
-										}}>
-											<Switch
-												checkedChildren="IO"
-												unCheckedChildren={<FormattedMessage id="Car"/>}
-												onChange={this.onChange1}
-												checked={this.state.switch1}
-												defaultChecked={this.state.switch1}
-											/>
 										</p>
 									</section>
 								</Col>
@@ -1168,64 +1144,74 @@ export default class CtrlRealtime extends Component {
 								<section onClick={this.gocall}><FormattedMessage id="Call"/></section>
 							</div> */}
 						</div>
-					}
-					<div className={classNames(styles.tab, view == 1 ?'tab-active' : 'tab-notactive')}>
-						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
-							<Col xs={{ span: 24 }} md={{ span: 48 }}>
-								<div id = "run" style={{ width: 320 , height: 80 }}></div>
-							</Col>
-						</Row>
-						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
-							<Col xs={{ span: 24 }} md={{ span: 48 }}>
-									<div id = "lock" style={{ width: 320 , height: 80 }}></div>
-							</Col>
-						</Row>
-						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
-							<Col xs={{ span: 24 }} md={{ span: 48 }}>
-									<div id = "close" style={{ width: 320 , height: 240 }}></div>
-							</Col>
-						</Row>
-					</div>
-					<ul ref='mybtn' id="menu" className={`${mfb.mfb_component__br} ${mfb.mfb_zoomin}`} data-mfb-toggle="click">
-						<li className={mfb.mfb_component__wrap}>
-						<a  className={mfb.mfb_component__button__main}>
-							<i className={`${mfb.mfb_component__main_icon__resting} ${mfb.icon_plus}`}></i>
-							<i id="mybutton" className={`${mfb.mfb_component__main_icon__active} ${mfb.icon_close}`}></i>
-						</a>
-						<ul className={mfb.mfb_component__list}>
-							<li>
-							<a  data-mfb-label={(this.state.language=="zh")?"菜单":"Menu"} className={mfb.mfb_component__button__child}>
-								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_menu}`} onClick={this.goDetail('params')}></i>
-							</a>
-							</li>
-							<li>
-							<a data-mfb-label={(this.state.language=="zh")?"二维码":"QR code"} className={mfb.mfb_component__button__child}>
-								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_qrcode}`} onClick={this.goQrcode}></i>
-							</a>
-							</li>
-							<li>
-							<a data-mfb-label={(this.state.language=="zh")?"内存查看":"Memory View"} className={mfb.mfb_component__button__child}>
-								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_watch}`} onClick={this.goDebug}></i>
-							</a>
-							</li>
-							<li>
-							<a data-mfb-label={(this.state.language=="zh")?"历史故障":"Historical fault"} className={mfb.mfb_component__button__child}>
-								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_fault}`} onClick={this.gohistory}></i>
-							</a>
-							</li>
-							<li>
-								<a data-mfb-label={(this.state.language=="zh")?"呼梯":"Call"} className={mfb.mfb_component__button__child}>
-								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_call}`} onClick={this.gocall}></i>
-								</a>
-							</li>
-							<li>
-								<a data-mfb-label={(this.state.language=="zh")?"实时":"Real time"} className={mfb.mfb_component__button__child}>
-								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_event}`}></i>
-								</a>
+						}
+						<div className={classNames(styles.tab, view == 1 ?'tab-active' : 'tab-notactive')}>
+							<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
+								<Col xs={{ span: 24 }} md={{ span: 48 }}>
+									<div id = "run" style={{ width: 320 , height: 80 }}></div>
+								</Col>
+							</Row>
+							<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
+								<Col xs={{ span: 24 }} md={{ span: 48 }}>
+										<div id = "lock" style={{ width: 320 , height: 80 }}></div>
+								</Col>
+							</Row>
+							<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
+								<Col xs={{ span: 24 }} md={{ span: 48 }}>
+										<div id = "close" style={{ width: 320 , height: 240 }}></div>
+								</Col>
+							</Row>
+						</div>
+						<ul ref='mybtn' id="menu" className={`${mfb.mfb_component__br} ${mfb.mfb_zoomin}`} data-mfb-toggle="click">
+							<li className={mfb.mfb_component__wrap}>
+								<div>
+									{
+										language=="zh"?
+										<a  className={mfb.mfb_component__button__main}>
+											<i className={`${mfb.mfb_component__main_icon__resting} ${mfb.icon_plus_ch}`}></i>
+											<i id="mybutton" className={`${mfb.mfb_component__main_icon__active} ${mfb.icon_close}`}></i>
+										</a>
+										:
+										<a  className={mfb.mfb_component__button__main}>
+											<i className={`${mfb.mfb_component__main_icon__resting} ${mfb.icon_plus_en}`}></i>
+											<i id="mybutton" className={`${mfb.mfb_component__main_icon__active} ${mfb.icon_close}`}></i>
+										</a>
+									}
+								</div>
+								<ul className={mfb.mfb_component__list}>
+									<li>
+									<a  data-mfb-label={(language=="zh")?"菜单":"Menu"} className={mfb.mfb_component__button__child}>
+										<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_menu}`} onClick={this.goDetail('params')}></i>
+									</a>
+									</li>
+									<li>
+									<a data-mfb-label={(language=="zh")?"二维码":"QR code"} className={mfb.mfb_component__button__child}>
+										<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_qrcode}`} onClick={this.goQrcode}></i>
+									</a>
+									</li>
+									<li>
+									<a data-mfb-label={(language=="zh")?"内存查看":"Memory View"} className={mfb.mfb_component__button__child}>
+										<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_watch}`} onClick={this.goDebug}></i>
+									</a>
+									</li>
+									<li>
+									<a data-mfb-label={(language=="zh")?"历史故障":"Historical fault"} className={mfb.mfb_component__button__child}>
+										<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_fault}`} onClick={this.gohistory}></i>
+									</a>
+									</li>
+									<li>
+										<a data-mfb-label={(language=="zh")?"呼梯":"Call"} className={mfb.mfb_component__button__child}>
+										<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_call}`} onClick={this.gocall}></i>
+										</a>
+									</li>
+									<li>
+										<a data-mfb-label={(language=="zh")?"实时":"Real time"} className={mfb.mfb_component__button__child}>
+										<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_event}`}></i>
+										</a>
+									</li>
+								</ul>
 							</li>
 						</ul>
-						</li>
-					</ul>
 					</div>
 				</div>
 			</div>

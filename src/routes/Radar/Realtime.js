@@ -244,30 +244,30 @@ export default class DoorHistory extends Component {
 		}
 	}
 	attachEvt=( elems, evt )=>{
-	  for( var i = 0, len = elems.length; i < len; i++ ){
-	    this.state.mainButton = elems[i].querySelector('.' + this.state.mainButtonClass);
+		for( var i = 0, len = elems.length; i < len; i++ ){
+			this.state.mainButton = elems[i].querySelector('.' + this.state.mainButtonClass);
 		if(this.state.mainButton!=null)
 		{
 			this.state.mainButton.addEventListener( evt , this.toggleButton, false);
 		}
-	  }
-	  
+		}
+
 	}
 	getElemsByToggleMethod=( selector )=>{
-	  return document.querySelectorAll('[' + this.state.toggleMethod + '="' + selector + '"]');
+		return document.querySelectorAll('[' + this.state.toggleMethod + '="' + selector + '"]');
 	}
 	toggleButton=( evt )=>{
-	  this.state.target = evt.target;
-	  while ( this.state.target && !this.state.target.getAttribute( this.state.toggleMethod ) ){
-	    this.state.target = this.state.target.parentNode;
-	    if(!this.state.target) { return; }
-	  }
-	  this.state.currentState = this.state.target.getAttribute( this.state.menuState ) === this.state.isOpen ? this.state.isClosed : this.state.isOpen;
-	  this.state.target.setAttribute(this.state.menuState, this.state.currentState);
-	  this.setState({
-	  	dateSelected:!this.state.dateSelected
-	  })
-	
+		this.state.target = evt.target;
+		while ( this.state.target && !this.state.target.getAttribute( this.state.toggleMethod ) ){
+			this.state.target = this.state.target.parentNode;
+			if(!this.state.target) { return; }
+		}
+		this.state.currentState = this.state.target.getAttribute( this.state.menuState ) === this.state.isOpen ? this.state.isClosed : this.state.isOpen;
+		this.state.target.setAttribute(this.state.menuState, this.state.currentState);
+		this.setState({
+			dateSelected:!this.state.dateSelected
+		})
+
 	}
 	initWebsocket (){ //初始化weosocket
 		const { currentUser } = this.props;
@@ -1174,7 +1174,7 @@ export default class DoorHistory extends Component {
 		this.state.elemsToClick = this.getElemsByToggleMethod( this.state.clickOpt );
 		this.attachEvt( this.state.elemsToClick, 'click' );
 		this.myattachEvt();
-		
+
 		const { device: { events, view, property, updateTime, }} = this.props;
 		const { show, id } = this.state;
 		const width = parseInt((window.innerWidth - 100) / 2);
@@ -1269,9 +1269,9 @@ export default class DoorHistory extends Component {
 									</p>
 									<p ><FormattedMessage id="Closing signal"/> <i className={styles.status}>{show.closeIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
-									<p ><FormattedMessage id="Opening arrival signal"/><i className={styles.status}>{show.openTo ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									<p ><FormattedMessage id="Opening arrival signal"/><FormattedMessage id="Normally closed"/>{show.openTo?<i style={{background:"#21B923"}} className={styles.signal1}/>:<i className={styles.signal1}/>}
 									</p>
-									<p ><FormattedMessage id="Closing arrival signal"/><i className={styles.status}>{show.closeTo ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									<p ><FormattedMessage id="Closing arrival signal"/><FormattedMessage id="Normally closed"/>{show.closeTo?<i style={{background:"#21B923"}} className={styles.signal1}/>:<i className={styles.signal1}/>}
 									</p>
 									<p><FormattedMessage id="Monitor remaining time"/> <i className={styles.status}>{this.state.endTime?(this.state.endTime+"s"):"0s"}</i>
 									</p>
@@ -1324,11 +1324,11 @@ export default class DoorHistory extends Component {
 									</p>
 									<p style={{
 										width: '100%',
-									}}><FormattedMessage id="Opening arrival signal"/><i className={styles.status}>{show.openTo ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									}}><FormattedMessage id="Opening arrival signal"/><FormattedMessage id="Normally closed"/>{show.openTo?<i style={{background:"#21B923"}} className={styles.signal1}/>:<i className={styles.signal1}/>}
 									</p>
 									<p style={{
 										width: '100%',
-									}}><FormattedMessage id="Closing arrival signal"/><i className={styles.status}>{show.closeTo ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									}}><FormattedMessage id="Closing arrival signal"/><FormattedMessage id="Normally closed"/>{show.closeTo?<i style={{background:"#21B923"}} className={styles.signal1}/>:<i className={styles.signal1}/>}
 									</p>
 									<p style={{
 										width: '100%',
@@ -1457,34 +1457,44 @@ export default class DoorHistory extends Component {
 					</div>
 
 					<ul ref='mybtn' id="menu" className={`${mfb.mfb_component__br} ${mfb.mfb_zoomin}`} data-mfb-toggle="click">
-					  <li className={mfb.mfb_component__wrap}>
-						<a  className={mfb.mfb_component__button__main}>
-						  <i className={`${mfb.mfb_component__main_icon__resting} ${mfb.icon_plus}`}></i>
-						  <i id="mybutton" className={`${mfb.mfb_component__main_icon__active} ${mfb.icon_close}`}></i>
-						</a>
+						<li className={mfb.mfb_component__wrap}>
+							<div>
+								{
+									language=="zh"?
+									<a  className={mfb.mfb_component__button__main}>
+										<i className={`${mfb.mfb_component__main_icon__resting} ${mfb.icon_plus_ch}`}></i>
+										<i id="mybutton" className={`${mfb.mfb_component__main_icon__active} ${mfb.icon_close}`}></i>
+									</a>
+									:
+									<a  className={mfb.mfb_component__button__main}>
+										<i className={`${mfb.mfb_component__main_icon__resting} ${mfb.icon_plus_en}`}></i>
+										<i id="mybutton" className={`${mfb.mfb_component__main_icon__active} ${mfb.icon_close}`}></i>
+									</a>
+								}
+							</div>
 						<ul className={mfb.mfb_component__list}>
-						  <li>
+							<li>
 							<a  data-mfb-label={(language=="zh")?"菜单":"Menu"} className={mfb.mfb_component__button__child} onClick={this.goDetail(type == 2 ? 'params/2': 'params/1')}>
-							  <i className={`${mfb.mfb_component__child_icon} ${mfb.icon_menu}`}></i>
+								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_menu}`}></i>
 							</a>
-						  </li>
-						  <li>
+							</li>
+							<li>
 							<a data-mfb-label={(language=="zh")?"二维码":"QR code"} className={mfb.mfb_component__button__child} onClick={this.goQrcode}>
-							  <i className={`${mfb.mfb_component__child_icon} ${mfb.icon_qrcode}`}></i>
+								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_qrcode}`}></i>
 							</a>
-						  </li>
-						  <li>
+							</li>
+							<li>
 							<a data-mfb-label={(language=="zh")?"历史故障":"Historical faults"} className={mfb.mfb_component__button__child} onClick={this.gohistory}>
-							  <i className={`${mfb.mfb_component__child_icon} ${mfb.icon_fault}`}></i>
+								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_fault}`}></i>
 							</a>
-						  </li>
-						  <li>
+							</li>
+							<li>
 							<a data-mfb-label={(language=="zh")?"历史事件":"Historical events"} className={mfb.mfb_component__button__child} onClick={this.goEvent}>
-							  <i className={`${mfb.mfb_component__child_icon} ${mfb.icon_event}`}></i>
+								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_event}`}></i>
 							</a>
-						  </li>
+							</li>
 						</ul>
-					  </li>
+						</li>
 					</ul>
 					</div>
 				</div>

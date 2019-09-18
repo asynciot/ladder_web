@@ -72,12 +72,12 @@ export default class Home extends Component {
 			if (res.code === 0) {
 				this.setState({
 					devicesStatus: res.data,
-					doornum: parseInt(res.data.dooronline)+parseInt(res.data.dooroffline)+parseInt(res.data.doorlongoffline),
-					ctrlnum:parseInt(res.data.ctrlonline)+parseInt(res.data.ctrloffline)+parseInt(res.data.ctrllongoffline),
+					doornum: parseInt(res.data.dooronline)+parseInt(res.data.doorlongoffline),
+					ctrlnum:parseInt(res.data.ctrlonline)+parseInt(res.data.ctrllongoffline),
 				});
 			}
-			let num = parseInt(res.data.dooronline)+parseInt(res.data.dooroffline)+parseInt(res.data.doorlongoffline)+parseInt(res.data.ctrlonline)+parseInt(res.data.ctrloffline)+parseInt(res.data.ctrllongoffline)
-			if(num==0){
+			const nums = parseInt(res.data.dooronline)+parseInt(res.data.doorlongoffline)+parseInt(res.data.ctrlonline)+parseInt(res.data.ctrloffline)+parseInt(res.data.ctrllongoffline)
+			if(nums==0){
 				if(window.localStorage.getItem("language")=="zh"){
 					alert("请在个人界面使用关注设备，或使用微信扫一扫关注设备！")
 				}else{

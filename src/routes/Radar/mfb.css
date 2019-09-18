@@ -897,8 +897,11 @@
  */
 
 /*# sourceMappingURL=mfb.css.map */
-.icon_plus:before{
-	content: url(../../assets/icon/plus.png);
+.icon_plus_en:before{
+	content: "more";
+}
+.icon_plus_ch:before{
+	content: "更多";
 }
 .icon_close:before{
 	content: url(../../assets/icon/close.png);

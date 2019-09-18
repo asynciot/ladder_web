@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import pathToRegexp from 'path-to-regexp';
 import { connect } from 'dva';
 import { Row, Col, Collapse, Dropdown, Menu } from 'antd';
-import { List, Accordion, } from 'antd-mobile';
+import { List, Accordion, Flex } from 'antd-mobile';
 import styles from './Params.less';
 import { injectIntl, FormattedMessage } from 'react-intl';
 
@@ -20,11 +20,25 @@ const { SubMenu } = Menu;
 const Menus = (item) => (
 	<Menu>
 		<Row className={styles.border}>
-			<Col span={4} >
+			<Col span={6} >
+				<div><p><FormattedMessage id="Parameter Name"/></p></div>
+			</Col>
+			<Col span={12} className={styles.borderleft2}>
+				<p><FormattedMessage id="Introduce"/></p>
+			</Col>
+			<Col span={6} className={styles.borderleft2}>
+				<div><p><FormattedMessage id="Range"/></p></div>
+			</Col>
+		</Row>
+		<Row className={styles.border2}>
+			<Col span={6} style={{"text-align":'center'}}>
 				<div><p><FormattedMessage id={item.label}/></p></div>
 			</Col>
-			<Col span={20} className={styles.borderleft}>
+			<Col span={12} className={styles.borderleft}>
 				<p className={styles.explain}><FormattedMessage id={item.explain}/></p>
+			</Col>
+			<Col span={6} style={{"text-align":'center'}}>
+				<div><p>{item.range}</p></div>
 			</Col>
 		</Row>
 	</Menu>

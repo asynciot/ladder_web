@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Carousel, WingBlank, List, Flex, Card, Modal, Badge} from 'antd-mobile';
 import { Row, Col, Button, Spin, DatePicker, Pagination } from 'antd';
 import styles from './index.less';
-import { getBanners, getMessages, getDevicesStatus, getFault, postLocation, getFaultUntreted, getFollowDevices, getLadder } from '../../services/api';
+import { getBanners, getMessages, getDevicesStatus, getFault, postLocation, getFaultUntreted, getFollowDevices, getLadder, getLadderFault } from '../../services/api';
 import background3 from '../../assets/bg2.jpg';
 import background2 from '../../assets/bg1.jpg';
 import background4 from '../../assets/bg3.jpg';
@@ -22,7 +22,7 @@ import 'echarts/lib/component/legend';
 import 'echarts/lib/component/markPoint';
 
 const PlaceHolder = ({ className = '', ...restProps }) => (
-  <div className={`${className} placeholder`} {...restProps}>Block</div>
+	<div className={`${className} placeholder`} {...restProps}>Block</div>
 );
 
 const alert = Modal.alert;
@@ -33,22 +33,21 @@ var switchId = 0;
 export default class Home extends Component {
 	state = {
 		data: [],
-		imgHeight: 176,
 		messages: [],
-		doornum:0,
-		ctrlnum:0,
-		devicenum:0,
-		dooroffline:0,
-		ctrloffline:0,
-		deviceoffline:0,
-		deviceonline:0,
-		devicelongoffline:0,
+		doorNum:0,
+		ctrlNum:0,
+		deviceNum:0,
+		doorOffline:0,
+		ctrlOffline:0,
+		deviceOffline:0,
+		deviceOnline:0,
+		deviceLongoffline:0,
 		devicesStatus: {
 			dooronline:0,
-			dooroffline:0,
+			doorOffline:0,
 			doorlongoffline:0,
-			ctrlonline:0,
-			ctrloffline:0,
+			ctrlOnline:0,
+			ctrlOffline:0,
 			ctrllongoffline:0,
 		},
 		historyEvents: [],
@@ -88,11 +87,11 @@ export default class Home extends Component {
 			if (res.code === 0) {
 				this.setState({
 					devicesStatus: res.data,
-					doornum: parseInt(res.data.dooronline)+parseInt(res.data.dooroffline)+parseInt(res.data.doorlongoffline),
-					ctrlnum:parseInt(res.data.ctrlonline)+parseInt(res.data.ctrloffline)+parseInt(res.data.ctrllongoffline),
+					doorNum: parseInt(res.data.dooronline)+parseInt(res.data.doorlongoffline),
+					ctrlNum:parseInt(res.data.ctrlonline)+parseInt(res.data.ctrllongoffline),
 				});
 			}
-			let num = parseInt(res.data.dooronline)+parseInt(res.data.dooroffline)+parseInt(res.data.doorlongoffline)+parseInt(res.data.ctrlonline)+parseInt(res.data.ctrloffline)+parseInt(res.data.ctrllongoffline)
+			let num = parseInt(res.data.dooronline)+parseInt(res.data.doorlongoffline)+parseInt(res.data.ctrlonline)+parseInt(res.data.ctrllongoffline)
 			if(num==0){
 				if(this.state.language=="zh"){
 					alert("请在个人界面使用关注设备，或使用微信扫一扫关注设备！")
@@ -104,7 +103,7 @@ export default class Home extends Component {
 	}
 	getFault = () => {
 		getFault({ num: 1, page: 1, state:"untreated", islast:1}).then((res) => {
-				const list = res.data.list.map((item,index) => {
+			const list = res.data.list.map((item,index) => {
 				const device_id = item.device_id
 				getFollowDevices({num:1,page:1,device_id}).then((ind) => {
 					this.state.historyEvents[0].addr=ind.data.list[0].install_addr;
@@ -113,39 +112,41 @@ export default class Home extends Component {
 						historyEvents,
 					});
 				})
-
 				return item;
 			})
 			if (res.code === 0) {
-				let code = res.data.list[0].code
-				if(res.data.list[0].device_type=="ctrl"){
-					this.setState({
-						historyEvents: res.data.list,
-						total:res.data.totalNumber,
-						code:"E"+code.toString(16)
-					});
-				}else{
-					code = (code+50)
-					this.setState({
-						historyEvents: res.data.list,
-						total:res.data.totalNumber,
-						code,
-					});
+				let code
+				if(res.data.list[0]){
+					code = res.data.list[0].code
+					if(res.data.list[0].device_type=="ctrl"){
+						this.setState({
+							historyEvents: res.data.list,
+							total:res.data.totalNumber,
+							code:"E"+code.toString(16)
+						});
+					}else{
+						code = (code+50)
+						this.setState({
+							historyEvents: res.data.list,
+							total:res.data.totalNumber,
+							code,
+						});
+					}
 				}
 			}
 		});
-		getFaultUntreted({ num: 10, page:1, islast:1, device_type:'door',type:1 }).then((res) => {
+		getFaultUntreted({ num: 10, page:1, islast:1, device_type:'door', type:1,}).then((res) => {
 			const pos = res.data.list.map((item,index) => {
 			})
 			this.setState({
-				dooroffline:res.data.totalNumber,
+				doorOffline:res.data.totalNumber,
 			});
 		})
-		getFaultUntreted({ num: 10, page:1, islast:1, device_type:'ctrl',type:1 }).then((res) => {
+		getFaultUntreted({ num: 10, page:1, islast:1, device_type:'ctrl', type:1,}).then((res) => {
 			const pos = res.data.list.map((item,index) => {
 			})
 			this.setState({
-				ctrloffline:res.data.totalNumber,
+				ctrlOffline:res.data.totalNumber,
 			});
 		})
 	}
@@ -153,46 +154,51 @@ export default class Home extends Component {
 		let { navs } = this.state;
 		const page = val
 		switchId = state
-		if(switchId == 0){
-			state = ""
-		}else if(switchId == 1){
-			state = "online"
-		}else if(switchId == 2){
-			state = "longoffline"
-		}else if(switchId == 3){
-			state = "offline"
+		switch(switchId){
+			case 0:
+				state = "";
+				break;
+			case 1:
+				state = "online";
+				break;
+			case 2:
+				state = "longoffline";
+				break;
+			case 3:
+				state = "offline";
+				break;
 		}
-		getLadder({ num: 10, page, state, follow:"yes"}).then((res) => {
-			if(state==""){
-				this.state.devicenum=res.data.totalNumber;
-				const devicenum=this.state.devicenum;
+		if(switchId==3){
+			getLadderFault({ num: 1, page, follow:"yes"}).then((res)=>{
+				const deviceOffline=res.data.totalNumber;
 				this.setState({
-					devicenum,
+					deviceOffline,
 				});
-			}
-			if(state=="online")
-			{
-				this.state.deviceonline=res.data.totalNumber;
-				const deviceonline=this.state.deviceonline;
-				this.setState({
-					deviceonline,
-				});
-			}
-			if(state=="longoffline"){
-				this.state.devicelongoffline=res.data.totalNumber;
-				const devicelongoffline=this.state.devicelongoffline;
-				this.setState({
-					devicelongoffline,
-				});
-			}
-			if(state=="offline"){
-				this.state.deviceoffline=res.data.totalNumber;
-				const deviceoffline=this.state.deviceoffline;
-				this.setState({
-					deviceoffline,
-				});
-			}
-		});
+			})
+		}else{
+			getLadder({ num: 1, page, state, follow:"yes"}).then((res) => {
+				switch(state){
+					case "":
+						const deviceNum=res.data.totalNumber;
+						this.setState({
+							deviceNum,
+						});
+						break;
+					case "online":
+						const deviceOnline=res.data.totalNumber;
+						this.setState({
+							deviceOnline,
+						});
+						break;
+					case "longoffline":
+						const deviceLongoffline=res.data.totalNumber;
+						this.setState({
+							deviceLongoffline,
+						});
+						break;
+				}
+			});
+		}
 	}
 	onpress = () =>{
 		var geolocation = new BMap.Geolocation();
@@ -240,7 +246,7 @@ export default class Home extends Component {
 			state: { device_type }
 		});
 	}
-	toFollowDoorOffline = () => {
+	toFollowdoorOffline = () => {
 		const { history } = this.props;
 		const vcode = 2;
 		const device_type = "15";
@@ -266,7 +272,7 @@ export default class Home extends Component {
 			state: { device_type }
 		});
 	}
-	toFollowCtrlOnline = () => {
+	toFollowctrlOnline = () => {
 		const { history } = this.props;
 		const device_type = "240";
 		history.push({
@@ -274,7 +280,7 @@ export default class Home extends Component {
 			state: { device_type }
 		});
 	}
-	toFollowCtrlOffline = () => {
+	toFollowctrlOffline = () => {
 		const { history } = this.props;
 		const device_type = "240";
 		history.push({
@@ -295,80 +301,79 @@ export default class Home extends Component {
 		history.push('/company/work-order');
 	}
 	getOption(){
-		const {devicenum, deviceonline, deviceoffline, devicelongoffline}=this.state;
+		const {deviceNum, deviceOnline, deviceOffline, deviceLongoffline}=this.state;
 		let option={};
-		if(devicenum!=0){
-		option={
-			title: {
-				text: devicenum,
-				subtext: this.state.language=="zh"? "电梯总量":"Ladder Number",
-				x: '34%',
-				y: 'center',
-				textAlign:'center',
-				textStyle: {
-					fontSize:24,
-					fontWeight:'bold',
-					color: ['#333']
+		if(deviceNum!=0){
+			option={
+				title: {
+					text: deviceNum,
+					subtext: this.state.language=="zh"? "电梯总量":"Ladder Number",
+					x: '34%',
+					y: 'center',
+					textAlign:'center',
+					textStyle: {
+						fontSize:24,
+						fontWeight:'bold',
+						color: ['#333']
+					},
+					subtextStyle: {
+						fontSize:12,
+						color: '#666',
+					},
 				},
-				subtextStyle: {
-					fontSize:12,
-					color: '#666',
-				},
-			},
-			legend: {
-				show:true,
-				orient: 'vertical',
-				top: "middle",
-				right: "0%",
-				icon: 'circle'
+				legend: {
+					show:true,
+					orient: 'vertical',
+					top: "middle",
+					right: "0%",
+					icon: 'circle'
 
-			},
-			polar: {
-				center: ['35%', '50%'],
-				radius: '290%' //图形大小
-			},
-			angleAxis: {
-				show: false,
-				startAngle: 90,
-				min: 0,
-				max: 100
-			},
-			radiusAxis: {
-				type: 'category',
-				show: false,
-				data: this.state.language=="zh"?["在线", "离线", "故障"]:["online", "offline", "fault"]
-			},
-			series: [
-				{
-					type: "bar",
-					name: (this.state.language=="zh"?"在线：":"online：")+deviceonline,
-					coordinateSystem: "polar",
-					barWidth: 15, //宽度
-					barCategoryGap: "40%",
-					data: [deviceonline/devicenum*100],
 				},
-				{
-					type: "bar",
-					name: (this.state.language=="zh"?"离线：":"offline：")+devicelongoffline,
-					coordinateSystem: "polar",
-					barWidth: 15,
-					barCategoryGap: "40%",
-					data: [devicelongoffline/devicenum*100]
+				polar: {
+					center: ['35%', '50%'],
+					radius: '290%' //图形大小
 				},
-				{
-					type: "bar",
-					name: (this.state.language=="zh"?"故障：":"fault   ：")+deviceoffline,
-					coordinateSystem: "polar",
-					barWidth: 15,
-					barCategoryGap: "40%",
-					data: [deviceoffline/devicenum*100]
-				}
-			]
-		}
+				angleAxis: {
+					show: false,
+					startAngle: 90,
+					min: 0,
+					max: 100
+				},
+				radiusAxis: {
+					type: 'category',
+					show: false,
+					data: this.state.language=="zh"?["在线", "离线", "故障"]:["online", "offline", "fault"]
+				},
+				series: [
+					{
+						type: "bar",
+						name: (this.state.language=="zh"?"在线：":"online：")+deviceOnline,
+						coordinateSystem: "polar",
+						barWidth: 15, //宽度
+						barCategoryGap: "40%",
+						data: [deviceOnline/deviceNum*100],
+					},
+					{
+						type: "bar",
+						name: (this.state.language=="zh"?"离线：":"offline：")+deviceLongoffline,
+						coordinateSystem: "polar",
+						barWidth: 15,
+						barCategoryGap: "40%",
+						data: [deviceLongoffline/deviceNum*100]
+					},
+					{
+						type: "bar",
+						name: (this.state.language=="zh"?"故障：":"fault   ：")+deviceOffline,
+						coordinateSystem: "polar",
+						barWidth: 15,
+						barCategoryGap: "40%",
+						data: [deviceOffline/deviceNum*100]
+					}
+				]
+			}
 		}
 		return option;
 	}
-	
 	render() {
 		const imgList = [
 			// background1,
@@ -376,7 +381,7 @@ export default class Home extends Component {
 			background3,
 			background4,
 		]
-		const { devicesStatus, historyEvents, doornum, ctrlnum, total} = this.state;
+		const { devicesStatus, historyEvents, doorNum, ctrlNum, total} = this.state;
 		let notClosedEvents = historyEvents.filter(item => item.state );
 		const len = total
 		len > 1 ? notClosedEvents = [notClosedEvents[0]]:null
@@ -400,7 +405,6 @@ export default class Home extends Component {
 						<FormattedMessage id="Device List"/>
 					</div>
 				</div>
-				
 				<Flex className={styles.aui_flex}>
 					<Flex.Item onClick={this.toFollowDoorPage}>
 						<div className={styles.aui_palace1}>
@@ -420,7 +424,7 @@ export default class Home extends Component {
 										</div>
 										<div className={styles.aui_palace1_grid_main_bottom_right}>
 											<div className={styles.aui_palace1_grid_main_bottom_right1}>
-												{doornum}
+												{doorNum}
 											</div>
 										</div>
 									</div>
@@ -446,23 +450,22 @@ export default class Home extends Component {
 										</div>
 										<div className={styles.aui_palace1_grid_main_bottom_right}>
 											<div className={styles.aui_palace1_grid_main_bottom_right1}>
-												{ctrlnum}
+												{ctrlNum}
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>							
+							</div>
 						</div>
 					</Flex.Item>
-				</Flex>	
+				</Flex>
 				<div className={styles.aui_title}>
 					<div className={styles.title}>
 						<FormattedMessage id="Device State"/>
 					</div>
 				</div>
-				
 				<div className={styles.aui_palace}>
-				    <List.Item>
+						<List.Item>
 						<Flex className={styles.aui_flex}>
 							<Flex.Item  className={styles.aui_flex_item} onClick={this.toFollowDoorOnline}>
 								<Badge className={styles.sup} text={devicesStatus.dooronline} overflowCount={99}>
@@ -478,14 +481,14 @@ export default class Home extends Component {
 									</div>
 								</Badge>
 							</Flex.Item>
-							<Flex.Item className={styles.aui_flex_item} onClick={this.toFollowDoorOffline}>
-								<Badge className={styles.sup} text={this.state.dooroffline} overflowCount={99}>
+							<Flex.Item className={styles.aui_flex_item} onClick={this.toFollowdoorOffline}>
+								<Badge className={styles.sup} text={this.state.doorOffline} overflowCount={99}>
 									<div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
 										<img className={styles.aui_flex_item_icon} src={require('../../assets/icon/break.png')} />
 									</div>
 								</Badge>
 							</Flex.Item>
-							<Flex.Item className={styles.aui_flex_item} onClick={this.toFollowCtrlOnline}>
+							<Flex.Item className={styles.aui_flex_item} onClick={this.toFollowctrlOnline}>
 								<Badge className={styles.sup} text={devicesStatus.ctrlonline} overflowCount={99}>
 									<div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
 										<img className={styles.aui_flex_item_icon} src={require('../../assets/icon/cloud.png')} />
@@ -499,8 +502,8 @@ export default class Home extends Component {
 									</div>
 								</Badge>
 							</Flex.Item>
-							<Flex.Item className={styles.aui_flex_item} onClick={this.toFollowCtrlOffline}>
-								<Badge className={styles.sup} text={this.state.ctrloffline} overflowCount={99}>
+							<Flex.Item className={styles.aui_flex_item} onClick={this.toFollowctrlOffline}>
+								<Badge className={styles.sup} text={this.state.ctrlOffline} overflowCount={99}>
 									<div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
 										<img className={styles.aui_flex_item_icon} src={require('../../assets/icon/break.png')} />
 									</div>
@@ -510,13 +513,11 @@ export default class Home extends Component {
 						<Brief><ReactEcharts option={this.getOption()} theme="myTheme" notMerge={true} lazyUpdate={true} style={{ height: 300,width:'100%' }} /></Brief>
 					</List.Item>
 				</div>
-				
 				<div className={styles.aui_title}>
 					<div className={styles.title}>
 						<FormattedMessage id="Order State"/>
 					</div>
 				</div>
-				
 				<div className={styles.aui_palace}>
 						<List.Item
 							arrow="horizontal"
@@ -527,11 +528,11 @@ export default class Home extends Component {
 								len ?
 								notClosedEvents.map(item => (
 									<span className={styles.msg} key={item.id}>
-										
+
 											{item.addr}<FormattedMessage id={item.device_type}/>
 											&nbsp;&nbsp;
 											<FormattedMessage id={'O'+item.type}/>
-											
+
 									</span>
 								)) : (
 									<span>
@@ -540,7 +541,6 @@ export default class Home extends Component {
 								)
 							}
 						</List.Item>
-
 				</div>
 			</div>
 		);

@@ -188,28 +188,28 @@ export default class DoorHistory extends Component {
 		}
 	}
 	attachEvt=( elems, evt )=>{
-	  for( var i = 0, len = elems.length; i < len; i++ ){
-	    this.state.mainButton = elems[i].querySelector('.' + this.state.mainButtonClass);
+		for( var i = 0, len = elems.length; i < len; i++ ){
+			this.state.mainButton = elems[i].querySelector('.' + this.state.mainButtonClass);
 		if(this.state.mainButton!=null){
 			this.state.mainButton.addEventListener( evt , this.toggleButton, false);
 		}
-	  }
-	  
+		}
+		
 	}
 	getElemsByToggleMethod=( selector )=>{
-	  return document.querySelectorAll('[' + this.state.toggleMethod + '="' + selector + '"]');
+		return document.querySelectorAll('[' + this.state.toggleMethod + '="' + selector + '"]');
 	}
 	toggleButton=( evt )=>{
-	  this.state.target = evt.target;
-	  while ( this.state.target && !this.state.target.getAttribute( this.state.toggleMethod ) ){
-	    this.state.target = this.state.target.parentNode;
-	    if(!this.state.target) { return; }
-	  }
-	  this.state.currentState = this.state.target.getAttribute( this.state.menuState ) === this.state.isOpen ? this.state.isClosed : this.state.isOpen;
-	  this.state.target.setAttribute(this.state.menuState, this.state.currentState);
-	  this.setState({
-	  	dateSelected:!this.state.dateSelected
-	  })
+		this.state.target = evt.target;
+		while ( this.state.target && !this.state.target.getAttribute( this.state.toggleMethod ) ){
+			this.state.target = this.state.target.parentNode;
+			if(!this.state.target) { return; }
+		}
+		this.state.currentState = this.state.target.getAttribute( this.state.menuState ) === this.state.isOpen ? this.state.isClosed : this.state.isOpen;
+		this.state.target.setAttribute(this.state.menuState, this.state.currentState);
+		this.setState({
+			dateSelected:!this.state.dateSelected
+		})
 	
 	}
 	getType = () =>{
@@ -913,7 +913,7 @@ export default class DoorHistory extends Component {
 							<img src={this.state.src} alt="code"/>
 						</div>
 					</Modal>
- 					{/* <Row type="flex" justify="center" align="middle">
+					{/* <Row type="flex" justify="center" align="middle">
 						<Col span={24}>
 							<List style={{ backgroundColor: 'white' }} className="picker-list" onClick={() => this.props.history.push(`/events/door/${id}`)}>
 								<List.Item arrow="horizontal" onClick={() => this.props.history.push(`/events/door/${id}`)}>历史事件</List.Item>
@@ -1130,45 +1130,55 @@ export default class DoorHistory extends Component {
 							</Col>
 						</Row>
 						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
-						 	<Col xs={{ span: 24 }} md={{ span: 48 }}>
-						 			<div id = "Current" style={{ width: 320 , height: 240 }}></div>
-						 	</Col>
+							<Col xs={{ span: 24 }} md={{ span: 48 }}>
+									<div id = "Current" style={{ width: 320 , height: 240 }}></div>
+							</Col>
 						</Row>
 						<Row gutter={6} type="flex" justify="center" align="middle" className={styles.charts}>
-						 	<Col xs={{ span: 24 }} md={{ span: 48 }}>
+							<Col xs={{ span: 24 }} md={{ span: 48 }}>
 								<div id = "Speed" style={{ width: 320 , height: 240 }}></div>
-						 	</Col>
+							</Col>
 						</Row>
 					</div>
 					<ul ref='mybtn' id="menu" className={`${mfb.mfb_component__br} ${mfb.mfb_zoomin}`} data-mfb-toggle="click">
-					  <li className={mfb.mfb_component__wrap}>
-						<a  className={mfb.mfb_component__button__main}>
-						  <i className={`${mfb.mfb_component__main_icon__resting} ${mfb.icon_plus}`}></i>
-						  <i id="mybutton" className={`${mfb.mfb_component__main_icon__active} ${mfb.icon_close}`}></i>
-						</a>
+						<li className={mfb.mfb_component__wrap}>
+							<div>
+								{
+									la=="zh"?
+									<a  className={mfb.mfb_component__button__main}>
+										<i className={`${mfb.mfb_component__main_icon__resting} ${mfb.icon_plus_ch}`}></i>
+										<i id="mybutton" className={`${mfb.mfb_component__main_icon__active} ${mfb.icon_close}`}></i>
+									</a>
+									:
+									<a  className={mfb.mfb_component__button__main}>
+										<i className={`${mfb.mfb_component__main_icon__resting} ${mfb.icon_plus_en}`}></i>
+										<i id="mybutton" className={`${mfb.mfb_component__main_icon__active} ${mfb.icon_close}`}></i>
+									</a>
+								}
+							</div>
 						<ul className={mfb.mfb_component__list}>
-						  <li>
+							<li>
 							<a  data-mfb-label={(la=="zh")?"菜单":"Menu"} className={mfb.mfb_component__button__child}>
-							  <i className={`${mfb.mfb_component__child_icon} ${mfb.icon_menu}`} onClick={this.goDetail(type == 2 ? 'params/2': 'params/1')}></i>
+								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_menu}`} onClick={this.goDetail(type == 2 ? 'params/2': 'params/1')}></i>
 							</a>
-						  </li>
-						  <li>
+							</li>
+							<li>
 							<a data-mfb-label={(la=="zh")?"二维码":"QR code"} className={mfb.mfb_component__button__child}>
-							  <i className={`${mfb.mfb_component__child_icon} ${mfb.icon_qrcode}`} onClick={this.goQrcode}></i>
+								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_qrcode}`} onClick={this.goQrcode}></i>
 							</a>
-						  </li>
-						  <li>
+							</li>
+							<li>
 							<a data-mfb-label={(la=="zh")?"历史故障":"Historical faults"} className={mfb.mfb_component__button__child}>
-							  <i className={`${mfb.mfb_component__child_icon} ${mfb.icon_fault}`} onClick={this.gohistory}></i>
+								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_fault}`} onClick={this.gohistory}></i>
 							</a>
-						  </li>
-						  <li>
-						  	<a data-mfb-label={(la=="zh")?"历史事件":"Historical events"} className={mfb.mfb_component__button__child}>
+							</li>
+							<li>
+								<a data-mfb-label={(la=="zh")?"历史事件":"Historical events"} className={mfb.mfb_component__button__child}>
 								<i className={`${mfb.mfb_component__child_icon} ${mfb.icon_event}`} onClick={() => this.props.history.push(`/events/door/${id}`)}></i>
-						  	</a>
-						  </li>
+								</a>
+							</li>
 						</ul>
-					  </li>
+						</li>
 					</ul>
 				</div>
 				</div>
