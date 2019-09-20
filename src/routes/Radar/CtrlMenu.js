@@ -1,5 +1,5 @@
 import React ,{Component}from 'react'  //导入 React Component
-import { Row, Col, Button, Spin, Icon, DatePicker, Switch, } from 'antd';
+import { Row, Col } from 'antd';
 import { Flex } from 'antd-mobile';
 import styles from './CtrlRealtime.less';
 import classNames from 'classnames';
@@ -15,45 +15,29 @@ const polarity =(val)=> {
 		return "None";
 }
 class CtrlMenu extends Component{ //定义类继承 Compoent
-	state = {
-		language:window.localStorage.getItem("language"),
-		isIO:true,
-		tips:"IO Watch",
-	}
-	switch=()=>{
-		const { tips } = this.state
-		if(tips=="IO Watch"){
-			this.setState({
-				isIO:false,
-				tips:"Board Watch",
-			})
-		}else{
-			this.setState({
-				isIO:true,
-				tips:"IO Watch",
-			})
-		}
-	}
 	render(){ //render就是返回一个标签
-		const { language, tips, isIO } = this.state;
 		return(
 			<div>
 			{
 				<div className={styles.Menu}>
 					<Flex>
-						<Flex.Item><p className={styles.shishi}><FormattedMessage id={tips}/></p></Flex.Item>
-						<Flex.Item><p className={styles.shishi} style={{color:"#289EFC"}} onClick={()=>{this.switch()}}>切换</p></Flex.Item>
+					{
+						this.props.data==false?
+						<Flex.Item><p className={styles.shishi}><FormattedMessage id="IO Watch"/></p></Flex.Item>
+						:
+						<Flex.Item><p className={styles.shishi}><FormattedMessage id="Board Watch"/></p></Flex.Item>
+					}
 					</Flex>
 					<div>
 						{
-							isIO?
+							this.props.data==false?
 							<Row>
 								<Col
 									span={24}
 									className={classNames(styles.door)}
 								>
 									<Row style={{'text-align':'center'}}>
-										<Col span={5}><FormattedMessage id="Interface"/></Col>
+										<Col span={5} style={{'text-align':'left'}}><FormattedMessage id="Interface"/></Col>
 										<Col span={11}><FormattedMessage id="Signal Name"/></Col>
 										<Col span={4}><FormattedMessage id="Polarity"/></Col>
 										<Col span={4}><FormattedMessage id="State"/></Col>
@@ -63,7 +47,7 @@ class CtrlMenu extends Component{ //定义类继承 Compoent
 											IOMenu.map((item)=>(
 												item.children.map((prop)=>(
 													<Row style={{'text-align':'center'}}>
-														<Col span={5}>{prop.label}</Col>
+														<Col span={5} style={{'text-align':'left'}}>{prop.label}</Col>
 														<Col span={11}><FormattedMessage id={prop.value}/></Col>
 														<Col span={4}><FormattedMessage id={polarity(prop.Polarity)}/></Col>
 														<Col span={4}><i className={styles.signal}/></Col>
@@ -91,13 +75,13 @@ class CtrlMenu extends Component{ //定义类继承 Compoent
 												item.children.map((prop)=>(
 													item.value==0?
 													<Row style={{'text-align':'center'}}>
-														<Col span={12}><FormattedMessage id={prop.label}/></Col>
+														<Col span={12}>{prop.label}</Col>
 														<Col span={8}><FormattedMessage id={polarity(prop.value)}/></Col>
 														<Col span={4}><i className={styles.signal}/></Col>
 													</Row>
 													:
 													<Row style={{'text-align':'center'}}>
-														<Col span={12}><FormattedMessage id={prop.label}/></Col>
+														<Col span={12}>{prop.label}</Col>
 														<Col span={8}><FormattedMessage id={prop.value}/></Col>
 														<Col span={4}><i className={styles.signal}/></Col>
 													</Row>

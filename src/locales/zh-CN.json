@@ -1,6 +1,7 @@
 {
 	"Acceleration Distance for Synchronous Door Coupler Opening": "同步门刀打开时加速距离",
 	"Accept Time" : "接单时间",
+	"Actual floor" : "实际楼层",
 	"Action":"动作",
 	"Address" : "安装地址",
 	"Add Group" : "加入群组",
@@ -36,15 +37,15 @@
 	"Brake switch detection":"抱闸行程开关检测",
 	"Blackout emergency rescue":"停电应急救援",
 	"Backup power running":"层站召唤粘连去除",
-	"Brake":"抱闸",
-	"Brake keeping":"抱闸维持",
-	"Buzzer signal":"蜂鸣器信号",
+	"Brake" : "抱闸",
+	"Brake keeping" : "抱闸维持",
+	"Buzzer signal" : "蜂鸣器信号",
 	"Board Watch" : "轿顶板监控",
 
-	"Call":"呼梯",
-	"Car":"轿厢",
-	"Car Roof":"轿顶板",
-	"Car Input Watch:":"轿顶板输入监控：",
+	"Call" : "呼梯",
+	"Car" : "轿厢",
+	"Car Roof" : "轿顶板",
+	"Car Input Watch:" : "轿顶板输入监控：",
 	"Car Output Watch:" :"轿顶板输出监控：",
 	"China Mobile":"移动版",
 	"China Unicom":"联通版",
@@ -408,6 +409,7 @@
 	"Running test total opening and closing time":"测试运行开关门总时间",
 	"Relay Y function setting":"继电器EPR功能设置",
 
+	"Show floor" : "显示楼层",
 	"Stop protect time when full opening":"开门到位停止保护时间",
 	"Speed loop lead amp-lification factor f":"速度环超前放大倍数",
 	"Speed loop lag ampli-fication factor b":"速度环滞后放大倍数",
@@ -497,7 +499,7 @@
 	"X24 Function selection":"X24 功能选择",
 	"X25 Function selection":"X25 功能选择",
 
-  "Yes":"有",
+	"Yes":"有",
 
 	"Polarity selection of front light curtain switch":"门 1 光幕开关极性选择",
 	"Polarity selection of back light curtain switch":"门 2 光幕开关极性选择",

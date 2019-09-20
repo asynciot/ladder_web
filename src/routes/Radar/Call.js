@@ -25,6 +25,7 @@ export default class extends Component {
 		to: '',
 		view: 0,
 		pick:'',
+		language:window.localStorage.getItem("language"),
 	}
 	async componentWillMount() {
 		getFollowDevices({ num: 1, page:1, device_id:this.props.match.params.id}).then((res) => {
@@ -87,7 +88,21 @@ export default class extends Component {
 	submit = () => {
 		const from = this.state.from[0]
 		const to = this.state.to[0]
-		postCall({IMEI: this.state.IMEI, from, to});
+		postCall({IMEI: this.state.IMEI, from, to}).then((res)=>{
+			if(res.code==0){
+				if(this.state.language=="zh"){
+					alert("呼梯成功！")
+				}else{
+					alert("Success!")
+				}
+			}else{
+				if(this.state.language=="zh"){
+					alert("呼梯失败！")
+				}else{
+					alert("Error!")
+				}
+			}
+		});
 	}
 	tabChange = (tab, index) => {
 		this.setState({

@@ -242,10 +242,10 @@ export default class DoorHistory extends Component {
 				for(let i=0 ; i<response["length"] ; i++){
 					show.openIn = events.openIn[i] = (buffer[i*8]&0x80)>>7						//获取开门信号
 					show.closeIn = events.closeIn[i] = (buffer[i*8]&0x40)>>6					//获取关门信号
-					show.openTo =	events.openTo[i] = (buffer[i*8+0]&0x20)>>5					//获取开到位输入信号
-					show.closeTo = events.closeTo[i] = (buffer[i*8+0]&0x10)>>4					//获取关到位输入信号
-					show.openDecelerate =	events.openDecelerate[i] = (buffer[i*8+0]&0x08)>>3	//开减速输入信号
-					show.closeDecelerate = events.closeDecelerate[i] = (buffer[i*8+0]&0x04)>>2	//关减速输入信号
+					show.openTo =	events.openTo[i] = (buffer[i*8]&0x20)>>5					//获取开到位输入信号
+					show.closeTo = events.closeTo[i] = (buffer[i*8]&0x10)>>4					//获取关到位输入信号
+					show.openDecelerate =	events.openDecelerate[i] = (buffer[i*8]&0x08)>>3	//开减速输入信号
+					show.closeDecelerate = events.closeDecelerate[i] = (buffer[i*8]&0x04)>>2	//关减速输入信号
 					show.openToOut = events.openToOut[i] = (buffer[i*8]&0x02)>>1				//获取开到位输出信号
 					show.closeToOut = events.closeToOut[i] = (buffer[i*8]&0x01)					//获取关到位输出信号
 					show.door	= events.door[i] = (buffer[i*8+1]&0x80)>>7						//门光幕信号
@@ -260,7 +260,7 @@ export default class DoorHistory extends Component {
 					show.motorHigh = events.motorHigh[i] = (buffer[i*8+2]&0x40)>>6				//电机过载
 					show.flySafe = events.flySafe[i] = (buffer[i*8+2]&0x20)>>5					//飞车保护
 					show.closeStop = events.closeStop[i] = (buffer[i*8+2]&0x10)>>4				//开关门受阻
-					show.position	= events.position[i] = ((buffer[i*8+2]&0x0f)<<8)+(buffer[i*8+3]&0xff)					//获取位置信号
+					show.position	= events.position[i] = ((buffer[i*8+2]&0x0f)<<8)+(buffer[i*8+3]&0xff)			//获取位置信号
 					show.current = events.current[i] = (((buffer[i*8+4]&0xff)<<8)+(buffer[i*8+5]&0xff))/1000		//获取电流信号
 					events.speed[i] = (((buffer[i*8+6]&0xff)<<8)+(buffer[i*8+7]&0xff))/1000
 					events.nums[i] = i

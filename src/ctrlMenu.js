@@ -141,34 +141,34 @@ export const Board = [{
 	label:"轿顶板输入配置",
 	value:0,
 	children: [{
-			label: language=="zh"?'前门光幕开关极性选择':"Polarity selection of front light curtain switch",
+			label: language=="zh"?'前门光幕开关极性':"Polarity of Frontdoor Light Curtain Switch",
 			value: 1,
 		},{
-			label: language=="zh"?'后门光幕开关极性选择':"Polarity selection of back light curtain switch",
+			label: language=="zh"?'后门光幕开关极性':"Polarity of Backdoor Light Curtain Switch",
 			value: '1',
 		},{
-			label: language=="zh"?'前门安全触板开关极性选择':"Polarity selection of front door safety edge switch",
+			label: language=="zh"?'前门安全触板开关极性':"Polarity of Frontdoor safety contact switch",
 			value: '0',
 		},{
-			label: language=="zh"?'后门安全触板开关极性选择':" Polarity selection of back door safety edge switch",
+			label: language=="zh"?'后门安全触板开关极性':"Polarity of Backdoor safety contact switch",
 			value: '0',
 		},{
-			label: language=="zh"?'前门开门到位开关极性选择':"Polarity selection of 'front door open in place' switch ",
+			label: language=="zh"?'前门开门到位开关极性':"Polarity of Frontdoor Open-in-place Switch",
 			value: '1',
 		},{
-			label: language=="zh"?'后门开门到位开关极性选择':"Polarity selection of 'bear door open in place' switch",
+			label: language=="zh"?'后门开门到位开关极性':"Polarity of Backdoor Open-in-place Switch",
 			value: '1',
 		},{
-			label: language=="zh"?'前门关门到位开关极性选择':"Polarity selection of 'front door close in place' switch",
+			label: language=="zh"?'前门关门到位开关极性':"Polarity of Frontdoor closing in place switch",
 			value: '1',
 		},{
-			label: language=="zh"?'后门关门到位开关极性选择':"Polarity selection of 'back door close in place' switch",
+			label: language=="zh"?'后门关门到位开关极性':"Polarity of Backdoor closing in place switch",
 			value: '1',
 		},{
-			label: language=="zh"?'满载输入选择':"Full load input selection",
+			label: language=="zh"?'满载输入':"Full load input",
 			value: '1',
 		},{
-			label: language=="zh"?'超载输入选择':"Overload input selection",
+			label: language=="zh"?'超载输入':"Overload input",
 			value: '1',
 		}]
 },{
@@ -184,7 +184,7 @@ export const Board = [{
 			label:'CP3-Y3',
 			value: '7.05-03',
 		},{
-			label: language=="zh"?'轿顶串行功能扩展选择':"Extended selection of car top serial functions",
+			label: language=="zh"?'轿顶串行功能扩展':"Serial Function Expansion of Car Top",
 			value: language=="zh"?'真彩液晶':"LCD",
 		}]
 },]

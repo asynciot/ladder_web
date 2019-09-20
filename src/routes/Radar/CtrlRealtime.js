@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import _ from 'lodash';
 import base64url from 'base64url';
 import { Row, Col, Button, Spin, Icon, DatePicker, Switch, } from 'antd';
-import { Picker, List, Tabs, Modal } from 'antd-mobile';
+import { Picker, List, Tabs, Modal, Popover } from 'antd-mobile';
 import classNames from 'classnames';
 import styles from './CtrlRealtime.less';
 import echarts from 'echarts';
@@ -92,7 +92,6 @@ const data = [{
 export default class CtrlRealtime extends Component {
 	state = {
 		dateSelected:false,
-		closedate:false,
 		outButton:'',
 		outtarget:'',
 		clickOpt : 'click',
@@ -124,6 +123,7 @@ export default class CtrlRealtime extends Component {
 		switch1:false,
 		pick: '',
 		modal: false,
+		showFloor:false,
 		src: '',
 		event:{
 			run:[],
@@ -238,7 +238,6 @@ export default class CtrlRealtime extends Component {
 			websock=null
 		}
 	}
-
 	myattachEvt=()=>{
 		this.state.outButton=document.querySelector('#mymask');
 		if(this.state.outButton!=null)
@@ -252,10 +251,9 @@ export default class CtrlRealtime extends Component {
 			this.state.currentState = this.state.target.getAttribute( this.state.menuState ) === this.state.isClosed ;
 			this.state.target.setAttribute(this.state.menuState, this.state.currentState);
 			this.setState({
-				dateSelected:this.state.closedate
+				dateSelected:false,
 			})
 		}
-
 	}
 	attachEvt=( elems, evt )=>{
 		for( var i = 0, len = elems.length; i < len; i++ ){
@@ -265,10 +263,10 @@ export default class CtrlRealtime extends Component {
 			}
 		}
 	}
-	getElemsByToggleMethod=( selector )=>{
+	getElemsByToggleMethod = ( selector ) => {
 		return document.querySelectorAll('[' + this.state.toggleMethod + '="' + selector + '"]');
 	}
-	toggleButton=( evt )=>{
+	toggleButton = ( evt ) => {
 		this.state.target = evt.target;
 		while ( this.state.target && !this.state.target.getAttribute( this.state.toggleMethod ) ){
 			this.state.target = this.state.target.parentNode;
@@ -457,8 +455,8 @@ export default class CtrlRealtime extends Component {
 		const { run, lock, close, page, arr } = this.state;
 		let buffer = this.state.buffer[0]
 		let count= 0
-		const x=2
 		let markList = []
+		const x=2
 		const floor = this.state.floor
 		if(buffer!=null){
 			this.state.clock=false
@@ -851,6 +849,11 @@ export default class CtrlRealtime extends Component {
 			pathname: `/company/order/code/${id}`,
 		});
 	}
+	showFloor = () => {
+		this.setState({
+			showFloor:true,
+		})
+	}
 	changeIo = () => {
 		this.state.isIo = !this.state.isIo
 		if(this.state.isIo==true){
@@ -870,8 +873,9 @@ export default class CtrlRealtime extends Component {
 		this.forceUpdate()
 	}
 	onChange1 = () => {
-		this.state.switch1 = !this.state.switch1
-		this.forceUpdate()
+		this.setState({
+			switch1:!this.state.switch1
+		})
 	}
 	changeView = (item) => {
 		this.props.dispatch({
@@ -886,7 +890,6 @@ export default class CtrlRealtime extends Component {
 
 		const { ctrl: { event, view, device, floors, property, } } = this.props
 		const { floor, markFloor, markList, show, list, language } = this.state;
-		console.log(list)
 		const id = this.props.match.params.id;
 		if(view == 1 && counts == 1){
 			chartInte = setInterval(() => {
@@ -922,6 +925,7 @@ export default class CtrlRealtime extends Component {
 								<img src={this.state.src} alt="code"/>
 							</div>
 						</Modal>
+						
 						<Row type="flex" justify="center" align="middle">
 							<Col span={18}>
 								<p className={styles.shishi}><FormattedMessage id="Realtime:"/></p>
@@ -1011,30 +1015,61 @@ export default class CtrlRealtime extends Component {
 											<FormattedMessage id="Last update time"/> ：
 											<i className={styles.status}>{show.updateTime}</i>
 										</p>
+										<p style={{
+											width: '20%',
+											justifyContent: 'flex-start',
+										}}>
+											<Switch
+												checkedChildren={<FormattedMessage id="Car Roof"/>}
+												unCheckedChildren={"I/O"}
+												onChange={this.onChange1}
+												checked={this.state.switch1}
+												defaultChecked={this.state.switch1}
+												loading={this.state.loading}
+											/>
+										</p>
 									</section>
 								</Col>
 							</Row>
 							<div>
 								<Col span={18}>
-									<CtrlMenu/>
+									<CtrlMenu data={this.state.switch1}/>
 								</Col>
 								<Col span={6}>
-									<div className={styles.info}>
-										<p>
-											<Icon className={styles.icon} type={direction[`${show.downCall}${show.upCall}`]} />
-											<i>{this.state.floor[this.state.floor.length-show.floor]}</i>
-										</p>
-										<ul>
-											{
-												floor.map((item,index) => (
-													markList[index] ?
-													<li style={{ width: 30, color:'red'}} key={`${index}`} id={`${index}`}>{item}</li>
-													:
-													<li style={{ width: 30}} key={`${index}`} id={`${index}`}>{item}</li>
-												))
-											}
-										</ul>
-									</div>
+									<Popover
+										placement="left"
+										visible={this.state.showFloor}
+										overlay={[
+											(<div style={{
+												width: '100px',
+											}} className={styles.info}>
+												<ul>
+													{
+														floor.map((item,index) => (
+															<li style={{ width: 30}} key={`${index}`} id={`${index}`}>{floor.length-index}</li>
+														))
+													}
+												</ul>
+											</div>),
+										]}
+									> 
+										<div className={styles.info} onClick={()=>{this.showFloor()}}>
+											<p>
+												<Icon className={styles.icon} type={direction[`${show.downCall}${show.upCall}`]} />
+												<i>{this.state.floor[this.state.floor.length-show.floor]}</i>
+											</p>
+											<ul>
+												{
+													floor.map((item,index) => (
+														markList[index] ?
+														<li style={{ width: 30, color:'red'}} key={`${index}`} id={`${index}`}>{item}</li>
+														:
+														<li style={{ width: 30}} key={`${index}`} id={`${index}`}>{item}</li>
+													))
+												}
+											</ul>
+										</div>
+									</Popover>
 								</Col>
 							</div>
 						</div>
@@ -1136,13 +1171,6 @@ export default class CtrlRealtime extends Component {
 									</div>
 								</Col>
 							</div>
-							{/* <div className={styles.btns}>
-								<section onClick={this.goDetail('params')}><FormattedMessage id="Menu"/></section>
-								<section onClick={this.goQrcode}><FormattedMessage id="QR Code"/></section>
-								<section onClick={this.goDebug}><FormattedMessage id="watch"/></section>
-								<section onClick={this.gohistory}><FormattedMessage id="History fault"/></section>
-								<section onClick={this.gocall}><FormattedMessage id="Call"/></section>
-							</div> */}
 						</div>
 						}
 						<div className={classNames(styles.tab, view == 1 ?'tab-active' : 'tab-notactive')}>

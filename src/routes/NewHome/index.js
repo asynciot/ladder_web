@@ -519,28 +519,28 @@ export default class Home extends Component {
 					</div>
 				</div>
 				<div className={styles.aui_palace}>
-						<List.Item
-							arrow="horizontal"
-							onClick={this.toHistoryEventPage}
-							extra={<Badge className={styles.sup} text={len} overflowCount={99} />}
-						>
-							{
-								len ?
-								notClosedEvents.map(item => (
-									<span className={styles.msg} key={item.id}>
+					<List.Item
+						arrow="horizontal"
+						onClick={this.toHistoryEventPage}
+						extra={<Badge className={styles.sup} text={len} overflowCount={99} />}
+					>
+						{
+							len ?
+							notClosedEvents.map(item => (
+								<span className={styles.msg} key={item.id}>
 
-											{item.addr}<FormattedMessage id={item.device_type}/>
-											&nbsp;&nbsp;
-											<FormattedMessage id={'O'+item.type}/>
+										{item.addr}<FormattedMessage id={item.device_type}/>
+										&nbsp;&nbsp;
+										<FormattedMessage id={'O'+item.type}/>
 
-									</span>
-								)) : (
-									<span>
-										<FormattedMessage id="No Order"/>
-									</span>
-								)
-							}
-						</List.Item>
+								</span>
+							)) : (
+								<span>
+									<FormattedMessage id="No Order"/>
+								</span>
+							)
+						}
+					</List.Item>
 				</div>
 			</div>
 		);
