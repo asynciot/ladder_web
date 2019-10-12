@@ -30,8 +30,11 @@
 
 	"Forget": "Forget?",
 
+	"Grade" : "Grade",
 	"Get Code": "Get Code",
 
+	"Illustrate" : "Illustrate",
+	
 	"Lang": "简体中文",
 	"Login": "Login",
 
@@ -510,6 +513,32 @@
 	"Open Door": "Open Door",
 	"Reason": "Reason：",
 	"Answer": "Answer：",
+	
+	"4.01-01" : "Please set the parameters according to the nameplate of the motor. Note: Please set the default value if there is no BEMF on the motor nameplate. ",
+	"4.01-08" : "Users are not recommended to modify this parameter.",
+	"4.01-11" : "When the motor wiring mode remains unchanged, the motor phase sequence is reversed and switched between 0/1.",
+	"4.01-12" : "After the pulse direction of the encoder is reversed, 3.01-44 pulse counting is increased during the car ascending, 3.01-44 pulse counting is reduced during the car descending. It is switched between 0/1 when reversing.",
+	"4.01-14" : "Motor magnetic pole position self-learning result",
+	
+	"4.02-01" : "The speed loop is adjusted with f/b as the total gain value. In general, f is adjusted first, and f is increased as much as possible on the premise that the elevator does not oscillate, and then b is adjusted, so that the system has faster response characteristics.",
+	"4.02-03" : "Increasing the integral gain can speed up the dynamic response of the speed loop, but too large integral gain will cause system oscillation and overshoot. In general, the proportional gain is adjusted first to increase the integral gain as much as possible on the premise that the system does not oscillate, so that the system has a fast dynamic response without overshoot.",
+	"4.02-04" : "Filtering the output of the speed loop regulator and increasing the damping gain appropriately can make the speed curve smoother. If the set damping gain is too large, there will be jitter when the elevator is running at high speed.",
+	"4.02-05" : "Filtering the output of the speed loop regulator and increasing the differential gain appropriately can make the speed curve smoother. If the set differential gain is too large, the elevator produces signi-ficant jitter when running at low speeds.",
+	"4.02-06" : "Adjusting this parameter has a significant impact on the comfort of the elevator, and the appropriate adjustment can effectively suppress the jitter in the elevator running. If necessary, the fine-tuning is suggested.",
+	"4.02-08" : "The system sets the maximum output current.",
+	"4.02-09" : "The higher the carrier frequency, the lower the motor noise, but the loss increased.",
+	"4.02-10" : "The factory default value is adopted and users are not recommended to modify this parameter.",
+	"4.02-12" : "Effective without weighing sensor (9.01-07=0), enable compensation coefficient;This parameter should be reduced when starting suddenly, and increased when starting with pull-back.",
+	
+	"7.01-01" : "The function definition is represented by three digits. The hundred and ten digits are function numbers. When the single digit is 0, the signal is normally open; when it is 1, the signal is normally closed.X1 ~ X25 are switch input terminals, which can be configured according to Table 6.5 Function Definition Table.e.g. Connect the overload normally closed signal to port X24. First, find the overload signal function code 29 according to Table 6.5. Secondly, set the single digit to 1 according to the signal normally closed, namely, 291 is written to 7.01-24.Note: 1. When the two function codes are configured with the same function, the configuration with the larger function code serial number is valid.2. When the I/O board is configured with the car top input function (such as overload), the corresponding functions of the car top board is invalid.",
+	
+	"7.02-01" : "00 means the signal is normally open, 01 means the signal is normally closed.Note: 1. It is recommended to set the polarity of safety touch panel switch, light curtain switch and overload switch to normally close.2. The light curtain signal is invalid during the fireman's operating mode;",
+	
+	"7.03-01": "1. PB1 ~ PB8 are switch input terminals, which can be configured according to Table 6.6.The configuration with the larger function code number is valid when the same function is repeatedly configured.2. In case the command board feature configuration is repeated with the I/O board configuration, the command board configuration is invalid.3. This configuration is only valid for the first car command board;",
+	
+	"7.04-01 expalin": "1. The output configuration of Y1 ~ Y8 can be configured according to Table 6.7 Function Definition Table.2. The configuration with the larger function code number is valid when the same function is repeatedly configured.3. When configuring functions of Y1 ~ Y5, please select contactor of the same voltage level.",
+	
+	"7.05-01 expalin" : "The output of car roof relay is configured within the function range of 00 ~ 06 00: No signal output    01: up arrival gong output 02:down arrival gong output  03: up&down arrival gong output04: Overload buzzer output      05: Fire alarm output06: Lock bypass device audible & visual alarm output ",
 	
 	"7.01-000":"Not used",
 	"7.01-011":"Maintenance signal",

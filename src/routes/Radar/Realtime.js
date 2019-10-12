@@ -1265,13 +1265,13 @@ export default class DoorHistory extends Component {
 										width: '50%',
 									}}><FormattedMessage id="Door Current"/> <i className={styles.status}>{show.current} A</i>
 									</p>
-									<p ><FormattedMessage id="Opening signal"/> <i className={styles.status}>{show.openIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									<p ><FormattedMessage id="Opening signal"/><FormattedMessage id="Normally open"/>{show.openIn?<i style={{background:"#21B923"}} className={styles.signal1}/>:<i className={styles.signal1}/>}
 									</p>
-									<p ><FormattedMessage id="Closing signal"/> <i className={styles.status}>{show.closeIn ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
+									<p ><FormattedMessage id="Closing signal"/><FormattedMessage id="Normally open"/>{show.closeIn?<i style={{background:"#21B923"}} className={styles.signal1}/>:<i className={styles.signal1}/>}
 									</p>
-									<p ><FormattedMessage id="Opening arrival signal"/><FormattedMessage id="Normally closed"/>{show.openTo?<i style={{background:"#21B923"}} className={styles.signal1}/>:<i className={styles.signal1}/>}
+									<p ><FormattedMessage id="Opening arrival signal"/><FormattedMessage id="Normally closed"/>{show.openToOut?<i style={{background:"#21B923"}} className={styles.signal1}/>:<i className={styles.signal1}/>}
 									</p>
-									<p ><FormattedMessage id="Closing arrival signal"/><FormattedMessage id="Normally closed"/>{show.closeTo?<i style={{background:"#21B923"}} className={styles.signal1}/>:<i className={styles.signal1}/>}
+									<p ><FormattedMessage id="Closing arrival signal"/><FormattedMessage id="Normally closed"/>{show.closeToOut?<i style={{background:"#21B923"}} className={styles.signal1}/>:<i className={styles.signal1}/>}
 									</p>
 									<p><FormattedMessage id="Monitor remaining time"/> <i className={styles.status}>{this.state.endTime?(this.state.endTime+"s"):"0s"}</i>
 									</p>
@@ -1324,11 +1324,11 @@ export default class DoorHistory extends Component {
 									</p>
 									<p style={{
 										width: '100%',
-									}}><FormattedMessage id="Opening arrival signal"/><FormattedMessage id="Normally closed"/>{show.openTo?<i style={{background:"#21B923"}} className={styles.signal1}/>:<i className={styles.signal1}/>}
+									}}><FormattedMessage id="Opening arrival signal"/><FormattedMessage id="Normally closed"/>{show.openToOut?<i style={{background:"#21B923"}} className={styles.signal1}/>:<i className={styles.signal1}/>}
 									</p>
 									<p style={{
 										width: '100%',
-									}}><FormattedMessage id="Closing arrival signal"/><FormattedMessage id="Normally closed"/>{show.closeTo?<i style={{background:"#21B923"}} className={styles.signal1}/>:<i className={styles.signal1}/>}
+									}}><FormattedMessage id="Closing arrival signal"/><FormattedMessage id="Normally closed"/>{show.closeToOut?<i style={{background:"#21B923"}} className={styles.signal1}/>:<i className={styles.signal1}/>}
 									</p>
 									<p style={{
 										width: '100%',
@@ -1368,6 +1368,7 @@ export default class DoorHistory extends Component {
 									<section className={styles.noborder}>
 										<div />
 									</section>
+									<p></p>
 									<div className={styles.shaftinfo}>
 										<p><FormattedMessage id="Closing arrival input"/>
 										{

@@ -4,14 +4,13 @@ import { connect } from 'dva';
 import _ from 'lodash';
 import base64url from 'base64url';
 import { Row, Col, Button, Spin, Icon, DatePicker, Switch, } from 'antd';
-import { Picker, List, Tabs, Modal, Popover } from 'antd-mobile';
+import { Picker, List, Tabs, Modal, Popover, Flex } from 'antd-mobile';
 import classNames from 'classnames';
 import styles from './CtrlRealtime.less';
 import echarts from 'echarts';
 import { getEvent, postMonitor, getFollowDevices, getFault, getFloorData, getCtrlRuntime, getCommand } from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import mfb from './mfb.css';
-import { IOMenu, Board} from '../../ctrlMenu.js';
 import CtrlMenu from './CtrlMenu.js';
 
 const Watch = {
@@ -110,6 +109,7 @@ export default class CtrlRealtime extends Component {
 		active:true,
 		charts:true,
 		floor:[],
+		showfloor:[],
 		buffer:[],
 		leftAnimation: {
 			left: '0%',
@@ -120,7 +120,6 @@ export default class CtrlRealtime extends Component {
 			duration: 100,
 		},
 		switch:false,
-		switch1:false,
 		pick: '',
 		modal: false,
 		showFloor:false,
@@ -202,6 +201,7 @@ export default class CtrlRealtime extends Component {
 		loading:false,
 		language:window.localStorage.getItem("language"),
 		list:[],
+		clickNums:0,
 	}
 	componentWillMount() {
 		this.getBaseData()
@@ -236,6 +236,10 @@ export default class CtrlRealtime extends Component {
 		if(websock){
 			websock.close()
 			websock=null
+		}
+		console.log(websock);
+		if(websock){
+			websock.close()
 		}
 	}
 	myattachEvt=()=>{
@@ -274,7 +278,7 @@ export default class CtrlRealtime extends Component {
 		}
 		this.state.currentState = this.state.target.getAttribute( this.state.menuState ) === this.state.isOpen ? this.state.isClosed : this.state.isOpen;
 		this.state.target.setAttribute(this.state.menuState, this.state.currentState);
-			this.setState({
+		this.setState({
 			dateSelected:!this.state.dateSelected
 		})
 	}
@@ -621,15 +625,18 @@ export default class CtrlRealtime extends Component {
 				let buffer = [];
 				let arr = [];
 				let floor = [];
+				let showfloor = [];
 				buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
 				buffer.forEach((item) => {
 					arr.push(String.fromCharCode(item))
 				})
 				let high = arr.length/3;
 				for(let i=0; i<high;i++){
-					floor[high-1-i]=arr[i*3]+arr[i*3+1]+arr[i*3+2];
+					showfloor[i] = arr[i*3]+arr[i*3+1]+arr[i*3+2];
+					floor[high-1-i]= arr[i*3]+arr[i*3+1]+arr[i*3+2];
 				}
 				this.setState({
+					showfloor,
 					floor,
 				});
 			}
@@ -850,9 +857,23 @@ export default class CtrlRealtime extends Component {
 		});
 	}
 	showFloor = () => {
+		let clickNums= this.state.clickNums;
+		clickNums++;
 		this.setState({
-			showFloor:true,
+			clickNums,
 		})
+		setTimeout(()=>{
+			if(clickNums==1){
+				this.setState({
+					clickNums:0,
+				})
+			}else if(clickNums==2){
+				this.setState({
+					clickNums:0,
+					showFloor:true,
+				})
+			}
+		},200)
 	}
 	changeIo = () => {
 		this.state.isIo = !this.state.isIo
@@ -872,11 +893,7 @@ export default class CtrlRealtime extends Component {
 		}
 		this.forceUpdate()
 	}
-	onChange1 = () => {
-		this.setState({
-			switch1:!this.state.switch1
-		})
-	}
+	
 	changeView = (item) => {
 		this.props.dispatch({
 			type: 'ctrl/changeView',
@@ -889,7 +906,7 @@ export default class CtrlRealtime extends Component {
 		this.myattachEvt();
 
 		const { ctrl: { event, view, device, floors, property, } } = this.props
-		const { floor, markFloor, markList, show, list, language } = this.state;
+		const { showfloor, floor, markFloor, markList, show, list, language } = this.state;
 		const id = this.props.match.params.id;
 		if(view == 1 && counts == 1){
 			chartInte = setInterval(() => {
@@ -925,7 +942,32 @@ export default class CtrlRealtime extends Component {
 								<img src={this.state.src} alt="code"/>
 							</div>
 						</Modal>
-						
+						<Modal
+							visible={this.state.showFloor}
+							transparent
+							maskClosable={false}
+							footer={language=="en"?[{ text: 'OK', onPress: () => this.setState({showFloor: false}) }]:[{ text: '确定', onPress: () => this.setState({showFloor: false}) }]}
+							wrapProps={{ onTouchStart: this.onWrapTouchStart }}
+						>
+							<div className={styles.Floor}>
+								<div className={styles.title}>
+									<Row>
+										<Col span={12}><FormattedMessage id="Actual floor"/></Col>
+										<Col span={12}><FormattedMessage id="Show floor"/></Col>
+									</Row>
+								</div>
+								<div className={styles.show}>
+									{
+										showfloor.map((item,index) => (
+											<Row>
+												<Col className={styles.floor} span={12}>{index+1}</Col>
+												<Col className={styles.floor} span={12}>{item}</Col>
+											</Row>
+										))
+									}
+								</div>
+							</div>
+						</Modal>
 						<Row type="flex" justify="center" align="middle">
 							<Col span={18}>
 								<p className={styles.shishi}><FormattedMessage id="Realtime:"/></p>
@@ -1015,61 +1057,30 @@ export default class CtrlRealtime extends Component {
 											<FormattedMessage id="Last update time"/> ：
 											<i className={styles.status}>{show.updateTime}</i>
 										</p>
-										<p style={{
-											width: '20%',
-											justifyContent: 'flex-start',
-										}}>
-											<Switch
-												checkedChildren={<FormattedMessage id="Car Roof"/>}
-												unCheckedChildren={"I/O"}
-												onChange={this.onChange1}
-												checked={this.state.switch1}
-												defaultChecked={this.state.switch1}
-												loading={this.state.loading}
-											/>
-										</p>
 									</section>
 								</Col>
 							</Row>
 							<div>
 								<Col span={18}>
-									<CtrlMenu data={this.state.switch1}/>
+									<CtrlMenu/>
 								</Col>
 								<Col span={6}>
-									<Popover
-										placement="left"
-										visible={this.state.showFloor}
-										overlay={[
-											(<div style={{
-												width: '100px',
-											}} className={styles.info}>
-												<ul>
-													{
-														floor.map((item,index) => (
-															<li style={{ width: 30}} key={`${index}`} id={`${index}`}>{floor.length-index}</li>
-														))
-													}
-												</ul>
-											</div>),
-										]}
-									> 
-										<div className={styles.info} onClick={()=>{this.showFloor()}}>
-											<p>
-												<Icon className={styles.icon} type={direction[`${show.downCall}${show.upCall}`]} />
-												<i>{this.state.floor[this.state.floor.length-show.floor]}</i>
-											</p>
-											<ul>
-												{
-													floor.map((item,index) => (
-														markList[index] ?
-														<li style={{ width: 30, color:'red'}} key={`${index}`} id={`${index}`}>{item}</li>
-														:
-														<li style={{ width: 30}} key={`${index}`} id={`${index}`}>{item}</li>
-													))
-												}
-											</ul>
-										</div>
-									</Popover>
+									<div className={styles.info} onClick={()=>{this.showFloor()}}>
+										<p>
+											<Icon className={styles.icon} type={direction[`${show.downCall}${show.upCall}`]} />
+											<i>{this.state.floor[this.state.floor.length-show.floor]}</i>
+										</p>
+										<ul>
+											{
+												floor.map((item,index) => (
+													markList[index] ?
+													<li style={{ width: 30, color:'red'}} key={`${index}`} id={`${index}`}>{item}</li>
+													:
+													<li style={{ width: 30}} key={`${index}`} id={`${index}`}>{item}</li>
+												))
+											}
+										</ul>
+									</div>
 								</Col>
 							</div>
 						</div>

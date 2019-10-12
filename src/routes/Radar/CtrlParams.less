@@ -7,10 +7,6 @@
 	padding: 0 0 10px;
 	overflow-y: scroll;
 }
-// .panel {
-// 	margin-bottom: 8px;
-// 	border: 0 !important;
-// }
 .explain{
 	margin-left: 5px !important;
 	text-indent: 2em;
@@ -18,15 +14,47 @@
 .border{
 	margin: 2px;
 	border: 1px solid black;
+	text-align: center;
 	p{
 		// padding: 2px;
 		margin: 1px;
 	}
-	text-align: center;
+}
+.border2{
+	margin: 2px;
+	margin-top:-3px;
+	border-style: hidden solid solid solid;
+	border-color: black;
+	border-width: 1px;
+	p{
+		// padding: 2px;
+		margin: 1px;
+	}
 }
 .borderleft{
+	border-style: hidden solid hidden solid;
+	border-width: 1px;
+	border-color: black;
+	min-height: 90px;
+}
+.borderleft2{
 	border-style: hidden hidden hidden solid;
 	border-width: 1px;
 	border-color: black;
-	min-height: 100px;
+}
+:global {
+	.accordion .am-accordion-item .am-accordion-header {
+		color: #999;
+	}
+	.accordion .am-list-line .am-list-content,.am-list-extra {
+		color: #AAA;
+		font-size: 14px;
+	}
+}
+@media screen and (min-width: 575px) {
+	.content {
+		background: #f7f7f7;
+		position: static;
+		padding: 16px 14px 16px;
+	}
 }

@@ -32,7 +32,7 @@ const Menus = (item) => (
 		</Row>
 		<Row className={styles.border2}>
 			<Col span={6} style={{"text-align":'center'}}>
-				<div><p><FormattedMessage id={item.label}/></p></div>
+				<div><p ><FormattedMessage id={item.label}/></p></div>
 			</Col>
 			<Col span={12} className={styles.borderleft}>
 				<p className={styles.explain}><FormattedMessage id={item.explain}/></p>

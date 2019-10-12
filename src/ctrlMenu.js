@@ -141,50 +141,84 @@ export const Board = [{
 	label:"轿顶板输入配置",
 	value:0,
 	children: [{
-			label: language=="zh"?'前门光幕开关极性':"Polarity of Frontdoor Light Curtain Switch",
+			grade: 'BD1',
+			label: language=="zh"?'前门光幕输入':"Front door light screen input",
 			value: 1,
 		},{
-			label: language=="zh"?'后门光幕开关极性':"Polarity of Backdoor Light Curtain Switch",
+			grade: 'BD2',
+			label: language=="zh"?'后门光幕输入':"Backdoor light screen input",
 			value: '1',
 		},{
-			label: language=="zh"?'前门安全触板开关极性':"Polarity of Frontdoor safety contact switch",
+			grade: 'SE1',
+			label: language=="zh"?'前门安全触板输入':"Front door safety contact input",
 			value: '0',
 		},{
-			label: language=="zh"?'后门安全触板开关极性':"Polarity of Backdoor safety contact switch",
+			grade: 'SE2',
+			label: language=="zh"?'后门安全触板输入':"Backdoor safety contact input",
 			value: '0',
 		},{
-			label: language=="zh"?'前门开门到位开关极性':"Polarity of Frontdoor Open-in-place Switch",
+			grade: 'OPL1',
+			label: language=="zh"?'前门开门到位输入':"Front door open-in input",
 			value: '1',
 		},{
-			label: language=="zh"?'后门开门到位开关极性':"Polarity of Backdoor Open-in-place Switch",
+			grade: 'OPL2',
+			label: language=="zh"?'后门开门到位输入':"Backdoor Open-in-place input",
 			value: '1',
 		},{
-			label: language=="zh"?'前门关门到位开关极性':"Polarity of Frontdoor closing in place switch",
+			grade: 'CLL1',
+			label: language=="zh"?'前门关门到位输入':"Front door closing in place input",
 			value: '1',
 		},{
-			label: language=="zh"?'后门关门到位开关极性':"Polarity of Backdoor closing in place switch",
+			grade: 'CLL2',
+			label: language=="zh"?'后门关门到位输入':"Backdoor closing in place input",
 			value: '1',
 		},{
+			grade: 'FLW',
 			label: language=="zh"?'满载输入':"Full load input",
 			value: '1',
 		},{
+			grade: 'OLW',
 			label: language=="zh"?'超载输入':"Overload input",
+			value: '1',
+		},{
+			grade: 'LLW',
+			label: language=="zh"?'轻载输入':"Light load input",
 			value: '1',
 		}]
 },{
 	label:"轿顶板输出配置",
 	value:1,
 	children: [{
-			label:'CP3-Y1',
+			grade: 'OP1',
+			label:language=="zh"?'前门开门输出':"Front door open output",
 			value: '7.05-01',
 		},{
-			label:'CP3-Y2',
+			grade: 'CL1',
+			label:language=="zh"?'前门关门输出':"Front door close output",
 			value: '7.05-02',
 		},{
-			label:'CP3-Y3',
+			grade: 'OP2',
+			label:language=="zh"?'后门开门输出':"Backdoor open output",
 			value: '7.05-03',
 		},{
-			label: language=="zh"?'轿顶串行功能扩展':"Serial Function Expansion of Car Top",
-			value: language=="zh"?'真彩液晶':"LCD",
+			grade: 'CL2',
+			label:language=="zh"?'后门关门输出':"Backdoor close output",
+			value: '7.05-01',
+		},{
+			grade: 'Y1',
+			label:language=="zh"?'可配置':"Configurable",
+			value: '7.05-02',
+		},{
+			grade: 'Y2',
+			label:language=="zh"?'可配置':"Configurable",
+			value: '7.05-03',
+		},{
+			grade: 'Y3',
+			label:language=="zh"?'可配置':"Configurable",
+			value: '7.05-01',
+		},{
+			grade: 'Y4',
+			label:language=="zh"?'照明信号':"Illumination signal",
+			value: '7.05-01',
 		}]
 },]

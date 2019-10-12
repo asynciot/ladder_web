@@ -173,7 +173,7 @@ export async function queryMessage(params) {
 }
 export async function deleteMessage(params) {
 	return request(`/common/message?${stringify(params)}`,{
-	 method: 'DELETE',
+		method: 'DELETE',
 	});
 }
 export function getMessages(params) {
@@ -226,8 +226,6 @@ export async function errorCode(params) {
 export function getBanners(params) {
 	return request(`/common/banner?${stringify(params)}`);
 }
-
-
 
 // statistic
 export function getStatistic(params) {

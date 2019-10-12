@@ -15,22 +15,34 @@ const polarity =(val)=> {
 		return "None";
 }
 class CtrlMenu extends Component{ //定义类继承 Compoent
+	state={
+		switch:false,
+	}
+	onChange = () => {
+		this.setState({
+			switch:!this.state.switch
+		})
+	}
 	render(){ //render就是返回一个标签
 		return(
 			<div>
 			{
 				<div className={styles.Menu}>
-					<Flex>
 					{
-						this.props.data==false?
-						<Flex.Item><p className={styles.shishi}><FormattedMessage id="IO Watch"/></p></Flex.Item>
+						this.state.switch==false?
+						<Flex>
+							<Flex.Item><p className={styles.shishi}><FormattedMessage id="IO Watch"/></p></Flex.Item>
+							<Flex.Item><p className={styles.shishi} style={{'color':'#289EFC'}} onClick={()=>{this.onChange()}}><FormattedMessage id="Switch"/></p></Flex.Item>
+						</Flex>
 						:
-						<Flex.Item><p className={styles.shishi}><FormattedMessage id="Board Watch"/></p></Flex.Item>
+						<Flex>
+							<Flex.Item><p className={styles.shishi}><FormattedMessage id="Board Watch"/></p></Flex.Item>
+							<Flex.Item><p className={styles.shishi} style={{'color':'#289EFC'}} onClick={()=>{this.onChange()}}><FormattedMessage id="Switch"/></p></Flex.Item>
+						</Flex>
 					}
-					</Flex>
 					<div>
 						{
-							this.props.data==false?
+							this.state.switch==false?
 							<Row>
 								<Col
 									span={24}
@@ -65,8 +77,9 @@ class CtrlMenu extends Component{ //定义类继承 Compoent
 									className={classNames(styles.door)}
 								>
 									<Row style={{'text-align':'center'}}>
-										<Col span={12}><FormattedMessage id="Signal Name"/></Col>
-										<Col span={8}><FormattedMessage id="Polarity"/></Col>
+										<Col span={4} style={{'text-align':'left'}}><FormattedMessage id="Grade"/></Col>
+										<Col span={12}><FormattedMessage id="Illustrate"/></Col>
+										<Col span={4}><FormattedMessage id="Polarity"/></Col>
 										<Col span={4}><FormattedMessage id="State"/></Col>
 									</Row>
 									<div>
@@ -75,14 +88,16 @@ class CtrlMenu extends Component{ //定义类继承 Compoent
 												item.children.map((prop)=>(
 													item.value==0?
 													<Row style={{'text-align':'center'}}>
+														<Col span={4} style={{'text-align':'left'}}>{prop.grade}</Col>
 														<Col span={12}>{prop.label}</Col>
-														<Col span={8}><FormattedMessage id={polarity(prop.value)}/></Col>
+														<Col span={4}><p style={{'margin-left':'20px'}}>/</p></Col>
 														<Col span={4}><i className={styles.signal}/></Col>
 													</Row>
 													:
 													<Row style={{'text-align':'center'}}>
+														<Col span={4} style={{'text-align':'left'}}>{prop.grade}</Col>
 														<Col span={12}>{prop.label}</Col>
-														<Col span={8}><FormattedMessage id={prop.value}/></Col>
+														<Col span={4}><p style={{'margin-left':'20px'}}>/</p></Col>
 														<Col span={4}><i className={styles.signal}/></Col>
 													</Row>
 												))

@@ -8,6 +8,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:"0.1~45.0",
+			explain:"4.01-01",
 		},
 		{
 			num: 1,
@@ -15,6 +16,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:"380~380",
+			explain:"4.01-01",
 		},
 		{
 			num: 1,
@@ -22,6 +24,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:"2~300",
+			explain:"4.01-01",
 		},
 		{
 			num: 1,
@@ -29,6 +32,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:"30~2500",
+			explain:"4.01-01",
 		},
 		{
 			num: 10,
@@ -36,6 +40,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:"0~500",
+			explain:"4.01-01",
 		},
 		{
 			num: 1,
@@ -43,6 +48,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:"0~99",
+			explain:"4.01-01",
 		},
 		{
 			num: 1,
@@ -50,6 +56,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'60~400',
+			explain:"4.01-08",
 		},
 		{
 			num: 1,
@@ -57,6 +64,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~1',
+			explain:"4.01-11",
 		},
 		{
 			num: 1,
@@ -64,6 +72,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~1',
+			explain:"4.01-12",
 		},
 		{
 			num: 1,
@@ -71,6 +80,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:language == 'zh'?"不可更改":"Unalterable",
+			explain:"4.01-14",
 		},
 		{
 			num: 1,
@@ -78,6 +88,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:language == 'zh'?"不可更改":"Unalterable",
+			explain:"4.01-14",
 		}
 	]
 }, {
@@ -89,6 +100,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'1~31',
+			explain:"4.02-01",
 		},
 		{
 			num: 1,
@@ -96,6 +108,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'1~31',
+			explain:"4.02-01",
 		},
 		{
 			num: 1,
@@ -103,6 +116,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'1~31',
+			explain:"4.02-03",
 		},
 		{
 			num: 1,
@@ -110,6 +124,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'1~31',
+			explain:"4.02-04",
 		},
 		{
 			num: 1,
@@ -117,6 +132,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~31',
+			explain:"4.02-05",
 		},
 		{
 			num: 1,
@@ -124,6 +140,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'1~63',
+			explain:"4.02-06",
 		},
 		{
 			num: 1,
@@ -131,6 +148,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'1~63',
+			explain:"4.02-06",
 		},
 		{
 			num: 1,
@@ -138,6 +156,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'1~300',
+			explain:"4.02-08",
 		},
 		{
 			num: 1,
@@ -145,6 +164,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'2~16',
+			explain:"4.02-09",
 		},
 		{
 			num: 1,
@@ -152,6 +172,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~3',
+			explain:"4.02-10",
 		},
 		{
 			num: 1,
@@ -159,6 +180,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'1~15',
+			explain:"4.02-10",
 		},
 		{
 			num: 1,
@@ -166,6 +188,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~4000',
+			explain:"4.02-12",
 		}
 	],
 }, {
@@ -177,6 +200,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -184,6 +208,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -191,6 +216,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -198,6 +224,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -205,6 +232,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -212,6 +240,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -219,6 +248,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -226,6 +256,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -233,6 +264,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -240,6 +272,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -247,6 +280,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -254,6 +288,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -261,6 +296,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -268,6 +304,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -275,6 +312,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -282,6 +320,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -289,6 +328,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -296,6 +336,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -303,6 +344,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -310,6 +352,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -317,6 +360,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -324,6 +368,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -331,6 +376,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -338,6 +384,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		},
 		{
 			num: 1,
@@ -345,6 +392,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~380',
+			explain:"7.01-01",
 		}
 	],
 }, {
@@ -356,6 +404,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~1',
+			explain:"7.02-01",
 		},
 		{
 			num: 1,
@@ -363,6 +412,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~1',
+			explain:"7.02-01",
 		},
 		{
 			num: 1,
@@ -370,6 +420,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~1',
+			explain:"7.02-01",
 		},
 		{
 			num: 1,
@@ -377,6 +428,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~1',
+			explain:"7.02-01",
 		},
 		{
 			num: 1,
@@ -384,6 +436,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~1',
+			explain:"7.02-01",
 		},
 		{
 			num: 1,
@@ -391,6 +444,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~1',
+			explain:"7.02-01",
 		},
 		{
 			num: 1,
@@ -398,6 +452,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~1',
+			explain:"7.02-01",
 		},
 		{
 			num: 1,
@@ -405,6 +460,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~1',
+			explain:"7.02-01",
 		},
 		{
 			num: 1,
@@ -412,6 +468,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~1',
+			explain:"7.02-01",
 		},
 		{
 			num: 1,
@@ -419,6 +476,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~1',
+			explain:"7.02-01",
 		}
 	],
 }, {
@@ -430,6 +488,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~18',
+			explain:"7.03-01",
 		},
 		{
 			num: 1,
@@ -437,6 +496,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~18',
+			explain:"7.03-01",
 		},
 		{
 			num: 1,
@@ -444,6 +504,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~18',
+			explain:"7.03-01",
 		},
 		{
 			num: 1,
@@ -451,6 +512,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~18',
+			explain:"7.03-01",
 		},
 		{
 			num: 1,
@@ -458,6 +520,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~18',
+			explain:"7.03-01",
 		},
 		{
 			num: 1,
@@ -465,6 +528,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~18',
+			explain:"7.03-01",
 		},
 		{
 			num: 1,
@@ -472,6 +536,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~18',
+			explain:"7.03-01",
 		},
 		{
 			num: 1,
@@ -479,6 +544,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~18',
+			explain:"7.03-01",
 		}
 	],
 }, {
@@ -490,6 +556,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~14',
+			explain:"7.04-01 expalin",
 		},
 		{
 			num: 1,
@@ -497,6 +564,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~14',
+			explain:"7.04-01 expalin",
 		},
 		{
 			num: 1,
@@ -504,6 +572,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~14',
+			explain:"7.04-01 expalin",
 		},
 		{
 			num: 1,
@@ -511,6 +580,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~14',
+			explain:"7.04-01 expalin",
 		},
 		{
 			num: 1,
@@ -518,6 +588,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~14',
+			explain:"7.04-01 expalin",
 		},
 		{
 			num: 1,
@@ -525,6 +596,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~14',
+			explain:"7.04-01 expalin",
 		},
 		{
 			num: 1,
@@ -532,6 +604,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~14',
+			explain:"7.04-01 expalin",
 		},
 		{
 			num: 1,
@@ -539,6 +612,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~14',
+			explain:"7.04-01 expalin",
 		}
 	],
 }, {
@@ -550,6 +624,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~5',
+			explain:"7.05-01 expalin",
 		},
 		{
 			num: 1,
@@ -557,6 +632,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~5',
+			explain:"7.05-01 expalin",
 		},
 		{
 			num: 1,
@@ -564,6 +640,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~5',
+			explain:"7.05-01 expalin",
 		},
 		{
 			num: 1,
@@ -571,6 +648,7 @@ export const ctrlMenu = [{
 			value: '',
 			visible: true,
 			range:'0~2',
+			explain:"None",
 		}
 	],
 }, {

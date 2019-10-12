@@ -87,7 +87,17 @@ export default class Fault extends Component {
 		});
 	}
 	upFault = (e) =>{
+		const { language } = this.state;
 		var file = e.target.files[0]
+		if(file.size>1024*1024){
+			if(language=="zh"){
+				alert("请上传不超过1M的图片！");
+				return
+			}else{
+				alert("Please upload no more than 1M pictures.");
+				return
+			}
+		}
 		this.state.file1 = new File([file], "before"+new Date().getTime()+".jpg",{type:"image/*"});
 		var reader = new FileReader()
 		reader.onload = function (e) {
@@ -97,7 +107,17 @@ export default class Fault extends Component {
 		reader.readAsDataURL(this.state.file1)
 	}
 	upFinish = (e) =>{
+		const { language } = this.state;
 		var file = e.target.files[0]
+		if(file.size>1024*1024){
+			if(language=="zh"){
+				alert("请上传不超过1M的图片！");
+				return
+			}else{
+				alert("Please upload no more than 1M pictures.");
+				return
+			}
+		}
 		this.state.file2 = new File([file], "after"+new Date().getTime()+".jpg",{type:"image/*"});
 		var reader = new FileReader()
 		reader.onload = function (e) {
@@ -109,8 +129,6 @@ export default class Fault extends Component {
 	uploadPicture = (e) =>{
 		const { dispatch, location } = this.props;
 		const { language } = this.state;
-		const match = pathToRegexp('/company/order/:id').exec(location.pathname);
-		let id = match[2];
 		var formdata = new FormData();
 		formdata = new window.FormData();
 		formdata.append("file1",this.state.file1);
@@ -121,57 +139,59 @@ export default class Fault extends Component {
 		if(this.state.inspection_nexttime !='' & this.state.inspection_nexttime != null){
 			formdata.append("inspection_nexttime",this.state.inspection_nexttime);
 		}
-		formdata.append("id",this.props.location.state.id);
+		formdata.append("id",location.state.id);
 		formdata.append("remarks",this.state.remark);
 		formdata.append("result",'untransfer');
 		if(!this.state.file1 || !this.state.file2){
 			if(language=="zh"){
 				alert("请上传维修前和维修后的图片！");
+				return
 			}else{
 				alert("Please upload pictures before and after maintenance.");
+				return
 			}
-		}else {
-			fetch('http://server.asynciot.com/device/Dispatch/finish', {
-				method: 'POST',
-				headers: {
-					Accept: 'application/json, text/plain, */*',
-				},
-				credentials: 'include',
-				body: formdata
-			}).then((res)=> { return res.json()}).then((json)=>{
+		}
+		fetch('http://server.asynciot.com/device/Dispatch/finish', {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json, text/plain, */*',
+			},
+			credentials: 'include',
+			body: formdata
+		}).then((res)=> { return res.json()}).then((json)=>{
+			if(language=="zh"){
+				alert('提示', '图片上传中，请等待！', [
+					{ text: '确认',},
+				]);
+			}else{
+				alert('提示','Picture upload, please wait!',[
+					{ text: 'Ok',},
+				]);
+			}
+			if(json.code == 0){
 				if(language=="zh"){
-					alert('提示', '图片上传中，请等待！', [
+					alert('提示','上传成功',[
 						{ text: '确认',},
 					]);
 				}else{
-					alert('提示','Picture upload, please wait!',[
+					alert('提示','Success',[
 						{ text: 'Ok',},
 					]);
 				}
-				if(json.code == 0){
-					if(language=="zh"){
-						alert('提示','上传成功',[
-							{ text: '确认',},
-						]);
-					}else{
-						alert('提示','Success',[
-							{ text: 'Ok',},
-						]);
-					}
-					this.props.history.push(`/company/work-order`);
+				this.props.history.push(`/company/work-order`);
+			}else{
+				if(language=="zh"){
+					alert('提示', '上传失败', [
+						{ text: '确认',},
+					]);
 				}else{
-					if(language=="zh"){
-						alert('提示', '上传失败', [
-							{ text: '确认',},
-						]);
-					}else{
-						alert('提示','Error',[
-							{ text: 'Ok',},
-						]);
-					}
+					alert('提示','Error',[
+						{ text: 'Ok',},
+					]);
 				}
-			})
-		}
+			}
+		})
+		
 	}
 	onStart = async(val) => {
 		await this.setState({
