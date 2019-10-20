@@ -238,8 +238,8 @@
 	"High speed torque lifting":"高速力矩提升",
 
 	"Instructions" : "说明文档",
-	"Interface" : "串口号",
-	"Introduce" : "说明",
+	"Interface" : "端口号",
+	"Function Declaration" : "功能说明",
 	"Illustrate" : "解释说明",
 	"Install Address" : "项目名称",
 	"IP location" : "IP定位",
@@ -474,6 +474,7 @@
 	"Weight empty current of motor":"电机空载电流",
 	"warning" : "警告",
 	"watch" : "查看",
+	"Wait" : "请等待！",
 
 	"X1 Function selection":"X1 功能选择",
 	"X2 Function selection":"X2 功能选择",

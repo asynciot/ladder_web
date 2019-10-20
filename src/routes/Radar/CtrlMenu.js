@@ -46,7 +46,7 @@ class CtrlMenu extends Component{ //定义类继承 Compoent
 							<Row>
 								<Col
 									span={24}
-									className={classNames(styles.door)}
+									className={styles.door}
 								>
 									<Row style={{'text-align':'center'}}>
 										<Col span={5} style={{'text-align':'left'}}><FormattedMessage id="Interface"/></Col>
@@ -74,11 +74,11 @@ class CtrlMenu extends Component{ //定义类继承 Compoent
 							<Row>
 								<Col
 									span={24}
-									className={classNames(styles.door)}
+									className={styles.door}
 								>
 									<Row style={{'text-align':'center'}}>
-										<Col span={4} style={{'text-align':'left'}}><FormattedMessage id="Grade"/></Col>
-										<Col span={12}><FormattedMessage id="Illustrate"/></Col>
+										<Col span={5} style={{'text-align':'left'}}><FormattedMessage id="Interface"/></Col>
+										<Col span={11}><FormattedMessage id="Signal Name"/></Col>
 										<Col span={4}><FormattedMessage id="Polarity"/></Col>
 										<Col span={4}><FormattedMessage id="State"/></Col>
 									</Row>
@@ -86,18 +86,10 @@ class CtrlMenu extends Component{ //定义类继承 Compoent
 										{
 											Board.map((item)=>(
 												item.children.map((prop)=>(
-													item.value==0?
 													<Row style={{'text-align':'center'}}>
 														<Col span={4} style={{'text-align':'left'}}>{prop.grade}</Col>
 														<Col span={12}>{prop.label}</Col>
-														<Col span={4}><p style={{'margin-left':'20px'}}>/</p></Col>
-														<Col span={4}><i className={styles.signal}/></Col>
-													</Row>
-													:
-													<Row style={{'text-align':'center'}}>
-														<Col span={4} style={{'text-align':'left'}}>{prop.grade}</Col>
-														<Col span={12}>{prop.label}</Col>
-														<Col span={4}><p style={{'margin-left':'20px'}}>/</p></Col>
+														<Col span={4}><FormattedMessage id={polarity(prop.Polarity)}/></Col>
 														<Col span={4}><i className={styles.signal}/></Col>
 													</Row>
 												))

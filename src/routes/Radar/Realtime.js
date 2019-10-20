@@ -179,6 +179,7 @@ export default class DoorHistory extends Component {
 		id:0,
 		install:'',
 		device_name:'',
+		device_model:'',
 		IMEI:'',
 		threshold:40,
 		interval:50,
@@ -187,7 +188,7 @@ export default class DoorHistory extends Component {
 		endTime:'',
 		command:false,
 		loading:false,
-		device_model:'',
+		watch:false,
 		list:[],
 		language:window.localStorage.getItem("language"),
 	}
@@ -251,7 +252,6 @@ export default class DoorHistory extends Component {
 			this.state.mainButton.addEventListener( evt , this.toggleButton, false);
 		}
 		}
-
 	}
 	getElemsByToggleMethod=( selector )=>{
 		return document.querySelectorAll('[' + this.state.toggleMethod + '="' + selector + '"]');
@@ -267,7 +267,6 @@ export default class DoorHistory extends Component {
 		this.setState({
 			dateSelected:!this.state.dateSelected
 		})
-
 	}
 	initWebsocket (){ //初始化weosocket
 		const { currentUser } = this.props;
@@ -287,6 +286,7 @@ export default class DoorHistory extends Component {
 				clearInterval(timing)
 				this.forceUpdate()
 			}else{
+				this.state.watch = false;
 				var redata = JSON.parse(e.data)
 				this.pushData(redata)
 				if(COUNTS==0){
@@ -405,6 +405,7 @@ export default class DoorHistory extends Component {
 					websock=null;
 				}
 				this.initWebsocket()
+				this.state.watch = true;
 				const op = 'open';
 				let IMEI;
 				if(this.state.list.cellular==1){
@@ -1216,6 +1217,17 @@ export default class DoorHistory extends Component {
 						<div className="qrcode">
 							<Spin className="qrcode-loading"/>
 							<img src={this.state.src} alt="code"/>
+						</div>
+					</Modal>
+					<Modal
+						visible={this.state.watch}
+						transparent
+						maskClosable={false}
+						footer={language=="en"?[{ text: 'OK', onPress: () => this.setState({watch: false}) }]:[{ text: '确定', onPress: () => this.setState({watch: false}) }]}
+						wrapProps={{ onTouchStart: this.onWrapTouchStart }}
+					>
+						<div>
+							<p><FormattedMessage id="Wait"/></p>
 						</div>
 					</Modal>
 					<Row type="flex" justify="center" align="middle">
