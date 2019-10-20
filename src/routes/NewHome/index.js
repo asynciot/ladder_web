@@ -301,6 +301,20 @@ export default class Home extends Component {
 		history.push('/company/work-order');
 	}
 	getOption(){
+    /* var color = ['#0000FF', '#00ffff', '#00ff00', '#ffff00'];
+    var data =[{
+    	                name: '其它',
+    	                value: 25
+    	            },{
+    	                name: '休闲裤',
+    	                value: 25
+    	            },{
+    	                name: '女士衬衫',
+    	                value: 25
+    	            },{
+    	                name: '运动服',
+    	                value: 25
+    	            }];
 		const {deviceNum, deviceOnline, deviceOffline, deviceLongoffline}=this.state;
 		let option={};
 		if(deviceNum!=0){
@@ -327,7 +341,6 @@ export default class Home extends Component {
 					top: "middle",
 					right: "0%",
 					icon: 'circle'
-
 				},
 				polar: {
 					center: ['35%', '50%'],
@@ -351,7 +364,8 @@ export default class Home extends Component {
 						coordinateSystem: "polar",
 						barWidth: 15, //宽度
 						barCategoryGap: "40%",
-						data: [deviceOnline/deviceNum*100],
+            color : color,
+						data: data
 					},
 					{
 						type: "bar",
@@ -363,15 +377,69 @@ export default class Home extends Component {
 					},
 					{
 						type: "bar",
-						name: (this.state.language=="zh"?"故障：":"fault   ：")+deviceOffline,
+						name: (this.state.language=="zh"?"故障：":"fault：")+deviceOffline,
 						coordinateSystem: "polar",
 						barWidth: 15,
 						barCategoryGap: "40%",
 						data: [deviceOffline/deviceNum*100]
-					}
-				]
-			}
-		}
+					} */
+    const {deviceNum, deviceOnline, deviceOffline, deviceLongoffline}=this.state;
+    let option = {
+        title: {
+          text: deviceNum,
+          subtext: this.state.language=="zh"? "电梯总量":"Ladder Number",
+          x: '48%',
+          y: '40%',
+          textAlign:'center',
+          textStyle: {
+            fontSize:24,
+            fontWeight:'bold',
+            color: ['#333']
+          },
+          subtextStyle: {
+            fontSize:12,
+            color: '#666',
+          },
+        },
+        legend: {
+            orient: 'vertical',
+            right: "0%",
+            data:['在线:'+deviceOnline,'离线:'+deviceLongoffline,'故障:'+deviceOffline]
+        },
+        series: [
+            {
+                type:'pie',
+                radius: ['50%', '65%'],
+                avoidLabelOverlap: false,
+                hoverAnimation: false,
+                label: {
+                    normal: {
+                        show: false,
+                        position: 'center'
+                    }
+                },
+                data:[
+                    {value:deviceOnline, name:'在线:'+deviceOnline},
+                    {value:deviceLongoffline, name:'离线:'+deviceLongoffline}
+                ]
+            },
+            {
+                type:'pie',
+                radius: ['30%', '45%'],
+                avoidLabelOverlap: false,
+                hoverAnimation: false,
+                label: {
+                    normal: {
+                        show: false,
+                        position: 'center'
+                    }
+                },
+                data:[
+                    {value:0, name:'故障:'+deviceOffline}
+                ]
+            }
+        ]
+    };
 		return option;
 	}
 	render() {
@@ -400,12 +468,12 @@ export default class Home extends Component {
 						);
 					})}
 				</Carousel>
-				<div className={styles.aui_title}>
+				{/* <div className={styles.aui_title}>
 					<div className={styles.title}>
 						<FormattedMessage id="Device List"/>
-					</div>
-				</div>
-				<Flex className={styles.aui_flex}>
+          </div>
+				</div> */}
+				{/* <Flex className={styles.aui_flex}>
 					<Flex.Item onClick={this.toFollowDoorPage}>
 						<div className={styles.aui_palace1}>
 							<div className={styles.aui_palace1_left}>
@@ -458,15 +526,70 @@ export default class Home extends Component {
 							</div>
 						</div>
 					</Flex.Item>
-				</Flex>
+				</Flex> */}
 				<div className={styles.aui_title}>
 					<div className={styles.title}>
 						<FormattedMessage id="Device State"/>
 					</div>
 				</div>
 				<div className={styles.aui_palace}>
-						<List.Item>
+          <Flex className={styles.aui_flex}>
+            <Flex.Item onClick={this.toFollowDoorPage}>
+              <div className={styles.aui_palace1}>
+                <div className={styles.aui_palace1_left}>
+                  <div className={styles.aui_palace1_grid_icon}>
+                    <img src={require('../../assets/icon/door.jpg')} />
+                  </div>
+                </div>
+                <div className={styles.aui_palace1_right}>
+                  <div className={styles.aui_palace1_grid_main}>
+                    <div className={styles.aui_palace1_grid_main_top}>
+                      <FormattedMessage id="Door"/>
+                    </div>
+                    <div className={styles.aui_palace1_grid_main_bottom}>
+                      <div className={styles.aui_palace1_grid_main_bottom_left}>
+                        <FormattedMessage id="Number"/>
+                      </div>
+                      <div className={styles.aui_palace1_grid_main_bottom_right}>
+                        <div className={styles.aui_palace1_grid_main_bottom_right1}>
+                          {doorNum}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Flex.Item>
+            <Flex.Item onClick={this.toFollowCtrlPage}>
+              <div className={styles.aui_palace1}>
+                <div className={styles.aui_palace1_left}>
+                  <div className={styles.aui_palace1_grid_icon}>
+                    <img src={require('../../assets/icon/ctrl.jpg')} />
+                  </div>
+                </div>
+                <div className={styles.aui_palace1_right}>
+                  <div className={styles.aui_palace1_grid_main}>
+                    <div className={styles.aui_palace1_grid_main_top}>
+                      <FormattedMessage id="Ctrl"/>
+                    </div>
+                    <div className={styles.aui_palace1_grid_main_bottom}>
+                      <div className={styles.aui_palace1_grid_main_bottom_left}>
+                        <FormattedMessage id="Number"/>
+                      </div>
+                      <div className={styles.aui_palace1_grid_main_bottom_right}>
+                        <div className={styles.aui_palace1_grid_main_bottom_right1}>
+                          {ctrlNum}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Flex.Item>
+          </Flex>
+					<List.Item>
 						<Flex className={styles.aui_flex}>
+              &nbsp;
 							<Flex.Item  className={styles.aui_flex_item} onClick={this.toFollowDoorOnline}>
 								<Badge className={styles.sup} text={devicesStatus.dooronline} overflowCount={99}>
 									<div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
@@ -488,6 +611,7 @@ export default class Home extends Component {
 									</div>
 								</Badge>
 							</Flex.Item>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<Flex.Item className={styles.aui_flex_item} onClick={this.toFollowctrlOnline}>
 								<Badge className={styles.sup} text={devicesStatus.ctrlonline} overflowCount={99}>
 									<div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
