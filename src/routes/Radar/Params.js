@@ -24,7 +24,7 @@ const Menus = (item) => (
 				<div><p><FormattedMessage id="Parameter Name"/></p></div>
 			</Col>
 			<Col span={12} className={styles.borderleft2}>
-				<p><FormattedMessage id="Introduce"/></p>
+				<p><FormattedMessage id="Function Declaration"/></p>
 			</Col>
 			<Col span={6} className={styles.borderleft2}>
 				<div><p><FormattedMessage id="Range"/></p></div>

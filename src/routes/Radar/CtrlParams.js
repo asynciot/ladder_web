@@ -15,14 +15,14 @@ const Menus = (item) => (
 				<div><p><FormattedMessage id="Parameter Name"/></p></div>
 			</Col>
 			<Col span={12} className={styles.borderleft2}>
-				<p><FormattedMessage id="Introduce"/></p>
+				<p><FormattedMessage id="Function Declaration"/></p>
 			</Col>
 			<Col span={6} className={styles.borderleft2}>
 				<div><p><FormattedMessage id="Range"/></p></div>
 			</Col>
 		</Row>
 		<Row className={styles.border2}>
-			<Col span={6} style={{"text-align":'center'}}>
+			<Col span={6} style={{"text-align":'left'}}>
 				<div><p ><FormattedMessage id={item.label}/></p></div>
 			</Col>
 			<Col span={12} className={styles.borderleft}>

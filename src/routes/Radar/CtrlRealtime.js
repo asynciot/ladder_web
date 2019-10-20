@@ -199,6 +199,7 @@ export default class CtrlRealtime extends Component {
 		endTime:'',
 		command:false,
 		loading:false,
+		watch:false,
 		language:window.localStorage.getItem("language"),
 		list:[],
 		clickNums:0,
@@ -237,7 +238,6 @@ export default class CtrlRealtime extends Component {
 			websock.close()
 			websock=null
 		}
-		console.log(websock);
 		if(websock){
 			websock.close()
 		}
@@ -299,6 +299,35 @@ export default class CtrlRealtime extends Component {
 				clearInterval(timing)
 				this.forceUpdate()
 			}else{
+				this.state.watch = false;
+				getCommand({num:1,page:1,IMEI}).then((res)=>{
+					if(res.code==0){
+						let controll = 0;
+						const duration = 300;
+						timing = setInterval( () => {
+							const date = new Date().getTime()
+							const endTime = Math.round(((res.list[0].finish+duration*1000)-date)/1000)
+							if(endTime<0){
+								this.setState({
+									endTime:0,
+									switch:false,
+								})
+								clearInterval(timing)
+								if(this.state.language =="zh"&&controll==0){
+									controll = 1;
+									alert("监控结束,请稍后再监控。");
+								}else{
+									alert("End of monitoring.");
+								}
+							}else{
+								this.setState({
+									endTime,
+								})
+							}
+							this.forceUpdate()
+						},1000)
+					}
+				})
 				var redata = JSON.parse(e.data)
 				this.pushData(redata)
 				if(counts==0){
@@ -338,6 +367,7 @@ export default class CtrlRealtime extends Component {
 		if(this.state.state =="online"){
 			this.state.switch = !this.state.switch;
 			this.forceUpdate();
+			this.state.watch = true;
 			if(this.state.switch == true){
 				const device_id = this.props.match.params.id
 				if(websock){
@@ -361,33 +391,7 @@ export default class CtrlRealtime extends Component {
 				const address = '00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00';
 				if(this.state.endTime==0){
 					postMonitor({ op, IMEI, interval, threshold, duration, device_type, type, segment, address }).then((pos) => {
-						getCommand({num:1,page:1,IMEI}).then((res)=>{
-							if(res.code==0){
-								let controll = 0;
-								timing = setInterval( () => {
-									const date = new Date().getTime()
-									const endTime = Math.round(((res.list[0].submit+duration*1000)-date)/1000)
-									if(endTime<0){
-										this.setState({
-											endTime:0,
-											switch:false,
-										})
-										clearInterval(timing)
-										if(this.state.language =="zh"&&controll==0){
-											controll = 1;
-											alert("监控结束,请稍后再监控。");
-										}else{
-											alert("End of monitoring.");
-										}
-									}else{
-										this.setState({
-											endTime,
-										})
-									}
-									this.forceUpdate()
-								},1000)
-							}
-						})
+						
 					});
 				}
 			}else{
@@ -416,7 +420,7 @@ export default class CtrlRealtime extends Component {
 			show.closeBtn = (buffer[6]&0x80)>>7					//获取关门按钮信号
 			show.model    = buffer[7]&0xff						//获取电梯模式
 			show.status   = buffer[8]&0xff						//获取电梯状态
-			show.floor    = buffer[9]&0xff           			//获取电梯当前楼层
+			show.floor    = buffer[9]&0xff						//获取电梯当前楼层
 		});
 		this.setState({
 			show,
@@ -635,6 +639,7 @@ export default class CtrlRealtime extends Component {
 					showfloor[i] = arr[i*3]+arr[i*3+1]+arr[i*3+2];
 					floor[high-1-i]= arr[i*3]+arr[i*3+1]+arr[i*3+2];
 				}
+				showfloor.reverse();
 				this.setState({
 					showfloor,
 					floor,
@@ -655,80 +660,80 @@ export default class CtrlRealtime extends Component {
 		}
 		Run.setOption({
 			tooltip: {
-				trigger: 'axis'
+				trigger: 'axis',
 			},
 			legend: {
-				data:['运行信号']
+				data:['运行信号'],
 			},
 			grid: {
 				left: '3%',
 				right: '4%',
-				containLabel: true
+				containLabel: true,
 			},
 			xAxis: {
 				type: 'category',
 				data: this.state.event.nums,
 			},
 			yAxis: {
-				data:[0,1]
+				data:[0,1],
 			},
 			series: [{
 				name:'运行信号',
 				type:'line',
 				step: 'start',
-				data:this.state.run
+				data:this.state.run,
 			}]
 		});
 		Lock.setOption({
 			tooltip: {
-				trigger: 'axis'
+				trigger: 'axis',
 			},
 			legend: {
-				data:['门锁信号']
+				data:['门锁信号'],
 			},
 			grid: {
 				left: '3%',
 				right: '4%',
-				containLabel: true
+				containLabel: true,
 			},
 			xAxis: {
 				type: 'category',
 				data: this.state.event.nums,
 			},
 			yAxis: {
-				data:[0,1]
+				data:[0,1],
 			},
 			series: [{
 				name:'门锁信号',
 				type:'line',
 				step: 'start',
-				data:this.state.lock
+				data:this.state.lock,
 			}]
 		});
 		Close.setOption({
 			tooltip: {
-				trigger: 'axis'
+				trigger: 'axis',
 			},
 			legend: {
-				data:['关门信号']
+				data:['关门信号'],
 			},
 			grid: {
 				left: '3%',
 				right: '4%',
-				containLabel: true
+				containLabel: true,
 			},
 			xAxis: {
 				type: 'category',
 				data: this.state.event.nums,
 			},
 			yAxis: {
-				data:[0,1]
+				data:[0,1],
 			},
 			series: [{
 				name:'关门信号',
 				type:'line',
 				step: 'start',
-				data:this.state.close
+				data:this.state.close,
 			}]
 		});
 	}
@@ -893,7 +898,6 @@ export default class CtrlRealtime extends Component {
 		}
 		this.forceUpdate()
 	}
-	
 	changeView = (item) => {
 		this.props.dispatch({
 			type: 'ctrl/changeView',
@@ -904,7 +908,6 @@ export default class CtrlRealtime extends Component {
 		this.state.elemsToClick = this.getElemsByToggleMethod( this.state.clickOpt );
 		this.attachEvt( this.state.elemsToClick, 'click' );
 		this.myattachEvt();
-
 		const { ctrl: { event, view, device, floors, property, } } = this.props
 		const { showfloor, floor, markFloor, markList, show, list, language } = this.state;
 		const id = this.props.match.params.id;
@@ -943,6 +946,17 @@ export default class CtrlRealtime extends Component {
 							</div>
 						</Modal>
 						<Modal
+							visible={this.state.watch}
+							transparent
+							maskClosable={false}
+							footer={language=="en"?[{ text: 'OK', onPress: () => this.setState({watch: false}) }]:[{ text: '确定', onPress: () => this.setState({watch: false}) }]}
+							wrapProps={{ onTouchStart: this.onWrapTouchStart }}
+						>
+							<div>
+								<p><FormattedMessage id="Wait"/></p>
+							</div>
+						</Modal>
+						<Modal
 							visible={this.state.showFloor}
 							transparent
 							maskClosable={false}
@@ -960,8 +974,8 @@ export default class CtrlRealtime extends Component {
 									{
 										showfloor.map((item,index) => (
 											<Row>
-												<Col className={styles.floor} span={12}>{index+1}</Col>
-												<Col className={styles.floor} span={12}>{item}</Col>
+												<Col className={styles.floor} span={12}>{showfloor.length-index}</Col>
+												<Col className={styles.floor1} span={12}>{item}</Col>
 											</Row>
 										))
 									}
