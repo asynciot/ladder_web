@@ -8,7 +8,7 @@ import { Row, Col, Button, Spin, DatePicker, Input, } from 'antd';
 import { Picker, List, Tabs,  Card, Modal, } from 'antd-mobile';
 import classNames from 'classnames';
 import styles from './Fault.less';
-import { getFault, postFinish, postFault, getFollowDevices, getOrderCode } from '../../services/api';
+import { getDispatch, postFinish, postFault, getFollowDevices, getOrderCode } from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
 
 const alert = Modal.alert;
@@ -44,9 +44,10 @@ export default class Fault extends Component {
 	}
 	getFault = () =>{
 		const { dispatch, location } = this.props;
-		const match = pathToRegexp('/company/order/:id').exec(location.pathname);
+		//const match = pathToRegexp('/company/order/:id').exec(location.pathname);
+    const match = pathToRegexp('/company/Dispatch/:id').exec(location.pathname);
 		const id = match[1];
-		getFault({ id, page:1, num:1, }).then((res) => {
+		getDispatch({ id, page:1, num:1, }).then((res) => {
 			const list = res.data.list.map((item) => {
 				if(item.type == "2"){
 					this.state.maintenance = false
@@ -54,7 +55,7 @@ export default class Fault extends Component {
 				if(item.type == "3"){
 					this.state.inspection = false
 				}
-				const time = this.state.nowTime - item.createTime
+				const time = this.state.nowTime - item.create_time
 				item.hour = parseInt((time)/(1000*3600))
 				item.minute = parseInt(time%(1000*3600)/(1000*60))
 				item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
@@ -228,7 +229,8 @@ export default class Fault extends Component {
 	info = () => {
 		const id = this.state.list[0].code
 		this.props.history.push({
-			pathname: `/company/order/code/${id}`,
+			//pathname: `/company/order/code/${id}`,
+      pathname: `/company/Dispatch/code/${id}`,
 		});
 	}
 	onChange = (e) =>{
@@ -257,19 +259,16 @@ export default class Fault extends Component {
 										</tr>
 										<tr>
 											<a className={styles.text}><FormattedMessage id="fault"/><FormattedMessage id="type"/> ：</a>
-											<td className="tl" style={{ width: '100px' }}><FormattedMessage id={'O'+item.type}/></td>
+											<td className="tl" style={{ width: '100px' }}><FormattedMessage id={'O'+item.order_type}/></td>
 										</tr>
 										<tr>
 											<a className={styles.text}><FormattedMessage id="State"/> ：</a>
 											<td className={styles.left} style={{ width: '100px' }}><FormattedMessage id={item.state}/></td>
 										</tr>
 										<tr>
-											<a className={styles.text}><FormattedMessage id="Device Type"/> ：</a>
-											<td className="tl"><FormattedMessage id={item.device_type ||''}/></td>
-										</tr>
-										<tr>
 											<a className={styles.text}><FormattedMessage id="report time"/> ：</a>
-											<td className="tl">{moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')}</td>
+
+                      <td className="tl">{moment(parseInt(item.create_time)).format('YYYY-MM-DD HH:mm:ss')}</td>
 										</tr>
 										<tr>
 											<a className={styles.text}><FormattedMessage id="fault duration"/> ：</a>

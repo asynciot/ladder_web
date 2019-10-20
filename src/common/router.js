@@ -315,6 +315,13 @@ export const getRouterData = (app) => {
 			name2: 'Manage Order',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/WorkOrder')),
 		},
+
+		'/company/Dispatch/:id': {
+			name: '工单维修',
+			name2: 'Manage Order',
+			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/Dispatch')),
+		},
+
 		'/company/order/:id': {
 			name: '工单详情',
 			name2: 'Order Details',

@@ -171,14 +171,16 @@ export default class extends Component {
 	goFault = item => () =>{
 		const id = item.id
 		this.props.history.push({
-			pathname:`/company/order/${item.id}`,
+			//pathname:`/company/order/${item.id}`,
+      pathname:`/company/Dispatch/${item.id}`,
 			state: { id }
 		});
 	}
 	goFault1 = item => () =>{
 		const id = item.id
 		this.props.history.push({
-			pathname:`/company/order/${item.order_id}`,
+			//pathname:`/company/order/${item.order_id}`,
+      pathname:`/company/Dispatch/${item.id}`,
 			state: { id }
 		});
 	}
@@ -287,7 +289,7 @@ export default class extends Component {
 								dataSource={list}
 								renderItem={(item,index) => (
 									<List.Item actions={[<ListButton address={(event) => { this.address(item); }} edit={(event) => { this.deal(event,item,); }} />]} className={styles.item} key={index} onClick={this.goFault(item)}>
-										<Col span={20}>	
+										<Col span={20}>
 											<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" >
 												{
 													language=="zh"?
@@ -422,14 +424,14 @@ export default class extends Component {
 								dataSource={dispatchList}
 								renderItem={(item,index) => (
 									<List.Item actions={[<Finish address={(event) => { this.address(item) }} remove={(event) => { this.remove(event, item); }} />]} className={styles.item} key={index} onClick={this.goFault1(item)}>
-										<Col span={20}>	
+										<Col span={20}>
 											<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" >
 												{
 													language=="zh"?
 													<tbody>
 													{
 														code[index]?
-														(	
+														(
 															<tr>
 																<a className={styles.text}><FormattedMessage id="fault code"/>：</a>
 																<td className={styles.left} style={{ width: '200px' }}><FormattedMessage id={code[index]}/></td>
@@ -473,7 +475,7 @@ export default class extends Component {
 													<tbody>
 													{
 														code[index]?
-														(	
+														(
 															<tr>
 																<a className={styles.text}><FormattedMessage id="fault code"/>：</a>
 																<td className={styles.left} style={{ width: '200px' }}><FormattedMessage id={code[index]}/></td>
