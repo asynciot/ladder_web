@@ -185,11 +185,11 @@ function parseMenu(buffer) {
 	arr.forEach((item, i) => {
 		if (i < 11) {
 			item.value = parseInt((hex[i * 2] + hex[i * 2 + 1]), 16);
-			item.value = (item.value / item.num).toFixed(`${item.num}`.length - 1);
+			item.value = (item.value / item.num).toFixed(`${item.num}`.length - 1)+item.unit;
 		} else if (i < 22) {
-			item.value = parseInt(hex[i + 11], 16);
+			item.value = parseInt(hex[i + 11], 16)+item.unit;
 		} else if (i < 23) {
-			item.value = parseInt((hex[i + 11] + hex[i + 12]), 16);
+			item.value = parseInt((hex[i + 11] + hex[i + 12]), 16)+item.unit;
 			// item.value = (item.value / item.num).toFixed(`${item.num}`.length - 1);
 		} else if (i < 48) {
 			let val = hex2b(hex[i + 12]);
@@ -199,55 +199,55 @@ function parseMenu(buffer) {
 			while(b.length < 2) {
 				b = `0${b}`
 			}
-			item.value = `${b}${a}`
+			item.value = `${b}${a}`+item.unit
 		} else if (i < 58) {
-			item.value = isOpen[parseInt(hex[i + 12],16)];
+			item.value = isOpen[parseInt(hex[i + 12],16)]+item.unit;
 		} else if (i < 66) {
-			item.value = isRoof[hex[i + 12]];			
+			item.value = isRoof[hex[i + 12]]+item.unit;
 		} else if (i < 73) {
-			item.value = isY[hex[i + 12]];
+			item.value = isY[hex[i + 12]]+item.unit;
 		} else if (i < 77) {
-			item.value = isY1[hex[i + 12]];
+			item.value = isY1[hex[i + 12]]+item.unit;
 		} else if (i < 78) {
-			item.value = isCP8[hex[i + 12]];
+			item.value = isCP8[hex[i + 12]]+item.unit;
 		} else if (i < 79) {
-			item.value = isAll[hex[i + 12]];
+			item.value = isAll[hex[i + 12]]+item.unit;
 		} else if (i < 80) {
-			item.value = isMaster[hex[i + 12]];
+			item.value = isMaster[hex[i + 12]]+item.unit;
 		} else if (i < 82) {
-			item.value = isClose[hex[i + 12]];
+			item.value = isClose[hex[i + 12]]+item.unit;
 		} else if (i < 83) {
-			item.value = isBox[hex[i + 12]];
+			item.value = isBox[hex[i + 12]]+item.unit;
 		} else if (i < 84) {
-			item.value = isLayer[hex[i + 12]];
+			item.value = isLayer[hex[i + 12]]+item.unit;
 		} else if (i < 85) {
-			item.value = isWeight[hex[i + 12]];
+			item.value = isWeight[hex[i + 12]]+item.unit;
 		} else if (i < 86) {
-			item.value = isJoke[hex[i + 12]];
+			item.value = isJoke[hex[i + 12]]+item.unit;
 		} else if (i < 87) {
-			item.value = isArrive[hex[i + 12]];
+			item.value = isArrive[hex[i + 12]]+item.unit;
 		} else if (i < 88) {
-			item.value = parseInt(hex[i + 12], 16);
+			item.value = parseInt(hex[i + 12], 16)+item.unit;
 		} else if (i < 89) {
-			item.value = isVip[hex[i + 12]];
+			item.value = isVip[hex[i + 12]]+item.unit;
 		} else if (i < 90) {
-			item.value = isClose[hex[i + 12]];
+			item.value = isClose[hex[i + 12]]+item.unit;
 		} else if (i < 91) {
-			item.value = fireSwitch[hex[i + 12]];
+			item.value = fireSwitch[hex[i + 12]]+item.unit;
 		} else if (i < 92) {
-			item.value = fireSet[hex[i + 12]];
+			item.value = fireSet[hex[i + 12]]+item.unit;
 		} else if (i < 93) {
-			item.value = fireMode[hex[i + 12]];
+			item.value = fireMode[hex[i + 12]]+item.unit;
 		} else if (i < 94) {
-			item.value = fireProcess[hex[i + 12]];
+			item.value = fireProcess[hex[i + 12]]+item.unit;
 		} else if (i < 95) {
-			item.value = fireAuto[hex[i + 12]];
+			item.value = fireAuto[hex[i + 12]]+item.unit;
 		} else if (i < 105) {
-			item.value = isClosed[parseInt(hex[i + 12], 16)];
+			item.value = isClosed[parseInt(hex[i + 12], 16)]+item.unit;
 		} else if (i < 111) {
-			item.value = isClose[hex[i + 12]];
+			item.value = isClose[hex[i + 12]]+item.unit;
 		} else {
-			item.value = hex[i + 12+2*(i - 111)] + hex[i + 12+2*(i - 111)+1] + hex[i + 12+2*(i - 111)+2];
+			item.value = hex[i + 12+2*(i - 111)] + hex[i + 12+2*(i - 111)+1] + hex[i + 12+2*(i - 111)+2]+item.unit;
 		}
 	});
 	return ctrlMenu;

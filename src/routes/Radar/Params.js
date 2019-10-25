@@ -64,12 +64,12 @@ export default class Params extends Component {
 														item.explain ?
 														<Dropdown overlay={Menus(item)} trigger={['click']}>
 															<List.Item key={`${item.label}${index}`} extra={item.value}>
-																{`${+index+1}`.length == 2?`${+index+1}`:`0${+index+1}`}. <FormattedMessage id={item.label}/>
+																{`${+index+1}`.length == 2?`${data.menu}`+`${+index+1}`:`${data.menu}`+`0${+index+1}`}. <FormattedMessage id={item.label}/>
 															</List.Item>
 														</Dropdown>
 														:
 														<List.Item key={`${item.label}${index}`} extra={item.value}>
-															{`${+index+1}`.length == 2?`${+index+1}`:`0${+index+1}`}. <FormattedMessage id={item.label}/>
+															{`${+index+1}`.length == 2?`${data.menu}`+`${+index+1}`:`${data.menu}`+`0${+index+1}`}. <FormattedMessage id={item.label}/>
 														</List.Item>
 													))
 												}
