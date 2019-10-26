@@ -45,12 +45,21 @@ const ListButton = ({ className = '', ...restProps }) => (
 		</span>
 	</div>
 );
-const Finish = ({ className = '', ...restProps }) => (
+const Treating = ({ className = '', ...restProps }) => (
 	<div className={`${className} ${styles['list-btn']}`}>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.remove ? restProps.remove:''}>
 			<Icon className={`${styles.delete} ${styles.icon}`} type="close" />
 			<em><FormattedMessage id="transfer"/></em>
 		</span>
+		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.address ? restProps.address:''}>
+			<Icon className={`${styles.edit} ${styles.icon}`} type="arrow-down" />
+			<em><FormattedMessage id="Address"/></em>
+		</span>
+	</div>
+);
+
+const Finish = ({ className = '', ...restProps }) => (
+	<div className={`${className} ${styles['list-btn']}`}>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.address ? restProps.address:''}>
 			<Icon className={`${styles.edit} ${styles.icon}`} type="arrow-down" />
 			<em><FormattedMessage id="Address"/></em>
@@ -441,7 +450,7 @@ export default class extends Component {
 								className={styles.lis}
 								dataSource={dispatchList}
 								renderItem={(item,index) => (
-									<List.Item actions={[<Finish address={(event) => { this.address(item) }} remove={(event) => { this.remove(event, item); }} />]} className={styles.item} key={index} onClick={this.goFault1(item)}>
+									<List.Item actions={[<Treating address={(event) => { this.address(item) }} remove={(event) => { this.remove(event, item); }} />]} className={styles.item} key={index} onClick={this.goFault1(item)}>
 										<Col span={20}>
 											<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" >
 												{
