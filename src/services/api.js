@@ -129,6 +129,9 @@ export function getDevicesStatus(params) {
 export function getEvent(params) {
 	return request(`/device/Event?${stringify(params)}`);
 }
+export function getSimpleEvent(params) {
+	return request(`/device/Event/Simple?${stringify(params)}`);
+}
 export function getHistoryEvent(params) {
 	return request(`/device/Event?id=${params}`);
 }

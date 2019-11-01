@@ -179,7 +179,6 @@ export default class DoorHistory extends Component {
 	handleMask=(evt)=>{
 		this.state.outtarget=evt.target;
 		if(this.state.outtarget.id!="mybutton"&&this.state.target!=""){
-			
 			this.state.currentState = this.state.target.getAttribute( this.state.menuState ) === this.state.isClosed ;
 			this.state.target.setAttribute(this.state.menuState, this.state.currentState);
 			this.setState({
@@ -190,11 +189,10 @@ export default class DoorHistory extends Component {
 	attachEvt=( elems, evt )=>{
 		for( var i = 0, len = elems.length; i < len; i++ ){
 			this.state.mainButton = elems[i].querySelector('.' + this.state.mainButtonClass);
-		if(this.state.mainButton!=null){
-			this.state.mainButton.addEventListener( evt , this.toggleButton, false);
+			if(this.state.mainButton!=null){
+				this.state.mainButton.addEventListener( evt , this.toggleButton, false);
+			}
 		}
-		}
-		
 	}
 	getElemsByToggleMethod=( selector )=>{
 		return document.querySelectorAll('[' + this.state.toggleMethod + '="' + selector + '"]');
@@ -534,56 +532,6 @@ export default class DoorHistory extends Component {
 				data:events.speed,
 			}]
 		})
-		var _this = this
-		ss = (i) => {
-			show.openIn  = events.openIn[i]					//获取开门信号
-			show.closeIn = events.closeIn[i]				//获取关门信号
-			show.openToOut = events.openToOut[i]			//获取开到位输出信号
-			show.closeToOut = events.closeToOut[i]			//获取关到位输出信号
-			show.openDecelerate =	events.openDecelerate[i] 		//开减速输入信号
-			show.closeDecelerate = events.closeDecelerate[i]		//关减速输入信号
-			show.closeTo = events.closeTo[i]				//获取关到位输入信号
-			show.openTo =	events.openTo[i]				//获取开到位输入信号
-			show.door	= events.door[i]					//门光幕信号
-			show.open	= events.open[i]					//正在开门信号
-			show.close =	events.close[i]					//正在关门信号
-			show.openKeep	= events.openKeep[i]			//开门到位维持信号
-			show.closeKeep = events.closeKeep[i]			//关门到位维持信号
-			show.stop	= events.stop[i]					//停止输出信号
-			show.inHigh = events.inHigh[i]					//输入电压过高
-			show.inLow = events.inLow[i]					//输入电压过低
-			show.outHigh = events.outHigh[i]				//输出过流
-			show.motorHigh = events.motorHigh[i]			//电机过载
-			show.flySafe = events.flySafe[i]				//飞车保护
-			show.position	= events.position[i]			//获取位置信号
-			show.closeStop = events.closeStop[i]			//开关门受阻
-			show.current = events.current[i]				//获取电流信号
-			show.speed = events.speed[i]
-		}
-		OpenIn.on('click',function (params){
-			var i = params.name;//横坐标的值
-			ss(i)
-		});
-		OpenTo.on('click',function (params){
-			var i = params.name;//横坐标的值
-			ss(i)
-		});
-		Current.on('click',function (params){
-			var i = params.name;//横坐标的值
-			ss(i)
-		});
-		Decelerate.on('click',function (params){
-			var i = params.name;//横坐标的值
-			ss(i)
-		});
-		CloseIn.on('click',function (params){
-			var i = params.name;//横坐标的值
-			ss(i)
-		});
-		Speed.on('click',function (params){
-			var i = params.name;//横坐标的值
-			ss(i)
-		});
 	}
 	showChartEn = () =>{
 		const { show, events } = this.state
@@ -799,56 +747,6 @@ export default class DoorHistory extends Component {
 				data:events.speed,
 			}]
 		})
-		var _this = this
-		ss = (i) => {
-			show.openIn  = events.openIn[i]					//获取开门信号
-			show.closeIn = events.closeIn[i]				//获取关门信号
-			show.openToOut = events.openToOut[i]			//获取开到位输出信号
-			show.closeToOut = events.closeToOut[i]			//获取关到位输出信号
-			show.openDecelerate =	events.openDecelerate[i] 		//开减速输入信号
-			show.closeDecelerate = events.closeDecelerate[i]		//关减速输入信号
-			show.closeTo = events.closeTo[i]				//获取关到位输入信号
-			show.openTo =	events.openTo[i]				//获取开到位输入信号
-			show.door	= events.door[i]					//门光幕信号
-			show.open	= events.open[i]					//正在开门信号
-			show.close =	events.close[i]					//正在关门信号
-			show.openKeep	= events.openKeep[i]			//开门到位维持信号
-			show.closeKeep = events.closeKeep[i]			//关门到位维持信号
-			show.stop	= events.stop[i]					//停止输出信号
-			show.inHigh = events.inHigh[i]					//输入电压过高
-			show.inLow = events.inLow[i]					//输入电压过低
-			show.outHigh = events.outHigh[i]				//输出过流
-			show.motorHigh = events.motorHigh[i]			//电机过载
-			show.flySafe = events.flySafe[i]				//飞车保护
-			show.position	= events.position[i]			//获取位置信号
-			show.closeStop = events.closeStop[i]			//开关门受阻
-			show.current = events.current[i]				//获取电流信号
-			show.speed = events.speed[i]
-		}
-		OpenIn.on('click',function (params){
-			var i = params.name;//横坐标的值
-			ss(i)
-		});
-		OpenTo.on('click',function (params){
-			var i = params.name;//横坐标的值
-			ss(i)
-		});
-		Current.on('click',function (params){
-			var i = params.name;//横坐标的值
-			ss(i)
-		});
-		Decelerate.on('click',function (params){
-			var i = params.name;//横坐标的值
-			ss(i)
-		});
-		CloseIn.on('click',function (params){
-			var i = params.name;//横坐标的值
-			ss(i)
-		});
-		Speed.on('click',function (params){
-			var i = params.name;//横坐标的值
-			ss(i)
-		});
 	}
 	onChange = (val) => {
 		this.setState({
@@ -867,7 +765,6 @@ export default class DoorHistory extends Component {
 			const type = res.data.list[0].device_model
 			this.props.history.push(`/door/${id}/params/${type}`);
 		})
-
 	}
 	goQrcode = () => {
 		const id = this.props.match.params.id;

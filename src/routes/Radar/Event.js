@@ -10,7 +10,7 @@ import TweenOne from 'rc-tween-one';
 import F2 from '@antv/f2';
 import styles from './Event.less';
 import ReactEcharts from 'echarts-for-react';
-import {getEvent} from '../../services/api';
+import {getSimpleEvent} from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import zh from 'antd/lib/locale-provider/zh_CN';
 import en from 'antd/lib/locale-provider/en_US';
@@ -57,15 +57,13 @@ export default class DoorHistory extends Component {
 		const starttime = window.localStorage.getItem('starttime')
 		const endtime = window.localStorage.getItem('endtime')
 		const page = val
-		getEvent({ device_id, num: 10, page, starttime, endtime }).then((res) => {
+		getSimpleEvent({ device_id, num: 10, page, starttime, endtime }).then((res) => {
 			if (res.code === 0) {
 				const list = res.data.list.map((item)=>{
-					if(item.interval!=null){
-						item.endtime = item.time+item.interval*item["length"]
-						item.state = "Nomal Event"
-					}else{
-						item.endtime = item.time+20*item["length"]
-						item.state = "Realtime"
+					if(item.event_type=="open"){
+						item.event_type = "Open Event";
+					}else if(item.event_type=="close"){
+						item.event_type = "Close Event";
 					}
 					return item;
 				})
@@ -117,15 +115,15 @@ export default class DoorHistory extends Component {
 											<tbody>
 												<tr>
 													<a className={styles.text}><FormattedMessage id="Event State"/></a>
-													<td className="tl" style={{ width: '260px' }}>{<FormattedMessage id={item.state}/>}</td>
+													<td className="tl" style={{ width: '260px' }}>{<FormattedMessage id={item.event_type}/>}</td>
 												</tr>
 												<tr>
 													<a className={styles.text}><FormattedMessage id="start time"/> ：</a>
-													<td className="tl">{moment(item.time).format('YYYY-MM-DD HH:mm:ss') }</td>
+													<td className="tl">{moment(item.start_time).format('YYYY-MM-DD HH:mm:ss') }</td>
 												</tr>
 												<tr>
 													<a className={styles.text}><FormattedMessage id="end time"/> ：</a>
-													<td className="tl">{item.endtime? moment(item.endtime).format('YYYY-MM-DD HH:mm:ss'):<FormattedMessage id="None"/>}</td>
+													<td className="tl">{item.end_time? moment(item.end_time).format('YYYY-MM-DD HH:mm:ss'):<FormattedMessage id="None"/>}</td>
 												</tr>
 											</tbody>
 										</table>

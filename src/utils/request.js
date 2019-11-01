@@ -4,8 +4,8 @@ import { notification } from 'antd';
 var COUNT = 0;
 export const api = process.env.NODE_ENV === 'production'
 	? 'http://server.asynciot.com'
-	: 'http://server.asynciot.com'
-	// :'http://localhost:9000';
+	// : 'http://server.asynciot.com'
+	:'http://localhost:9000';
 const codeMessage = {
 	200: '服务器成功返回请求的数据',
 	201: '新建或修改数据成功。',
