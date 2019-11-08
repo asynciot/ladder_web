@@ -9,7 +9,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:"0.1~45.0",
 			explain:"4.01-01",
-			unit:'W'
+			unit:' W'
 		},
 		{
 			num: 1,
@@ -18,7 +18,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:"380~380",
 			explain:"4.01-01",
-			unit:'V'
+			unit:' V'
 		},
 		{
 			num: 1,
@@ -27,7 +27,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:"2~300",
 			explain:"4.01-01",
-			unit:'A'
+			unit:' A'
 		},
 		{
 			num: 1,
@@ -36,7 +36,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:"30~2500",
 			explain:"4.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 10,
@@ -45,7 +45,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:"0~500",
 			explain:"4.01-01",
-			unit:'rpm'
+			unit:' rpm'
 		},
 		{
 			num: 1,
@@ -54,7 +54,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:"0~99",
 			explain:"4.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -63,7 +63,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'60~400',
 			explain:"4.01-08",
-			unit:'V'
+			unit:' V'
 		},
 		{
 			num: 1,
@@ -72,7 +72,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~1',
 			explain:"4.01-11",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -81,7 +81,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~1',
 			explain:"4.01-12",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -90,7 +90,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:language == 'zh'?"不可更改":"Unalterable",
 			explain:"4.01-14",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -99,7 +99,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:language == 'zh'?"不可更改":"Unalterable",
 			explain:"4.01-14",
-			unit:''
+			unit:' '
 		}
 	]
 }, {
@@ -112,7 +112,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'1~31',
 			explain:"4.02-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -121,7 +121,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'1~31',
 			explain:"4.02-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -130,7 +130,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'1~31',
 			explain:"4.02-03",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -139,7 +139,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'1~31',
 			explain:"4.02-04",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -148,7 +148,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~31',
 			explain:"4.02-05",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -157,7 +157,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'1~63',
 			explain:"4.02-06",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -166,7 +166,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'1~63',
 			explain:"4.02-06",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -175,7 +175,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'1~300',
 			explain:"4.02-08",
-			unit:'A'
+			unit:' A'
 		},
 		{
 			num: 1,
@@ -184,7 +184,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'2~16',
 			explain:"4.02-09",
-			unit:'kHz'
+			unit:' kHz'
 		},
 		{
 			num: 1,
@@ -193,7 +193,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~3',
 			explain:"4.02-10",
-			unit:'us'
+			unit:' us'
 		},
 		{
 			num: 1,
@@ -202,7 +202,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'1~15',
 			explain:"4.02-10",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -211,7 +211,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~4000',
 			explain:"4.02-12",
-			unit:''
+			unit:' '
 		}
 	],
 }, {
@@ -224,7 +224,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -233,7 +233,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -242,7 +242,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -251,7 +251,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -260,7 +260,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -269,7 +269,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -278,7 +278,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -287,7 +287,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -296,7 +296,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -305,7 +305,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -314,7 +314,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -323,7 +323,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -332,7 +332,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -341,7 +341,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -350,7 +350,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -359,7 +359,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -368,7 +368,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -377,7 +377,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -386,7 +386,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -395,7 +395,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -404,7 +404,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -413,7 +413,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -422,7 +422,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -431,7 +431,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -440,7 +440,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~380',
 			explain:"7.01-01",
-			unit:''
+			unit:' '
 		}
 	],
 }, {
@@ -453,7 +453,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~1',
 			explain:"7.02-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -462,7 +462,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~1',
 			explain:"7.02-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -471,7 +471,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~1',
 			explain:"7.02-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -480,7 +480,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~1',
 			explain:"7.02-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -489,7 +489,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~1',
 			explain:"7.02-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -498,7 +498,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~1',
 			explain:"7.02-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -507,7 +507,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~1',
 			explain:"7.02-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -516,7 +516,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~1',
 			explain:"7.02-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -525,7 +525,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~1',
 			explain:"7.02-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -534,7 +534,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~1',
 			explain:"7.02-01",
-			unit:''
+			unit:' '
 		}
 	],
 }, {
@@ -547,7 +547,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~18',
 			explain:"7.03-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -556,7 +556,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~18',
 			explain:"7.03-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -565,7 +565,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~18',
 			explain:"7.03-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -574,7 +574,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~18',
 			explain:"7.03-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -583,7 +583,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~18',
 			explain:"7.03-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -592,7 +592,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~18',
 			explain:"7.03-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -601,7 +601,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~18',
 			explain:"7.03-01",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -610,7 +610,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~18',
 			explain:"7.03-01",
-			unit:''
+			unit:' '
 		}
 	],
 }, {
@@ -623,7 +623,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~14',
 			explain:"7.04-01 expalin",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -632,7 +632,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~14',
 			explain:"7.04-01 expalin",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -641,7 +641,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~14',
 			explain:"7.04-01 expalin",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -650,7 +650,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~14',
 			explain:"7.04-01 expalin",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -659,7 +659,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~14',
 			explain:"7.04-01 expalin",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -668,7 +668,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~14',
 			explain:"7.04-01 expalin",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -677,7 +677,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~14',
 			explain:"7.04-01 expalin",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -686,7 +686,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~14',
 			explain:"7.04-01 expalin",
-			unit:''
+			unit:' '
 		}
 	],
 }, {
@@ -699,7 +699,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~5',
 			explain:"7.05-01 expalin",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -708,7 +708,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~5',
 			explain:"7.05-01 expalin",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -717,7 +717,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~5',
 			explain:"7.05-01 expalin",
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
@@ -726,7 +726,7 @@ export const ctrlMenu = [{
 			visible: true,
 			range:'0~2',
 			explain:"None",
-			unit:''
+			unit:' '
 		}
 	],
 }, {
@@ -737,84 +737,84 @@ export const ctrlMenu = [{
 			label: 'Parallel/group control selection',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Parallel main/auxiliary elevators',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Removal of landing call adhesion',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Deletion of mistaken car command',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Control box configuration',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Landing call configuration',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Selection of analog weighing channels',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Anti-nuisance function selection',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Selection of arrival gong output',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Delay of arrival gong output',
 			value: '',
 			visible: true,
-			unit:'s'
+			unit:' s'
 		},
 		{
 			num: 1,
 			label: 'VIP service',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Security floor service at night',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		}
 	],
 }, {
@@ -825,35 +825,35 @@ export const ctrlMenu = [{
 			label: 'Input options of fire elevator switch',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Options of fire switch configuration',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Firefighting mode',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Brake switch detection',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Start running with door closed limit detected',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		}
 	],
 }, {
@@ -864,112 +864,112 @@ export const ctrlMenu = [{
 			label: 'Re-leveling',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Blackout emergency rescue',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Backup power running',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Earthquake control',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Voice station report',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Forced closing',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Remote monitor',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Cell monitorg',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Landing arrival gong',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Landing forecasting lamp',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'IC card service',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'IC card service floor 1',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'IC card service floor 2',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'IC card service floor 3',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'IC card service floor 4',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'IC card service floor 00‐FF call switch',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		}
 	],
 }, {
@@ -980,35 +980,35 @@ export const ctrlMenu = [{
 			label: 'Elevator control software version',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Motor control software version',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Serial communication software version',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Car control software version',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		},
 		{
 			num: 1,
 			label: 'Parallel communication software version',
 			value: '',
 			visible: true,
-			unit:''
+			unit:' '
 		}
 	],
 }]

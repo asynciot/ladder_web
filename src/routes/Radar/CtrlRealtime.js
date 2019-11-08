@@ -203,6 +203,7 @@ export default class CtrlRealtime extends Component {
 		language:window.localStorage.getItem("language"),
 		list:[],
 		clickNums:0,
+    IMEI:'',
 	}
 	componentWillMount() {
 		this.getBaseData()
@@ -300,7 +301,7 @@ export default class CtrlRealtime extends Component {
 				this.forceUpdate()
 			}else{
 				this.state.watch = false;
-				getCommand({num:1,page:1,IMEI}).then((res)=>{
+				getCommand({num:1,page:1,IMEI:this.state.IMEI}).then((res)=>{
 					if(res.code==0){
 						let controll = 0;
 						const duration = 300;
@@ -391,7 +392,6 @@ export default class CtrlRealtime extends Component {
 				const address = '00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00';
 				if(this.state.endTime==0){
 					postMonitor({ op, IMEI, interval, threshold, duration, device_type, type, segment, address }).then((pos) => {
-						
 					});
 				}
 			}else{
@@ -441,6 +441,7 @@ export default class CtrlRealtime extends Component {
 					state:res.data.list[0].state,
 					command,
 					show,
+					IMEI:res.data.list[0].IMEI,
 				})
 			}
 		})

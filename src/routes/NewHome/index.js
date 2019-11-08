@@ -340,10 +340,39 @@ export default class Home extends Component {
 						{value:deviceOnline, name:'在线:'+deviceOnline},
 						{value:deviceLongoffline, name:'离线:'+deviceLongoffline}
 					]
-				}/* ,
+				}
+			]
+		};
+		return option;
+	}
+	getOption1(){
+		const {deviceNum, deviceOnline, deviceOffline, deviceLongoffline}=this.state;
+		let option = {
+			title: {
+				text: deviceNum,
+				subtext: this.state.language=="zh"? "电梯总量":"Ladder Number",
+				x: '48%',
+				y: '40%',
+				textAlign:'center',
+				textStyle: {
+					fontSize:24,
+					fontWeight:'bold',
+					color: ['#333']
+				},
+				subtextStyle: {
+					fontSize:12,
+					color: '#666',
+				},
+			},
+			legend: {
+				orient: 'vertical',
+				right: "0%",
+				data:['故障:'+deviceOffline,]
+			},
+			series: [
 				{
 					type:'pie',
-					radius: ['30%', '45%'],
+					radius: ['50%', '65%'],
 					avoidLabelOverlap: false,
 					hoverAnimation: false,
 					label: {
@@ -355,55 +384,11 @@ export default class Home extends Component {
 					data:[
 						{value:deviceOffline, name:'故障:'+deviceOffline}
 					]
-				} */
+				}
 			]
 		};
 		return option;
 	}
-  getOption1(){
-  	const {deviceNum, deviceOnline, deviceOffline, deviceLongoffline}=this.state;
-  	let option = {
-  		title: {
-  			text: deviceNum,
-  			subtext: this.state.language=="zh"? "电梯总量":"Ladder Number",
-  			x: '48%',
-  			y: '40%',
-  			textAlign:'center',
-  			textStyle: {
-  				fontSize:24,
-  				fontWeight:'bold',
-  				color: ['#333']
-  			},
-  			subtextStyle: {
-  				fontSize:12,
-  				color: '#666',
-  			},
-  		},
-  		legend: {
-  			orient: 'vertical',
-  			right: "0%",
-  			data:['故障:'+deviceOffline]
-  		},
-  		series: [
-  			{
-  				type:'pie',
-  				radius: ['50%', '65%'],
-  				avoidLabelOverlap: false,
-  				hoverAnimation: false,
-  				label: {
-  					normal: {
-  						show: false,
-  						position: 'center'
-  					}
-  				},
-  				data:[
-  					{value:deviceOffline, name:'故障:'+deviceOffline}
-  				]
-  			}
-  		]
-  	};
-  	return option;
-  }
 	render() {
 		const imgList = [
 			// background1,
@@ -411,7 +396,7 @@ export default class Home extends Component {
 			background3,
 			background4,
 		]
-		const { devicesStatus, historyEvents, doorNum, ctrlNum, total} = this.state;
+		const { devicesStatus, historyEvents, doorNum, ctrlNum, deviceNum, total, deviceOffline, deviceOnline, deviceLongoffline} = this.state;
 		let notClosedEvents = historyEvents.filter(item => item.state );
 		const len = total
 		len > 1 ? notClosedEvents = [notClosedEvents[0]]:null
@@ -436,8 +421,8 @@ export default class Home extends Component {
 					</div>
 				</div>
 				<div className={styles.aui_palace}>
-					<Flex className={styles.aui_flex}>
-						<Flex.Item onClick={this.toFollowDoorPage}>
+					<Row className={styles.aui_flex}>
+						<Col span={12} onClick={this.toFollowDoorPage}>
 							<div className={styles.aui_palace1}>
 								<div className={styles.aui_palace1_left}>
 									<div className={styles.aui_palace1_grid_icon}>
@@ -462,8 +447,31 @@ export default class Home extends Component {
 									</div>
 								</div>
 							</div>
-						</Flex.Item>
-						<Flex.Item onClick={this.toFollowCtrlPage}>
+						</Col>
+            <Col span={3}  className={styles.aui_flex_item} onClick={this.toFollowDoorOnline}>
+              <Badge className={styles.sup} text={devicesStatus.dooronline} overflowCount={99}>
+                <div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
+                  <img className={styles.aui_flex_item_icon} src={require('../../assets/icon/cloud.png')} />
+                </div>
+              </Badge>
+            </Col>
+            <Col span={3} className={styles.aui_flex_item} onClick={this.toFollowDoorLongOffline}>
+              <Badge className={styles.sup} text={devicesStatus.doorlongoffline} overflowCount={99}>
+                <div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
+                  <img className={styles.aui_flex_item_icon} src={require('../../assets/icon/nosign.png')} />
+                </div>
+              </Badge>
+            </Col>
+            <Col span={2} className={styles.aui_flex_item} onClick={this.toFollowdoorOffline}>
+              <Badge className={styles.sup} text={this.state.doorOffline} overflowCount={99}>
+                <div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
+                  <img className={styles.aui_flex_item_icon} src={require('../../assets/icon/break.png')} />
+                </div>
+              </Badge>
+            </Col>
+          </Row>
+          <Row className={styles.aui_flex}>
+						<Col span={12} onClick={this.toFollowCtrlPage}>
 							<div className={styles.aui_palace1}>
 								<div className={styles.aui_palace1_left}>
 									<div className={styles.aui_palace1_grid_icon}>
@@ -488,10 +496,80 @@ export default class Home extends Component {
 									</div>
 								</div>
 							</div>
-						</Flex.Item>
-					</Flex>
+						</Col>
+            <Col span={3} className={styles.aui_flex_item} onClick={this.toFollowctrlOnline}>
+              <Badge className={styles.sup} text={devicesStatus.ctrlonline} overflowCount={99}>
+                <div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
+                  <img className={styles.aui_flex_item_icon} src={require('../../assets/icon/cloud.png')} />
+                </div>
+              </Badge>
+            </Col>
+            <Col span={3} className={styles.aui_flex_item} onClick={this.toFollowCtrlLongOffline}>
+              <Badge className={styles.sup} text={devicesStatus.ctrllongoffline} overflowCount={99}>
+                <div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
+                  <img className={styles.aui_flex_item_icon} src={require('../../assets/icon/nosign.png')} />
+                </div>
+              </Badge>
+            </Col>
+            <Col span={2} className={styles.aui_flex_item} onClick={this.toFollowctrlOffline}>
+              <Badge className={styles.sup} text={this.state.ctrlOffline} overflowCount={99}>
+                <div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
+                  <img className={styles.aui_flex_item_icon} src={require('../../assets/icon/break.png')} />
+                </div>
+              </Badge>
+            </Col>
+          </Row>
+          <Row className={styles.aui_flex}>
+            <Col span={12} onClick={this.toFollowCtrlPage}>
+              <div className={styles.aui_palace1}>
+                <div className={styles.aui_palace1_left}>
+                  <div className={styles.aui_palace1_grid_icon}>
+                    <img src={require('../../assets/icon/elevatorCtr.png')} />
+                  </div>
+                </div>
+                <div className={styles.aui_palace1_right}>
+                  <div className={styles.aui_palace1_grid_main}>
+                    <div className={styles.aui_palace1_grid_main_top}>
+                      <FormattedMessage id="Manage Elevator"/>
+                    </div>
+                    <div className={styles.aui_palace1_grid_main_bottom}>
+                      <div className={styles.aui_palace1_grid_main_bottom_left}>
+                        <FormattedMessage id="Number"/>
+                      </div>
+                      <div className={styles.aui_palace1_grid_main_bottom_right}>
+                        <div className={styles.aui_palace1_grid_main_bottom_right1}>
+                          {deviceNum}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Col>
+            <Col span={3} className={styles.aui_flex_item} onClick={this.toFollowctrlOnline}>
+              <Badge className={styles.sup} text={deviceOnline} overflowCount={99}>
+                <div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
+                  <img className={styles.aui_flex_item_icon} src={require('../../assets/icon/cloud.png')} />
+                </div>
+              </Badge>
+            </Col>
+            <Col span={3} className={styles.aui_flex_item} onClick={this.toFollowCtrlLongOffline}>
+              <Badge className={styles.sup} text={deviceLongoffline} overflowCount={99}>
+                <div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
+                  <img className={styles.aui_flex_item_icon} src={require('../../assets/icon/nosign.png')} />
+                </div>
+              </Badge>
+            </Col>
+            <Col span={2} className={styles.aui_flex_item} onClick={this.toFollowctrlOffline}>
+              <Badge className={styles.sup} text={deviceOffline} overflowCount={99}>
+                <div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
+                  <img className={styles.aui_flex_item_icon} src={require('../../assets/icon/break.png')} />
+                </div>
+              </Badge>
+            </Col>
+          </Row>
 					<List.Item>
-						<Flex className={styles.aui_flex}>&nbsp;
+						{/*<Flex className={styles.aui_flex}>&nbsp;
 							<Flex.Item  className={styles.aui_flex_item} onClick={this.toFollowDoorOnline}>
 								<Badge className={styles.sup} text={devicesStatus.dooronline} overflowCount={99}>
 									<div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
@@ -513,6 +591,7 @@ export default class Home extends Component {
 									</div>
 								</Badge>
 							</Flex.Item>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 							<Flex.Item className={styles.aui_flex_item} onClick={this.toFollowctrlOnline}>
 								<Badge className={styles.sup} text={devicesStatus.ctrlonline} overflowCount={99}>
 									<div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
@@ -534,9 +613,9 @@ export default class Home extends Component {
 									</div>
 								</Badge>
 							</Flex.Item>
-						</Flex>
+						</Flex>*/}
 						<Brief><ReactEcharts option={this.getOption()} theme="myTheme" notMerge={true} lazyUpdate={true} style={{ height: 250,width:'100%' }} /></Brief>,
-            <Brief><ReactEcharts option={this.getOption1()} theme="myTheme" notMerge={true} lazyUpdate={true} style={{ height: 250,width:'100%' }} /></Brief>
+			      <Brief><ReactEcharts option={this.getOption1()} theme="myTheme" notMerge={true} lazyUpdate={true} style={{ height: 250,width:'100%' }} /></Brief>
 					</List.Item>
 				</div>
 				<div className={styles.aui_title}>

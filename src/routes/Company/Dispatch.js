@@ -72,7 +72,7 @@ export default class Fault extends Component {
 					this.state.disable = true
 					this.state.disable1 = true
 				}
-				const device_id = item.device_id;
+			  const device_id = item.device_id;
 				let name = '';
 				getFollowDevices({device_id,num:1,page:1}).then(res=>{
 					this.setState({
