@@ -193,7 +193,7 @@ export default class extends Component {
 				})
 				break;
 		}
-		
+
 	}
 	goFault = item => () =>{
 		const id = item.id
@@ -315,9 +315,9 @@ export default class extends Component {
 								className={styles.lis}
 								dataSource={list}
 								renderItem={(item,index) => (
-									<List.Item actions={[<ListButton address={(event) => { this.address(item); }} edit={(event) => { this.deal(event,item,); }} />]} className={styles.item} key={index} onClick={this.goFault(item)}>
+									<List.Item actions={[<ListButton address={(event) => { this.address(item); }} edit={(event) => { this.deal(event,item,); }} />]} className={styles.item} key={index} >
 										<Col span={20}>
-											<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" >
+											<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault(item)}>
 												{
 													language=="zh"?
 													<tbody>
@@ -450,9 +450,9 @@ export default class extends Component {
 								className={styles.lis}
 								dataSource={dispatchList}
 								renderItem={(item,index) => (
-									<List.Item actions={[<Treating address={(event) => { this.address(item) }} remove={(event) => { this.remove(event, item); }} />]} className={styles.item} key={index} onClick={this.goFault1(item)}>
+									<List.Item actions={[<Treating address={(event) => { this.address(item) }} remove={(event) => { this.remove(event, item); }} />]} className={styles.item} key={index} >
 										<Col span={20}>
-											<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" >
+											<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault1(item)}>
 												{
 													language=="zh"?
 													<tbody>
@@ -559,9 +559,9 @@ export default class extends Component {
 								className={styles.lis}
 								dataSource={dispatchList}
 								renderItem={(item,index) => (
-									<List.Item actions={[<Finish address={(event) => { this.address(item) }} />]} className={styles.item} key={index} onClick={this.goFault1(item)}>
+									<List.Item actions={[<Finish address={(event) => { this.address(item) }} />]} className={styles.item} key={index} >
 										<Col span={20}>
-											<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" >
+											<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault1(item)}>
 												{
 													language=="zh"?
 													<tbody>

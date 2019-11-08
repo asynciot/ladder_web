@@ -616,7 +616,7 @@ export default class Home extends Component {
 						</Flex>*/}
 						<Brief><ReactEcharts option={this.getOption()} theme="myTheme" notMerge={true} lazyUpdate={true} style={{ height: 250,width:'100%' }} /></Brief>,
 			      <Brief><ReactEcharts option={this.getOption1()} theme="myTheme" notMerge={true} lazyUpdate={true} style={{ height: 250,width:'100%' }} /></Brief>
-					</List.Item>
+			    </List.Item>
 				</div>
 				<div className={styles.aui_title}>
 					<div className={styles.title}>
