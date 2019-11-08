@@ -340,10 +340,39 @@ export default class Home extends Component {
 						{value:deviceOnline, name:'在线:'+deviceOnline},
 						{value:deviceLongoffline, name:'离线:'+deviceLongoffline}
 					]
-				}/* ,
+				}
+			]
+		};
+		return option;
+	}
+	getOption1(){
+		const {deviceNum, deviceOnline, deviceOffline, deviceLongoffline}=this.state;
+		let option = {
+			title: {
+				text: deviceNum,
+				subtext: this.state.language=="zh"? "电梯总量":"Ladder Number",
+				x: '48%',
+				y: '40%',
+				textAlign:'center',
+				textStyle: {
+					fontSize:24,
+					fontWeight:'bold',
+					color: ['#333']
+				},
+				subtextStyle: {
+					fontSize:12,
+					color: '#666',
+				},
+			},
+			legend: {
+				orient: 'vertical',
+				right: "0%",
+				data:['故障:'+deviceOffline,]
+			},
+			series: [
 				{
 					type:'pie',
-					radius: ['30%', '45%'],
+					radius: ['50%', '65%'],
 					avoidLabelOverlap: false,
 					hoverAnimation: false,
 					label: {
@@ -355,55 +384,11 @@ export default class Home extends Component {
 					data:[
 						{value:deviceOffline, name:'故障:'+deviceOffline}
 					]
-				} */
+				}
 			]
 		};
 		return option;
 	}
-  getOption1(){
-  	const {deviceNum, deviceOnline, deviceOffline, deviceLongoffline}=this.state;
-  	let option = {
-  		title: {
-  			text: deviceNum,
-  			subtext: this.state.language=="zh"? "电梯总量":"Ladder Number",
-  			x: '48%',
-  			y: '40%',
-  			textAlign:'center',
-  			textStyle: {
-  				fontSize:24,
-  				fontWeight:'bold',
-  				color: ['#333']
-  			},
-  			subtextStyle: {
-  				fontSize:12,
-  				color: '#666',
-  			},
-  		},
-  		legend: {
-  			orient: 'vertical',
-  			right: "0%",
-  			data:['故障:'+deviceOffline]
-  		},
-  		series: [
-  			{
-  				type:'pie',
-  				radius: ['50%', '65%'],
-  				avoidLabelOverlap: false,
-  				hoverAnimation: false,
-  				label: {
-  					normal: {
-  						show: false,
-  						position: 'center'
-  					}
-  				},
-  				data:[
-  					{value:deviceOffline, name:'故障:'+deviceOffline}
-  				]
-  			}
-  		]
-  	};
-  	return option;
-  }
 	render() {
 		const imgList = [
 			// background1,
@@ -536,7 +521,7 @@ export default class Home extends Component {
 							</Flex.Item>
 						</Flex>
 						<Brief><ReactEcharts option={this.getOption()} theme="myTheme" notMerge={true} lazyUpdate={true} style={{ height: 250,width:'100%' }} /></Brief>,
-            <Brief><ReactEcharts option={this.getOption1()} theme="myTheme" notMerge={true} lazyUpdate={true} style={{ height: 250,width:'100%' }} /></Brief>
+			<Brief><ReactEcharts option={this.getOption1()} theme="myTheme" notMerge={true} lazyUpdate={true} style={{ height: 250,width:'100%' }} /></Brief>
 					</List.Item>
 				</div>
 				<div className={styles.aui_title}>
