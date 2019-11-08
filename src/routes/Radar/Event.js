@@ -10,7 +10,7 @@ import TweenOne from 'rc-tween-one';
 import F2 from '@antv/f2';
 import styles from './Event.less';
 import ReactEcharts from 'echarts-for-react';
-import {getEvent} from '../../services/api';
+import {readSimpleEvents} from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import zh from 'antd/lib/locale-provider/zh_CN';
 import en from 'antd/lib/locale-provider/en_US';
@@ -36,14 +36,14 @@ export default class DoorHistory extends Component {
 			start: val,
 		});
 		window.localStorage.setItem('starttime',moment(this.state.start).format('YYYY-MM-DD'))
-		this.getEvent(1)
+		this.readSimpleEvents(1)
 	}
 	onEnd = async(val) => {
 		await this.setState({
 			end: val,
 		});
 		window.localStorage.setItem('endtime',moment(this.state.end).format('YYYY-MM-DD'))
-		this.getEvent(1)
+		this.readSimpleEvents(1)
 	}
 	goHistory = (item) => {
 		const { match } = this.props;
@@ -51,13 +51,13 @@ export default class DoorHistory extends Component {
 		const device_id = match.params.id
 		this.props.history.push(`/${device_type}/${device_id}/history/${item.id}`);
 	}
-	getEvent = (val) => {
+	readSimpleEvents = (val) => {
 		const { match } = this.props;
 		const device_id = match.params.id
 		const starttime = window.localStorage.getItem('starttime')
 		const endtime = window.localStorage.getItem('endtime')
 		const page = val
-		getEvent({ device_id, num: 10, page, starttime, endtime }).then((res) => {
+		readSimpleEvents({ device_id, num: 10, page, starttime, endtime }).then((res) => {
 			if (res.code === 0) {
 				const list = res.data.list.map((item)=>{
 					if(item.interval!=null){
@@ -85,7 +85,7 @@ export default class DoorHistory extends Component {
 		});
 	}
 	pageChange = (val) => {
-		this.getEvent(val)
+		this.readSimpleEvents(val)
 	}
 	render(){
 		const { navs, list, switchIdx } = this.state;

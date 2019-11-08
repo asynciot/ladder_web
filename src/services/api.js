@@ -2,6 +2,7 @@ import { stringify } from 'qs';
 import { request, file } from '../utils/request';
 
 // user
+
 export async function register(params) {
 	return request('/account/register', {
 		method: 'POST',
@@ -128,6 +129,9 @@ export function getDevicesStatus(params) {
 }
 export function getEvent(params) {
 	return request(`/device/Event?${stringify(params)}`);
+}
+export function readSimpleEvents(params) {
+	return request(`/device/Event/Simple?${stringify(params)}`);
 }
 export function getHistoryEvent(params) {
 	return request(`/device/Event?id=${params}`);
