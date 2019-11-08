@@ -130,7 +130,11 @@ export function getDevicesStatus(params) {
 export function getEvent(params) {
 	return request(`/device/Event?${stringify(params)}`);
 }
+<<<<<<< HEAD
 export function readSimpleEvents(params) {
+=======
+export function getSimpleEvent(params) {
+>>>>>>> c1b1335268772fc74d127c5e0cddec7dc28963e6
 	return request(`/device/Event/Simple?${stringify(params)}`);
 }
 export function getHistoryEvent(params) {

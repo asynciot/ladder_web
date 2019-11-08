@@ -55,6 +55,7 @@
 	"Confirm":"确认密码",
 	"Confirm password":"确认密码",
 	"Close":"关",
+	"Close Event" : "关门事件",
 	"Close door lamp":"关门灯",
 	"Control Mode Setting": "控制模式设置",
 	"Closing Input Signal Terminal Selection": "关门输入信号端子选择",
@@ -313,6 +314,7 @@
 	"next maintenance" : "下次维保时间",
 	"next yearly check" : "下次年检时间",
 
+	"Open Event" : "开门事件",
 	"Opening Limit Output Relay Polarity Setting": "开门限位输出继电器极性设置",
 	"Opening Limit Switch Polarity Setting": "开门限位开关极性设置",
 	"Opening Input Signal Terminal Selection": "开门输入信号端子选择",
