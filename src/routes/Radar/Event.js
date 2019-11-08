@@ -10,11 +10,7 @@ import TweenOne from 'rc-tween-one';
 import F2 from '@antv/f2';
 import styles from './Event.less';
 import ReactEcharts from 'echarts-for-react';
-<<<<<<< HEAD
 import {readSimpleEvents} from '../../services/api';
-=======
-import {getSimpleEvent} from '../../services/api';
->>>>>>> c1b1335268772fc74d127c5e0cddec7dc28963e6
 import { injectIntl, FormattedMessage } from 'react-intl';
 import zh from 'antd/lib/locale-provider/zh_CN';
 import en from 'antd/lib/locale-provider/en_US';
@@ -61,11 +57,7 @@ export default class DoorHistory extends Component {
 		const starttime = window.localStorage.getItem('starttime')
 		const endtime = window.localStorage.getItem('endtime')
 		const page = val
-<<<<<<< HEAD
 		readSimpleEvents({ device_id, num: 10, page, starttime, endtime }).then((res) => {
-=======
-		getSimpleEvent({ device_id, num: 10, page, starttime, endtime }).then((res) => {
->>>>>>> c1b1335268772fc74d127c5e0cddec7dc28963e6
 			if (res.code === 0) {
 				const list = res.data.list.map((item)=>{
 					if(item.event_type=="open"){
