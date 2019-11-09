@@ -48,13 +48,18 @@ export default class extends Component {
 		iddr:'',
 	}
 	componentWillMount() {
+    const { location } = this.props;
+    const match = pathToRegexp('/company/ladder/:state').exec(location.pathname);
+    const state =match[1]
+    console.log(state)
 		if(state=="all"){
 			switchId = 0
 		}else if(state=="online"){
 			switchId = 1
 		}else if(state=="longoffline"){
-			switchId = 3
+			switchId = 2
 		}
+    console.log(switchId)
 		this.state.switchId = switchId
 		this.getDevice(1,switchId);
 	}
@@ -65,7 +70,7 @@ export default class extends Component {
 		}else{
 			this.getDevice(val,switchId);
 		}
-		
+
 	}
 	getDevice = (val,state) => {
 		let { navs } = this.state;

@@ -435,6 +435,55 @@ export default class Home extends Component {
 					</div>
 				</div>
 				<div className={styles.aui_palace}>
+          <Row className={styles.aui_flex}>
+            <Col span={12} onClick={() => this.goLadder(1)}>
+              <div className={styles.aui_palace1}>
+                <div className={styles.aui_palace1_left}>
+                  <div className={styles.aui_palace1_grid_icon}>
+                    <img src={require('../../assets/icon/elevatorCtr.png')} />
+                  </div>
+                </div>
+                <div className={styles.aui_palace1_right}>
+                  <div className={styles.aui_palace1_grid_main}>
+                    <div className={styles.aui_palace1_grid_main_top}>
+                      <FormattedMessage id="Manage Elevator"/>
+                    </div>
+                    <div className={styles.aui_palace1_grid_main_bottom}>
+                      <div className={styles.aui_palace1_grid_main_bottom_left}>
+                        <FormattedMessage id="Number"/>
+                      </div>
+                      <div className={styles.aui_palace1_grid_main_bottom_right}>
+                        <div className={styles.aui_palace1_grid_main_bottom_right1}>
+                          {deviceNum}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Col>
+            <Col span={3} className={styles.aui_flex_item} onClick={()=>this.goLadder(2)}>
+              <Badge className={styles.sup} text={deviceOnline} overflowCount={99}>
+                <div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
+                  <img className={styles.aui_flex_item_icon} src={require('../../assets/icon/cloud.png')} />
+                </div>
+              </Badge>
+            </Col>
+            <Col span={3} className={styles.aui_flex_item} onClick={()=>this.goLadder(3)}>
+              <Badge className={styles.sup} text={deviceLongoffline} overflowCount={99}>
+                <div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
+                  <img className={styles.aui_flex_item_icon} src={require('../../assets/icon/nosign.png')} />
+                </div>
+              </Badge>
+            </Col>
+            <Col span={2} className={styles.aui_flex_item} onClick={()=>this.goLadder(1)}>
+              <Badge className={styles.sup} text={deviceOffline} overflowCount={99}>
+                <div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
+                  <img className={styles.aui_flex_item_icon} src={require('../../assets/icon/break.png')} />
+                </div>
+              </Badge>
+            </Col>
+          </Row>
 					<Row className={styles.aui_flex}>
 						<Col span={12} onClick={this.toFollowDoorPage}>
 							<div className={styles.aui_palace1}>
@@ -527,55 +576,6 @@ export default class Home extends Component {
 						</Col>
 						<Col span={2} className={styles.aui_flex_item} onClick={this.toFollowctrlOffline}>
 							<Badge className={styles.sup} text={this.state.ctrlOffline} overflowCount={99}>
-								<div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
-									<img className={styles.aui_flex_item_icon} src={require('../../assets/icon/break.png')} />
-								</div>
-							</Badge>
-						</Col>
-					</Row>
-					<Row className={styles.aui_flex}>
-						<Col span={12} onClick={this.toFollowCtrlPage}>
-							<div className={styles.aui_palace1}>
-								<div className={styles.aui_palace1_left}>
-									<div className={styles.aui_palace1_grid_icon}>
-										<img src={require('../../assets/icon/elevatorCtr.png')} />
-									</div>
-								</div>
-								<div className={styles.aui_palace1_right}>
-									<div className={styles.aui_palace1_grid_main}>
-										<div className={styles.aui_palace1_grid_main_top}>
-											<FormattedMessage id="Manage Elevator"/>
-										</div>
-										<div className={styles.aui_palace1_grid_main_bottom}>
-											<div className={styles.aui_palace1_grid_main_bottom_left}>
-												<FormattedMessage id="Number"/>
-											</div>
-											<div className={styles.aui_palace1_grid_main_bottom_right}>
-												<div className={styles.aui_palace1_grid_main_bottom_right1}>
-													{deviceNum}
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</Col>
-						<Col span={3} className={styles.aui_flex_item} onClick={()=>this.goLadder(2)}>
-							<Badge className={styles.sup} text={deviceOnline} overflowCount={99}>
-								<div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
-									<img className={styles.aui_flex_item_icon} src={require('../../assets/icon/cloud.png')} />
-								</div>
-							</Badge>
-						</Col>
-						<Col span={3} className={styles.aui_flex_item} onClick={()=>this.goLadder(3)}>
-							<Badge className={styles.sup} text={deviceLongoffline} overflowCount={99}>
-								<div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
-									<img className={styles.aui_flex_item_icon} src={require('../../assets/icon/nosign.png')} />
-								</div>
-							</Badge>
-						</Col>
-						<Col span={2} className={styles.aui_flex_item} onClick={()=>this.goLadder(1)}>
-							<Badge className={styles.sup} text={deviceOffline} overflowCount={99}>
 								<div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
 									<img className={styles.aui_flex_item_icon} src={require('../../assets/icon/break.png')} />
 								</div>
