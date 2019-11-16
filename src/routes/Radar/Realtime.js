@@ -561,31 +561,31 @@ export default class DoorHistory extends Component {
 			if(this.state.active==true){
 				for(let i=0;i<this.state.threshold/x;i++){
 					if((count+8) <= buffer.length){
-						page.openIn = (buffer[count+0]&0x80)>>7;									//获取开门输入信号
-						page.closeIn = (buffer[count+0]&0x40)>>6;									//获取关门信号
-						page.openTo = (buffer[count+0]&0x20)>>5;									//获取开到位输入信号
-						page.closeTo = (buffer[count+0]&0x10)>>4;									//获取关到位输入信号
-						page.openDecelerate = (buffer[count+0]&0x08)>>3;							//开减速输入信号
-						page.closeDecelerate = (buffer[count+0]&0x04)>>2;							//关减速输入信号
+						page.openIn = (buffer[count+0]&0x80)>>7;										//获取开门输入信号
+						page.closeIn = (buffer[count+0]&0x40)>>6;										//获取关门信号
+						page.openTo = (buffer[count+0]&0x20)>>5;										//获取开到位输入信号
+						page.closeTo = (buffer[count+0]&0x10)>>4;										//获取关到位输入信号
+						page.openDecelerate = (buffer[count+0]&0x08)>>3;						//开减速输入信号
+						page.closeDecelerate = (buffer[count+0]&0x04)>>2;						//关减速输入信号
 						page.openToOut = (buffer[count+0]&0x02)>>1;									//获取开到位输出信号
-						page.closeToOut = buffer[count+0]&0x01;										//获取关到位输出信号
-						page.door = (buffer[count+1]&0x80)>>7;										//正在门光幕
-						page.open = (buffer[count+1]&0x40)>>6;										//正在开门信号
-						page.close = (buffer[count+1]&0x20)>>5;										//正在关门信号
+						page.closeToOut = buffer[count+0]&0x01;											//获取关到位输出信号
+						page.door = (buffer[count+1]&0x80)>>7;											//正在门光幕
+						page.open = (buffer[count+1]&0x40)>>6;											//正在开门信号
+						page.close = (buffer[count+1]&0x20)>>5;											//正在关门信号
 						page.openKeep = (buffer[count+1]&0x10)>>4;									//开门到位维持信号
 						page.closeKeep	= (buffer[count+1]&0x08)>>3;								//关门到位维持信号
-						page.stop = (buffer[count+1]&0x04)>>2;										//停止输出信号
-						page.inHigh = (buffer[count+1]&0x02)>>1;									//输入电压过高
-						page.inLow = buffer[count+1]&0x01;											//输入电压过低
-						page.outHigh = (buffer[count+2]&0x80)>>7;									//输出过流
+						page.stop = (buffer[count+1]&0x04)>>2;											//停止输出信号
+						page.inHigh = (buffer[count+1]&0x02)>>1;										//输入电压过高
+						page.inLow = buffer[count+1]&0x01;													//输入电压过低
+						page.outHigh = (buffer[count+2]&0x80)>>7;										//输出过流
 						page.motorHigh = (buffer[count+2]&0x40)>>6;									//电机过载
-						page.flySafe = (buffer[count+2]&0x20)>>5;									//飞车保护
+						page.flySafe = (buffer[count+2]&0x20)>>5;										//飞车保护
 						page.closeStop = (buffer[count+2]&0x10)>>4;									//开关门受阻
-						page.position = ((buffer[count+2]&0x0f)<<8)+(buffer[count+3]&0xff);			//获取位置信号
+						page.position = ((buffer[count+2]&0x0f)<<8)+(buffer[count+3]&0xff);				//获取位置信号
 						page.current = (((buffer[count+4]&0xff)<<8)+(buffer[count+5]&0xff))/1000;	//获取电流信号
 						page.speed = (((buffer[count+6]&0xff)<<8)+(buffer[count+7]&0xff))/1000;		//获取速度
 						if(show.speed>32.767){
-							page.speed = (page.speed-65.535).toFixed(2);
+							page.speed = (page.speed-65.536).toFixed(2);
 						}
 						count=8*i*x
 					}

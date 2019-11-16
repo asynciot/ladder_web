@@ -17,11 +17,11 @@ const { TextArea } = Input;
 const CodeTransform = {
 	'51':'04',
 	'52':'07',
-  '66':'08',
-  '82':'03',
-  '114':'LV',
-  '178':'OV',
-  '229':'MO',
+	'66':'08',
+	'82':'03',
+	'114':'LV',
+	'178':'OV',
+	'229':'MO',
 }
 export default class Fault extends Component {
 	state = {
@@ -167,30 +167,31 @@ export default class Fault extends Component {
 					{ text: 'Ok',},
 				]);
 			}
-			if(json.code == 0){
-				if(language=="zh"){
-					alert('提示','上传成功',[
-						{ text: '确认',},
-					]);
+			setTimeout(() =>{
+				if(json.code == 0){
+					if(language=="zh"){
+						alert('提示','上传成功',[
+							{ text: '确认',},
+						]);
+					}else{
+						alert('提示','Success',[
+							{ text: 'Ok',},
+						]);
+					}
+					this.props.history.push(`/company/work-order`);
 				}else{
-					alert('提示','Success',[
-						{ text: 'Ok',},
-					]);
+					if(language=="zh"){
+						alert('提示', '上传失败', [
+							{ text: '确认',},
+						]);
+					}else{
+						alert('提示','Error',[
+							{ text: 'Ok',},
+						]);
+					}
 				}
-				this.props.history.push(`/company/work-order`);
-			}else{
-				if(language=="zh"){
-					alert('提示', '上传失败', [
-						{ text: '确认',},
-					]);
-				}else{
-					alert('提示','Error',[
-						{ text: 'Ok',},
-					]);
-				}
-			}
+			}, 500);
 		})
-
 	}
 	onStart = async(val) => {
 		await this.setState({
@@ -289,7 +290,7 @@ export default class Fault extends Component {
 
 											<div className={styles.ls}>
 												<TextArea
-                          placeholder={language=="zh"?"故障详情":"fault details"}
+													placeholder={language=="zh"?"故障详情":"fault details"}
 													maxlength={50}
 													// width={100px}
 													value={this.state.remark}
