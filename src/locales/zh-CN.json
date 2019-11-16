@@ -302,6 +302,8 @@
 	"Motor pole logarithm":"电机极对数",
 	"Motor rated BEMF":"电机额定反电动势",
 	"Motor phase sequence":"电机相序",
+  "Maximum speed" : "最大速度",
+  "Maximum current" : "最大电流",
 
 	"NBSL" : "宁波申菱 管理系统",
 	"NBSL Elevator QR Code" : "宁波申菱电梯二维码",

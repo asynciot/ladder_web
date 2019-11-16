@@ -118,13 +118,21 @@ export default class DoorHistory extends Component {
 													<td className="tl" style={{ width: '260px' }}>{<FormattedMessage id={item.event_type}/>}</td>
 												</tr>
 												<tr>
-													<a className={styles.text}><FormattedMessage id="start time"/> ：</a>
+													<a className={styles.text}><FormattedMessage id="start time"/>：</a>
 													<td className="tl">{moment(item.start_time).format('YYYY-MM-DD HH:mm:ss') }</td>
 												</tr>
 												<tr>
-													<a className={styles.text}><FormattedMessage id="end time"/> ：</a>
+													<a className={styles.text}><FormattedMessage id="end time"/>：</a>
 													<td className="tl">{item.end_time? moment(item.end_time).format('YYYY-MM-DD HH:mm:ss'):<FormattedMessage id="None"/>}</td>
 												</tr>
+                        <tr>
+                          <a className={styles.text}><FormattedMessage id="Maximum current"/> : </a>
+                          <td className="tl" style={{ width: '260px' }}>{item.current / 1000}A</td>
+                        </tr>
+                        <tr>
+                          <a className={styles.text}><FormattedMessage id="Maximum speed"/> : </a>
+                          <td className="tl" style={{ width: '260px' }}>{item.speed / 1000}m/s</td>
+                        </tr>
 											</tbody>
 										</table>
 									</List.Item>
