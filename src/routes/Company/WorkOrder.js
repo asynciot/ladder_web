@@ -198,8 +198,8 @@ export default class extends Component {
 	goFault = item => () =>{
 		const id = item.id
 		this.props.history.push({
-			//pathname:`/company/order/${item.id}`,
-      pathname:`/company/Dispatch/${item.id}`,
+			pathname:`/company/order/${item.id}`,
+      // pathname:`/company/Dispatch/${item.id}`,
 			state: { id }
 		});
 	}

@@ -54,10 +54,10 @@ export default class DoorHistory extends Component {
 	readSimpleEvents = (val) => {
 		const { match } = this.props;
 		const device_id = match.params.id
-		const starttime = window.localStorage.getItem('starttime')
-		const endtime = window.localStorage.getItem('endtime')
+		const startTime = window.localStorage.getItem('starttime')
+		const endTime = window.localStorage.getItem('endtime')
 		const page = val
-		readSimpleEvents({ device_id, num: 10, page, starttime, endtime }).then((res) => {
+		readSimpleEvents({ device_id, num: 10, page, startTime, endTime }).then((res) => {
 			if (res.code === 0) {
 				const list = res.data.list.map((item)=>{
 					if(item.event_type=="open"){
