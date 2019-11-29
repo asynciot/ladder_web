@@ -229,8 +229,8 @@ export default class Fault extends Component {
 	info = () => {
 		const id = this.state.list[0].code
 		this.props.history.push({
-			//pathname: `/company/order/code/${id}`,
-      pathname: `/company/Dispatch/code/${id}`,
+			pathname: `/company/order/code/${id}`,
+      // pathname: `/company/Dispatch/code/${id}`,
 		});
 	}
 	onChange = (e) =>{

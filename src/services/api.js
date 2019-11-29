@@ -170,6 +170,9 @@ export function getLadder(params) {
 export function getLadderFault(params) {
 	return request(`/device/Ladder?${stringify(params)}`);
 }
+export function getLadderCount() {
+	return request(`/device/Ladder/ReadCount?`);
+}
 
 // message
 export async function queryMessage(params) {

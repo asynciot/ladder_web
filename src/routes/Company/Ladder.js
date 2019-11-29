@@ -51,7 +51,6 @@ export default class extends Component {
     const { location } = this.props;
     const match = pathToRegexp('/company/ladder/:state').exec(location.pathname);
     const state =match[1]
-    console.log(state)
 		if(state=="all"){
 			switchId = 0
 		}else if(state=="online"){
@@ -59,7 +58,6 @@ export default class extends Component {
 		}else if(state=="longoffline"){
 			switchId = 2
 		}
-    console.log(switchId)
 		this.state.switchId = switchId
 		this.getDevice(1,switchId);
 	}

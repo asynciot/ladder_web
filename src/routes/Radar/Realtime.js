@@ -437,6 +437,7 @@ export default class DoorHistory extends Component {
 										controll = 1;
 										alert("监控结束,请稍后再监控。");
 									}else{
+										controll = 1;
 										alert("End of monitoring.");
 									}
 								}else{

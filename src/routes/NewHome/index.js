@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Carousel, WingBlank, List, Flex, Card, Modal, Badge} from 'antd-mobile';
 import { Row, Col, Button, Spin, DatePicker, Pagination } from 'antd';
 import styles from './index.less';
-import { getBanners, getMessages, getDevicesStatus, getFault, postLocation, getFaultUntreted, getFollowDevices, getLadder, getLadderFault } from '../../services/api';
+import { getBanners, getMessages, getDevicesStatus, getFault, postLocation, getFaultUntreted, getFollowDevices, getLadder, getLadderFault, getLadderCount } from '../../services/api';
 import background3 from '../../assets/bg2.jpg';
 import background2 from '../../assets/bg1.jpg';
 import background4 from '../../assets/bg3.jpg';
@@ -37,17 +37,17 @@ export default class Home extends Component {
 		doorNum:0,
 		ctrlNum:0,
 		deviceNum:0,
-		doorOffline:0,
-		ctrlOffline:0,
+		dooroffline:"0",
+		ctrloffline:"0",
 		deviceOffline:0,
 		deviceOnline:0,
 		deviceLongoffline:0,
 		devicesStatus: {
 			dooronline:0,
-			doorOffline:0,
+			dooroffline:0,
 			doorlongoffline:0,
-			ctrlOnline:0,
-			ctrlOffline:0,
+			ctrlonline:0,
+			ctrloffline:0,
 			ctrllongoffline:0,
 		},
 		historyEvents: [],
@@ -68,10 +68,7 @@ export default class Home extends Component {
 		this.getMessages();
 		this.getDevicesStatus();
 		this.getFault();
-		this.getDevice(1,0);
-		this.getDevice(1,1);
-		this.getDevice(1,2);
-		this.getDevice(1,3);
+		this.getDevice();
 	}
 	getMessages = () => {
 		getMessages({ num: 1, page: 1 }).then((res) => {
@@ -136,69 +133,30 @@ export default class Home extends Component {
 			}
 		});
 		getFaultUntreted({ num: 10, page:1, islast:1, device_type:'door', type:1,}).then((res) => {
-			const pos = res.data.list.map((item,index) => {
-			})
-			this.setState({
-				doorOffline:res.data.totalNumber,
-			});
+      this.state.devicesStatus.dooroffline = res.data.totalNumber
+      this.setState({
+        dooroffline:res.data.totalNumber+"",
+      })
 		})
 		getFaultUntreted({ num: 10, page:1, islast:1, device_type:'ctrl', type:1,}).then((res) => {
-			const pos = res.data.list.map((item,index) => {
-			})
-			this.setState({
-				ctrlOffline:res.data.totalNumber,
-			});
+      this.setState({
+        ctrloffline:res.data.totalNumber+"",
+      })
 		})
 	}
 	getDevice = (val,state) => {
-		let { navs } = this.state;
-		const page = val
-		switchId = state
-		switch(switchId){
-			case 0:
-				state = "";
-				break;
-			case 1:
-				state = "online";
-				break;
-			case 2:
-				state = "longoffline";
-				break;
-			case 3:
-				state = "offline";
-				break;
-		}
-		if(switchId==3){
-			getLadderFault({ num: 1, page, follow:"yes"}).then((res)=>{
-				const deviceOffline=res.data.totalNumber;
-				this.setState({
-					deviceOffline,
-				});
-			})
-		}else{
-			getLadder({ num: 1, page, state, follow:"yes"}).then((res) => {
-				switch(state){
-					case "":
-						const deviceNum=res.data.totalNumber;
-						this.setState({
-							deviceNum,
-						});
-						break;
-					case "online":
-						const deviceOnline=res.data.totalNumber;
-						this.setState({
-							deviceOnline,
-						});
-						break;
-					case "longoffline":
-						const deviceLongoffline=res.data.totalNumber;
-						this.setState({
-							deviceLongoffline,
-						});
-						break;
-				}
-			});
-		}
+		getLadderCount().then((res)=>{
+		  this.setState({
+		    deviceOnline:res.data.online,
+		  	deviceOffline:res.data.offline,
+		  	deviceLongoffline:res.data.longoffline,
+		    deviceNum:parseInt(res.data.online)+parseInt(res.data.longoffline),
+        LadderOnline:res.data.online,
+        LadderOffline:res.data.offline,
+        LadderLongoffline:res.data.longoffline,
+        LadderNum:parseInt(res.data.online)+parseInt(res.data.longoffline),
+		  });
+		})
 	}
 	onpress = () =>{
 		var geolocation = new BMap.Geolocation();
@@ -229,14 +187,6 @@ export default class Home extends Component {
 			state: { vcode,device_type }
 		});
 	}
-	toFollowDoorPage = () => {
-		const { history } = this.props;
-		const device_type = "15";
-		history.push({
-			pathname: '/company/followdoor/all',
-			state: { device_type }
-		});
-	}
 	toFollowDoorOnline = () => {
 		const { history } = this.props;
 		const vcode = 1;
@@ -261,14 +211,6 @@ export default class Home extends Component {
 		const device_type = "15";
 		history.push({
 			pathname: '/company/followdoor/longoffline',
-			state: { device_type }
-		});
-	}
-	toFollowCtrlPage = () => {
-		const { history } = this.props;
-		const device_type = "240";
-		history.push({
-			pathname: '/company/followctrl/all',
 			state: { device_type }
 		});
 	}
@@ -300,7 +242,7 @@ export default class Home extends Component {
 		const { history } = this.props;
 		history.push('/company/work-order');
 	}
-	getOption(){
+	DrawOnline(){
 		const {deviceNum, deviceOnline, deviceOffline, deviceLongoffline}=this.state;
 		let option = {
 			title: {
@@ -322,6 +264,7 @@ export default class Home extends Component {
 				right: "0%",
 				data:['在线:'+deviceOnline,'离线:'+deviceLongoffline]
 			},
+      color: ['#3fb1e3','#66747b'],
 			series: [
 				{
 					type:'pie',
@@ -344,7 +287,7 @@ export default class Home extends Component {
 
 		return option;
 	}
-	getOption1(){
+	DrawOrder(){
 		const {deviceNum, deviceOnline, deviceOffline, deviceLongoffline}=this.state;
 		const Normal = deviceNum-deviceOffline;
 		let option = {
@@ -367,7 +310,7 @@ export default class Home extends Component {
 				right: "0%",
 				data:['故障:'+deviceOffline,'正常:'+Normal]
 			},
-			color:['red','green'],
+			color:['red','#6be6c1'],
 			series: [
 				{
 					type:'pie',
@@ -402,6 +345,62 @@ export default class Home extends Component {
 				break;
 		}
 	}
+  Draw = (val) => {
+    switch(val){
+    	case 1:
+        getLadderCount().then((res)=>{
+    			if (res.code === 0) {
+            this.setState({
+              deviceOnline:res.data.online,
+              deviceOffline:res.data.offline,
+              deviceLongoffline:res.data.longoffline,
+              deviceNum:parseInt(res.data.online)+parseInt(res.data.longoffline),
+            });
+          }
+        })
+    		break;
+    	case 2:
+    		getDevicesStatus().then((res) => {
+    			if (res.code === 0) {
+    				this.setState({
+              deviceOnline:res.data.dooronline,
+              deviceLongoffline:res.data.doorlongoffline,
+              deviceNum:parseInt(res.data.dooronline)+parseInt(res.data.doorlongoffline),
+    				});
+    			}
+    		});
+        getFaultUntreted({ num: 10, page:1, islast:1, device_type:'door', type:1,}).then((res) => {
+        	const pos = res.data.list.map((item,index) => {
+        	})
+        	this.setState({
+        		dooroffline:res.data.totalNumber+"",
+            deviceOffline:res.data.totalNumber,
+        	});
+        })
+    		break;
+    	case 3:
+    		getDevicesStatus().then((res) => {
+    			if (res.code === 0) {
+    				this.setState({
+              deviceOnline:res.data.ctrlonline,
+              deviceLongoffline:res.data.ctrllongoffline,
+              deviceNum:parseInt(res.data.ctrlonline)+parseInt(res.data.ctrllongoffline),
+    				});
+    			}
+    		});
+        getFaultUntreted({ num: 10, page:1, islast:1, device_type:'ctrl', type:1,}).then((res) => {
+        	const pos = res.data.list.map((item,index) => {
+        	})
+        	this.setState({
+        		ctrloffline:res.data.totalNumber+"",
+            deviceOffline:res.data.totalNumber,
+        	});
+
+
+        })
+    		break;
+    }
+  }
 	onChartClick(params){
 		const { history } = this.props;
 		history.push('/company/ladder/'+params.data.state);
@@ -413,7 +412,7 @@ export default class Home extends Component {
 			background3,
 			background4,
 		]
-		const { devicesStatus, historyEvents, doorNum, ctrlNum, deviceNum, total, deviceOffline, deviceOnline, deviceLongoffline} = this.state;
+		const { devicesStatus, historyEvents, doorNum, ctrlNum, deviceNum, total, deviceOffline, deviceOnline, deviceLongoffline, LadderNum, LadderLongoffline, LadderOffline, LadderOnline} = this.state;
 		let notClosedEvents = historyEvents.filter(item => item.state );
 		const len = total
 		len > 1 ? notClosedEvents = [notClosedEvents[0]]:null;
@@ -443,7 +442,7 @@ export default class Home extends Component {
 				</div>
 				<div className={styles.aui_palace}>
 					<Row className={styles.aui_flex}>
-						<Col span={12} onClick={() => this.goLadder(1)}>
+						<Col span={12} onClick={() => this.Draw(1)}>
 							<div className={styles.aui_palace1}>
 								<div className={styles.aui_palace1_left}>
 									<div className={styles.aui_palace1_grid_icon}>
@@ -461,7 +460,7 @@ export default class Home extends Component {
 											</div>
 											<div className={styles.aui_palace1_grid_main_bottom_right}>
 												<div className={styles.aui_palace1_grid_main_bottom_right1}>
-													{deviceNum}
+													{LadderNum}
 												</div>
 											</div>
 										</div>
@@ -470,21 +469,21 @@ export default class Home extends Component {
 							</div>
 						</Col>
 						<Col span={3} className={styles.aui_flex_item} onClick={()=>this.goLadder(2)}>
-							<Badge className={styles.sup} text={deviceOnline} overflowCount={99}>
+							<Badge className={styles.sup} text={LadderOnline} overflowCount={99}>
 								<div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
 									<img className={styles.aui_flex_item_icon} src={require('../../assets/icon/cloud.png')} />
 								</div>
 							</Badge>
 						</Col>
 						<Col span={3} className={styles.aui_flex_item} onClick={()=>this.goLadder(3)}>
-							<Badge className={styles.sup} text={deviceLongoffline} overflowCount={99}>
+							<Badge className={styles.sup} text={LadderLongoffline} overflowCount={99}>
 								<div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
 									<img className={styles.aui_flex_item_icon} src={require('../../assets/icon/nosign.png')} />
 								</div>
 							</Badge>
 						</Col>
 						<Col span={2} className={styles.aui_flex_item} onClick={()=>this.goLadder(1)}>
-							<Badge className={styles.sup} text={deviceOffline} overflowCount={99}>
+							<Badge className={styles.sup} text={LadderOffline} overflowCount={99}>
 								<div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
 									<img className={styles.aui_flex_item_icon} src={require('../../assets/icon/break.png')} />
 								</div>
@@ -492,7 +491,7 @@ export default class Home extends Component {
 						</Col>
 					</Row>
 					<Row className={styles.aui_flex}>
-						<Col span={12} onClick={this.toFollowDoorPage}>
+						<Col span={12} onClick={()=>this.Draw(2)}>
 							<div className={styles.aui_palace1}>
 								<div className={styles.aui_palace1_left}>
 									<div className={styles.aui_palace1_grid_icon}>
@@ -533,7 +532,7 @@ export default class Home extends Component {
 							</Badge>
 						</Col>
 						<Col span={2} className={styles.aui_flex_item} onClick={this.toFollowdoorOffline}>
-							<Badge className={styles.sup} text={this.state.doorOffline} overflowCount={99}>
+							<Badge className={styles.sup} text={this.state.dooroffline} overflowCount={99}>
 								<div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
 									<img className={styles.aui_flex_item_icon} src={require('../../assets/icon/break.png')} />
 								</div>
@@ -541,7 +540,7 @@ export default class Home extends Component {
 						</Col>
 					</Row>
 					<Row className={styles.aui_flex}>
-						<Col span={12} onClick={this.toFollowCtrlPage}>
+						<Col span={12} onClick={()=>this.Draw(3)}>
 							<div className={styles.aui_palace1}>
 								<div className={styles.aui_palace1_left}>
 									<div className={styles.aui_palace1_grid_icon}>
@@ -582,7 +581,7 @@ export default class Home extends Component {
 							</Badge>
 						</Col>
 						<Col span={2} className={styles.aui_flex_item} onClick={this.toFollowctrlOffline}>
-							<Badge className={styles.sup} text={this.state.ctrlOffline} overflowCount={99}>
+							<Badge className={styles.sup} text={this.state.ctrloffline} overflowCount={99}>
 								<div style={{ width: '26px', height: '26px', display: 'inline-block' }} >
 									<img className={styles.aui_flex_item_icon} src={require('../../assets/icon/break.png')} />
 								</div>
@@ -592,7 +591,7 @@ export default class Home extends Component {
 					<List.Item>
 						<Brief>
 							<ReactEcharts
-								option={this.getOption()}
+								option={this.DrawOnline()}
 								theme="myTheme"
 								notMerge={true}
 								lazyUpdate={true}
@@ -602,7 +601,7 @@ export default class Home extends Component {
 						</Brief>,
 						<Brief>
 							<ReactEcharts
-								option={this.getOption1()}
+								option={this.DrawOrder()}
 								theme="myTheme"
 								notMerge={true}
 								lazyUpdate={true}

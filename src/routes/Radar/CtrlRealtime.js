@@ -203,7 +203,7 @@ export default class CtrlRealtime extends Component {
 		language:window.localStorage.getItem("language"),
 		list:[],
 		clickNums:0,
-    IMEI:'',
+		IMEI:'',
 	}
 	componentWillMount() {
 		this.getBaseData()
@@ -301,34 +301,7 @@ export default class CtrlRealtime extends Component {
 				this.forceUpdate()
 			}else{
 				this.state.watch = false;
-				getCommand({num:1,page:1,IMEI:this.state.IMEI}).then((res)=>{
-					if(res.code==0){
-						let controll = 0;
-						const duration = 300;
-						timing = setInterval( () => {
-							const date = new Date().getTime()
-							const endTime = Math.round(((res.list[0].finish+duration*1000)-date)/1000)
-							if(endTime<0){
-								this.setState({
-									endTime:0,
-									switch:false,
-								})
-								clearInterval(timing)
-								if(this.state.language =="zh"&&controll==0){
-									controll = 1;
-									alert("监控结束,请稍后再监控。");
-								}else{
-									alert("End of monitoring.");
-								}
-							}else{
-								this.setState({
-									endTime,
-								})
-							}
-							this.forceUpdate()
-						},1000)
-					}
-				})
+
 				var redata = JSON.parse(e.data)
 				this.pushData(redata)
 				if(counts==0){
@@ -393,6 +366,37 @@ export default class CtrlRealtime extends Component {
 				if(this.state.endTime==0){
 					postMonitor({ op, IMEI, interval, threshold, duration, device_type, type, segment, address }).then((pos) => {
 					});
+					setTimeout(()=>{
+						getCommand({num:1,page:1,IMEI:this.state.IMEI}).then((res)=>{
+							if(res.code==0){
+								let controll = 0;
+								const duration = 300;
+								timing = setInterval( () => {
+									const date = new Date().getTime()
+									const endTime = Math.round(((res.list[0].submit+duration*1000)-date)/1000)
+									if(endTime<0){
+										this.setState({
+											endTime:0,
+											switch:false,
+										})
+										clearInterval(timing)
+										if(this.state.language =="zh"&&controll==0){
+											controll = 1;
+											alert("监控结束,请稍后再监控。");
+										}else{
+											controll = 1;
+											alert("End of monitoring.");
+										}
+									}else{
+										this.setState({
+											endTime,
+										})
+									}
+									this.forceUpdate()
+								},1000)
+							}
+						})
+					}, 1000);
 				}
 			}else{
 				websock.close()
