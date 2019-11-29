@@ -309,7 +309,7 @@ export default class Login extends Component {
 																<i className={styles.deal} onClick={this.showModal} loading={this.state.loading}>
 																	《<FormattedMessage id="Terms of Service"/>》
 																</i>
-																<Modal 
+																<Modal
 																	title={language=="zh"? "网站注册服务条款": "Terms of Service for Website Registration"}
 																	visible={visible}
 																	onOk={this.handleOk}

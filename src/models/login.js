@@ -1,7 +1,7 @@
 import { message } from 'antd';
 import { accountLogin, accountLogout, register, getCaptcha, retrieve } from '../services/api';
 import { setAuthority } from '../utils/authority';
-
+const la = window.localStorage.getItem("language");
 export default {
 	namespace: 'login',
 	state: {
@@ -10,7 +10,6 @@ export default {
 	effects: {
 		*login({ payload }, { call, put }) {
 			const response = yield call(accountLogin, payload);
-			const la = window.localStorage.getItem("language");
 			yield put({
 				type: 'changeLoginStatus',
 				payload: response,
@@ -66,7 +65,7 @@ export default {
 						0,
 					);
 				}
-				
+
 				yield setTimeout(msg, 500);
 				yield put({
 					type: 'login',
@@ -81,14 +80,13 @@ export default {
 				}else{
 					message.error('Account has been registered');
 				}
-				
 			} else {
 				if(la=="zh"){
 					message.error('注册失败');
 				}else{
 					message.error('register failed');
 				}
-			} 
+			}
 		},
 		*retrieve({ payload }, { call, put }) {
 			const params = Object.assign({ username: payload.username }, payload);
@@ -119,7 +117,7 @@ export default {
 				}else{
 					message.error('failed');
 				}
-				
+
 			}
 		},
 		*captcha({ payload }, { call, put }) {
@@ -136,7 +134,7 @@ export default {
 				}else{
 					message.error('failed');
 				}
-				
+
 			}
 		},
 		*logout({ payload }, { call, put }) {

@@ -88,9 +88,9 @@ export default class Fault extends Component {
 	upFault = (e) =>{
 		const { language } = this.state;
 		var file = e.target.files[0]
-		if(file.size>1024*1024){
+		if(file.size>1024*1024*5){
 			if(language=="zh"){
-				alert("请上传不超过1M的图片！");
+				alert("请上传不超过5M的图片！");
 				return
 			}else{
 				alert("Please upload no more than 1M pictures.");
@@ -108,9 +108,9 @@ export default class Fault extends Component {
 	upFinish = (e) =>{
 		const { language } = this.state;
 		var file = e.target.files[0]
-		if(file.size>1024*1024){
+		if(file.size>1024*1024*5){
 			if(language=="zh"){
-				alert("请上传不超过1M的图片！");
+				alert("请上传不超过5M的图片！");
 				return
 			}else{
 				alert("Please upload no more than 1M pictures.");

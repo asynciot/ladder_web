@@ -137,7 +137,7 @@ export function getHistoryEvent(params) {
 	return request(`/device/Event?id=${params}`);
 }
 export function getDispatch(params) {
-	return request(`/device/Dispatch?${stringify(params)}`);
+	return request(`/device/Dispatch?${stringify(params)}&follow=yes`);
 }
 export function postFinish(params) {
 	return request('/device/Dispatch/finish', {
