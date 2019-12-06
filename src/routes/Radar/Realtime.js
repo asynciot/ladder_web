@@ -186,7 +186,6 @@ export default class DoorHistory extends Component {
 		duration:300,
 		startTime:'',
 		endTime:'',
-		command:false,
 		loading:false,
 		watch:false,
 		list:[],
@@ -273,7 +272,6 @@ export default class DoorHistory extends Component {
 		const device_id = this.state.id
 		const userId = currentUser.id
 		const wsurl = 'ws://47.96.162.192:9006/device/Monitor/socket?deviceId='+device_id+'&userId='+userId;
-		this.state.command = true
 		websock = new WebSocket(wsurl);
 		websock.onopen = this.websocketonopen;
 		websock.onerror = this.websocketonerror;
@@ -281,8 +279,8 @@ export default class DoorHistory extends Component {
 			if(e.data=="closed"){
 				this.state.switch = false
 				this.state.stop = 1
-				this.state.command = false
 				websock.close()
+        clearInterval(showInte)
 				clearInterval(timing)
 				this.forceUpdate()
 			}else{
@@ -505,13 +503,7 @@ export default class DoorHistory extends Component {
 			}
 		});
 		getFollowDevices({device_id}).then((res)=>{
-			let command = false;
 			if(res.code==0){
-				if(res.data.list[0].commond=="ok"||res.data.list[0].commond=="monitor"){
-					command = false;
-				}else{
-					command = true;
-				}
 				let time = res.data.list[0].device_t_update;
 				time = time.replace(/NOVT/,"CST");
 				show.updateTime = moment(time).subtract('hours',13).format('YYYY-MM-DD HH:mm:ss');
@@ -520,36 +512,41 @@ export default class DoorHistory extends Component {
 					install:res.data.list[0].install_addr,
 					device_name:res.data.list[0].device_name,
 					device_model:res.data.list[0].device_model,
-					command,
 					state:res.data.list[0].state,
 					show,
 					list:res.data.list[0],
 				})
+
+        console.log(this.state.device_model+"11")
 			}
 		})
-		if(this.state.device_model == '1'){
-			getDoorRuntime({device_id,num:1,page:1,type:4100}).then((res) => {
-				if(res.code == 0){
-					let buffer = [];
-					buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
-					const hex = this.buffer2hex(buffer);
-					this.setState({
-						doorWidth:parseInt((hex[26] + hex[27]), 16),
-					})
-				}
-			});
-		}else{
-			getDoorRuntime({device_id,num:1,page:1,type:4101}).then((res) => {
-				if(res.code == 0){
-					let buffer = []
-					buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
-					const hex = this.buffer2hex(buffer);
-					this.setState({
-						doorWidth:parseInt((hex[14] + hex[15]), 16),
-					})
-				}
-			});
-		}
+    setTimeout(()=>{
+      if(this.state.device_model == '1'){
+      	getDoorRuntime({device_id,num:1,page:1,type:4100}).then((res) => {
+      		if(res.code == 0){
+      			let buffer = [];
+      			buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
+      			const hex = this.buffer2hex(buffer);
+            console.log(parseInt((hex[26] + hex[27]), 16))
+      			this.setState({
+      				doorWidth:parseInt((hex[26] + hex[27]), 16),
+      			})
+      		}
+      	});
+      }else{
+      	getDoorRuntime({device_id,num:1,page:1,type:4101}).then((res) => {
+      		if(res.code == 0){
+      			let buffer = []
+      			buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
+      			const hex = this.buffer2hex(buffer);
+            console.log(parseInt((hex[14] + hex[15]), 16))
+      			this.setState({
+      				doorWidth:parseInt((hex[14] + hex[15]), 16),
+      			})
+      		}
+      	});
+      }
+    }, 100);
 		this.setAnimation();
 	}
 	getData = () => {

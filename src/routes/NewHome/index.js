@@ -29,7 +29,6 @@ const alert = Modal.alert;
 var INTE = null;
 const Item = List.Item;
 const Brief = Item.Brief;
-var switchId = 0;
 export default class Home extends Component {
 	state = {
 		data: [],
@@ -133,29 +132,29 @@ export default class Home extends Component {
 			}
 		});
 		getFaultUntreted({ num: 10, page:1, islast:1, device_type:'door', type:1,}).then((res) => {
-      this.state.devicesStatus.dooroffline = res.data.totalNumber
-      this.setState({
-        dooroffline:res.data.totalNumber+"",
-      })
+			this.state.devicesStatus.dooroffline = res.data.totalNumber
+			this.setState({
+				dooroffline:res.data.totalNumber+"",
+			})
 		})
 		getFaultUntreted({ num: 10, page:1, islast:1, device_type:'ctrl', type:1,}).then((res) => {
-      this.setState({
-        ctrloffline:res.data.totalNumber+"",
-      })
+			this.setState({
+				ctrloffline:res.data.totalNumber+"",
+			})
 		})
 	}
 	getDevice = (val,state) => {
 		getLadderCount().then((res)=>{
-		  this.setState({
-		    deviceOnline:res.data.online,
-		  	deviceOffline:res.data.offline,
-		  	deviceLongoffline:res.data.longoffline,
-		    deviceNum:parseInt(res.data.online)+parseInt(res.data.longoffline),
-        LadderOnline:res.data.online,
-        LadderOffline:res.data.offline,
-        LadderLongoffline:res.data.longoffline,
-        LadderNum:parseInt(res.data.online)+parseInt(res.data.longoffline),
-		  });
+			this.setState({
+				deviceOnline:res.data.online,
+				deviceOffline:res.data.offline,
+				deviceLongoffline:res.data.longoffline,
+				deviceNum:parseInt(res.data.online)+parseInt(res.data.longoffline),
+				LadderOnline:res.data.online,
+				LadderOffline:res.data.offline,
+				LadderLongoffline:res.data.longoffline,
+				LadderNum:parseInt(res.data.online)+parseInt(res.data.longoffline),
+			});
 		})
 	}
 	onpress = () =>{
@@ -264,7 +263,7 @@ export default class Home extends Component {
 				right: "0%",
 				data:['在线:'+deviceOnline,'离线:'+deviceLongoffline]
 			},
-      color: ['#3fb1e3','#66747b'],
+			color: ['#3fb1e3','#66747b'],
 			series: [
 				{
 					type:'pie',
@@ -345,62 +344,62 @@ export default class Home extends Component {
 				break;
 		}
 	}
-  Draw = (val) => {
-    switch(val){
-    	case 1:
-        getLadderCount().then((res)=>{
-    			if (res.code === 0) {
-            this.setState({
-              deviceOnline:res.data.online,
-              deviceOffline:res.data.offline,
-              deviceLongoffline:res.data.longoffline,
-              deviceNum:parseInt(res.data.online)+parseInt(res.data.longoffline),
-            });
-          }
-        })
-    		break;
-    	case 2:
-    		getDevicesStatus().then((res) => {
-    			if (res.code === 0) {
-    				this.setState({
-              deviceOnline:res.data.dooronline,
-              deviceLongoffline:res.data.doorlongoffline,
-              deviceNum:parseInt(res.data.dooronline)+parseInt(res.data.doorlongoffline),
-    				});
-    			}
-    		});
-        getFaultUntreted({ num: 10, page:1, islast:1, device_type:'door', type:1,}).then((res) => {
-        	const pos = res.data.list.map((item,index) => {
-        	})
-        	this.setState({
-        		dooroffline:res.data.totalNumber+"",
-            deviceOffline:res.data.totalNumber,
-        	});
-        })
-    		break;
-    	case 3:
-    		getDevicesStatus().then((res) => {
-    			if (res.code === 0) {
-    				this.setState({
-              deviceOnline:res.data.ctrlonline,
-              deviceLongoffline:res.data.ctrllongoffline,
-              deviceNum:parseInt(res.data.ctrlonline)+parseInt(res.data.ctrllongoffline),
-    				});
-    			}
-    		});
-        getFaultUntreted({ num: 10, page:1, islast:1, device_type:'ctrl', type:1,}).then((res) => {
-        	const pos = res.data.list.map((item,index) => {
-        	})
-        	this.setState({
-        		ctrloffline:res.data.totalNumber+"",
-            deviceOffline:res.data.totalNumber,
-        	});
+	Draw = (val) => {
+		switch(val){
+			case 1:
+				getLadderCount().then((res)=>{
+					if (res.code === 0) {
+						this.setState({
+							deviceOnline:res.data.online,
+							deviceOffline:res.data.offline,
+							deviceLongoffline:res.data.longoffline,
+							deviceNum:parseInt(res.data.online)+parseInt(res.data.longoffline),
+						});
+					}
+				})
+				break;
+			case 2:
+				getDevicesStatus().then((res) => {
+					if (res.code === 0) {
+						this.setState({
+							deviceOnline:res.data.dooronline,
+							deviceLongoffline:res.data.doorlongoffline,
+							deviceNum:parseInt(res.data.dooronline)+parseInt(res.data.doorlongoffline),
+						});
+					}
+				});
+				getFaultUntreted({ num: 10, page:1, islast:1, device_type:'door', type:1,}).then((res) => {
+					const pos = res.data.list.map((item,index) => {
+					})
+					this.setState({
+						dooroffline:res.data.totalNumber+"",
+						deviceOffline:res.data.totalNumber,
+					});
+				})
+				break;
+			case 3:
+				getDevicesStatus().then((res) => {
+					if (res.code === 0) {
+						this.setState({
+							deviceOnline:res.data.ctrlonline,
+							deviceLongoffline:res.data.ctrllongoffline,
+							deviceNum:parseInt(res.data.ctrlonline)+parseInt(res.data.ctrllongoffline),
+						});
+					}
+				});
+				getFaultUntreted({ num: 10, page:1, islast:1, device_type:'ctrl', type:1,}).then((res) => {
+					const pos = res.data.list.map((item,index) => {
+					})
+					this.setState({
+						ctrloffline:res.data.totalNumber+"",
+						deviceOffline:res.data.totalNumber,
+					});
 
 
-        })
-    		break;
-    }
-  }
+				})
+				break;
+		}
+	}
 	onChartClick(params){
 		const { history } = this.props;
 		history.push('/company/ladder/'+params.data.state);

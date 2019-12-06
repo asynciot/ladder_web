@@ -197,7 +197,6 @@ export default class CtrlRealtime extends Component {
 		code:'',
 		startTime:'',
 		endTime:'',
-		command:false,
 		loading:false,
 		watch:false,
 		language:window.localStorage.getItem("language"),
@@ -294,14 +293,12 @@ export default class CtrlRealtime extends Component {
 		websock.onmessage= (e) =>{
 			if(e.data=="closed"){
 				this.state.switch = false
-				this.state.command = false
 				websock.close()
 				clearInterval(showInte)
 				clearInterval(timing)
 				this.forceUpdate()
 			}else{
 				this.state.watch = false;
-
 				var redata = JSON.parse(e.data)
 				this.pushData(redata)
 				if(counts==0){
@@ -326,6 +323,7 @@ export default class CtrlRealtime extends Component {
 		console.log("WebSocket已关闭")
 	}
 	onChange = (val) => {
+		this.forceUpdate();
 		this.clears()
 		counts = 0
 		ct = 0
@@ -341,7 +339,6 @@ export default class CtrlRealtime extends Component {
 		if(this.state.state =="online"){
 			this.state.switch = !this.state.switch;
 			this.forceUpdate();
-			this.state.watch = true;
 			if(this.state.switch == true){
 				const device_id = this.props.match.params.id
 				if(websock){
@@ -349,6 +346,7 @@ export default class CtrlRealtime extends Component {
 					websock=null
 				}
 				this.initWebsocket()
+        this.state.watch = true;
 				const op = 'open';
 				let IMEI;
 				if(this.state.list.cellular==1){
@@ -430,20 +428,13 @@ export default class CtrlRealtime extends Component {
 			show,
 		})
 		getFollowDevices({device_id}).then((res)=>{
-			let command = false
 			if(res.code ==0){
-				if(res.data.list[0].commond=="ok"||res.data.list[0].commond=="monitor"){
-					command = false
-				}else{
-					command = true
-				}
 				let time = res.data.list[0].device_t_update;
 				time = time.replace(/NOVT/,"CST");
 				show.updateTime = moment(time).subtract('hours',13).format('YYYY-MM-DD HH:mm:ss');
 				this.setState({
 					list:res.data.list[0],
 					state:res.data.list[0].state,
-					command,
 					show,
 					IMEI:res.data.list[0].IMEI,
 				})
@@ -997,7 +988,6 @@ export default class CtrlRealtime extends Component {
 									unCheckedChildren={<FormattedMessage id="Close"/>}
 									onChange={this.onChange}
 									checked={this.state.switch}
-									disabled={this.state.command}
 									defaultChecked={this.state.switch}
 									loading={this.state.loading}
 								/>
