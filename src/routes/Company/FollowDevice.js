@@ -389,7 +389,7 @@ export default class extends Component {
 																</Col>
 															</Col>
 															<Col span={8}>
-																<a className={styles.text}><FormattedMessage id="State"/> : </a>
+																<a className={styles.text}><FormattedMessage id="State"/> ：</a>
 																<td className="tl"><FormattedMessage id={state[item.state] ||'None'}/></td>
 															</Col>
 														</tr>
@@ -462,7 +462,7 @@ export default class extends Component {
 																</Col>
 															</Col>
 															<Col span={8}>
-																<a className={styles.text}><FormattedMessage id="State"/> : </a>
+																<a className={styles.text}><FormattedMessage id="State"/> ：</a>
 																<td className="tl"><FormattedMessage id={state[item.state] ||'None'}/></td>
 															</Col>
 														</tr>
@@ -538,7 +538,7 @@ export default class extends Component {
 																</Col>
 															</Col>
 															<Col span={8}>
-																<a className={styles.text}><FormattedMessage id="type"/>：</a>
+																<a className={styles.text}><FormattedMessage id="type"/> ：</a>
 																<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 															</Col>
 														</tr>
@@ -552,7 +552,7 @@ export default class extends Component {
 																</Col>
 															</Col>
 															<Col span={8}>
-																<a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
+																<a className={styles.text}><FormattedMessage id="RSSI"/> ：</a>
 																<td className="tl"><Signal width={item.rssi}/></td>
 															</Col>
 														</tr>
@@ -566,7 +566,7 @@ export default class extends Component {
 																</Col>
 															</Col>
 															<Col span={8}>
-																<a className={styles.text}><FormattedMessage id="State"/> : </a>
+																<a className={styles.text}><FormattedMessage id="State"/> ：</a>
 																<td className="tl"><FormattedMessage id={state[item.state] ||'None'}/></td>
 															</Col>
 														</tr>
@@ -611,7 +611,7 @@ export default class extends Component {
 																</Col>
 															</Col>
 															<Col span={8}>
-																<a className={styles.text}><FormattedMessage id="type"/>：</a>
+																<a className={styles.text}><FormattedMessage id="type"/> ：</a>
 																<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 															</Col>
 														</tr>
@@ -625,7 +625,7 @@ export default class extends Component {
 																</Col>
 															</Col>
 															<Col span={8}>
-																<a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
+																<a className={styles.text}><FormattedMessage id="RSSI"/> ：</a>
 																<td className="tl"><Signal width={item.rssi}/></td>
 															</Col>
 														</tr>
@@ -639,7 +639,7 @@ export default class extends Component {
 																</Col>
 															</Col>
 															<Col span={8}>
-																<a className={styles.text}><FormattedMessage id="State"/> : </a>
+																<a className={styles.text}><FormattedMessage id="State"/> ：</a>
 																<td className="tl"><FormattedMessage id={state[item.state] ||'None'}/></td>
 															</Col>
 														</tr>
@@ -696,7 +696,7 @@ export default class extends Component {
 																</Col>
 															</Col>
 															<Col span={8}>
-																<a className={styles.text}><FormattedMessage id="type"/>：</a>
+																<a className={styles.text}><FormattedMessage id="type"/> ：</a>
 																<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 															</Col>
 														</tr>
@@ -710,7 +710,7 @@ export default class extends Component {
 																</Col>
 															</Col>
 															<Col span={8}>
-																<a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
+																<a className={styles.text}><FormattedMessage id="RSSI"/> ：</a>
 																<td className="tl"><Signal width={item.rssi}/></td>
 															</Col>
 														</tr>
@@ -727,7 +727,7 @@ export default class extends Component {
 														<tr>
 															<Col span={16}>
 																<Col span={10}>
-																	<a className={styles.text}><FormattedMessage id="State"/> : </a>
+																	<a className={styles.text}><FormattedMessage id="State"/> ：</a>
 																</Col>
 																<Col span={14}>
 																	<td className={styles.left}><FormattedMessage id={item.code}/></td>
@@ -775,7 +775,7 @@ export default class extends Component {
 																</Col>
 															</Col>
 															<Col span={8}>
-																<a className={styles.text}><FormattedMessage id="type"/>：</a>
+																<a className={styles.text}><FormattedMessage id="type"/> ：</a>
 																<td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
 															</Col>
 														</tr>
@@ -789,7 +789,7 @@ export default class extends Component {
 																</Col>
 															</Col>
 															<Col span={8}>
-																<a className={styles.text}><FormattedMessage id="RSSI"/>：</a>
+																<a className={styles.text}><FormattedMessage id="RSSI"/> ：</a>
 																<td className="tl"><Signal width={item.rssi}/></td>
 															</Col>
 														</tr>
@@ -913,7 +913,7 @@ export default class extends Component {
 																</Col>
 															</Col>
 															<Col span={8}>
-																<a className={styles.text}><FormattedMessage id="State"/> : </a>
+																<a className={styles.text}><FormattedMessage id="State"/>  ：</a>
 																<td className="tl"><FormattedMessage id={state[item.state] ||'None'}/></td>
 															</Col>
 														</tr>

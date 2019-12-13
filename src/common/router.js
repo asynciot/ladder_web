@@ -255,6 +255,11 @@ export const getRouterData = (app) => {
 			name2: 'Manage Elevator',
 			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/Ladder')),
 		},
+		'/company/ladder/order': {
+			name: '电梯管理',
+			name2: 'Manage Elevator',
+			component: dynamicWrapper(app, ['company', 'user'], () => import('../routes/Company/Ladder')),
+		},
 		'/company/ladder/:id': {
 			name: '电梯信息',
 			name2: 'Elevator Information',

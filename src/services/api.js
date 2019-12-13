@@ -168,7 +168,10 @@ export function getLadder(params) {
 	return request(`/device/Ladder/ReadMore?${stringify(params)}`);
 }
 export function getLadderFault(params) {
-	return request(`/device/Ladder?${stringify(params)}`);
+	return request(`/device/Ladder/ReadFault`);
+}
+export function getLadderInfo(params) {
+	return request(`/device/Ladder/ReadFaultInfo`);
 }
 export function getLadderCount() {
 	return request(`/device/Ladder/ReadCount?`);

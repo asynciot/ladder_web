@@ -98,41 +98,12 @@ export default class Home extends Component {
 		});
 	}
 	getFault = () => {
-		getFault({ num: 1, page: 1, state:"untreated", islast:1}).then((res) => {
-			const list = res.data.list.map((item,index) => {
-				const device_id = item.device_id
-				getFollowDevices({num:1,page:1,device_id}).then((ind) => {
-					this.state.historyEvents[0].addr=ind.data.list[0].install_addr;
-					const historyEvents = this.state.historyEvents;
-					this.setState({
-						historyEvents,
-					});
-				})
-				return item;
+		getLadderFault().then((res) => {
+      this.setState({
+				LadderOffline:res.data.totalNumber+"",
 			})
-			if (res.code === 0) {
-				let code
-				if(res.data.list[0]){
-					code = res.data.list[0].code
-					if(res.data.list[0].device_type=="ctrl"){
-						this.setState({
-							historyEvents: res.data.list,
-							total:res.data.totalNumber,
-							code:"E"+code.toString(16)
-						});
-					}else{
-						code = (code+50)
-						this.setState({
-							historyEvents: res.data.list,
-							total:res.data.totalNumber,
-							code,
-						});
-					}
-				}
-			}
-		});
+    })
 		getFaultUntreted({ num: 10, page:1, islast:1, device_type:'door', type:1,}).then((res) => {
-			this.state.devicesStatus.dooroffline = res.data.totalNumber
 			this.setState({
 				dooroffline:res.data.totalNumber+"",
 			})

@@ -208,7 +208,7 @@ export default class DoorHistory extends Component {
 		this.setState({
 			dateSelected:!this.state.dateSelected
 		})
-	
+
 	}
 	getType = () =>{
 		const device_id = this.state.device_id
@@ -267,6 +267,15 @@ export default class DoorHistory extends Component {
 						show.speed = events.speed[i]
 					}
 				}
+				console.log(events.current)
+				events.current.forEach((item,index)=>{
+					if(index==0){
+						item =item
+					}else{
+						item = events.current[index-1]*0.8+item*0.2
+					}
+				})
+				console.log(events.current)
 				if(show.openIn==1){
 					this.setState({
 						event:"Open Door",
@@ -781,7 +790,7 @@ export default class DoorHistory extends Component {
 		this.state.elemsToClick = this.getElemsByToggleMethod( this.state.clickOpt );
 		this.attachEvt( this.state.elemsToClick, 'click' );
 		this.myattachEvt();
-		
+
 		const { device: { events, view, property }} = this.props;
 		const { show } = this.state
 		const id = this.props.match.params.id;
@@ -854,7 +863,7 @@ export default class DoorHistory extends Component {
 									</p>
 									<p ><FormattedMessage id="Closing arrival signal"/><i className={styles.status}>{show.closeTo ? <FormattedMessage id="Open"/> : <FormattedMessage id="Close"/>}</i>
 									</p>
-									
+
 									<p style={{
 										width: '50%',
 									}}><FormattedMessage id="Now Event"/><i className={styles.status}>{<FormattedMessage id={this.state.event}/> || <FormattedMessage id="None"/>}</i>
