@@ -45,6 +45,18 @@ const ListButton = ({ className = '', ...restProps }) => (
 		</span>
 	</div>
 );
+const Examine = ({ className = '', ...restProps }) => (
+  <div className={`${className} ${styles['list-btn']}`}>
+		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.edit ? restProps.edit:''}>
+			<Icon className={`${styles.edit} ${styles.icon}`} type="form" />
+			<em><FormattedMessage id="examine"/></em>
+		</span>
+    <span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.address ? restProps.address:''}>
+			<Icon className={`${styles.edit} ${styles.icon}`} type="arrow-down" />
+			<em><FormattedMessage id="Address"/></em>
+		</span>
+  </div>
+);
 const Treating = ({ className = '', ...restProps }) => (
 	<div className={`${className} ${styles['list-btn']}`}>
 		<span style={{ display: 'block', marginBottom: 8 }} onClick={restProps.remove ? restProps.remove:''}>
@@ -85,7 +97,8 @@ export default class extends Component {
 	tabs = [
 		{ title: (window.localStorage.getItem("language")=='en') ? 'untreated' : '待接单', type:"untreated"},
 		{ title: (window.localStorage.getItem("language")=='en') ? 'treating' : '急修中' , type:"treating"},
-		{ title: (window.localStorage.getItem("language")=='en') ? 'treated' : '已完成' , type:"treated"},
+		{ title: (window.localStorage.getItem("language")=='en') ? 'examined' : '待审核' , type:"examined"},
+    { title: (window.localStorage.getItem("language")=='en') ? 'treated' : '已完成' , type:"treated"},
 	];
 	componentWillMount() {
 		this.getFault('untreated')
@@ -170,6 +183,41 @@ export default class extends Component {
 					})
 				})
 				break;
+      case 'examined':
+        getFault({ num: 10, page, state }).then((res) => {
+          const list = res.data.list.map((item,index) => {
+            const time = new Date().getTime() - item.createTime
+            item.hour = parseInt((time)/(1000*3600))
+            item.minute = parseInt(time%(1000*3600)/(1000*60))
+            item.second = parseInt(time%(1000*3600)%(1000*60)/1000)
+            const device_id = item.device_id
+            this.setState({
+              totalNumber:res.data.totalNumber,
+            })
+            getFollowDevices({num:1,page:1,device_id}).then((ind) => {
+              device_name[index] = ind.data.list[0].device_name
+              this.setState({
+                device_name,
+              });
+            })
+            if(item.device_type=='ctrl'){
+              item.code = 'E'+res.data.list[index].code.toString(16)
+            }else{
+              item.code = CodeTransform[parseInt(res.data.list[index].code)+50]
+            }
+            return item;
+          })
+          if(res.data.totalNumber==0){
+            this.setState({
+              totalNumber:0,
+              page:0,
+            })
+          }
+          this.setState({
+            list,
+          })
+        });
+        break;
 			case 'treated':
 				getDispatch({ num: 10, page, state:'treated', isreg:"True"}).then((res) => {
 					clearInterval(inte)
@@ -291,7 +339,8 @@ export default class extends Component {
 		if(dispatchList.length!=0){
 			dispatchList.map((item,index)=>{
 				if(item.device_type == 'ctrl'){
-					code[index] = 'E'+item.code.toString(16)
+				  item.code = item.code == null ? "" : item.code.toString(16)
+				  code[index] = 'E'+item.code
 				}else{
 					code[index] = CodeTransform[parseInt(item.code)+50]
 				}
@@ -551,6 +600,141 @@ export default class extends Component {
 								</Col>
 							</Row>
 						</div>
+            <div  style={{ backgroundColor: '#fff' }}>
+              <List
+                className={styles.lis}
+                dataSource={list}
+                renderItem={(item,index) => (
+                  <List.Item actions={[<Examine address={(event) => { this.address(item); }} edit={(event) => { this.deal(event,item,); }} />]} className={styles.item} key={index} >
+                    <Col span={20}>
+                      <table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault(item)}>
+                        {
+                          language=="zh"?
+                            <tbody>
+                            <tr>
+                              <a className={styles.text}><FormattedMessage id="fault code"/>：</a>
+                              <td className={styles.left2} style={{ width: '210px' }}><FormattedMessage id={item.code}/></td>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="Device Name"/>：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className="tl">{device_name[index]}</td>
+                                </Col>
+                              </Col>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="type"/>：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className="tl" style={{ width: '80px' }}><FormattedMessage id={'O'+item.type}/></td>
+                                </Col>
+                              </Col>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="Device Type"/>：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
+                                </Col>
+                              </Col>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="report time"/>：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className="tl">{moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')}</td>
+                                </Col>
+                              </Col>
+                            </tr>
+                            <tr>
+                              <Col span={16}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="fault duration"/>：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className="tl">{item.hour}<FormattedMessage id="H"/>{item.minute}<FormattedMessage id="M"/>{item.second}<FormattedMessage id="S"/></td>
+                                </Col>
+                              </Col>
+                            </tr>
+                            </tbody>
+                            :
+                            <tbody>
+                            <tr>
+                              <a className={styles.text}><FormattedMessage id="fault code"/>：</a>
+                              <td className={styles.left} style={{ width: '210px' }}><FormattedMessage id={item.code}/></td>
+                            </tr>
+                            <tr>
+                              <Col span={18}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="Device Name"/>：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className="tl">{device_name[index]}</td>
+                                </Col>
+                              </Col>
+                            </tr>
+                            <tr>
+                              <Col span={18}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="type"/>：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className="tl" style={{ width: '80px' }}><FormattedMessage id={'O'+item.type}/></td>
+                                </Col>
+                              </Col>
+                            </tr>
+                            <tr>
+                              <Col span={18}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="Device Type"/>：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className="tl"><FormattedMessage id={typeName[item.device_type] ||''}/></td>
+                                </Col>
+                              </Col>
+                            </tr>
+                            <tr>
+                              <Col span={18}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="report time"/>：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className="tl">{moment(parseInt(item.createTime)).format('YYYY-MM-DD HH:mm:ss')}</td>
+                                </Col>
+                              </Col>
+                            </tr>
+                            <tr>
+                              <Col span={18}>
+                                <Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="fault duration"/>：</a>
+                                </Col>
+                                <Col span={14}>
+                                  <td className="tl">{item.hour}<FormattedMessage id="H"/>{item.minute}<FormattedMessage id="M"/>{item.second}<FormattedMessage id="S"/></td>
+                                </Col>
+                              </Col>
+                            </tr>
+                            </tbody>
+                        }
+                      </table>
+                    </Col>
+                  </List.Item>
+                )}
+              />
+              <Row className={styles.page}>
+                <Col span={24} className={styles.center2}>
+                  <Pagination simple pageSize={10} onChange={this.pageChange} current={this.state.page} total={this.state.totalNumber} />
+                </Col>
+              </Row>
+            </div>
 						<div style={{ backgroundColor: '#fff' }}>
 							<List
 								className={styles.lis}
@@ -593,7 +777,7 @@ export default class extends Component {
 																</Col>
 															</Col>
 														</tr>
-														<tr>
+														{/*<tr>
 															<Col span={16}>
 																<Col span={10}>
 																	<a className={styles.text}><FormattedMessage id="order duration"/> ：</a>
@@ -602,7 +786,7 @@ export default class extends Component {
 																	<td className="tl">{item.hour}<FormattedMessage id="H"/>{item.minute}<FormattedMessage id="M"/>{item.second}<FormattedMessage id="S"/></td>
 																</Col>
 															</Col>
-														</tr>
+														</tr>*/}
 													</tbody>
 													:
 													<tbody>
@@ -637,7 +821,7 @@ export default class extends Component {
 																</Col>
 															</Col>
 														</tr>
-														<tr>
+														{/*<tr>
 															<Col span={16}>
 																<Col span={12}>
 																	<a className={styles.text}><FormattedMessage id="order duration"/> ：</a>
@@ -646,7 +830,7 @@ export default class extends Component {
 																	<td className="tl">{item.hour}<FormattedMessage id="H"/>{item.minute}<FormattedMessage id="M"/>{item.second}<FormattedMessage id="S"/></td>
 																</Col>
 															</Col>
-														</tr>
+														</tr>*/}
 													</tbody>
 												}
 											</table>
