@@ -37,10 +37,11 @@
 
 	"Lang": "简体中文",
 	"Login": "Login",
+	"longoffline" : "longoffline",
 
 	"Module Type": "Module Type",
-  "Maximum speed" : "Maximum speed",
-  "Maximum current" : "Maximum current",
+	"Maximum speed" : "Maximum speed",
+	"Maximum current" : "Maximum current",
 
 	"NBSL": "Ningbo Shen Ling Management System",
 	"NBSL Elevator QR Code": "NBSL Elevator QR Code",

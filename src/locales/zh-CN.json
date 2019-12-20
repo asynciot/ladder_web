@@ -189,7 +189,6 @@
 	"edit" : "编辑",
 	"event number in cache" : "缓存中的事件数",
 	"early remind Days" : "提前多少天提醒",
-  "examine" : "审核",
 	"Encoder feedback direction":"编码器反馈方向",
 	"Electrical angle at initial power-on":"上电初始电角度",
 	"Exciting current setting":"励磁电流设置",
@@ -268,6 +267,7 @@
 	"Location Area":"所在区域",
 	"List" : "列表",
 	"long offline" : "离线",
+	"longoffline" : "离线",
 
 	"Menu adjustment demonstration": "菜单调节演示",
 	"Motor UVW wiring direction setting": "电机 UVW 接线方向设置",
@@ -303,8 +303,8 @@
 	"Motor pole logarithm":"电机极对数",
 	"Motor rated BEMF":"电机额定反电动势",
 	"Motor phase sequence":"电机相序",
-  "Maximum speed" : "最大速度",
-  "Maximum current" : "最大电流",
+	"Maximum speed" : "最大速度",
+	"Maximum current" : "最大电流",
 
 	"NBSL" : "宁波申菱 管理系统",
 	"NBSL Elevator QR Code" : "宁波申菱电梯二维码",
@@ -710,6 +710,7 @@
 
 	"refresh" : "刷新",
 	"Switch":"切换",
+	"":"无",
 	"None":"无",
 	"Shutdown":"停车",
 	"Stop":"不动作",
