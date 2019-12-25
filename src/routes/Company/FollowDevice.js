@@ -348,15 +348,21 @@ export default class extends Component {
 												<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 													<tbody>
 														<tr>
-															<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
-															<td className={styles.left} style={{width:'220px'}}>{item.install_addr}</td>
+															<Col span={16}>
+																<Col span={10}>
+                                  <a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
+                                </Col>
+                                <Col span={12}>
+                                  <td className={styles.left} style={{width:'240px'}}>{item.install_addr}</td>
+                                </Col>
+                              </Col>
 														</tr>
 														<tr>
 															<Col span={16}>
-																<Col span={10}>
+																<Col span={12}>
 																	<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
 																</Col>
-																<Col span={14}>
+																<Col span={12}>
 																	<td className={styles.left}>{item.device_name ? item.device_name : <FormattedMessage id="None"/>}</td>
 																</Col>
 															</Col>
@@ -395,10 +401,10 @@ export default class extends Component {
 														</tr>
 														<tr>
 															<Col span={16}>
-																<Col span={10}>
+																<Col span={12}>
 																	<a className={styles.text}><FormattedMessage id="Module Type"/> ：</a>
 																</Col>
-																<Col span={14}>
+																<Col span={12}>
 																	<td className={styles.left}>{<FormattedMessage id={module[item.cellular]}/>}</td>
 																</Col>
 															</Col>
@@ -525,15 +531,21 @@ export default class extends Component {
 												<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 													<tbody>
 														<tr>
-															<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
-															<td className={styles.left} style={{width:'220px'}}>{item.install_addr}</td>
+															<Col span={16}>
+																<Col span={10}>
+														      <a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
+														    </Col>
+														    <Col span={12}>
+														      <td className={styles.left} style={{width:'240px'}}>{item.install_addr}</td>
+														    </Col>
+														  </Col>
 														</tr>
 														<tr>
 															<Col span={16}>
-																<Col span={10}>
+																<Col span={12}>
 																	<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
 																</Col>
-																<Col span={14}>
+																<Col span={12}>
 																	<td className={styles.left}>{item.device_name ? item.device_name : <FormattedMessage id="None"/>}</td>
 																</Col>
 															</Col>
@@ -572,16 +584,16 @@ export default class extends Component {
 														</tr>
 														<tr>
 															<Col span={16}>
-																<Col span={10}>
+																<Col span={12}>
 																	<a className={styles.text}><FormattedMessage id="Module Type"/> ：</a>
 																</Col>
-																<Col span={14}>
+																<Col span={12}>
 																	<td className={styles.left}>{<FormattedMessage id={module[item.cellular]}/>}</td>
 																</Col>
 															</Col>
 														</tr>
 															<Col span={6}>
-																<a className={styles.text}><FormattedMessage id="Base Station"/> ：</a>
+																<a className={styles.text3}><FormattedMessage id="Base Station"/> ：</a>
 															</Col>
 																<p className={styles.text2}>{item.cell_address}</p>
 													</tbody>
@@ -654,7 +666,7 @@ export default class extends Component {
 															</Col>
 														</tr>
 															<Col span={6}>
-																<a className={styles.text}><FormattedMessage id="Base Station"/> ：</a>
+																<a className={styles.text3}><FormattedMessage id="Base Station"/> ：</a>
 															</Col>
 																<p className={styles.text2}>{item.cell_address}</p>
 													</tbody>
@@ -683,15 +695,21 @@ export default class extends Component {
 												<table className={styles.table} border="0" cellPadding="0" cellSpacing="0">
 													<tbody>
 														<tr>
-															<a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
-															<td className={styles.left} style={{width:'200px'}}>{item.install_addr}</td>
+															<Col span={16}>
+																<Col span={10}>
+														      <a className={styles.text}><FormattedMessage id="Install Address"/> ：</a>
+														    </Col>
+														    <Col span={12}>
+														      <td className={styles.left} style={{width:'240px'}}>{item.install_addr}</td>
+														    </Col>
+														  </Col>
 														</tr>
 														<tr>
 															<Col span={16}>
-																<Col span={10}>
+																<Col span={12}>
 																	<a className={styles.text}><FormattedMessage id="Device Name"/> ：</a>
 																</Col>
-																<Col span={14}>
+																<Col span={12}>
 																	<td className={styles.left}>{item.device_name ? item.device_name : <FormattedMessage id="None"/>}</td>
 																</Col>
 															</Col>
@@ -736,16 +754,16 @@ export default class extends Component {
 														</tr>
 														<tr>
 															<Col span={16}>
-																<Col span={10}>
+																<Col span={12}>
 																	<a className={styles.text}><FormattedMessage id="Module Type"/> ：</a>
 																</Col>
-																<Col span={14}>
+																<Col span={12}>
 																	<td className={styles.left}>{<FormattedMessage id={module[item.cellular]}/>}</td>
 																</Col>
 															</Col>
 														</tr>
 															<Col span={6}>
-																<a className={styles.text}><FormattedMessage id="Base Station"/> ：</a>
+																<a className={styles.text3}><FormattedMessage id="Base Station"/> ：</a>
 															</Col>
 																<p className={styles.text2}>{item.cell_address}</p>
 													</tbody>
@@ -824,7 +842,7 @@ export default class extends Component {
 															</Col>
 														</tr>
 															<Col span={6}>
-																<a className={styles.text}><FormattedMessage id="Base Station"/> ：</a>
+																<a className={styles.text3}><FormattedMessage id="Base Station"/> ：</a>
 															</Col>
 																<p className={styles.text2}>{item.cell_address}</p>
 													</tbody>
@@ -928,7 +946,7 @@ export default class extends Component {
 															</Col>
 														</tr>
 															<Col span={6}>
-																<a className={styles.text}><FormattedMessage id="Base Station"/> ：</a>
+																<a className={styles.text3}><FormattedMessage id="Base Station"/> ：</a>
 															</Col>
 																<p className={styles.text2}>{item.cell_address}</p>
 													</tbody>
@@ -1001,7 +1019,7 @@ export default class extends Component {
 															</Col>
 														</tr>
 															<Col span={6}>
-																<a className={styles.text}><FormattedMessage id="Base Station"/> ：</a>
+																<a className={styles.text3}><FormattedMessage id="Base Station"/> ：</a>
 															</Col>
 																<p className={styles.text2}>{item.cell_address}</p>
 													</tbody>

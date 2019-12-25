@@ -48,7 +48,6 @@ function parseMenu(buffer, type) {
 		});
 	});
 	arr.forEach((item, i) => {
-		console.log(item.unit)
 		if (i < 86) {
 			item.value = parseInt((hex[i * 2] + hex[i * 2 + 1]), 16);
 			item.value = (item.value / item.num).toFixed(`${item.num}`.length - 1)+item.unit;

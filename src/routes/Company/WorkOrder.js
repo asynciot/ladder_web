@@ -127,7 +127,7 @@ export default class extends Component {
 		let type = []
 		switch (state){
 			case 'untreated':
-				getFault({ num: 10, page, state, islast:1 }).then((res) => {
+				getFault({ num: 10, page, state, islast:1, type:1}).then((res) => {
 					const list = res.data.list.map((item,index) => {
 						const time = new Date().getTime() - item.createTime
 						item.hour = parseInt((time)/(1000*3600))
@@ -388,16 +388,6 @@ export default class extends Component {
 														<tr>
 															<Col span={16}>
 																<Col span={10}>
-																	<a className={styles.text}><FormattedMessage id="type"/>：</a>
-																</Col>
-																<Col span={14}>
-																	<td className="tl" style={{ width: '80px' }}><FormattedMessage id={'O'+item.type}/></td>
-																</Col>
-															</Col>
-														</tr>
-														<tr>
-															<Col span={16}>
-																<Col span={10}>
 																	<a className={styles.text}><FormattedMessage id="Device Type"/>：</a>
 																</Col>
 																<Col span={14}>
@@ -439,16 +429,6 @@ export default class extends Component {
 																</Col>
 																<Col span={14}>
 																	<td className="tl">{device_name[index]}</td>
-																</Col>
-															</Col>
-														</tr>
-														<tr>
-															<Col span={18}>
-																<Col span={10}>
-																	<a className={styles.text}><FormattedMessage id="type"/>：</a>
-																</Col>
-																<Col span={14}>
-																	<td className="tl" style={{ width: '80px' }}><FormattedMessage id={'O'+item.type}/></td>
 																</Col>
 															</Col>
 														</tr>
@@ -632,16 +612,6 @@ export default class extends Component {
 														<tr>
 															<Col span={16}>
 																<Col span={10}>
-																	<a className={styles.text}><FormattedMessage id="type"/>：</a>
-																</Col>
-																<Col span={14}>
-																	<td className="tl" style={{ width: '80px' }}><FormattedMessage id={'O'+item.type}/></td>
-																</Col>
-															</Col>
-														</tr>
-														<tr>
-															<Col span={16}>
-																<Col span={10}>
 																	<a className={styles.text}><FormattedMessage id="Device Type"/>：</a>
 																</Col>
 																<Col span={14}>
@@ -683,16 +653,6 @@ export default class extends Component {
 																</Col>
 																<Col span={14}>
 																	<td className="tl">{device_name[index]}</td>
-																</Col>
-															</Col>
-														</tr>
-														<tr>
-															<Col span={18}>
-																<Col span={10}>
-																	<a className={styles.text}><FormattedMessage id="type"/>：</a>
-																</Col>
-																<Col span={14}>
-																	<td className="tl" style={{ width: '80px' }}><FormattedMessage id={'O'+item.type}/></td>
 																</Col>
 															</Col>
 														</tr>

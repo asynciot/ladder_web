@@ -280,7 +280,7 @@ export default class DoorHistory extends Component {
 				this.state.switch = false
 				this.state.stop = 1
 				websock.close()
-        clearInterval(showInte)
+				clearInterval(showInte)
 				clearInterval(timing)
 				this.forceUpdate()
 			}else{
@@ -322,11 +322,20 @@ export default class DoorHistory extends Component {
 			this.state.color=true
 		}
 		if (show.outHigh) {
-			str = '82';
+      if (this.state.device_model==1) {
+        str= 'OC';
+      } else{
+        str = '82';
+      }
 			this.state.color=true
 		}
 		if (show.motorHigh) {
-			str= '66';
+      if (this.state.device_model==1) {
+        str= 'None';
+      } else{
+        str= '66';
+      }
+			
 			this.state.color=true
 		}
 		if (show.flySafe) {
@@ -516,37 +525,34 @@ export default class DoorHistory extends Component {
 					show,
 					list:res.data.list[0],
 				})
-
-        console.log(this.state.device_model+"11")
 			}
 		})
-    setTimeout(()=>{
-      if(this.state.device_model == '1'){
-      	getDoorRuntime({device_id,num:1,page:1,type:4100}).then((res) => {
-      		if(res.code == 0){
-      			let buffer = [];
-      			buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
-      			const hex = this.buffer2hex(buffer);
-            console.log(parseInt((hex[26] + hex[27]), 16))
-      			this.setState({
-      				doorWidth:parseInt((hex[26] + hex[27]), 16),
-      			})
-      		}
-      	});
-      }else{
-      	getDoorRuntime({device_id,num:1,page:1,type:4101}).then((res) => {
-      		if(res.code == 0){
-      			let buffer = []
-      			buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
-      			const hex = this.buffer2hex(buffer);
-            console.log(parseInt((hex[14] + hex[15]), 16))
-      			this.setState({
-      				doorWidth:parseInt((hex[14] + hex[15]), 16),
-      			})
-      		}
-      	});
-      }
-    }, 100);
+		setTimeout(()=>{
+			if(this.state.device_model == '1'){
+				getDoorRuntime({device_id,num:1,page:1,type:4100}).then((res) => {
+					if(res.code == 0){
+						let buffer = [];
+						buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
+						const hex = this.buffer2hex(buffer);
+						this.setState({
+							doorWidth:parseInt((hex[26] + hex[27]), 16),
+						})
+					}
+				});
+			}else{
+				getDoorRuntime({device_id,num:1,page:1,type:4101}).then((res) => {
+					if(res.code == 0){
+						let buffer = []
+						buffer = base64url.toBuffer(res.data.list[0].data);	//8位转流
+						const hex = this.buffer2hex(buffer);
+						console.log(parseInt((hex[14] + hex[15]), 16))
+						this.setState({
+							doorWidth:parseInt((hex[14] + hex[15]), 16),
+						})
+					}
+				});
+			}
+		}, 100);
 		this.setAnimation();
 	}
 	getData = () => {
@@ -1466,7 +1472,6 @@ export default class DoorHistory extends Component {
 							</Col>
 						</Row>
 					</div>
-
 					<ul ref='mybtn' id="menu" className={`${mfb.mfb_component__br} ${mfb.mfb_zoomin}`} data-mfb-toggle="click">
 						<li className={mfb.mfb_component__wrap}>
 							<div>
