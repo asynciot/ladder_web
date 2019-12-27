@@ -99,10 +99,29 @@ export default class Home extends Component {
 	}
 	getFault = () => {
 		getLadderFault().then((res) => {
-      this.setState({
+			this.setState({
 				LadderOffline:res.data.totalNumber+"",
 			})
-    })
+		})
+		getFault({ num: 1, page: 1, state:"untreated", islast:1, type:1, }).then((res) => {
+			if (res.code === 0) {
+				let code = res.data.list[0].code
+				if(res.data.list[0].device_type=="ctrl"){
+					this.setState({
+						historyEvents: res.data.list,
+						total:res.data.totalNumber,
+						code:"E"+code.toString(16)
+					});
+				}else{
+					code = (code+50)
+					this.setState({
+						historyEvents: res.data.list,
+						total:res.data.totalNumber,
+						code,
+					});
+				}
+			}
+		});
 		getFaultUntreted({ num: 10, page:1, islast:1, device_type:'door', type:1,}).then((res) => {
 			this.setState({
 				dooroffline:res.data.totalNumber+"",
@@ -365,8 +384,6 @@ export default class Home extends Component {
 						ctrloffline:res.data.totalNumber+"",
 						deviceOffline:res.data.totalNumber,
 					});
-
-
 				})
 				break;
 		}
@@ -424,30 +441,30 @@ export default class Home extends Component {
 										<div className={styles.aui_palace1_grid_main_top}>
 											<FormattedMessage id="Manage Elevator"/>
 										</div>
-                    {
-                      this.state.language == "zh" ?
-                      <div className={styles.aui_palace1_grid_main_bottom}>
-                      	<div className={styles.aui_palace1_grid_main_bottom_left}>
-                      		<FormattedMessage id="Number"/>
-                      	</div>
-                      	<div className={styles.aui_palace1_grid_main_bottom_right}>
-                      		<div className={styles.aui_palace1_grid_main_bottom_right1}>
-                      			{LadderNum}
-                      		</div>
-                      	</div>
-                      </div>
-                      :
-                      <div className={styles.aui_palace1_grid_main_bottom}>
-                      	<div className={styles.aui_palace1_grid_main_bottom_left}>
-                      		<FormattedMessage id="Number"/>
-                      	</div>
-                      	<div className={styles.aui_palace1_grid_main_bottom_right}>
-                      		<div className={styles.aui_palace1_grid_main_bottom_right2}>
-                      			{LadderNum}
-                      		</div>
-                      	</div>
-                      </div>
-                    }
+										{
+											this.state.language == "zh" ?
+											<div className={styles.aui_palace1_grid_main_bottom}>
+												<div className={styles.aui_palace1_grid_main_bottom_left}>
+													<FormattedMessage id="Number"/>
+												</div>
+												<div className={styles.aui_palace1_grid_main_bottom_right}>
+													<div className={styles.aui_palace1_grid_main_bottom_right1}>
+														{LadderNum}
+													</div>
+												</div>
+											</div>
+											:
+											<div className={styles.aui_palace1_grid_main_bottom}>
+												<div className={styles.aui_palace1_grid_main_bottom_left}>
+													<FormattedMessage id="Number"/>
+												</div>
+												<div className={styles.aui_palace1_grid_main_bottom_right}>
+													<div className={styles.aui_palace1_grid_main_bottom_right2}>
+														{LadderNum}
+													</div>
+												</div>
+											</div>
+										}
 									</div>
 								</div>
 							</div>
@@ -487,30 +504,30 @@ export default class Home extends Component {
 										<div className={styles.aui_palace1_grid_main_top}>
 											<FormattedMessage id="Door"/>
 										</div>
-                    {
-                      this.state.language == "zh" ?
-                      <div className={styles.aui_palace1_grid_main_bottom}>
-                      	<div className={styles.aui_palace1_grid_main_bottom_left}>
-                      		<FormattedMessage id="Number"/>
-                      	</div>
-                      	<div className={styles.aui_palace1_grid_main_bottom_right}>
-                      		<div className={styles.aui_palace1_grid_main_bottom_right1}>
-                      			{doorNum}
-                      		</div>
-                      	</div>
-                      </div>
-                      :
-                      <div className={styles.aui_palace1_grid_main_bottom}>
-                      	<div className={styles.aui_palace1_grid_main_bottom_left}>
-                      		<FormattedMessage id="Number"/>
-                      	</div>
-                      	<div className={styles.aui_palace1_grid_main_bottom_right}>
-                      		<div className={styles.aui_palace1_grid_main_bottom_right2}>
-                      			{doorNum}
-                      		</div>
-                      	</div>
-                      </div>
-                    }
+										{
+											this.state.language == "zh" ?
+											<div className={styles.aui_palace1_grid_main_bottom}>
+												<div className={styles.aui_palace1_grid_main_bottom_left}>
+													<FormattedMessage id="Number"/>
+												</div>
+												<div className={styles.aui_palace1_grid_main_bottom_right}>
+													<div className={styles.aui_palace1_grid_main_bottom_right1}>
+														{doorNum}
+													</div>
+												</div>
+											</div>
+											:
+											<div className={styles.aui_palace1_grid_main_bottom}>
+												<div className={styles.aui_palace1_grid_main_bottom_left}>
+													<FormattedMessage id="Number"/>
+												</div>
+												<div className={styles.aui_palace1_grid_main_bottom_right}>
+													<div className={styles.aui_palace1_grid_main_bottom_right2}>
+														{doorNum}
+													</div>
+												</div>
+											</div>
+										}
 									</div>
 								</div>
 							</div>
@@ -550,30 +567,30 @@ export default class Home extends Component {
 										<div className={styles.aui_palace1_grid_main_top}>
 											<FormattedMessage id="Ctrl"/>
 										</div>
-                    {
-                      this.state.language == "zh" ?
-                      <div className={styles.aui_palace1_grid_main_bottom}>
-                      	<div className={styles.aui_palace1_grid_main_bottom_left}>
-                      		<FormattedMessage id="Number"/>
-                      	</div>
-                      	<div className={styles.aui_palace1_grid_main_bottom_right}>
-                      		<div className={styles.aui_palace1_grid_main_bottom_right1}>
-                      			{ctrlNum}
-                      		</div>
-                      	</div>
-                      </div>
-                      :
-                      <div className={styles.aui_palace1_grid_main_bottom}>
-                      	<div className={styles.aui_palace1_grid_main_bottom_left}>
-                      		<FormattedMessage id="Number"/>
-                      	</div>
-                      	<div className={styles.aui_palace1_grid_main_bottom_right}>
-                      		<div className={styles.aui_palace1_grid_main_bottom_right2}>
-                      			{ctrlNum}
-                      		</div>
-                      	</div>
-                      </div>
-                    }
+										{
+											this.state.language == "zh" ?
+											<div className={styles.aui_palace1_grid_main_bottom}>
+												<div className={styles.aui_palace1_grid_main_bottom_left}>
+													<FormattedMessage id="Number"/>
+												</div>
+												<div className={styles.aui_palace1_grid_main_bottom_right}>
+													<div className={styles.aui_palace1_grid_main_bottom_right1}>
+														{ctrlNum}
+													</div>
+												</div>
+											</div>
+											:
+											<div className={styles.aui_palace1_grid_main_bottom}>
+												<div className={styles.aui_palace1_grid_main_bottom_left}>
+													<FormattedMessage id="Number"/>
+												</div>
+												<div className={styles.aui_palace1_grid_main_bottom_right}>
+													<div className={styles.aui_palace1_grid_main_bottom_right2}>
+														{ctrlNum}
+													</div>
+												</div>
+											</div>
+										}
 									</div>
 								</div>
 							</div>
@@ -637,11 +654,9 @@ export default class Home extends Component {
 							len ?
 							notClosedEvents.map(item => (
 								<span className={styles.msg} key={item.id}>
-
-										{item.addr}<FormattedMessage id={item.device_type}/>
-										&nbsp;&nbsp;
-										<FormattedMessage id={'O'+item.type}/>
-
+										<FormattedMessage id={item.device_type}/>{"  "}
+										<FormattedMessage id={'O'+item.type}/>{"  "}
+                    <FormattedMessage id={this.state.code}/>
 								</span>
 							)) : (
 								<span>
