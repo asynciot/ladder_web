@@ -99,6 +99,9 @@ export function getFault(params) {
 export function getFaultUntreted(params) {
 	return request(`/device/Order/Untreted?${stringify(params)}&follow=yes`);
 }
+export function getFaultDeviceName(params) {
+	return request(`/device/Order/DeviceName?${stringify(params)}&follow=yes`);
+}
 export function postFault(params) {
 	return request('/device/Order/receipt', {
 		method: 'POST',
@@ -141,6 +144,12 @@ export function getDispatch(params) {
 }
 export function postFinish(params) {
 	return request('/device/Dispatch/finish', {
+		method: 'POST',
+		body: params,
+	});
+}
+export function postAdopt(params) {
+	return request('/device/Dispatch/adopt', {
 		method: 'POST',
 		body: params,
 	});

@@ -17,11 +17,11 @@ const { TextArea } = Input;
 const CodeTransform = {
 	'51':'04',
 	'52':'07',
-  '66':'08',
-  '82':'03',
-  '114':'LV',
-  '178':'OV',
-  '229':'MO',
+	'66':'08',
+	'82':'03',
+	'114':'LV',
+	'178':'OV',
+	'229':'MO',
 }
 export default class Fault extends Component {
 	state = {
@@ -45,7 +45,7 @@ export default class Fault extends Component {
 	getFault = () =>{
 		const { dispatch, location } = this.props;
 		//const match = pathToRegexp('/company/order/:id').exec(location.pathname);
-    const match = pathToRegexp('/company/Dispatch/:id').exec(location.pathname);
+		const match = pathToRegexp('/company/Dispatch/:id').exec(location.pathname);
 		const id = match[1];
 		getDispatch({ id, page:1, num:1, }).then((res) => {
 			const list = res.data.list.map((item) => {
@@ -72,7 +72,7 @@ export default class Fault extends Component {
 					this.state.disable = true
 					this.state.disable1 = true
 				}
-			  const device_id = item.device_id;
+				const device_id = item.device_id;
 				let name = '';
 				getFollowDevices({device_id,num:1,page:1}).then(res=>{
 					this.setState({
@@ -89,12 +89,12 @@ export default class Fault extends Component {
 	upFault = (e) =>{
 		const { language } = this.state;
 		var file = e.target.files[0]
-		if(file.size>1024*1024){
+		if(file.size>1024*1024*5){
 			if(language=="zh"){
-				alert("请上传不超过1M的图片！");
+				alert("请上传不超过5M的图片！");
 				return
 			}else{
-				alert("Please upload no more than 1M pictures.");
+				alert("Please upload no more than 5M pictures.");
 				return
 			}
 		}
@@ -109,12 +109,12 @@ export default class Fault extends Component {
 	upFinish = (e) =>{
 		const { language } = this.state;
 		var file = e.target.files[0]
-		if(file.size>1024*1024){
+		if(file.size>1024*1024*5){
 			if(language=="zh"){
-				alert("请上传不超过1M的图片！");
+				alert("请上传不超过5M的图片！");
 				return
 			}else{
-				alert("Please upload no more than 1M pictures.");
+				alert("Please upload no more than 5M pictures.");
 				return
 			}
 		}
@@ -151,6 +151,15 @@ export default class Fault extends Component {
 				return
 			}
 		}
+		if(language=="zh"){
+			alert('提示', '图片上传中，请等待！', [
+				{ text: '确认',},
+			]);
+		}else{
+			alert('提示','Picture upload, please wait!',[
+				{ text: 'Ok',},
+			]);
+		}
 		fetch('http://server.asynciot.com/device/Dispatch/finish', {
 			method: 'POST',
 			headers: {
@@ -159,37 +168,30 @@ export default class Fault extends Component {
 			credentials: 'include',
 			body: formdata
 		}).then((res)=> { return res.json()}).then((json)=>{
-			if(language=="zh"){
-				alert('提示', '图片上传中，请等待！', [
-					{ text: '确认',},
-				]);
-			}else{
-				alert('提示','Picture upload, please wait!',[
-					{ text: 'Ok',},
-				]);
-			}
-			if(json.code == 0){
-				if(language=="zh"){
-					alert('提示','上传成功',[
-						{ text: '确认',},
-					]);
+			setTimeout(() =>{
+				if(json.code == 0){
+					if(language=="zh"){
+						alert('提示','上传成功',[
+							{ text: '确认',},
+						]);
+					}else{
+						alert('提示','Success',[
+							{ text: 'Ok',},
+						]);
+					}
+					this.props.history.push(`/company/work-order`);
 				}else{
-					alert('提示','Success',[
-						{ text: 'Ok',},
-					]);
+					if(language=="zh"){
+						alert('提示', '上传失败', [
+							{ text: '确认',},
+						]);
+					}else{
+						alert('提示','Error',[
+							{ text: 'Ok',},
+						]);
+					}
 				}
-				this.props.history.push(`/company/work-order`);
-			}else{
-				if(language=="zh"){
-					alert('提示', '上传失败', [
-						{ text: '确认',},
-					]);
-				}else{
-					alert('提示','Error',[
-						{ text: 'Ok',},
-					]);
-				}
-			}
+			}, 500);
 		})
 
 	}
@@ -230,7 +232,7 @@ export default class Fault extends Component {
 		const id = this.state.list[0].code
 		this.props.history.push({
 			pathname: `/company/order/code/${id}`,
-      // pathname: `/company/Dispatch/code/${id}`,
+			// pathname: `/company/Dispatch/code/${id}`,
 		});
 	}
 	onChange = (e) =>{
@@ -268,7 +270,7 @@ export default class Fault extends Component {
 										<tr>
 											<a className={styles.text}><FormattedMessage id="report time"/> ：</a>
 
-                      <td className="tl">{moment(parseInt(item.create_time)).format('YYYY-MM-DD HH:mm:ss')}</td>
+											<td className="tl">{moment(parseInt(item.create_time)).format('YYYY-MM-DD HH:mm:ss')}</td>
 										</tr>
 										<tr>
 											<a className={styles.text}><FormattedMessage id="fault duration"/> ：</a>
@@ -288,7 +290,7 @@ export default class Fault extends Component {
 
 											<div className={styles.ls}>
 												<TextArea
-                          placeholder={language=="zh"?"故障详情":"fault details"}
+													placeholder={language=="zh"?"故障详情":"fault details"}
 													maxlength={50}
 													// width={100px}
 													value={this.state.remark}

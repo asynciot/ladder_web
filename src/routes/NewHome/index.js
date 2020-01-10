@@ -105,20 +105,22 @@ export default class Home extends Component {
 		})
 		getFault({ num: 1, page: 1, state:"untreated", islast:1, type:1, }).then((res) => {
 			if (res.code === 0) {
-				let code = res.data.list[0].code
-				if(res.data.list[0].device_type=="ctrl"){
-					this.setState({
-						historyEvents: res.data.list,
-						total:res.data.totalNumber,
-						code:"E"+code.toString(16)
-					});
-				}else{
-					code = (code+50)
-					this.setState({
-						historyEvents: res.data.list,
-						total:res.data.totalNumber,
-						code,
-					});
+				if(res.data.list[0]!=null){
+					let code = res.data.list[0].code
+					if(res.data.list[0].device_type=="ctrl"){
+						this.setState({
+							historyEvents: res.data.list,
+							total:res.data.totalNumber,
+							code:"E"+code.toString(16)
+						});
+					}else{
+						code = (code+50)
+						this.setState({
+							historyEvents: res.data.list,
+							total:res.data.totalNumber,
+							code,
+						});
+					}
 				}
 			}
 		});
@@ -190,7 +192,7 @@ export default class Home extends Component {
 		const vcode = 2;
 		const device_type = "15";
 		history.push({
-			pathname: '/company/followdoor/order',
+			pathname: '/company/followdoor/offline',
 			state: { device_type }
 		});
 	}
@@ -656,7 +658,7 @@ export default class Home extends Component {
 								<span className={styles.msg} key={item.id}>
 										<FormattedMessage id={item.device_type}/>{"  "}
 										<FormattedMessage id={'O'+item.type}/>{"  "}
-                    <FormattedMessage id={this.state.code}/>
+										<FormattedMessage id={this.state.code}/>
 								</span>
 							)) : (
 								<span>

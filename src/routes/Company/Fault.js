@@ -113,7 +113,7 @@ export default class Fault extends Component {
 				alert("请上传不超过5M的图片！");
 				return
 			}else{
-				alert("Please upload no more than 1M pictures.");
+				alert("Please upload no more than 5M pictures.");
 				return
 			}
 		}
@@ -150,6 +150,15 @@ export default class Fault extends Component {
 				return
 			}
 		}
+		if(language=="zh"){
+			alert('提示', '图片上传中，请等待！', [
+				{ text: '确认',},
+			]);
+		}else{
+			alert('提示','Picture upload, please wait!',[
+				{ text: 'Ok',},
+			]);
+		}
 		fetch('http://server.asynciot.com/device/Dispatch/finish', {
 			method: 'POST',
 			headers: {
@@ -158,15 +167,6 @@ export default class Fault extends Component {
 			credentials: 'include',
 			body: formdata
 		}).then((res)=> { return res.json()}).then((json)=>{
-			if(language=="zh"){
-				alert('提示', '图片上传中，请等待！', [
-					{ text: '确认',},
-				]);
-			}else{
-				alert('提示','Picture upload, please wait!',[
-					{ text: 'Ok',},
-				]);
-			}
 			setTimeout(() =>{
 				if(json.code == 0){
 					if(language=="zh"){

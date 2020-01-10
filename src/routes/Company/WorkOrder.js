@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Icon, Button, Row, Col, Pagination, List, LocaleProvider } from 'antd';
 import { Tabs, Flex, Modal, PullToRefresh } from 'antd-mobile';
 import styles from './WorkOrder.less';
-import { getFault, postFault, postFinish, deleteFault, getDispatch, getFollowDevices} from '../../services/api';
+import { getFault, postFault, postFinish, deleteFault, getDispatch, getFollowDevices, getFaultDeviceName, postAdopt} from '../../services/api';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import zh from 'antd/es/locale-provider/zh_CN';
 import en from 'antd/es/locale-provider/en_GB';
@@ -91,7 +91,6 @@ export default class extends Component {
 		dispatchTotal:1,
 		type:'',
 		totalNumber:0,
-		device_name:'',
 		language:window.localStorage.getItem("language"),
 	}
 	tabs = [
@@ -123,11 +122,10 @@ export default class extends Component {
 	getFault = (state) => {
 		let {page, total, historyEvents} = this.state;
 		this.state.type = state
-		let device_name = []
 		let type = []
 		switch (state){
 			case 'untreated':
-				getFault({ num: 10, page, state, islast:1, type:1}).then((res) => {
+				getFaultDeviceName({ num: 10, page, state, islast:1, type:1}).then((res) => {
 					const list = res.data.list.map((item,index) => {
 						const time = new Date().getTime() - item.createTime
 						item.hour = parseInt((time)/(1000*3600))
@@ -136,12 +134,6 @@ export default class extends Component {
 						const device_id = item.device_id
 						this.setState({
 							totalNumber:res.data.totalNumber,
-						})
-						getFollowDevices({num:1,page:1,device_id}).then((ind) => {
-							device_name[index] = ind.data.list[0].device_name
-							this.setState({
-								device_name,
-							});
 						})
 						if(item.device_type=='ctrl'){
 							if(item.code!=null){
@@ -188,7 +180,7 @@ export default class extends Component {
 				})
 				break;
 			case 'examined':
-				getFault({ num: 10, page, state }).then((res) => {
+				getFaultDeviceName({ num: 10, page, state }).then((res) => {
 					const list = res.data.list.map((item,index) => {
 						const time = new Date().getTime() - item.createTime
 						item.hour = parseInt((time)/(1000*3600))
@@ -197,12 +189,6 @@ export default class extends Component {
 						const device_id = item.device_id
 						this.setState({
 							totalNumber:res.data.totalNumber,
-						})
-						getFollowDevices({num:1,page:1,device_id}).then((ind) => {
-							device_name[index] = ind.data.list[0].device_name
-							this.setState({
-								device_name,
-							});
 						})
 						if(item.device_type=='ctrl'){
 							item.code = 'E'+res.data.list[index].code.toString(16)
@@ -293,12 +279,41 @@ export default class extends Component {
 				{ text: 'ok',
 					onPress: () => {
 						postFault({order_id}).then(() => {
-						this.getFault(detail.state)
 						});
+            this.getFault(detail.state)
+            this.forceUpdate()
 					},
 				},
 			]);
 		}
+	}
+	Adopt = (e, detail) => {
+		const { language } = this.state;
+		const id = detail.id;
+		alert('提示', desc[detail.state], [
+			{ text: '取消', style: 'default' },
+			{ text: '确认',
+				onPress: () => {
+					postAdopt({id}).then((res) => {
+						if(res.code == 0){
+							if(language=="zh"){
+								alert("审核成功！")
+							}else{
+								alert("Success")
+							}
+						}else{
+							if(language=="zh"){
+								alert("审核失败！")
+							}else{
+								alert("Error")
+							}
+						}
+						this.getFault(detail.state)
+            this.forceUpdate()
+					});
+				},
+			},
+		]);
 	}
 	address = (item) =>{
 		const id = item.device_id
@@ -314,8 +329,8 @@ export default class extends Component {
 				{ text: '确认',
 					onPress: () => {
 						postFinish({ id: detail.id,result:'transfer' }).then((res) => {
-							this.getFault("")
 						});
+						this.getFault("")
 					},
 				},
 			]);
@@ -325,15 +340,15 @@ export default class extends Component {
 				{ text: 'ok',
 					onPress: () => {
 						postFinish({ id: detail.id,result:'transfer' }).then((res) => {
-							this.getFault("")
 						});
+						this.getFault("")
 					},
 				},
 			]);
 		}
 	}
 	render() {
-		const { historyEvents, list, dispatchList, device_name, code, language} = this.state;
+		const { historyEvents, list, dispatchList, code, language} = this.state;
 		var la;
 		if(language == "zh" ){
 			la = zh;
@@ -381,7 +396,7 @@ export default class extends Component {
 																	<a className={styles.text}><FormattedMessage id="Device Name"/>：</a>
 																</Col>
 																<Col span={14}>
-																	<td className="tl">{device_name[index]}</td>
+																	<td className="tl">{item.device_name}</td>
 																</Col>
 															</Col>
 														</tr>
@@ -428,7 +443,7 @@ export default class extends Component {
 																	<a className={styles.text}><FormattedMessage id="Device Name"/>：</a>
 																</Col>
 																<Col span={14}>
-																	<td className="tl">{device_name[index]}</td>
+																	<td className="tl">{item.device_name}</td>
 																</Col>
 															</Col>
 														</tr>
@@ -589,7 +604,7 @@ export default class extends Component {
 								className={styles.lis}
 								dataSource={list}
 								renderItem={(item,index) => (
-									<List.Item actions={[<Examine address={(event) => { this.address(item); }} edit={(event) => { this.deal(event,item,); }} />]} className={styles.item} key={index} >
+									<List.Item actions={[<Examine address={(event) => { this.address(item); }} edit={(event) => { this.Adopt(event,item,); }} />]} className={styles.item} key={index} >
 										<Col span={20}>
 											<table className={styles.table} border="0" cellPadding="0" cellSpacing="0" onClick={this.goFault(item)}>
 												{
@@ -605,7 +620,7 @@ export default class extends Component {
 																	<a className={styles.text}><FormattedMessage id="Device Name"/>：</a>
 																</Col>
 																<Col span={14}>
-																	<td className="tl">{device_name[index]}</td>
+																	<td className="tl">{item.device_name}</td>
 																</Col>
 															</Col>
 														</tr>
@@ -652,7 +667,7 @@ export default class extends Component {
 																	<a className={styles.text}><FormattedMessage id="Device Name"/>：</a>
 																</Col>
 																<Col span={14}>
-																	<td className="tl">{device_name[index]}</td>
+																	<td className="tl">{item.device_name}</td>
 																</Col>
 															</Col>
 														</tr>
